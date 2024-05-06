@@ -1,0 +1,24 @@
+{
+  "npm.binPath": "C:/Users/Sad~1Hentai/AppData/Local/pnpm/pnpm.exe",
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "typescript",
+    "json",
+    "css",
+    "scss",
+    "javascriptreact",
+    "typescriptreact",
+    "less",
+    "markdown",
+    "vue",
+    "html",
+    "htmx",
+    "astro",
+    "yaml",
+    "xml",
+    "python",
+    "go",
+    "shellscript",
+    "plaintext"
+  ]
+}
