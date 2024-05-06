@@ -1,4 +1,2 @@
-nvim-treesitter-context doesnt work
 auto-session doesnt work
-twilight doesnt work
 Auto-formatting doesnt work
