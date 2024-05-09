@@ -32,6 +32,10 @@
     spicetify-nix = {
       url = "github:the-argus/spicetify-nix";
     };
+
+    nixneovimplugins = {
+      url = "github:jooooscha/nixpkgs-vim-extra-plugins";
+    };
     
   };
 

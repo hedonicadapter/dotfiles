@@ -16,6 +16,7 @@ vim.o.scrolloff = 999
 vim.opt.cmdheight = 1
 vim.g.have_nerd_font = true
 vim.opt.guifont = "ProggyClean Nerd Font"
+vim.o.guicursor = 'n-v-c-sm-i-ci-ve:block,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor'
 
 if vim.g.neovide then 
     vim.opt.guifont = "Iosevka Term"
@@ -42,7 +43,6 @@ vim.api.nvim_set_hl(0, "DropBarIconKindFunction", {
     bg = "#000000"
 })
 
-vim.cmd("command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument")
 vim.cmd [[highlight Normal guibg=none]]
 
 -- Use LspAttach autocommand to only map the following keys
@@ -129,14 +129,6 @@ vim.api.nvim_exec([[
   autocmd BufEnter * set relativenumber
 ]], false)
 
--- For coc-css
-vim.api.nvim_exec([[
-  autocmd FileType css setlocal iskeyword+=-
-]], false)
-vim.api.nvim_exec([[
-  autocmd FileType scss setl iskeyword+=@-@
-]], false)
-
 vim.api.nvim_exec([[
   autocmd BufEnter * hi DropBarIconKindFunction guibg=#000000
 ]], false)
@@ -144,3 +136,12 @@ vim.api.nvim_exec([[
 vim.api.nvim_exec([[
   autocmd BufEnter * hi WinBar guibg=NONE
 ]], false)
+
+-- Remap keys for apply code actions at the cursor position.
+-- vim.keymap.set("n", "<leader>ca", "<Plug>(coc-codeaction-cursor)", opts)
+-- Remap keys for apply source code actions for current file.
+-- vim.keymap.set("n", "<leader>fca", "<Plug>(coc-codeaction-source)", opts)
+-- Apply the most preferred quickfix action on the current line.
+-- vim.keymap.set("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
+
+-- vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})

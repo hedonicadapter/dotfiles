@@ -1,2 +1,0 @@
-        require('coc-nvim').setup()
-

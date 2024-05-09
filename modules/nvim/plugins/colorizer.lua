@@ -12,3 +12,7 @@ require'colorizer'.setup {
                 }
             }
         }
+
+          vim.api.nvim_exec([[
+            autocmd BufEnter * silent! :ColorizerAttachToBuffer
+          ]], false)

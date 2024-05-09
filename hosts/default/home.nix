@@ -24,7 +24,10 @@ in
   home.username = "hedonicadapter";
   home.homeDirectory = "/home/hedonicadapter";
 
-  nixpkgs.overlays = [ inputs.neovim-nightly-overlay.overlay ];
+  nixpkgs.overlays = [ 
+    inputs.neovim-nightly-overlay.overlay
+    inputs.nixneovimplugins.overlays.default
+  ];
   #nixpkgs.overlays = [
    # (import (builtins.fetchTarball {
     #  url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
@@ -169,30 +172,31 @@ background-color = "#000A";
             pad = "40x0";
             font-size-adjustment = 1;
             line-height = 15;
-
           };
           colors = {
-
-foreground = "ECE1D7";
-background = "292522";
-selection-background = "403A36";
-selection-foreground = "ECE1D7";
-regular0   = "34302C";
-regular1   = "BD8183";
-regular2   = "78997A";
-regular3   = "E49B5D";
-regular4   = "7F91B2";
-regular5   = "B380B0";
-regular6   = "7B9695";
-regular7   = "C1A78E";
-bright0    = "867462";
-bright1    = "D47766";
-bright2    = "85B695";
-bright3    = "EBC06D";
-bright4    = "A3A9CE";
-bright5    = "CF9BC2";
-bright6    = "89B3B6";
-bright7    = "ECE1D7";
+            foreground = "ECE1D7";
+            background = "292522";
+            selection-background = "403A36";
+            selection-foreground = "ECE1D7";
+            regular0   = "34302C";
+            regular1   = "BD8183";
+            regular2   = "78997A";
+            regular3   = "E49B5D";
+            regular4   = "7F91B2";
+            regular5   = "B380B0";
+            regular6   = "7B9695";
+            regular7   = "C1A78E";
+            bright0    = "867462";
+            bright1    = "D47766";
+            bright2    = "85B695";
+            bright3    = "EBC06D";
+            bright4    = "A3A9CE";
+            bright5    = "CF9BC2";
+            bright6    = "89B3B6";
+            bright7    = "ECE1D7";
+          };
+          cursor = {
+            blink = "yes";
           };
     };
   };
@@ -200,7 +204,12 @@ bright7    = "ECE1D7";
   programs.git = {
     enable = true;
     userName = "hedonicadapter";
-    userEmail = "filtersome@gmail.com";
+    userEmail = "mailservice.samherman@gmail.com";
+    extraConfig = {
+      credential.helper = "${
+          pkgs.git.override { withLibsecret = true; }
+        }/bin/git-credential-libsecret";
+    };
   };
 
   
@@ -224,18 +233,17 @@ bright7    = "ECE1D7";
     vimAlias = true;
     vimdiffAlias = true;
 
-    coc = {
-      enable = true;
-    };
-
     plugins = with pkgs.vimPlugins; [
+      {
+      	plugin = nvim-lspconfig;
+	config = toLuaFile ../../modules/nvim/plugins/lsp.lua;
+      }
+
       nvim-web-devicons
       
       telescope-fzf-native-nvim
       plenary-nvim
-      nvim-lspconfig
       nvim-treesitter-context
-      dropbar-nvim
       dressing-nvim
       nvim-ts-autotag
       vim-visual-multi
@@ -246,17 +254,30 @@ bright7    = "ECE1D7";
       auto-session
       telescope-file-browser-nvim
 
-      {
-        plugin = lsp_signature-nvim;
-        config = toLua ''
-            require'lsp_signature'.setup({
-              delete_to_trash = true,
-              view_options = {
-                show_hidden_files = true,
-              }
-            })
-        '';
-      }
+	neodev-nvim
+
+            #   "astro",
+            #   "bashls",
+            #   "azure_pipelines_ls",
+            #   "bicep",
+            #   "omnisharp",
+            #   "cssls",
+            #   "dockerls",
+            #   "gopls",
+            #   "html",
+            #   "htmx",
+            #   "jsonls",
+            #   "tsserver",
+            #   "lua_ls",
+            #   "spectral",
+            #   "powershell_es",
+            #   "sqlls",
+            #   "somesass_ls",
+            #   "tailwindcss",
+            #   "terraformls",
+            #   "vimls",
+            #   "yamlls",
+            # }
 
       {
         plugin = auto-session;
@@ -306,7 +327,24 @@ bright7    = "ECE1D7";
       }
 
       {
-        plugin = nvim-treesitter;
+	plugin = (nvim-treesitter.withPlugins (p: [
+          p.tree-sitter-nix
+          p.tree-sitter-vim
+          p.tree-sitter-bash
+          p.tree-sitter-lua
+          p.tree-sitter-json
+	  p.tree-sitter-astro
+	  p.tree-sitter-bicep
+	  p.tree-sitter-c-sharp
+	  p.tree-sitter-dockerfile
+	  p.tree-sitter-go
+	  p.tree-sitter-html
+	  p.tree-sitter-javascript
+	  p.tree-sitter-json
+	  p.tree-sitter-scss
+	  p.tree-sitter-sql
+	  p.tree-sitter-typescript
+        ]));
         config = toLuaFile ../../modules/nvim/plugins/treesitter.lua;
       }
 
@@ -426,18 +464,40 @@ bright7    = "ECE1D7";
         config = toLuaFile ../../modules/nvim/plugins/twilight.lua; 
       }
 
-
-
       {
         plugin = melange-nvim;
         config = "colorscheme melange";
       }
+
+      {
+        plugin = pkgs.vimExtraPlugins.reactive-nvim;
+        config = toLua ''
+
+
+require('reactive').setup {
+load = 'customCursor'
+}
+''; 
+      }
+
+      {
+        plugin = dropbar-nvim;
+        config = toLua ''
+          require('dropbar').setup() 
+          vim.o.winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
+        '';
+      }
+    ] ++ [
     ];
 
     extraLuaConfig = ''
       ${builtins.readFile ../../modules/nvim/options.lua}
       ${builtins.readFile ../../modules/nvim/keymaps.lua}
     '';
+  };
+  home.file.".config/nvim/lua/reactive/presets" = {
+  source = ../../modules/nvim/plugins/reactive;
+  recursive = true;
   };
 
   programs.ags = {

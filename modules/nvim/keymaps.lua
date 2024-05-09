@@ -130,14 +130,14 @@ vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
         set_keymap_for_all_modes('<leader>lg', ':Telescope live_grep<CR>')
 
 -- coc
-        vim.api.nvim_set_keymap('n', 'gr', '<Plug>(coc-references)', {
-            noremap = true,
-            silent = true
-        })
-
-        vim.api.nvim_set_keymap('n', '<leader>fc', '<Plug>(coc-fix-current)', {
-            noremap = false,
-            silent = true
-        })
+        -- vim.api.nvim_set_keymap('n', 'gr', '<Plug>(coc-references)', {
+        --     noremap = true,
+        --     silent = true
+        -- })
+        --
+        -- vim.api.nvim_set_keymap('n', '<leader>fc', '<Plug>(coc-fix-current)', {
+        --     noremap = false,
+        --     silent = true
+        -- })
 
 
