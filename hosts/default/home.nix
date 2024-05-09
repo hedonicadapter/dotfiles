@@ -255,7 +255,12 @@ background-color = "#000A";
       telescope-file-browser-nvim
 
 	neodev-nvim
-
+	{
+        plugin = nvim-cmp;
+        config = toLuaFile ../modules/nvim/plugins/cmp.lua;
+      }
+      cmp_luasnip
+      cmp-nvim-lsp
             #   "astro",
             #   "bashls",
             #   "azure_pipelines_ls",
