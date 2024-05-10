@@ -94,6 +94,7 @@ in {
     terraform
     stylua
     nixfmt
+    tailwindcss-language-server
   ];
 
   home.file.".config/rofi" = {
@@ -155,6 +156,8 @@ in {
     ../../modules/oh-my-zsh/themes/headline/headline.zsh-theme;
   programs.zsh = {
     enable = true;
+
+    autosuggestion = { enable = true; };
 
     oh-my-zsh = {
       enable = true;
@@ -252,6 +255,15 @@ in {
     plugins = with pkgs.vimPlugins;
       [
         {
+          plugin = auto-session;
+          config = toLua ''
+            require('auto-session').setup()
+          '';
+        }
+
+        coq_nvim
+
+        {
           plugin = nvim-lspconfig;
           config = toLuaFile ../../modules/nvim/plugins/lsp.lua;
         }
@@ -261,7 +273,6 @@ in {
         telescope-fzf-native-nvim
         plenary-nvim
         nvim-treesitter-context
-        dressing-nvim
         nvim-ts-autotag
         vim-visual-multi
 
@@ -276,6 +287,13 @@ in {
           config = toLuaFile ../../modules/nvim/plugins/cmp.lua;
         }
         cmp-nvim-lsp
+
+        {
+          plugin = dressing-nvim;
+          config = toLua ''
+            require('dressing').setup()
+          '';
+        }
 
         {
           plugin = conform-nvim;
@@ -298,7 +316,7 @@ in {
               cs = {"csharpier"},
               go = {"gofmt"},
              sql = {"sqlfluff"},
-            tf = {"terraform_fmt"},
+              tf = {"terraform_fmt"},
 
               },
             format_on_save = {
@@ -329,13 +347,7 @@ in {
           config = toLuaFile ../../modules/nvim/plugins/telescope.lua;
         }
 
-        {
-          plugin = telescope-undo-nvim;
-          config = toLua ''
-            require("telescope").setup()
-            require("telescope").load_extension("undo")
-          '';
-        }
+        telescope-undo-nvim
 
         {
           plugin = nvim-neoclip-lua;
