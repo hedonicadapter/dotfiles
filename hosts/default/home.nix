@@ -442,28 +442,13 @@ in {
 
         {
           plugin = mini-nvim;
-          config = toLua ''
-            require'mini.move'.setup {
-              mappings = {
-                  down = 'J',
-                  up = 'K'
-              }
-            }
-            require'mini.indentscope'.setup()
-          '';
+          config = toLuaFile ../../modules/nvim/plugins/mini.lua;
         }
 
         {
           plugin = highlight-undo-nvim;
           config = toLua ''
             require('highlight-undo').setup()
-          '';
-        }
-
-        {
-          plugin = alpha-nvim;
-          config = toLua ''
-            require'alpha'.setup(require'alpha.themes.dashboard'.config)
           '';
         }
 
