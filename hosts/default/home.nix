@@ -83,6 +83,9 @@ tofi-power-menu
 
     prettierd
     sassc
+      typescript
+      nodePackages.typescript-language-server
+dotnet-sdk_8
   ];
 
 
@@ -254,35 +257,14 @@ background-color = "#000A";
       auto-session
       telescope-file-browser-nvim
 
+
+
 	neodev-nvim
 	{
         plugin = nvim-cmp;
-        config = toLuaFile ../modules/nvim/plugins/cmp.lua;
+        config = toLuaFile ../../modules/nvim/plugins/cmp.lua;
       }
-      cmp_luasnip
       cmp-nvim-lsp
-            #   "astro",
-            #   "bashls",
-            #   "azure_pipelines_ls",
-            #   "bicep",
-            #   "omnisharp",
-            #   "cssls",
-            #   "dockerls",
-            #   "gopls",
-            #   "html",
-            #   "htmx",
-            #   "jsonls",
-            #   "tsserver",
-            #   "lua_ls",
-            #   "spectral",
-            #   "powershell_es",
-            #   "sqlls",
-            #   "somesass_ls",
-            #   "tailwindcss",
-            #   "terraformls",
-            #   "vimls",
-            #   "yamlls",
-            # }
 
       {
         plugin = auto-session;
@@ -338,17 +320,19 @@ background-color = "#000A";
           p.tree-sitter-bash
           p.tree-sitter-lua
           p.tree-sitter-json
-	  p.tree-sitter-astro
-	  p.tree-sitter-bicep
-	  p.tree-sitter-c-sharp
-	  p.tree-sitter-dockerfile
-	  p.tree-sitter-go
-	  p.tree-sitter-html
-	  p.tree-sitter-javascript
-	  p.tree-sitter-json
-	  p.tree-sitter-scss
-	  p.tree-sitter-sql
-	  p.tree-sitter-typescript
+          p.tree-sitter-astro
+          p.tree-sitter-bicep
+          p.tree-sitter-c-sharp
+          p.tree-sitter-dockerfile
+          p.tree-sitter-go
+          p.tree-sitter-html
+          p.tree-sitter-javascript
+          p.tree-sitter-jsdoc
+          p.tree-sitter-scss
+          p.tree-sitter-sql
+          p.tree-sitter-typescript
+          p.tree-sitter-tsx
+          p.tree-sitter-terraform
         ]));
         config = toLuaFile ../../modules/nvim/plugins/treesitter.lua;
       }

@@ -46,3 +46,107 @@ require('lspconfig').rnix.setup {
     on_attach = on_attach,
     capabilities = capabilities,
 }
+require'lspconfig'.astro.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.azure_pipelines_ls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+
+    settings = {
+          yaml = {
+              schemas = {
+                  ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = {
+                      "/azure-pipeline*.y*l",
+                      "/*.azure*",
+                      "Azure-Pipelines/**/*.y*l",
+                      "Pipelines/*.y*l",
+                  },
+              },
+          },
+      },
+} 
+require'lspconfig'.astro.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.bashls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.azure_pipelines_ls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.bicep.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+vim.cmd [[ autocmd BufNewFile,BufRead *.bicep set filetype=bicep ]]
+
+require'lspconfig'.omnisharp.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.cssls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.dockerls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.gopls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.html.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.htmx.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.jsonls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.tsserver.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.lua_ls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.spectral.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.sqlls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.somesass_ls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+require'lspconfig'.tailwindcss.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+}
+require'lspconfig'.terraformls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+}
+require'lspconfig'.vimls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+}
+require'lspconfig'.yamlls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+} 
+            
