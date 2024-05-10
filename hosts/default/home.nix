@@ -16,6 +16,8 @@ let
     (builtins.readFile ../../wrappers/vscode.nix);
   beeper-wrap = pkgs.writeShellScriptBin "wrap-beeper"
     (builtins.readFile ../../wrappers/beeper.nix);
+  steam-wrap = pkgs.writeShellScriptBin "wrap-steam"
+    (builtins.readFile ../../wrappers/steam.nix);
 
   tofi-power-menu = pkgs.writeShellScriptBin "tofi-power-menu"
     (builtins.readFile ../../modules/tofi/power-menu.sh);
@@ -79,6 +81,7 @@ in {
     teams-wrap
     vscode-wrap
     beeper-wrap
+    steam-wrap
 
     tofi-power-menu
 
@@ -275,6 +278,7 @@ in {
         nvim-treesitter-context
         nvim-ts-autotag
         vim-visual-multi
+        vim-wakatime
 
         nvim-ts-context-commentstring
         sqlite-lua

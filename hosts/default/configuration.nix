@@ -1,15 +1,13 @@
-
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, inputs, ... }:
 let
-  spicetify-nix= inputs.spicetify-nix;
+  spicetify-nix = inputs.spicetify-nix;
   spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
-in
-{
-services.blueman.enable = true;
+in {
+  services.blueman.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Authentication agent
@@ -23,12 +21,16 @@ services.blueman.enable = true;
   };
 
   # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   boot.plymouth = {
     enable = true;
     theme = "abstract_ring";
-    themePackages = [(pkgs.adi1090x-plymouth-themes.override {selected_themes = ["abstract_ring"];})];
+    themePackages = [
+      (pkgs.adi1090x-plymouth-themes.override {
+        selected_themes = [ "abstract_ring" ];
+      })
+    ];
   };
 
   hardware.nvidia = {
@@ -56,20 +58,18 @@ services.blueman.enable = true;
     open = false;
 
     # Enable the Nvidia settings menu,
-	# accessible via `nvidia-settings`.
+    # accessible via `nvidia-settings`.
     nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      inputs.home-manager.nixosModules.default
-      spicetify-nix.nixosModules.default
-    ];
-
+  imports = [ # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    inputs.home-manager.nixosModules.default
+    spicetify-nix.nixosModules.default
+  ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -115,8 +115,6 @@ services.blueman.enable = true;
     xkb.variant = "";
   };
 
-	
-
   # Configure console keymap
   console.keyMap = "sv-latin1";
 
@@ -148,16 +146,15 @@ services.blueman.enable = true;
     isNormalUser = true;
     description = "hedonicadapter";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-    #  thunderbird
-    ];
+    packages = with pkgs;
+      [
+        #  thunderbird
+      ];
   };
 
   home-manager = {
-    extraSpecialArgs = {inherit inputs;};
-    users = {
-      "hedonicadapter" = import ./home.nix;
-    };
+    extraSpecialArgs = { inherit inputs; };
+    users = { "hedonicadapter" = import ./home.nix; };
   };
 
   # Enable automatic login for the user.
@@ -167,7 +164,6 @@ services.blueman.enable = true;
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
-
 
   environment.pathsToLink = [ "/share/bash-completion" ];
 
@@ -181,64 +177,61 @@ services.blueman.enable = true;
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
-  orchis-theme
-  bibata-cursors-translucent
-  fluent-icon-theme
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
+    orchis-theme
+    bibata-cursors-translucent
+    fluent-icon-theme
 
-gcc
-  python311Packages.cmake
-  nodejs_21
-	microsoft-edge-dev
-	xorg.xmodmap
-	git
-  nix-output-monitor
+    gcc
+    python311Packages.cmake
+    nodejs_21
+    microsoft-edge-dev
+    xorg.xmodmap
+    git
+    nix-output-monitor
 
-  wev # event viewer
-  
-  zoxide
-  ripgrep
-  fd
-  wl-clipboard
-  swappy
-  easyeffects
-  brightnessctl
-  playerctl
-	spotify
-	armcord
-	
-	swww
-	wlsunset
-	cliphist
-	wl-clip-persist
-	teams-for-linux
-	vscode
-  obsidian
+    wev # event viewer
 
-  font-manager
+    zoxide
+    ripgrep
+    fd
+    wl-clipboard
+    swappy
+    easyeffects
+    brightnessctl
+    playerctl
+    spotify
+    armcord
 
-  fsearch
+    swww
+    wlsunset
+    cliphist
+    wl-clip-persist
+    teams-for-linux
+    vscode
+    obsidian
+
+    font-manager
+
+    fsearch
   ];
 
+  programs.spicetify = {
+    enable = true;
+    theme = spicePkgs.themes.Orchis;
+    colorScheme = "mocha";
 
-
-programs.spicetify =
-    {
-      enable = true;
-      theme = spicePkgs.themes.Orchis;
-      colorScheme = "mocha";
-
-      enabledExtensions = with spicePkgs.extensions; [
-        fullAppDisplay
-        keyboardShortcut
-        powerBar
-        shuffle # shuffle+ (special characters are sanitized out of ext names)
-        skipStats
-        autoVolume
-        adblock
-      ];
-    };
+    enabledExtensions = with spicePkgs.extensions; [
+      fullAppDisplay
+      keyboardShortcut
+      powerBar
+      shuffle # shuffle+ (special characters are sanitized out of ext names)
+      skipStats
+      autoVolume
+      adblock
+    ];
+  };
 
   programs.hyprland = {
     # Install the packages from nixpkgs
@@ -249,15 +242,16 @@ programs.spicetify =
     package = inputs.hyprland.packages."${pkgs.system}".hyprland;
   };
 
-
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
+  programs.steam = { enable = true; };
+
   environment.sessionVariables = {
-  	WLR_NO_HARDWARE_CURSORS = "1";
+    WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
     GTK_THEME = "Orchis-Green-Dark-Compact";
-	};
+  };
 
   xdg.portal.enable = true;
 
@@ -281,7 +275,6 @@ programs.spicetify =
     lidSwitch = "ignore";
 
   };
-
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
