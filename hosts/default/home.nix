@@ -123,6 +123,8 @@ in {
     NIXOS_OZONE_WL = "1";
     GTK_THEME = "Orchis-Green-Dark-Compact";
     ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";
+
+    LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
 
   # Let Home Manager install and manage itself.

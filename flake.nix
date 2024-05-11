@@ -28,15 +28,19 @@
 
   };
 
-  outputs = { self, nixpkgs, spicetify-nix, ... }@inputs: {
-    nixosConfigurations.default = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./hosts/default/configuration.nix
-        inputs.home-manager.nixosModules.default
-      ];
-    };
+  outputs = { self, nixpkgs, spicetify-nix, ... }@inputs:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      nixosConfigurations.default = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/default/configuration.nix
+          inputs.home-manager.nixosModules.default
+        ];
+      };
 
-    devShell.x86_64-linux = (import ./shell.nix { inherit nixpkgs; });
-  };
+      devShell.x86_64-linux = (import ./shell.nix { inherit pkgs; });
+    };
 }

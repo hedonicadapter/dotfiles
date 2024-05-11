@@ -1,0 +1,3 @@
+[console_scripts]
+img2art=img2art.cli:launch
+
