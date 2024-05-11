@@ -2,17 +2,13 @@
   description = "Nixos config flake";
 
   inputs = {
-    nixpkgs = {
-      url = "github:nixos/nixpkgs/nixos-unstable";
-    };
+    nixpkgs = { url = "github:nixos/nixpkgs/nixos-unstable"; };
 
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
     };
 
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-    };
+    hyprland = { url = "github:hyprwm/Hyprland"; };
 
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
@@ -24,31 +20,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ags = {
-      url = "github:Aylur/ags";
-    };
+    ags = { url = "github:Aylur/ags"; };
 
-    
-    spicetify-nix = {
-      url = "github:the-argus/spicetify-nix";
-    };
+    spicetify-nix = { url = "github:the-argus/spicetify-nix"; };
 
-    nixneovimplugins = {
-      url = "github:jooooscha/nixpkgs-vim-extra-plugins";
-    };
-    
+    nixneovimplugins = { url = "github:jooooscha/nixpkgs-vim-extra-plugins"; };
+
   };
 
-  outputs = { self, nixpkgs, spicetify-nix, ... }@inputs:
-    {
-      nixosConfigurations.default = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-        };
-        modules = [
-          ./hosts/default/configuration.nix
-          inputs.home-manager.nixosModules.default
-        ];
-      };
+  outputs = { self, nixpkgs, spicetify-nix, ... }@inputs: {
+    nixosConfigurations.default = nixpkgs.lib.nixosSystem {
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hosts/default/configuration.nix
+        inputs.home-manager.nixosModules.default
+      ];
     };
+
+    devShell.x86_64-linux = (import ./shell.nix { inherit nixpkgs; });
+  };
 }

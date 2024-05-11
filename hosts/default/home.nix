@@ -260,7 +260,13 @@ in {
         {
           plugin = auto-session;
           config = toLua ''
-            require('auto-session').setup()
+            require('auto-session').setup({
+              auto_session_suppress_dirs = { "~/", "~/Documents/coding", "~/Downloads", "/"},
+              log_level = "error",
+              auto_restore_enabled = true,
+              auto_save_enabled = true,
+              auto_session_root_dir = vim.fn.stdpath('data').."/sessions/",
+            })
           '';
         }
 
@@ -414,10 +420,10 @@ in {
           '';
         }
 
-        {
-          plugin = nvim-autopairs;
-          config = toLuaFile ../../modules/nvim/plugins/autopairs.lua;
-        }
+        # {
+        #   plugin = nvim-autopairs;
+        #   config = toLuaFile ../../modules/nvim/plugins/autopairs.lua;
+        # }
 
         {
           plugin = comment-nvim;
@@ -459,18 +465,6 @@ in {
         {
           plugin = mini-nvim;
           config = toLuaFile ../../modules/nvim/plugins/mini.lua;
-        }
-
-        {
-          plugin = highlight-undo-nvim;
-          config = toLua ''
-            require('highlight-undo').setup()
-          '';
-        }
-
-        {
-          plugin = which-key-nvim;
-          config = toLuaFile ../../modules/nvim/plugins/which-key.lua;
         }
 
         {
