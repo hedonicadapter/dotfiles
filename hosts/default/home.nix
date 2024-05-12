@@ -287,7 +287,7 @@ in {
         nvim-ts-autotag
         vim-visual-multi
         vim-wakatime
-
+        copilot-vim
         nvim-ts-context-commentstring
         sqlite-lua
 
@@ -339,11 +339,6 @@ in {
 
             })
           '';
-        }
-
-        {
-          plugin = copilot-lua;
-          config = toLuaFile ../../modules/nvim/plugins/copilot.lua;
         }
 
         {
@@ -467,6 +462,11 @@ in {
         {
           plugin = mini-nvim;
           config = toLuaFile ../../modules/nvim/plugins/mini.lua;
+        }
+
+        {
+          plugin = startup-nvim;
+          config = toLuaFile ../../modules/nvim/plugins/startup.lua;
         }
 
         {

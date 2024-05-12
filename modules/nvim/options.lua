@@ -17,6 +17,7 @@ vim.opt.cmdheight = 1
 vim.g.have_nerd_font = true
 vim.opt.guifont = "ProggyClean Nerd Font"
 vim.o.guicursor = "n-v-c-sm-i-ci-ve:block,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor"
+vim.o.cmdheight = 0
 
 if vim.g.neovide then
 	vim.opt.guifont = "Iosevka Term"
