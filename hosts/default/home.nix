@@ -47,6 +47,8 @@ in {
     (nerdfonts.override { fonts = [ "ProggyClean" ]; })
 
     grim
+    slurp
+    lf
     jq
     cargo
     rustc
@@ -56,7 +58,6 @@ in {
     nodePackages.pnpm
 
     nwg-look
-    hyprshot
     neovide
     transmission
     beeper
