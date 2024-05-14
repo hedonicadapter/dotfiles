@@ -23,14 +23,40 @@ in {
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  boot.plymouth = {
-    enable = true;
-    theme = "abstract_ring";
-    themePackages = [
-      (pkgs.adi1090x-plymouth-themes.override {
-        selected_themes = [ "abstract_ring" ];
-      })
+  boot = {
+    plymouth = {
+      enable = true;
+      theme = "abstract_ring";
+      themePackages = [
+        (pkgs.adi1090x-plymouth-themes.override {
+          selected_themes = [ "abstract_ring" ];
+        })
+      ];
+    };
+
+    # silent boot options below
+    loader.grub.timeoutStyle = false;
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "i915.fastboot=1"
+      "loglevel=3"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
+      "udev.log_priority=3"
     ];
+
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot = {
+        enable = true;
+        editor = false;
+        configurationLimit = 100;
+      };
+    };
   };
 
   hardware.nvidia = {
@@ -70,9 +96,6 @@ in {
     inputs.home-manager.nixosModules.default
     spicetify-nix.nixosModules.default
   ];
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -190,6 +213,7 @@ in {
     xorg.xmodmap
     git
     nix-output-monitor
+    jetbrains.rider
 
     wev # event viewer
 

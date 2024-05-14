@@ -1,10 +1,16 @@
 * {
+  font-family: "ProggyClean Nerd Font Propo";
   transition: all 0.15s ease-out;
 }
 
 window.bar {
-  background-color: transparent;
+  /* border-radius: 14px; */
+  /* border-bottom-left-radius: 6px; */
+  /* border-bottom-right-radius: 6px; */
+  /* border-radius: 50px; */
+  /* background-color: black; */
   color: @theme_text_color;
+  /* opacity: 0.75; */
 }
 
 button {
@@ -22,7 +28,7 @@ button:hover {
 
 .workspace {
   padding: 0px 8px;
-  font-size:0.9em;
+  font-size: 1em;
   font-weight: bold;
 }
 
@@ -30,14 +36,13 @@ button:hover {
 }
 
 .client-title {
-  font-size:1.4em;
+  font-size: 1.75em;
   color: @theme_text_color;
 }
 
 .box {
-  background-color: @theme_base_color;
-  border-radius: 50px;
-  padding: 3px 16px 2px 16px;
+  font-size: 1.5em;
+  padding: 4px 16px 3px 16px;
   opacity: 0.76;
 }
 .box:hover {
@@ -57,7 +62,7 @@ button:hover {
   margin: 0 8px;
 }
 
- .media-box .player .img {
+.media-box .player .img {
   min-width: 46px;
   min-height: 46px;
   background-size: cover;
@@ -66,53 +71,53 @@ button:hover {
   margin-right: 1em;
 }
 
- .media-box .player .title {
+.media-box .player .title {
   padding-top: 3px;
   padding-right: 9px;
   font-size: 1em;
 }
 
- .media-box .player .artist {
-  font-size: 0.8em;
+.media-box .player .artist {
+  font-size: 0.9em;
   font-weight: bold;
   color: @theme_unfocused_text_color;
 }
 
- .media-box .player scale.position {
+.media-box .player scale.position {
   padding: 0;
   margin-bottom: 0.3em;
 }
 
- .media-box .player scale.position trough {
+.media-box .player scale.position trough {
   border-radius: 8px;
 
   min-height: 8px;
 }
 
- .media-box .player scale.position highlight {
+.media-box .player scale.position highlight {
   border-radius: 8px;
 
   background-color: @theme_fg_color;
 }
 
- .media-box .player scale.position slider {
+.media-box .player scale.position slider {
   all: unset;
 }
- .media-box .position {
+.media-box .position {
   margin-top: 2px;
 }
 
- .media-box .player button {
+.media-box .player button {
   min-height: 1.2em;
   min-width: 1.2em;
   padding: 0.3em;
 }
 
- .media-box .player button.play-pause {
+.media-box .player button.play-pause {
   margin: 0 0.3em;
 }
 
- .media-box .controls {
+.media-box .controls {
   margin-top: 4px;
 }
 
@@ -182,23 +187,23 @@ window.notification-popups box.notifications {
 }
 
 .app-item {
-  font-size:3em;
-  padding:12px 0px;
+  font-size: 3em;
+  padding: 12px 0px;
   margin: 0px 4px;
 }
 
-.spotify-icon{
-	font-size:2em;
+.spotify-icon {
+  font-size: 2em;
 }
 
 .dock-hidden > * {
-  opacity:0.74;
+  opacity: 0.74;
 }
-.dock-hidden .music-box{
-  opacity:0;
+.dock-hidden .music-box {
+  opacity: 0;
 }
 .dock-hidden .app-item {
-	font-size:1.4em;
-  margin:0;
-  padding:2px 0px;
+  font-size: 1.4em;
+  margin: 0;
+  padding: 2px 0px;
 }

@@ -18,6 +18,8 @@ let
     (builtins.readFile ../../wrappers/beeper.nix);
   steam-wrap = pkgs.writeShellScriptBin "wrap-steam"
     (builtins.readFile ../../wrappers/steam.nix);
+  rider-wrap = pkgs.writeShellScriptBin "wrap-rider"
+    (builtins.readFile ../../wrappers/rider.nix);
 
   tofi-power-menu = pkgs.writeShellScriptBin "tofi-power-menu"
     (builtins.readFile ../../modules/tofi/power-menu.sh);
@@ -78,6 +80,7 @@ in {
     vscode-wrap
     beeper-wrap
     steam-wrap
+    rider-wrap
 
     tofi-power-menu
 
@@ -95,11 +98,6 @@ in {
     nixfmt
     tailwindcss-language-server
   ];
-
-  home.file.".config/rofi" = {
-    source = ../../modules/rofi;
-    recursive = true;
-  };
 
   home.file = {
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
