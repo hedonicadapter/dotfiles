@@ -32,11 +32,6 @@ in {
     inputs.neovim-nightly-overlay.overlay
     inputs.nixneovimplugins.overlays.default
   ];
-  #nixpkgs.overlays = [
-  # (import (builtins.fetchTarball {
-  #  url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
-  #}))
-  #];
 
   fonts.fontconfig.enable = true;
 
@@ -185,10 +180,11 @@ in {
         term = "xterm-256color";
 
         shell = "zsh";
-        font = "Iosevka Term:size=8";
+        # font = "Iosevka Term:size=8";
+        font = "ProggyClean Nerd Font Mono:size=13";
         dpi-aware = "yes";
         pad = "40x0";
-        font-size-adjustment = 1;
+        font-size-adjustment = 0.9;
         line-height = 15;
       };
       colors = {
@@ -265,14 +261,47 @@ in {
             require('auto-session').setup({
               auto_session_suppress_dirs = { "~/", "~/Documents/coding", "~/Downloads", "/"},
               log_level = "error",
-              auto_restore_enabled = true,
+              auto_restore_enabled = false,
               auto_save_enabled = true,
               auto_session_root_dir = vim.fn.stdpath('data').."/sessions/",
             })
           '';
         }
 
-        coq_nvim
+        {
+          plugin = coq_nvim;
+          config = toLua ''
+            vim.g.coq_settings = {
+              display = {
+                preview = {
+                  border = "rounded",
+                          
+                },
+              },
+            }
+          '';
+        }
+
+        {
+          plugin = gitsigns-nvim;
+          config = toLua ''
+            require('gitsigns').setup()
+          '';
+        }
+
+        {
+          plugin = symbols-outline-nvim;
+          config = toLua ''
+            require("symbols-outline").setup()
+          '';
+        }
+
+        {
+          plugin = git-conflict-nvim;
+          config = toLua ''
+            require('git-conflict').setup()
+          '';
+        }
 
         {
           plugin = nvim-lspconfig;
@@ -287,11 +316,16 @@ in {
         nvim-ts-autotag
         vim-visual-multi
         vim-wakatime
-        copilot-vim
         nvim-ts-context-commentstring
         sqlite-lua
 
-        telescope-file-browser-nvim
+        copilot-vim
+        # {
+        #   plugin = copilotchat-nvim;
+        #   config = toLua ''
+        #     require('CopilotChat').setup()
+        #   '';
+        # }
 
         neodev-nvim
         {
@@ -417,11 +451,6 @@ in {
           '';
         }
 
-        # {
-        #   plugin = nvim-autopairs;
-        #   config = toLuaFile ../../modules/nvim/plugins/autopairs.lua;
-        # }
-
         {
           plugin = comment-nvim;
           config = toLua "require('Comment').setup()";
@@ -465,11 +494,6 @@ in {
         }
 
         {
-          plugin = startup-nvim;
-          config = toLuaFile ../../modules/nvim/plugins/startup.lua;
-        }
-
-        {
           plugin = satellite-nvim;
           config = toLua ''
             require('satellite').setup()
@@ -489,10 +513,8 @@ in {
         {
           plugin = pkgs.vimExtraPlugins.reactive-nvim;
           config = toLua ''
-
-
             require('reactive').setup {
-            load = 'customCursor'
+              load = 'customCursor'
             }
           '';
         }

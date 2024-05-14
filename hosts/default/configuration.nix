@@ -245,7 +245,12 @@ in {
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  programs.steam = { enable = true; };
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    gamescopeSession.enable = true;
+  };
 
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";

@@ -1,4 +1,7 @@
 local on_attach = function(_, bufnr)
+	vim.g.inlay_hints_visible = true
+	vim.lsp.inlay_hint(bufnr, true)
+
 	local bufmap = function(keys, func)
 		vim.keymap.set("n", keys, func, { buffer = bufnr })
 	end
@@ -28,6 +31,31 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 require("neodev").setup()
 local lspconfig = require("lspconfig")
 local coq = require("coq")
+
+vim.diagnostic.config(
+{
+		underline = true,
+		update_in_insert = false,
+		virtual_text = {
+			spacing = 4,
+			source = "if_many",
+			prefix = "●",
+		},
+		severity_sort = true,
+		signs = {
+			text = {
+				[vim.diagnostic.severity.ERROR] = ,
+				[vim.diagnostic.severity.WARN] = ,
+				[vim.diagnostic.severity.HINT] = 󰧑,
+				[vim.diagnostic.severity.INFO] = ,
+			},
+		},
+
+	inlay_hints = {
+		enabled = true,
+	},
+}
+)
 
 lspconfig.lua_ls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,

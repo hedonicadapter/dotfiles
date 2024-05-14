@@ -24,8 +24,8 @@ return {
 				-- change
 				c = {
 					winhl = {
-						CursorLine = { bg = "#8fbf7f" },
-						CursorLineNr = { fg = "#000000", bg = "#8fbf7f" },
+						CursorLine = { bg = "#233524" },
+						CursorLineNr = { fg = "#000000", bg = "#233524" },
 					},
 				},
 				-- delete
@@ -46,14 +46,14 @@ return {
 		},
 		i = {
 			winhl = {
-				CursorLine = { bg = "#d4be98" },
-				CursorLineNr = { fg = "#000000", bg = "#d4be98" },
+				CursorLine = { bg = "#867462" },
+				CursorLineNr = { fg = "#000000", bg = "#867462" },
 			},
 		},
 		c = {
 			winhl = {
-				CursorLine = { bg = "#8fbf7f" },
-				CursorLineNr = { fg = "#000000", bg = "#8fbf7f" },
+				CursorLine = { bg = "#EBC06D" },
+				CursorLineNr = { fg = "#000000", bg = "#EBC06D" },
 			},
 		},
 		n = {

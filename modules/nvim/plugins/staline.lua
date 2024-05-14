@@ -5,10 +5,10 @@ require("staline").setup({
 		right = { "file_name" },
 	},
 	mode_colors = {
-		i = "#d4be98",
-		n = "#84a598",
-		c = "#8fbf7f",
-		v = "#fc802d",
+		i = "#867462",
+		n = "#403A36",
+		c = "#EBC06D",
+		v = "#273142",
 	},
 	defaults = {
 		true_colors = true,

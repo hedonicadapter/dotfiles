@@ -12,10 +12,9 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.backspace = "indent,eol,start"
 vim.opt.clipboard:append("unnamedplus")
-vim.o.scrolloff = 999
 vim.opt.cmdheight = 1
 vim.g.have_nerd_font = true
-vim.opt.guifont = "ProggyClean Nerd Font"
+vim.opt.guifont = "ProggyClean Nerd"
 vim.o.guicursor = "n-v-c-sm-i-ci-ve:block,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor"
 vim.o.cmdheight = 0
 
@@ -94,7 +93,6 @@ vim.api.nvim_create_autocmd("CmdlineLeave", {
 	command = ":set cmdheight=0",
 })
 
--- Hide message after writing a file
 vim.api.nvim_create_autocmd("BufWritePost", {
 	group = vim.api.nvim_create_augroup("hide_message_after_write", {
 		clear = true,
@@ -107,14 +105,21 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
 	group = grp,
 	callback = function()
-		local win_h = vim.api.nvim_win_get_height(0)
-		local off = math.min(vim.o.scrolloff, math.floor(win_h / 2))
-		local dist = vim.fn.line("$") - vim.fn.line(".")
-		local rem = vim.fn.line("w$") - vim.fn.line("w0") + 1
-		if dist < off and win_h - rem + dist < off then
-			local view = vim.fn.winsaveview()
-			view.topline = view.topline + off - (win_h - rem + dist)
-			vim.fn.winrestview(view)
+		local bufname = vim.fn.bufname()
+
+		if bufname == "Starter" then
+			vim.o.scrolloff = 0
+		else
+			-- local win_h = vim.api.nvim_win_get_height(0)
+			-- local off = math.min(vim.o.scrolloff, math.floor(win_h / 2))
+			-- local dist = vim.fn.line("$") - vim.fn.line(".")
+			-- local rem = vim.fn.line("w$") - vim.fn.line("w0") + 1
+			-- if dist < off and win_h - rem + dist < off then
+			-- 	local view = vim.fn.winsaveview()
+			-- 	view.topline = view.topline + off - (win_h - rem + dist)
+			-- 	vim.fn.winrestview(view)
+			-- end
+			vim.o.scrolloff = 999
 		end
 	end,
 })

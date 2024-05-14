@@ -30,6 +30,7 @@ local my_items = function()
 		fileObject.action = "lua require('auto-session.session-lens.actions').functions.RestoreSession('"
 			.. fileObject.name
 			.. "')"
+		fileObject.name = i .. " " .. fileObject.name
 		fileObject.section = "Sessions"
 	end
 	return sessions
@@ -62,6 +63,9 @@ starter.setup({
 	items = { my_items(), starter.sections.recent_files(5, false, false) },
 	footer = " ",
 })
+
+vim.cmd("autocmd User MiniStarterOpened set showtabline=0")
+
 require("mini.move").setup({
 	mappings = {
 		down = "J",
