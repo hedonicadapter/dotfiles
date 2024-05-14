@@ -1,18 +1,17 @@
-with import <nixpkgs> { };
-(let
-  python = let
-    packageOverrides = self: super: {
-      opencv4 = super.opencv4.override {
-        enableGtk2 = true; # boolean
-        gtk2 = pkgs.gnome2.gtk; # pkgs.gtk2-x11
-      };
-      #opencv4_ = super.opencv4.overrideAttrs (old: rec { 
-      #  gtk2 = pkgs.gtk2 ; # pkgs.gtk2-x11 # pkgs.gnome2.gtk;
-      #  # doCheck = false;
-      #  });
-    };
-  in pkgs.python3.override {
-    inherit packageOverrides;
-    self = python;
-  };
-in python.withPackages (ps: with ps; [ opencv4 libGL virtualenv ])).env
+{ pkgs ? import <nixpkgs> {} }:
+
+pkgs.mkShell {
+  buildInputs = with pkgs; [
+    python311Packages.python
+    python311Packages.virtualenv
+    wget  # to download the .whl file
+    libGL
+    glib
+  ];
+
+  shellHook = ''
+    virtualenv venv
+    source venv/bin/activate
+    export LD_LIBRARY_PATH="${pkgs.libGL.out}/lib:${pkgs.glib.out}/lib:$LD_LIBRARY_PATH"
+  '';
+}
