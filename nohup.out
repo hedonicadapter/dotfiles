@@ -1,0 +1,4 @@
+Vim: Caught deadly signal 'SIGTERM'
+
+Vim: Finished.
+Client GitHub Copilot quit with exit code 0 and signal 1. Check log for errors: /home/hedonicadapter/.local/state/nvim/lsp.log

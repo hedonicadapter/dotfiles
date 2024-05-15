@@ -18,8 +18,6 @@ let
     (builtins.readFile ../../wrappers/beeper.nix);
   steam-wrap = pkgs.writeShellScriptBin "wrap-steam"
     (builtins.readFile ../../wrappers/steam.nix);
-  rider-wrap = pkgs.writeShellScriptBin "wrap-rider"
-    (builtins.readFile ../../wrappers/rider.nix);
 
   tofi-power-menu = pkgs.writeShellScriptBin "tofi-power-menu"
     (builtins.readFile ../../modules/tofi/power-menu.sh);
@@ -43,7 +41,13 @@ in {
   home.stateVersion = "23.11";
 
   nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [ "beeper" "terraform" ];
+    builtins.elem (lib.getName pkg) [
+      "beeper"
+      "terraform"
+      "steamcmd"
+      "steam-run"
+      "steam-original"
+    ];
 
   home.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "ProggyClean" ]; })
@@ -80,7 +84,7 @@ in {
     vscode-wrap
     beeper-wrap
     steam-wrap
-    rider-wrap
+    steamcmd
 
     tofi-power-menu
 
@@ -89,7 +93,9 @@ in {
     sassc
     typescript
     nodePackages.typescript-language-server
-    dotnet-sdk_8
+    # dotnet-sdk_8
+    dotnet-sdk
+    azure-functions-core-tools
     csharpier
     sqlfluff
     go
