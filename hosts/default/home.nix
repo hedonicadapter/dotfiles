@@ -23,7 +23,7 @@ let
     (builtins.readFile ../../modules/tofi/power-menu.sh);
 
 in {
-  imports = [ inputs.ags.homeManagerModules.default ];
+  imports = [ inputs.ags.homeManagerModules.default ../../cachix.nix ];
 
   home.username = "hedonicadapter";
   home.homeDirectory = "/home/hedonicadapter";
@@ -85,6 +85,7 @@ in {
     beeper-wrap
     steam-wrap
     steamcmd
+    cachix
 
     tofi-power-menu
 

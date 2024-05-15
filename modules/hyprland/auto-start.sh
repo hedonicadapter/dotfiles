@@ -3,6 +3,10 @@
 # nm-applet --indicator &
 hyprctl setcursor Bibata_Ghost 30 &
 
+hyperctl dispatch exec "[workspace 2 silent] easyeffects" &
+hyperctl dispatch exec "[workspace 2 silent] beeper --disable-features=WaylandFractionalScaleV1 --hidden false" &
+hyperctl dispatch exec "[workspace 2 silent] wrap-obsidian" &
+
 ags &
 
 swww-daemon &
