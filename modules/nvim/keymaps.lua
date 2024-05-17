@@ -43,27 +43,27 @@ vim.api.nvim_set_keymap("n", "<S-Tab>", ":bprev<CR>", {
 	silent = true,
 })
 
-vim.api.nvim_set_keymap("n", "<S-j>", ":m .+1<CR>==", { -- move line down
+vim.api.nvim_set_keymap("n", "<C-j>", ":m .+1<CR>==", { -- move line down
 	noremap = true,
 	silent = true,
 })
-vim.api.nvim_set_keymap("n", "<S-k>", ":m .-2<CR>==", { -- move line up
+vim.api.nvim_set_keymap("n", "<C-k>", ":m .-2<CR>==", { -- move line up
 	noremap = true,
 	silent = true,
 })
-vim.api.nvim_set_keymap("i", "<S-j>", "<Esc>:m .+1<CR>==gi", {
+vim.api.nvim_set_keymap("i", "<C-j>", "<Esc>:m .+1<CR>==gi", {
 	noremap = true,
 	silent = true,
 })
-vim.api.nvim_set_keymap("i", "<S-k>", "<Esc>:m .-2<CR>==gi", {
+vim.api.nvim_set_keymap("i", "<C-k>", "<Esc>:m .-2<CR>==gi", {
 	noremap = true,
 	silent = true,
 })
-vim.api.nvim_set_keymap("v", "<S-j>", ":m '>+1<CR>gv", {
+vim.api.nvim_set_keymap("v", "<C-j>", ":m '>+1<CR>gv", {
 	noremap = true,
 	silent = true,
 })
-vim.api.nvim_set_keymap("v", "<S-k>", ":m '<-2<CR>gv", {
+vim.api.nvim_set_keymap("v", "<C-k>", ":m '<-2<CR>gv", {
 	noremap = true,
 	silent = true,
 })

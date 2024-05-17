@@ -12,24 +12,23 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.backspace = "indent,eol,start"
 vim.opt.clipboard:append("unnamedplus")
-vim.opt.cmdheight = 1
 vim.g.have_nerd_font = true
-vim.opt.guifont = "ProggyClean Nerd"
+vim.opt.guifont = "ProggyClean Nerd Font Mono"
 vim.o.guicursor = "n-v-c-sm-i-ci-ve:block,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor"
 vim.o.cmdheight = 0
 
 if vim.g.neovide then
-	vim.opt.guifont = "Iosevka Term"
 	vim.opt.linespace = 15
 
 	vim.g.neovide_padding_top = 4
-	vim.g.neovide_padding_bottom = 4
-	vim.g.neovide_padding_right = 4
-	vim.g.neovide_padding_left = 4
+	vim.g.neovide_padding_bottom = 0
+	vim.g.neovide_padding_right = 10
+	vim.g.neovide_padding_left = 10
 
 	vim.g.neovide_scroll_animation_length = 0.15
+	vim.g.neovide_refresh_rate = 144
 
-	vim.g.neovide_theme = "auto"
+	vim.g.neovide_theme = "melange"
 
 	vim.g.neovide_refresh_rate = 144
 	vim.g.neovide_refresh_rate_idle = 5
@@ -37,6 +36,16 @@ if vim.g.neovide then
 	vim.g.neovide_cursor_smooth_blink = true
 	vim.g.neovide_fullscreen = false
 	vim.g.neovide_remember_window_size = false
+	vim.g.neovide_scale_factor = 1.25
+
+	-- Helper function for transparency formatting
+	local alpha = function()
+		return string.format("%x", math.floor(255 * vim.g.transparency or 0.8))
+	end
+	-- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
+	vim.g.neovide_transparency = 0.8
+	vim.g.transparency = 0.8
+	vim.g.neovide_background_color = "#0f1117" .. alpha()
 end
 
 vim.api.nvim_set_hl(0, "DropBarIconKindFunction", {

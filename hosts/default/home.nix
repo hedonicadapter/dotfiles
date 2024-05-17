@@ -16,8 +16,8 @@ let
     (builtins.readFile ../../wrappers/vscode.nix);
   beeper-wrap = pkgs.writeShellScriptBin "wrap-beeper"
     (builtins.readFile ../../wrappers/beeper.nix);
-  steam-wrap = pkgs.writeShellScriptBin "wrap-steam"
-    (builtins.readFile ../../wrappers/steam.nix);
+  # steam-wrap = pkgs.writeShellScriptBin "wrap-steam"
+  # (builtins.readFile ../../wrappers/steam.nix);
 
   tofi-power-menu = pkgs.writeShellScriptBin "tofi-power-menu"
     (builtins.readFile ../../modules/tofi/power-menu.sh);
@@ -44,12 +44,15 @@ in {
     builtins.elem (lib.getName pkg) [
       "beeper"
       "terraform"
-      "steamcmd"
-      "steam-run"
-      "steam-original"
+      # "steamcmd"
+      # "steam-run"
+      # "steam-original"
     ];
 
   home.packages = with pkgs; [
+    public-sans
+    work-sans
+    merriweather
     (nerdfonts.override { fonts = [ "ProggyClean" ]; })
 
     grim
@@ -83,9 +86,10 @@ in {
     teams-wrap
     vscode-wrap
     beeper-wrap
-    steam-wrap
-    steamcmd
-    cachix
+    # steam-wrap
+    # steamcmd
+    # cachix
+    bottles
 
     tofi-power-menu
 
@@ -122,10 +126,12 @@ in {
   home.sessionVariables = {
     EDITOR = "neovide";
     NIXOS_OZONE_WL = "1";
-    GTK_THEME = "Orchis-Green-Dark-Compact";
+    GTK_THEME = "Orchis-Yellow-Dark-Compact";
     ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";
 
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+    XDG_RUNTIME_DIR = "/run/user/$UID";
+    WINIT_X11_SCALE_FACTOR = 0.75;
   };
 
   # Let Home Manager install and manage itself.
@@ -153,10 +159,18 @@ in {
       padding-top = "35%";
       result-spacing = 25;
       num-results = 5;
-      font = "monospace";
+      font = "Work Sans";
+      font-size = 24;
       background-color = "#000A";
+      prompt-color = "#ECE1D7";
+      selection-color = "#273142";
+      selection-match-color = "#233524";
+
+      history-file = "${config.home.homeDirectory}/.config/tofi/history";
     };
   };
+  home.file.".config/obsidian/global.css".source =
+    ../../modules/obsidian/global.css;
 
   home.file.".oh-my-zsh/custom/themes/headline/headline.zsh-theme".source =
     ../../modules/oh-my-zsh/themes/headline/headline.zsh-theme;
@@ -169,6 +183,7 @@ in {
       enable = true;
       extraConfig = ''
         eval "$(zoxide init zsh)"
+        export XDG_RUNTIME_DIR=/run/user/$(id -u)
       '';
       theme = "headline/headline";
     };
@@ -570,7 +585,7 @@ in {
   gtk.cursorTheme.name = "Bibata_Ghost";
 
   gtk.theme.package = pkgs.orchis-theme;
-  gtk.theme.name = "Orchis-Green-Dark-Compact";
+  gtk.theme.name = "Orchis-Yellow-Dark-Compact";
 
   xdg.mimeApps.defaultApplications = {
     "text/html" = "edge.desktop";

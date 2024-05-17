@@ -1,35 +1,35 @@
-@import '_color-palette-default.scss';
+@import "_color-palette-default.scss";
 
-$colorscheme: 'Orchis-Green-Dark-Compact';
+$colorscheme: "Orchis-Yellow-Dark-Compact";
 
 // Gnome-shell panel style
-$panel_style: 'float';
+$panel_style: "float";
 
 // transparent opacity
-$opacity: 'default';
+$opacity: "default";
 
 // blackness
-$blackness: 'false';
+$blackness: "false";
 
 // Theme primary color
-$theme: 'Orchis-Green-Dark-Compact';
+$theme: "Orchis-Yellow-Dark-Compact";
 
 // Check and radio primary color
-$check_radio: 'default';
+$check_radio: "default";
 
 // Default corner radius value
-$mac_style: 'false';
+$mac_style: "false";
 
 // Default corner radius value
 $default_corner: 12px;
 
-$corner_style: 'default';
+$corner_style: "default";
 
 @if ($default_corner / 1px >= 10) {
-  $corner_style: 'circular';
+  $corner_style: "circular";
 } @else {
-  $corner_style: 'square';
+  $corner_style: "square";
 }
 
 // Default sub-menu styling
-$submenu_style: 'false';
+$submenu_style: "false";

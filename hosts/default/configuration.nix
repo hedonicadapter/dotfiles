@@ -1,8 +1,4 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 let
   spicetify-nix = inputs.spicetify-nix;
   spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
@@ -13,7 +9,6 @@ in {
   # Authentication agent
   security.polkit.enable = true;
 
-  # Enable OpenGL
   hardware.opengl = {
     enable = true;
     driSupport = true;
@@ -36,32 +31,31 @@ in {
 
     # silent boot options below
     loader.grub.timeoutStyle = false;
-    consoleLogLevel = 0;
-    initrd.verbose = false;
-    kernelParams = [
-      "quiet"
-      "splash"
-      "boot.shell_on_fail"
-      "i915.fastboot=1"
-      "loglevel=3"
-      "rd.systemd.show_status=false"
-      "rd.udev.log_level=3"
-      "udev.log_priority=3"
-    ];
+    # consoleLogLevel = 0;
+    # initrd.verbose = false;
+    # kernelParams = [
+    # "quiet"
+    # "splash"
+    # "boot.shell_on_fail"
+    # "i915.fastboot=1"
+    # "loglevel=3"
+    # "rd.systemd.show_status=false"
+    # "rd.udev.log_level=3"
+    # "udev.log_priority=3"
+    # ];
 
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot = {
         enable = true;
-        editor = false;
+        editor = true;
         configurationLimit = 100;
       };
     };
   };
 
   hardware.nvidia = {
-    # Modesetting is required.
-    modesetting.enable = true;
+    modesetting.enable = true; # Modesetting is required.
 
     # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
     # Enable this if you have graphical corruption issues or application crashes after waking
@@ -71,7 +65,7 @@ in {
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
+    # powerManagement.finegrained = true;
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
@@ -80,17 +74,15 @@ in {
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
     # Only available from driver 515.43.04+
     # Currently alpha-quality/buggy, so false is currently the recommended setting.
-    open = false;
+    open = true;
 
-    # Enable the Nvidia settings menu,
-    # accessible via `nvidia-settings`.
     nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  imports = [ # Include the results of the hardware scan.
+  imports = [
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
     spicetify-nix.nixosModules.default
@@ -98,18 +90,9 @@ in {
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
   time.timeZone = "Europe/Stockholm";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.inputMethod.enabled = "ibus"; # for emoji input
   i18n.extraLocaleSettings = {
@@ -137,14 +120,11 @@ in {
     xkb.variant = "";
   };
 
-  # Configure console keymap
   console.keyMap = "sv-latin1";
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing.enable = true; # Enable CUPS to print documents.
 
-  # Enable sound with pipewire.
-  sound.enable = true;
+  sound.enable = true; # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -152,16 +132,9 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
 
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.hedonicadapter = {
@@ -188,13 +161,12 @@ in {
     users = { "hedonicadapter" = import ./home.nix; };
   };
 
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "hedonicadapter";
+  # services.displayManager.autoLogin.enable = false;
+  # services.displayManager.autoLogin.user = "hedonicadapter";
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
+  # systemd.services."getty@tty1".enable = false;
+  # systemd.services."autovt@tty1".enable = false;
 
   environment.pathsToLink = [ "/share/bash-completion" ];
 
@@ -202,14 +174,18 @@ in {
     permittedInsecurePackages = [
       "electron-25.9.0" # ONLY for obsidian at the moment
     ];
-    allowUnfree = true;
+    allowUnfreePredicate = pkg:
+      builtins.elem (lib.getName pkg) [
+        "nvidia-x11"
+        "spotify"
+        "microsoft-edge-dev"
+        "vscode"
+        "obsidian"
+        "nvidia-settings"
+      ];
   };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
     orchis-theme
     bibata-cursors-translucent
     fluent-icon-theme
@@ -265,28 +241,26 @@ in {
   };
 
   programs.hyprland = {
-    # Install the packages from nixpkgs
     enable = true;
-    # Whether to enable XWayland
     xwayland.enable = true;
-    # enableNvidiaPatches = true;
     package = inputs.hyprland.packages."${pkgs.system}".hyprland;
   };
 
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-    gamescopeSession.enable = true;
-  };
+  # programs.steam = {
+  #   enable = true;
+  #   remotePlay.openFirewall = true;
+  #   dedicatedServer.openFirewall = true;
+  #   gamescopeSession.enable = true;
+  # };
+  # programs.gamemode.enable = true;
 
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
-    GTK_THEME = "Orchis-Green-Dark-Compact";
+    GTK_THEME = "Orchis-Yellow-Dark-Compact";
   };
 
   xdg.portal.enable = true;

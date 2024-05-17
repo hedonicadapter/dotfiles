@@ -5,7 +5,7 @@ const network = await Service.import("network");
 const systemtray = await Service.import("systemtray");
 import { NotificationPopups } from "./Notification.js";
 import { AppLauncher } from "./AppLauncher.js";
-import { Dock } from "./Dock.js";
+// import { Dock } from "./Dock.js";
 
 const date = Variable("", {
   poll: [1000, 'date "+%H:%M:%S %b %e"'],
@@ -141,7 +141,7 @@ function Bar(monitor = 0) {
     anchor: ["top", "right", "left"],
     exclusivity: "exclusive",
     // margins: [8, 16, -3, 16],
-    margins: [0, 9, 0, 4],
+    margins: [0, 4, -6, 4],
     child: Widget.CenterBox({
       spacing: 8,
       start_widget: Left(),
@@ -153,7 +153,7 @@ function Bar(monitor = 0) {
 
 App.config({
   style: `${App.configDir}/style.css`,
-  gtkTheme: "Orchis-Green-Dark-Compact",
+  gtkTheme: "Orchis-Yellow-Dark-Compact",
   iconTheme: "Fluent",
 
   windows: [

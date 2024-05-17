@@ -1,5 +1,5 @@
 * {
-  font-family: "ProggyClean Nerd Font Propo";
+  font-family: "Work Sans";
   transition: all 0.15s ease-out;
 }
 
@@ -10,7 +10,7 @@ window.bar {
   /* border-radius: 50px; */
   /* background-color: black; */
   color: @theme_text_color;
-  /* opacity: 0.75; */
+  opacity: 0.85;
 }
 
 button {
@@ -28,21 +28,21 @@ button:hover {
 
 .workspace {
   padding: 0px 8px;
-  font-size: 1em;
-  font-weight: bold;
+  font-size: 0.9em;
 }
 
 .workspaces button.focused {
+  font-weight: bold;
 }
 
 .client-title {
-  font-size: 1.75em;
+  font-size: 1em;
   color: @theme_text_color;
 }
 
 .box {
-  font-size: 1.5em;
-  padding: 4px 16px 3px 16px;
+  font-size: 1em;
+  padding: 5px 16px 4px 16px;
   opacity: 0.76;
 }
 .box:hover {
@@ -193,7 +193,7 @@ window.notification-popups box.notifications {
 }
 
 .spotify-icon {
-  font-size: 2em;
+  font-size: 1.75em;
 }
 
 .dock-hidden > * {
