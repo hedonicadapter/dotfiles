@@ -289,8 +289,7 @@ in {
     vimAlias = true;
     vimdiffAlias = true;
 
-    plugins = with pkgs.vimPlugins;
-      [
+    plugins = with pkgs.vimPlugins; [
         {
           plugin = auto-session;
           config = toLua ''
@@ -348,12 +347,21 @@ in {
 
         telescope-fzf-native-nvim
         plenary-nvim
-        nvim-treesitter-context
         nvim-ts-autotag
         vim-visual-multi
         vim-wakatime
         nvim-ts-context-commentstring
         sqlite-lua
+
+        {
+          plugin = nvim-treesitter-context;
+          config = toLua ''
+            require("treesitter-context").setup({
+              enable = true,
+              max-lines = 3,
+            })
+          '';
+        }
 
         copilot-vim
         # {
@@ -542,6 +550,13 @@ in {
         {
           plugin = melange-nvim;
           config = "colorscheme melange";
+        }
+
+        {
+          plugin = transparent-nvim;
+          config = ''
+            require("transparent").setup()
+          '';
         }
 
         {

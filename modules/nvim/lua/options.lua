@@ -167,11 +167,3 @@ vim.api.nvim_exec(
 	false
 )
 
--- Remap keys for apply code actions at the cursor position.
--- vim.keymap.set("n", "<leader>ca", "<Plug>(coc-codeaction-cursor)", opts)
--- Remap keys for apply source code actions for current file.
--- vim.keymap.set("n", "<leader>fca", "<Plug>(coc-codeaction-source)", opts)
--- Apply the most preferred quickfix action on the current line.
--- vim.keymap.set("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
-
--- vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
