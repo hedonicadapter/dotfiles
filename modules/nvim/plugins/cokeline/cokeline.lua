@@ -1,10 +1,6 @@
-local get_hex = function(hlgroup_name, attr)
-	local hlgroup_ID = vim_fn.synIDtrans(vim_fn.hlID(hlgroup_name))
-	local hex = vim_fn.synIDattr(hlgroup_ID, attr)
-	return hex ~= "" and hex or "NONE"
-end
-
-local mappings = require("./mappings")
+local util = require("lua.utils")
+local mappings = utils.mappings
+local get_hex = utils.get_hex
 
 local rep = string.rep
 
