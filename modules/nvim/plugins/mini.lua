@@ -3,7 +3,7 @@
 -- 	file = "''",
 -- })
 local starter = require("mini.starter")
-local getFilesInDirectory = require("lua.util").getFilesInDirectory
+local getFilesInDirectory = require("utils").getFilesInDirectory
 
 function merge_tables(t1, t2)
 	for k, v in ipairs(t2) do

@@ -262,6 +262,15 @@ in {
   home.file.".config/hypr/wallpaper-cycler.sh".source =
     ../../modules/hyprland/wallpaper-cycler.sh;
 
+    home.file.".config/nvim/lua" = {
+    source = ../../modules/nvim/lua;
+    recursive = true;
+  };
+  home.file.".config/nvim/lua/reactive/presets" = {
+    source = ../../modules/nvim/plugins/reactive;
+    recursive = true;
+  };
+
   programs.neovim = let
     toLua = str: ''
       lua << EOF
@@ -561,14 +570,6 @@ in {
       # ${builtins.readFile ../../modules/nvim/lua/keymaps.lua}
       # ${builtins.readFile ../../modules/nvim/lua/utils.lua}
     # '';
-  };
-  home.file.".config/nvim/lua" = {
-    source = ../../modules/nvim/lua;
-    recursive = true;
-  };
-  home.file.".config/nvim/lua/reactive/presets" = {
-    source = ../../modules/nvim/plugins/reactive;
-    recursive = true;
   };
 
   programs.ags = {

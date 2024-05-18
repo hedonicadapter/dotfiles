@@ -1,4 +1,4 @@
-local util = require("lua.utils")
+local util = require("utils")
 local mappings = utils.mappings
 local get_hex = utils.get_hex
 
