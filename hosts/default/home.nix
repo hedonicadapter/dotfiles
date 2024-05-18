@@ -16,8 +16,8 @@ let
     (builtins.readFile ../../wrappers/vscode.nix);
   beeper-wrap = pkgs.writeShellScriptBin "wrap-beeper"
     (builtins.readFile ../../wrappers/beeper.nix);
-  # steam-wrap = pkgs.writeShellScriptBin "wrap-steam"
-  # (builtins.readFile ../../wrappers/steam.nix);
+  steam-wrap = pkgs.writeShellScriptBin "wrap-steam"
+    (builtins.readFile ../../wrappers/steam.nix);
 
   tofi-power-menu = pkgs.writeShellScriptBin "tofi-power-menu"
     (builtins.readFile ../../modules/tofi/power-menu.sh);
@@ -44,9 +44,10 @@ in {
     builtins.elem (lib.getName pkg) [
       "beeper"
       "terraform"
-      # "steamcmd"
-      # "steam-run"
-      # "steam-original"
+      "steamcmd"
+      "steam-original"
+      "steam-run"
+      "steam"
     ];
 
   home.packages = with pkgs; [
@@ -65,6 +66,8 @@ in {
     bicep
     gh
     nodePackages.pnpm
+    libGLU
+    wine
 
     nwg-look
     neovide
@@ -86,10 +89,11 @@ in {
     teams-wrap
     vscode-wrap
     beeper-wrap
-    # steam-wrap
-    # steamcmd
+    steam-wrap
+    steamcmd
     # cachix
     bottles
+    lutris
 
     tofi-power-menu
 
@@ -98,8 +102,8 @@ in {
     sassc
     typescript
     nodePackages.typescript-language-server
-    # dotnet-sdk_8
-    dotnet-sdk
+    (with dotnetCorePackages; combinePackages [ sdk_6_0 sdk_7_0 sdk_8_0 ])
+    csharp-ls
     azure-functions-core-tools
     csharpier
     sqlfluff
@@ -131,7 +135,7 @@ in {
 
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
     XDG_RUNTIME_DIR = "/run/user/$UID";
-    WINIT_X11_SCALE_FACTOR = 0.75;
+    # WINIT_X11_SCALE_FACTOR = 0.75;
   };
 
   # Let Home Manager install and manage itself.

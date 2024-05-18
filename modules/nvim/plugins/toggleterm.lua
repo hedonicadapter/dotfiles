@@ -1,18 +1,22 @@
 require("toggleterm").setup({
-        shell = "zsh",
-        hide_numbers = false,
+	shell = "zsh",
+	hide_numbers = false,
 })
 
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+	[[
   autocmd TermOpen term://*toggleterm* startinsert | normal! A
   autocmd TermLeave term://*toggleterm* stopinsert
-]], false)
+]],
+	false
+)
 
-  vim.api.nvim_set_keymap('n', '<C-j>', ':ToggleTerm direction=vertical size=80 <CR>', {
-      noremap = true, silent = true
-  })
+vim.api.nvim_set_keymap("n", "<C-Space>", ":ToggleTerm direction=vertical size=80 <CR>", {
+	noremap = true,
+	silent = true,
+})
 
-vim.api.nvim_set_keymap('t', '<C-j>', '<cmd> :ToggleTerm<CR>', {
-    noremap = true,
-    silent = true
+vim.api.nvim_set_keymap("t", "<C-Space>", "<cmd> :ToggleTerm<CR>", {
+	noremap = true,
+	silent = true,
 })

@@ -115,7 +115,7 @@ lspconfig.bicep.setup(coq.lsp_ensure_capabilities({
 }))
 vim.cmd([[ autocmd BufNewFile,BufRead *.bicep set filetype=bicep ]])
 
-lspconfig.omnisharp.setup(coq.lsp_ensure_capabilities({
+lspconfig.csharp_ls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
 }))

@@ -1,3 +1,13 @@
+local function set_keymap_for_all_modes(key, cmd)
+	local modes = { "n", "v", "x", "s", "o", "l" }
+	for _, mode in ipairs(modes) do
+		vim.api.nvim_set_keymap(mode, key, cmd, {
+			noremap = true,
+			silent = true,
+		})
+	end
+end
+
 vim.api.nvim_set_keymap("n", "<leader>u", "<cmd>Telescope undo<CR>", {
 	noremap = true,
 	silent = true,
@@ -107,15 +117,7 @@ vim.api.nvim_exec(
 	false
 )
 
-local function set_keymap_for_all_modes(key, cmd)
-	local modes = { "n", "v", "x", "s", "o", "l" }
-	for _, mode in ipairs(modes) do
-		vim.api.nvim_set_keymap(mode, key, cmd, {
-			noremap = true,
-			silent = true,
-		})
-	end
-end
+vim.api.nvim_set_keymap("n", "<leader>ss", "<cmd>Telescope session-lens<cr>", { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap(
 	"n",
