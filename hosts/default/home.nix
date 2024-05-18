@@ -512,17 +512,9 @@ in {
           config = toLuaFile ../../modules/nvim/plugins/toggleterm.lua;
         }
 
-        # {
-        #   plugin = nvim-cokeline;
-        #   config = toLuaFile ../../modules/nvim/plugins/cokeline/cokeline.lua;
-        #   # config = toLua ''
-        #   #   require('cokeline').setup()
-        #   # '';
-        # }
-
         {
-          plugin = tabby-nvim;
-          config = toLuaFile ../../modules/nvim/plugins/tabby.lua;
+          plugin = nvim-cokeline;
+          config = toLuaFile ../../modules/nvim/plugins/cokeline/cokeline.lua;
         }
 
         {

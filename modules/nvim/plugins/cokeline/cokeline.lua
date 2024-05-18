@@ -20,35 +20,19 @@ local comments_fg = get_hex("Comment", "fg")
 local errors_fg = get_hex("DiagnosticError", "fg")
 local warnings_fg = get_hex("DiagnosticWarn", "fg")
 
-local min_buffer_width = 23
+local min_buffer_width = 30
 
 local components = {
 	separator = {
-		text = " ",
-		bg = get_hex("Normal", "bg"),
-		truncation = { priority = 1 },
-	},
-
-	space = {
 		text = " ",
 		truncation = { priority = 1 },
 	},
 
 	left_half_circle = {
-		text = "",
-		-- fg = function(buffer)
-		-- 	return buffer.is_focused and "#32323400" or get_hex("ColorColumn", "bg")
-		-- end,
-		-- bg = get_hex("Normal", "bg"),
-		truncation = { priority = 1 },
-	},
-
-	right_half_circle = {
-		text = "",
-		fg = function(buffer)
-			return buffer.is_focused and "#323234" or get_hex("ColorColumn", "bg")
+		text = function(buffer)
+			return buffer.is_focused and "(~‾⌣‾)~ " or ""
 		end,
-		bg = get_hex("Normal", "bg"),
+		bg = "NONE",
 		truncation = { priority = 1 },
 	},
 
@@ -150,12 +134,11 @@ local components = {
 
 	close_or_unsaved = {
 		text = function(buffer)
-			return buffer.is_modified and "●" or ""
+			return buffer.is_modified and " ●  " or "   "
 		end,
 		fg = function(buffer)
 			return buffer.is_modified and palette.normal.green or nil
 		end,
-		delete_buffer_on_left_click = true,
 		truncation = { priority = 1 },
 	},
 }
@@ -197,20 +180,19 @@ require("cokeline").setup({
 	},
 
 	rendering = {
-		max_buffer_width = 23,
+		max_buffer_width = 30,
 	},
 
 	default_hl = {
 		fg = function(buffer)
 			return buffer.is_focused and get_hex("Normal", "fg") or get_hex("Comment", "fg")
 		end,
-		bg = function(buffer)
-			return buffer.is_focused and "#323234" or get_hex("ColorColumn", "bg")
-		end,
+
+		bg = "NONE",
 	},
 
 	components = {
-		-- components.separator,
+		components.separator,
 		components.left_half_circle,
 		left_padding,
 		components.devicon_or_pick_letter,
@@ -219,9 +201,8 @@ require("cokeline").setup({
 		components.filename_root,
 		components.filename_extension,
 		components.diagnostics,
-		components.space,
+		components.separator,
 		right_padding,
 		components.close_or_unsaved,
-		components.right_half_circle,
 	},
 })

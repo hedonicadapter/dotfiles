@@ -150,3 +150,16 @@ vim.api.nvim_set_keymap(
 	"<CMD>SymbolsOutline<CR>",
 	{ desc = "Symbols outline", noremap = true, silent = true }
 )
+
+vim.api.nvim_exec([[
+	function! SynStack()
+		if !exists("*synstack")
+		  return
+		endif
+		echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+	  endfunc
+]], false)
+
+vim.fn.SynGroup()
+
+vim.api.nvim_set_keymap('n', '<leader>sg', ':call SynGroup()<CR>', {noremap = true, silent = true})
