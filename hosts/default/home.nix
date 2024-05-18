@@ -565,11 +565,15 @@ in {
         }
       ] ++ [ ];
 
-    # extraLuaConfig = ''
-      # ${builtins.readFile ../../modules/nvim/lua/options.lua}
+     extraLuaConfig = ''
+     require('options')
+     require('keymaps')
+      require('utils')
+     '';
+
+     # ${builtins.readFile ../../modules/nvim/lua/options.lua}
       # ${builtins.readFile ../../modules/nvim/lua/keymaps.lua}
       # ${builtins.readFile ../../modules/nvim/lua/utils.lua}
-    # '';
   };
 
   programs.ags = {
