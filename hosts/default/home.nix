@@ -262,7 +262,7 @@ in {
   home.file.".config/hypr/wallpaper-cycler.sh".source =
     ../../modules/hyprland/wallpaper-cycler.sh;
 
-    home.file.".config/nvim/lua" = {
+  home.file.".config/nvim/lua" = {
     source = ../../modules/nvim/lua;
     recursive = true;
   };
@@ -565,16 +565,17 @@ in {
         }
       ] ++ [ ];
 
-     extraLuaConfig = ''
-     require('options')
-     require('keymaps')
-      require('utils')
-     '';
+      extraLuaConfig = ''
+        ${builtins.readFile ../../modules/nvim/init.lua}
+      '';
 
-     # ${builtins.readFile ../../modules/nvim/lua/options.lua}
-      # ${builtins.readFile ../../modules/nvim/lua/keymaps.lua}
-      # ${builtins.readFile ../../modules/nvim/lua/utils.lua}
+
+
   };
+
+  # ${builtins.readFile ../../modules/nvim/lua/options.lua}
+  #      ${builtins.readFile ../../modules/nvim/lua/keymaps.lua}
+  #      ${builtins.readFile ../../modules/nvim/lua/utils.lua}
 
   programs.ags = {
     enable = true;
