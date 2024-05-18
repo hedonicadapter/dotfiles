@@ -134,7 +134,20 @@ local get_hex = function(hlgroup_name, attr)
 	return hex ~= "" and hex or "NONE"
 end
 
+function getFilesInDirectory(directory)
+	local files = {}
+	for dir in io.popen("ls -pa " .. directory .. " | grep -v /"):lines() do
+		local filename_withoutpercentage = string.gsub(dir, "%%", "/")
+		local filename = string.gsub(filename_withoutpercentage, "%.vim", "")
+		local fileObject = { name = filename }
+
+		table.insert(files, fileObject)
+	end
+	return files
+end
+
 return {
 	mappings = setup,
 	get_hex = get_hex,
+	getFilesInDirectory = getFilesInDirectory,
 }

@@ -557,8 +557,9 @@ in {
       ] ++ [ ];
 
     extraLuaConfig = ''
-      ${builtins.readFile ../../modules/nvim/options.lua}
-      ${builtins.readFile ../../modules/nvim/keymaps.lua}
+      ${builtins.readFile ../../modules/nvim/lua/options.lua}
+      ${builtins.readFile ../../modules/nvim/lua/keymaps.lua}
+      ${builtins.readFile ../../modules/nvim/lua/utils.lua}
     '';
   };
   home.file.".config/nvim/lua/reactive/presets" = {
