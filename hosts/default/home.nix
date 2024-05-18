@@ -556,11 +556,15 @@ in {
         }
       ] ++ [ ];
 
-    extraLuaConfig = ''
-      ${builtins.readFile ../../modules/nvim/lua/options.lua}
-      ${builtins.readFile ../../modules/nvim/lua/keymaps.lua}
-      ${builtins.readFile ../../modules/nvim/lua/utils.lua}
-    '';
+    # extraLuaConfig = ''
+      # ${builtins.readFile ../../modules/nvim/lua/options.lua}
+      # ${builtins.readFile ../../modules/nvim/lua/keymaps.lua}
+      # ${builtins.readFile ../../modules/nvim/lua/utils.lua}
+    # '';
+  };
+  home.file.".config/nvim/lua" = {
+    source = ../../modules/nvim/lua;
+    recursive = true;
   };
   home.file.".config/nvim/lua/reactive/presets" = {
     source = ../../modules/nvim/plugins/reactive;
