@@ -48,6 +48,7 @@ in {
       "steam-original"
       "steam-run"
       "steam"
+      "rider"
     ];
 
   home.packages = with pkgs; [
@@ -71,6 +72,7 @@ in {
 
     nwg-look
     neovide
+    jetbrains.rider
     transmission
     beeper
     #(callPackage ./neovide.nix { })
@@ -503,9 +505,10 @@ in {
 
         {
           plugin = nvim-cokeline;
-          config = toLua ''
-            require('cokeline').setup()
-          '';
+          config = toLuaFile ../../modules/nvim/plugins/cokeline.lua;
+          # config = toLua ''
+          #   require('cokeline').setup()
+          # '';
         }
 
         {
