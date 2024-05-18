@@ -25,7 +25,7 @@ if vim.g.neovide then
 	vim.g.neovide_padding_right = 10
 	vim.g.neovide_padding_left = 10
 
-	vim.g.neovide_scroll_animation_length = 0.15
+	vim.g.neovide_scroll_animation_length = 0.25
 	vim.g.neovide_refresh_rate = 144
 
 	vim.g.neovide_theme = "melange"

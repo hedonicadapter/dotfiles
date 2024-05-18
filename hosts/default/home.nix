@@ -289,7 +289,8 @@ in {
     vimAlias = true;
     vimdiffAlias = true;
 
-    plugins = with pkgs.vimPlugins; [
+    plugins = with pkgs.vimPlugins;
+      [
         {
           plugin = auto-session;
           config = toLua ''
@@ -358,8 +359,12 @@ in {
           config = toLua ''
             require("treesitter-context").setup({
               enable = true,
-              max-lines = 3,
+              max_lines = 3,
             })
+
+            vim.api.nvim_exec([[
+              autocmd BufEnter * hi TreesitterContextBottom gui=italic guisp=NONE
+            ]], false)
           '';
         }
 
@@ -554,7 +559,7 @@ in {
 
         {
           plugin = transparent-nvim;
-          config = ''
+          config = toLua ''
             require("transparent").setup()
           '';
         }
