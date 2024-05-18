@@ -505,7 +505,7 @@ in {
 
         {
           plugin = nvim-cokeline;
-          config = toLuaFile ../../modules/nvim/plugins/cokeline.lua;
+          config = toLuaFile ../../modules/nvim/plugins/cokeline/cokeline.lua;
           # config = toLua ''
           #   require('cokeline').setup()
           # '';

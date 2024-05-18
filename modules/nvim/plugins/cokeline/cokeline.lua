@@ -1,5 +1,10 @@
-local get_hex = require("cokeline/utils").get_hex
-local mappings = require("cokeline/mappings")
+local get_hex = function(hlgroup_name, attr)
+	local hlgroup_ID = vim_fn.synIDtrans(vim_fn.hlID(hlgroup_name))
+	local hex = vim_fn.synIDattr(hlgroup_ID, attr)
+	return hex ~= "" and hex or "NONE"
+end
+
+local mappings = require("./mappings")
 
 local rep = string.rep
 
