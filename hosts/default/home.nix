@@ -512,12 +512,17 @@ in {
           config = toLuaFile ../../modules/nvim/plugins/toggleterm.lua;
         }
 
+        # {
+        #   plugin = nvim-cokeline;
+        #   config = toLuaFile ../../modules/nvim/plugins/cokeline/cokeline.lua;
+        #   # config = toLua ''
+        #   #   require('cokeline').setup()
+        #   # '';
+        # }
+
         {
-          plugin = nvim-cokeline;
-          config = toLuaFile ../../modules/nvim/plugins/cokeline/cokeline.lua;
-          # config = toLua ''
-          #   require('cokeline').setup()
-          # '';
+          plugin = tabby-nvim;
+          config = toLuaFile ../../modules/nvim/plugins/tabby.lua;
         }
 
         {
@@ -565,17 +570,10 @@ in {
         }
       ] ++ [ ];
 
-      extraLuaConfig = ''
-        ${builtins.readFile ../../modules/nvim/init.lua}
-      '';
-
-
-
+    extraLuaConfig = ''
+      ${builtins.readFile ../../modules/nvim/init.lua}
+    '';
   };
-
-  # ${builtins.readFile ../../modules/nvim/lua/options.lua}
-  #      ${builtins.readFile ../../modules/nvim/lua/keymaps.lua}
-  #      ${builtins.readFile ../../modules/nvim/lua/utils.lua}
 
   programs.ags = {
     enable = true;

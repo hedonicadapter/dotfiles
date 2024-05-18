@@ -1,6 +1,5 @@
 local util = require("utils")
-local mappings = utils.mappings
-local get_hex = utils.get_hex
+local get_hex = util.get_hex
 
 local rep = string.rep
 
@@ -37,10 +36,10 @@ local components = {
 
 	left_half_circle = {
 		text = "",
-		fg = function(buffer)
-			return buffer.is_focused and "#323234" or get_hex("ColorColumn", "bg")
-		end,
-		bg = get_hex("Normal", "bg"),
+		-- fg = function(buffer)
+		-- 	return buffer.is_focused and "#32323400" or get_hex("ColorColumn", "bg")
+		-- end,
+		-- bg = get_hex("Normal", "bg"),
 		truncation = { priority = 1 },
 	},
 
@@ -55,16 +54,13 @@ local components = {
 
 	devicon_or_pick_letter = {
 		text = function(buffer)
-			return (mappings.is_picking_focus() or mappings.is_picking_close()) and buffer.pick_letter .. " "
-				or buffer.devicon.icon
+			return buffer.devicon.icon
 		end,
 		fg = function(buffer)
-			return (mappings.is_picking_focus() and palette.normal.yellow)
-				or (mappings.is_picking_close() and palette.normal.red)
-				or (buffer.is_focused and buffer.devicon.color or comments_fg)
+			return (buffer.is_focused and buffer.devicon.color or comments_fg)
 		end,
 		style = function(_)
-			return (mappings.is_picking_focus() or mappings.is_picking_close()) and "italic,bold" or nil
+			return "italic,bold" or nil
 		end,
 		truncation = { priority = 1 },
 	},
@@ -136,23 +132,21 @@ local components = {
 		},
 	},
 
-	-- diagnostics = {
-	--   text = function(buffer)
-	--     return
-	--       (buffer.diagnostics.errors ~= 0 and '  ' .. buffer.diagnostics.errors)
-	--       or (buffer.diagnostics.warnings ~= 0 and '  ' .. buffer.diagnostics.warnings)
-	--       or ''
-	--   end,
-	--   hl = {
-	--     fg = function(buffer)
-	--       return
-	--         (buffer.diagnostics.errors ~= 0 and errors_fg)
-	--         or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
-	--         or nil
-	--     end,
-	--   },
-	--   truncation = { priority = 1 },
-	-- },
+	diagnostics = {
+		text = function(buffer)
+			return (buffer.diagnostics.errors ~= 0 and "  " .. buffer.diagnostics.errors)
+				or (buffer.diagnostics.warnings ~= 0 and "  " .. buffer.diagnostics.warnings)
+				or ""
+		end,
+		hl = {
+			fg = function(buffer)
+				return (buffer.diagnostics.errors ~= 0 and errors_fg)
+					or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
+					or nil
+			end,
+		},
+		truncation = { priority = 1 },
+	},
 
 	close_or_unsaved = {
 		text = function(buffer)
@@ -215,21 +209,8 @@ require("cokeline").setup({
 		end,
 	},
 
-	sidebar = {
-		filetype = "NvimTree",
-		components = {
-			{
-				text = "",
-				-- text = "  NvimTree",
-				fg = palette.normal.yellow,
-				bg = get_hex("NvimTreeNormal", "bg"),
-				style = "bold",
-			},
-		},
-	},
-
 	components = {
-		components.separator,
+		-- components.separator,
 		components.left_half_circle,
 		left_padding,
 		components.devicon_or_pick_letter,
@@ -237,7 +218,7 @@ require("cokeline").setup({
 		components.unique_prefix,
 		components.filename_root,
 		components.filename_extension,
-		-- components.diagnostics,
+		components.diagnostics,
 		components.space,
 		right_padding,
 		components.close_or_unsaved,
