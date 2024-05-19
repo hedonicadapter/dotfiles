@@ -20,3 +20,5 @@ vim.api.nvim_set_keymap("t", "<C-Space>", "<cmd> :ToggleTerm<CR>", {
 	noremap = true,
 	silent = true,
 })
+vim.api.nvim_set_keymap("n", "<leader>cc", "<CMD>CopilotChatToggle<CR>", { desc = "Open Copilot Chat" })
+vim.api.nvim_set_keymap("v", "<leader>cc", "<CMD>CopilotChatReview<CR>", { desc = "Open Copilot Chat" })

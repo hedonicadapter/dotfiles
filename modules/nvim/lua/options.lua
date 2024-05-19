@@ -46,6 +46,18 @@ if vim.g.neovide then
 	vim.g.neovide_transparency = 0.8
 	vim.g.transparency = 0.8
 	vim.g.neovide_background_color = "#0f1117" .. alpha()
+
+	vim.keymap.set("n", "<C-s>", ":w<CR>") -- Save
+	vim.keymap.set("v", "<C-c>", '"+y') -- Copy
+	vim.keymap.set("n", "<C-v>", '"+P') -- Paste normal mode
+	vim.keymap.set("v", "<C-v>", '"+P') -- Paste visual mode
+	vim.keymap.set("c", "<C-v>", "<C-R>+") -- Paste command mode
+	vim.keymap.set("i", "<C-v>", '<ESC>l"+Pli') -- Paste insert mode
+
+	vim.api.nvim_set_keymap("", "<C-v>", "+p<CR>", { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("!", "<C-v>", "<C-R>+", { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("t", "<C-v>", "<C-R>+", { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("v", "<C-v>", "<C-R>+", { noremap = true, silent = true })
 end
 
 vim.api.nvim_set_hl(0, "DropBarIconKindFunction", {
@@ -166,4 +178,3 @@ vim.api.nvim_exec(
 ]],
 	false
 )
-

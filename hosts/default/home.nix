@@ -52,10 +52,6 @@ in {
     ];
 
   home.packages = with pkgs; [
-    public-sans
-    work-sans
-    merriweather
-    (nerdfonts.override { fonts = [ "ProggyClean" ]; })
 
     grim
     slurp
@@ -132,7 +128,7 @@ in {
   home.sessionVariables = {
     EDITOR = "neovide";
     NIXOS_OZONE_WL = "1";
-    GTK_THEME = "Orchis-Yellow-Dark-Compact";
+    # GTK_THEME = "Orchis-Yellow-Dark-Compact";
     ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";
 
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
@@ -154,6 +150,7 @@ in {
   #  bashrcExtra = "eval \"$(zoxide init bash)\"";
   # };
 
+  stylix.targets.tofi.enable = false;
   programs.tofi = {
     enable = true;
     settings = {
@@ -208,8 +205,8 @@ in {
 
         shell = "zsh";
         # font = "Iosevka Term:size=8";
-        font = "ProggyClean Nerd Font Mono:size=13";
-        dpi-aware = "yes";
+        # font = "ProggyClean Nerd Font Mono:size=13";
+        # dpi-aware = "yes";
         pad = "40x0";
         font-size-adjustment = 0.9;
         line-height = 15;
@@ -345,7 +342,6 @@ in {
         }
 
         nvim-web-devicons
-
         telescope-fzf-native-nvim
         plenary-nvim
         nvim-ts-autotag
@@ -353,6 +349,32 @@ in {
         vim-wakatime
         nvim-ts-context-commentstring
         sqlite-lua
+
+        {
+          plugin = nvim-spider;
+          config = toLua ''
+            require('spider').setup()
+                        
+            vim.keymap.set(
+            	{ "n", "o", "x" },
+            	"w",
+            	"<cmd>lua require('spider').motion('w')<CR>",
+            	{ desc = "Spider-w" }
+            )
+            vim.keymap.set(
+            	{ "n", "o", "x" },
+            	"e",
+            	"<cmd>lua require('spider').motion('e')<CR>",
+            	{ desc = "Spider-e" }
+            )
+            vim.keymap.set(
+            	{ "n", "o", "x" },
+            	"b",
+            	"<cmd>lua require('spider').motion('b')<CR>",
+            	{ desc = "Spider-b" }
+            )
+          '';
+        }
 
         {
           plugin = nvim-treesitter-context;
@@ -370,7 +392,7 @@ in {
 
         copilot-vim
         # {
-        #   plugin = copilotchat-nvim;
+        #   plugin = unstable.vimPlugins.CopilotChat-nvim;
         #   config = toLua ''
         #     require('CopilotChat').setup()
         #   '';
@@ -606,14 +628,14 @@ in {
   gtk.iconTheme.package = pkgs.fluent-icon-theme;
   gtk.iconTheme.name = "Fluent";
 
-  gtk.font.name = "Noto Sans";
-  gtk.font.package = pkgs.noto-fonts;
+  # gtk.font.name = "Noto Sans";
+  # gtk.font.package = pkgs.noto-fonts;
 
   gtk.cursorTheme.package = pkgs.bibata-cursors-translucent;
   gtk.cursorTheme.name = "Bibata_Ghost";
 
-  gtk.theme.package = pkgs.orchis-theme;
-  gtk.theme.name = "Orchis-Yellow-Dark-Compact";
+  # gtk.theme.package = pkgs.orchis-theme;
+  # gtk.theme.name = "Orchis-Yellow-Dark-Compact";
 
   xdg.mimeApps.defaultApplications = {
     "text/html" = "edge.desktop";
@@ -623,13 +645,13 @@ in {
     "text/plain" = "neovide.desktop";
   };
 
-  xdg.configFile = {
-    "gtk-4.0/assets".source =
-      "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
-    "gtk-4.0/gtk.css".source =
-      "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
-    "gtk-4.0/gtk-dark.css".source =
-      "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
-  };
+  # xdg.configFile = {
+  #   "gtk-4.0/assets".source =
+  #     "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
+  #   "gtk-4.0/gtk.css".source =
+  #     "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
+  #   "gtk-4.0/gtk-dark.css".source =
+  #     "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
+  # };
 }
 

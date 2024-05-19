@@ -2,6 +2,12 @@
 let
   spicetify-nix = inputs.spicetify-nix;
   spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
+
+  inputImage =
+    /home/hedonicadapter/Pictures/wallpapers-original/a_tree_with_white_flowers_01.jpg;
+  brightness = 0;
+  contrast = 0;
+  fillColor = "black";
 in {
   services.blueman.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -189,7 +195,7 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
-    orchis-theme
+    # orchis-theme
     bibata-cursors-translucent
     fluent-icon-theme
 
@@ -202,7 +208,7 @@ in {
     nix-output-monitor
 
     wev # event viewer
-
+    atac
     zoxide
     ripgrep
     fd
@@ -268,6 +274,63 @@ in {
 
   xdg.portal.enable = true;
 
+  stylix = {
+    image = pkgs.runCommand "dimmed-background.png" { } ''
+      ${pkgs.imagemagick}/bin/convert "${inputImage}" -auto-level -brightness-contrast ${
+        toString brightness
+      },${toString contrast}  -fill ${fillColor} $out
+    '';
+    polarity = "dark";
+    # base16Scheme = {
+    # base00 = "#FBF1F2";
+    # base01 = "#8B8198";
+    # base02 = "#BFB9C6";
+    # base03 = "#585062";
+    #   base04 = "#DCB16C";
+    #   base05 = "#8B8198";
+    #   base06 = "#7297B9";
+    #   base07 = "#FBF1F2";
+    #   base08 = "#D57E85";
+    #   base09 = "#DCB16C";
+    #   base0A = "#A3B367";
+    #   base0B = "#69A9A7";
+    #   base0C = "#69A9A7";
+    #   base0D = "#7297B9";
+    #   base0E = "#BB99B4";
+    #   base0F = "#D57E85";
+    # };
+    targets = {
+      chromium.enable = true;
+      gnome.enable = true;
+      gtk.enable = true;
+
+      plymouth.enable = false;
+    };
+
+    fonts = {
+      # pkgs.public-sans
+
+      serif = {
+        package = pkgs.merriweather;
+        name = "Merriweather";
+      };
+
+      sansSerif = {
+        package = pkgs.public-sans;
+        name = "Work Sans";
+      };
+
+      monospace = {
+        package = pkgs.nerdfonts.override { fonts = [ "ProggyClean" ]; };
+        name = "ProggyClean Nerd Font Mono";
+      };
+
+      emoji = {
+        package = pkgs.noto-fonts-emoji;
+        name = "Noto Color Emoji";
+      };
+    };
+  };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -284,10 +347,7 @@ in {
   '';
 
   # List services that you want to enable:
-  services.logind = {
-    lidSwitch = "ignore";
-
-  };
+  services.logind = { lidSwitch = "ignore"; };
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;

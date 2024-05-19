@@ -61,17 +61,17 @@ local components = {
 		truncation = { priority = 1 },
 	},
 
-	unique_prefix = {
-		text = function(buffer)
-			return buffer.unique_prefix
-		end,
-		fg = comments_fg,
-		style = "italic",
-		truncation = {
-			priority = 4,
-			direction = "left",
-		},
-	},
+	-- unique_prefix = {
+	-- 	text = function(buffer)
+	-- 		return buffer.unique_prefix
+	-- 	end,
+	-- 	fg = comments_fg,
+	-- 	style = "italic",
+	-- 	truncation = {
+	-- 		priority = 4,
+	-- 		direction = "left",
+	-- 	},
+	-- },
 
 	filename_root = {
 		text = function(buffer)
@@ -197,7 +197,7 @@ require("cokeline").setup({
 		left_padding,
 		components.devicon_or_pick_letter,
 		components.index,
-		components.unique_prefix,
+		-- components.unique_prefix,
 		components.filename_root,
 		components.filename_extension,
 		components.diagnostics,

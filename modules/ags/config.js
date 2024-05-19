@@ -153,7 +153,7 @@ function Bar(monitor = 0) {
 
 App.config({
   style: `${App.configDir}/style.css`,
-  gtkTheme: "Orchis-Yellow-Dark-Compact",
+  // gtkTheme: "Orchis-Yellow-Dark-Compact",
   iconTheme: "Fluent",
 
   windows: [

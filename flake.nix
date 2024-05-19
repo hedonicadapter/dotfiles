@@ -26,9 +26,10 @@
 
     nixneovimplugins = { url = "github:jooooscha/nixpkgs-vim-extra-plugins"; };
 
+    stylix = { url = "github:danth/stylix"; };
   };
 
-  outputs = { self, nixpkgs, spicetify-nix, ... }@inputs:
+  outputs = { self, nixpkgs, spicetify-nix, stylix, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -36,6 +37,7 @@
       nixosConfigurations.default = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [
+          stylix.nixosModules.stylix
           ./hosts/default/configuration.nix
           inputs.home-manager.nixosModules.default
         ];
