@@ -95,11 +95,12 @@ in {
 
     tofi-power-menu
 
+    bun
     nodePackages.prettier
     prettierd
     sassc
     typescript
-    nodePackages.typescript-language-server
+    # nodePackages.typescript-language-server
     (with dotnetCorePackages; combinePackages [ sdk_6_0 sdk_7_0 sdk_8_0 ])
     csharp-ls
     azure-functions-core-tools
@@ -109,7 +110,7 @@ in {
     terraform
     stylua
     nixfmt
-    tailwindcss-language-server
+    # tailwindcss-language-server
   ];
 
   home.file = {
@@ -197,6 +198,7 @@ in {
     enableZshIntegration = true;
   };
 
+  stylix.targets.foot.enable = false;
   programs.foot = {
     enable = true;
     settings = {
@@ -205,8 +207,8 @@ in {
 
         shell = "zsh";
         # font = "Iosevka Term:size=8";
-        # font = "ProggyClean Nerd Font Mono:size=13";
-        # dpi-aware = "yes";
+        font = "JetBrainsMono Nerd Font:size=13";
+        dpi-aware = "yes";
         pad = "40x0";
         font-size-adjustment = 0.9;
         line-height = 15;
@@ -353,7 +355,9 @@ in {
         {
           plugin = nvim-spider;
           config = toLua ''
-            require('spider').setup()
+            require('spider').setup({
+              skipInsignificantPunctuation = false,
+            })
                         
             vim.keymap.set(
             	{ "n", "o", "x" },
@@ -515,12 +519,12 @@ in {
           '';
         }
 
-        {
-          plugin = indent-blankline-nvim;
-          config = toLua ''
-            require("ibl").setup {}
-          '';
-        }
+        # {
+        #   plugin = indent-blankline-nvim;
+        #   config = toLua ''
+        #     require("ibl").setup {}
+        #   '';
+        # }
 
         {
           plugin = comment-nvim;
@@ -579,12 +583,12 @@ in {
           config = "colorscheme melange";
         }
 
-        {
-          plugin = transparent-nvim;
-          config = toLua ''
-            require("transparent").setup()
-          '';
-        }
+        # {
+        #   plugin = transparent-nvim;
+        #   config = toLua ''
+        #     require("transparent").setup()
+        #   '';
+        # }
 
         {
           plugin = pkgs.vimExtraPlugins.reactive-nvim;
@@ -611,11 +615,6 @@ in {
 
   programs.ags = {
     enable = true;
-
-    # null or path, leave as null if you don't want hm to manage the config
-    # configDir = ../../modules/ags;
-
-    # additional packages to add to gjs's runtime
     extraPackages = with pkgs; [ gtksourceview webkitgtk accountsservice ];
   };
   home.file.".config/ags" = {

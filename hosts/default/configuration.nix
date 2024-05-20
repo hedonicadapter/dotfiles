@@ -4,10 +4,11 @@ let
   spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
 
   inputImage =
-    /home/hedonicadapter/Pictures/wallpapers-original/a_tree_with_white_flowers_01.jpg;
+    /home/hedonicadapter/Pictures/wallpapers-original/a_group_of_white_flowers_on_a_bush.jpg;
   brightness = 0;
-  contrast = 0;
+  contrast = 40;
   fillColor = "black";
+  saturation = 180; # Increase the saturation by 20%
 in {
   services.blueman.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -276,16 +277,36 @@ in {
 
   stylix = {
     image = pkgs.runCommand "dimmed-background.png" { } ''
-      ${pkgs.imagemagick}/bin/convert "${inputImage}" -auto-level -brightness-contrast ${
+      ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${
         toString brightness
-      },${toString contrast}  -fill ${fillColor} $out
+      },${toString contrast} -modulate 100,${
+        toString saturation
+      } -fill ${fillColor} $out
     '';
     polarity = "dark";
+    base16Scheme = {
+      base00 = "#292522";
+      base01 = "#34302C";
+      base02 = "#403A36";
+      base03 = "#867462";
+      base04 = "#C1A78E";
+      base05 = "#ECE1D7";
+      base06 = "#D47766";
+      base07 = "#EBC06D";
+      base08 = "#85B695";
+      base09 = "#89B3B6";
+      base0A = "#A3A9CE";
+      base0B = "#CF9BC2";
+      base0C = "#BD8183";
+      base0D = "#E49B5D";
+      base0E = "#78997A";
+      base0F = "#7B9695";
+    };
     # base16Scheme = {
-    # base00 = "#FBF1F2";
-    # base01 = "#8B8198";
-    # base02 = "#BFB9C6";
-    # base03 = "#585062";
+    #   base00 = "#FBF1F2";
+    #   base01 = "#8B8198";
+    #   base02 = "#BFB9C6";
+    #   base03 = "#585062";
     #   base04 = "#DCB16C";
     #   base05 = "#8B8198";
     #   base06 = "#7297B9";
@@ -321,14 +342,21 @@ in {
       };
 
       monospace = {
-        package = pkgs.nerdfonts.override { fonts = [ "ProggyClean" ]; };
-        name = "ProggyClean Nerd Font Mono";
+        package = pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
+        # package = pkgs.nerdfonts.override { fonts = [ "ProggyClean" ]; };
+        name = "JetBrainsMono Nerd Font";
       };
 
       emoji = {
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
       };
+
+      sizes.applications = 9;
+      sizes.desktop = 9;
+      sizes.popups = 9;
+      sizes.terminal = 16;
+
     };
   };
   # Some programs need SUID wrappers, can be configured further or are

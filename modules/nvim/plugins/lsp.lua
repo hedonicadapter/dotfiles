@@ -144,8 +144,37 @@ lspconfig.jsonls.setup(coq.lsp_ensure_capabilities({
 	capabilities = capabilities,
 }))
 lspconfig.tsserver.setup(coq.lsp_ensure_capabilities({
-	on_attach = on_attach,
-	capabilities = capabilities,
+  cmd = {"bunx", "typescript-language-server", "--stdio" },
+  capabilities = capabilities,
+  single_file_support = true,
+  completions = {
+    completeFunctionCalls = true,
+  },
+  settings = {
+    javascript = {
+      inlayHints = {
+        includeInlayEnumMemberValueHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
+        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayVariableTypeHints = false,
+      },
+    },
+
+    typescript = {
+      inlayHints = {
+        includeInlayEnumMemberValueHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
+        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayVariableTypeHints = false,
+      },
+    },
+  },
 }))
 lspconfig.lua_ls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
@@ -164,8 +193,19 @@ lspconfig.somesass_ls.setup(coq.lsp_ensure_capabilities({
 	capabilities = capabilities,
 }))
 lspconfig.tailwindcss.setup(coq.lsp_ensure_capabilities({
-	on_attach = on_attach,
-	capabilities = capabilities,
+  cmd = { "bunx", "tailwindcss-language-server", "--stdio" },
+  capabilities = capabilities,
+  completions = {
+    completeFunctionCalls = true,
+  },
+  root_dir = lspconfig.util.root_pattern(
+    "tailwind.config.js",
+    "tailwind.config.cjs",
+    "tailwind.config.ts",
+    "postcss.config.js",
+    "postcss.config.cjs",
+    "postcss.config.ts"
+  ),
 }))
 lspconfig.terraformls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
