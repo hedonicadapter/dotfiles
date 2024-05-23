@@ -18,7 +18,7 @@ vim.o.cmdheight = 0
 if vim.g.neovide then
 	vim.opt.linespace = 15
 
-	vim.g.neovide_padding_top = 4
+	vim.g.neovide_padding_top = 8
 	vim.g.neovide_padding_bottom = 0
 	vim.g.neovide_padding_right = 10
 	vim.g.neovide_padding_left = 10

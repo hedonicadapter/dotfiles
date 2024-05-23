@@ -8,7 +8,7 @@ import { AppLauncher } from "./AppLauncher.js";
 // import { Dock } from "./Dock.js";
 
 const date = Variable("", {
-  poll: [1000, 'date "+%H:%M:%S %b %e"'],
+  poll: [1000, 'date "+%H:%M:%S %A %b %e"'],
 });
 
 function Workspaces() {
@@ -17,7 +17,9 @@ function Workspaces() {
     ws.map(({ id }) =>
       Widget.Button({
         on_clicked: () => hyprland.messageAsync(`dispatch workspace ${id}`),
-        child: Widget.Label(`${id}`),
+        child: Widget.Label({
+          label: activeId.as((i) => (i === id ? "" : "")),
+        }),
         class_name: activeId.as(
           (i) => `${i === id ? "focused" : ""} workspace`,
         ),

@@ -26,15 +26,15 @@ in {
   services.xserver.videoDrivers = [ "nvidia" ];
 
   boot = {
-    plymouth = {
-      enable = true;
-      theme = "abstract_ring";
-      themePackages = [
-        (pkgs.adi1090x-plymouth-themes.override {
-          selected_themes = [ "abstract_ring" ];
-        })
-      ];
-    };
+    # plymouth = {
+    #   enable = true;
+    #   theme = "abstract_ring";
+    #   themePackages = [
+    #     (pkgs.adi1090x-plymouth-themes.override {
+    #       selected_themes = [ "abstract_ring" ];
+    #     })
+    #   ];
+    # };
 
     # silent boot options below
     loader.grub.timeoutStyle = false;
@@ -327,8 +327,6 @@ in {
       chromium.enable = true;
       gnome.enable = true;
       gtk.enable = true;
-
-      plymouth.enable = false;
     };
 
     fonts = {

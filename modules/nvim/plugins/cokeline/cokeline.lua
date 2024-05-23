@@ -134,7 +134,7 @@ local components = {
 
 	close_or_unsaved = {
 		text = function(buffer)
-			return buffer.is_modified and " ●  " or (buffer.is_focused and "  " or "  ")
+			return buffer.is_modified and " ●  " or (buffer.is_focused and "   " or "   ")
 		end,
 		fg = function(buffer)
 			return buffer.is_modified and palette.normal.green or nil
@@ -192,6 +192,7 @@ require("cokeline").setup({
 	},
 
 	components = {
+		components.separator,
 		components.separator,
 		components.left_half_circle,
 		left_padding,
