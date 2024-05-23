@@ -38,6 +38,7 @@ button:hover {
 
 .client-title {
   font-size: 1em;
+  font-style: italic;
   color: @theme_text_color;
 }
 
@@ -119,6 +120,11 @@ button:hover {
 
 .media-box .controls {
   margin-top: 4px;
+}
+
+.clock {
+  font-size: 0.8em;
+  font-weight: bold;
 }
 
 /* NOTIFICATION TOASTS */

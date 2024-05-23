@@ -143,7 +143,7 @@ function Bar(monitor = 0) {
     anchor: ["top", "right", "left"],
     exclusivity: "exclusive",
     // margins: [8, 16, -3, 16],
-    margins: [0, 14, 2, 12],
+    margins: [0, 20, 2, 12],
     child: Widget.CenterBox({
       spacing: 8,
       start_widget: Left(),
