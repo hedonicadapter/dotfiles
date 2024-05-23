@@ -1,3 +1,6 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 local function set_keymap_for_all_modes(key, cmd)
 	local modes = { "n", "v", "x", "s", "o", "l" }
 	for _, mode in ipairs(modes) do
@@ -99,6 +102,13 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
 
+vim.keymap.set("n", "<leader>n", "<Cmd>call search('[([{<\\|\"\\|'']')<CR>", {
+	desc = "Jump to next",
+})
+vim.keymap.set("n", "<leader>p", "<Cmd>call search('[([{<\\|\"\\|'']', 'b') <CR>", {
+	desc = "Jump to previous",
+})
+
 -- Telescope
 vim.api.nvim_exec(
 	[[
@@ -150,3 +160,4 @@ vim.api.nvim_set_keymap(
 	"<CMD>SymbolsOutline<CR>",
 	{ desc = "Symbols outline", noremap = true, silent = true }
 )
+

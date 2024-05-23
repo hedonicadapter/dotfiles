@@ -1,7 +1,5 @@
 vim.o.showmode = false
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 vim.opt.autoindent = true
 vim.opt.expandtab = true
 vim.opt.wrap = false
@@ -143,54 +141,26 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
 vim.api.nvim_exec(
 	[[
   autocmd BufEnter * colorscheme melange
+  autocmd BufEnter * ReactiveStart
 ]],
 	false
 )
 
 vim.api.nvim_exec(
 	[[
-  autocmd BufEnter * hi TreesitterContextBottom gui=underline 
+  autocmd BufEnter * hi TreesitterContextBottom guisp=NONE
+  autocmd BufEnter * hi TreesitterContext guibg=NONE gui=italic
+  autocmd BufEnter * hi WinBar guibg=NONE
+  autocmd BufEnter * hi LineNr guibg=NONE
+  autocmd BufEnter * hi SignColumn guibg=NONE
+  autocmd BufEnter * hi DropBarIconKindFunction guibg=NONE
 ]],
 	false
 )
 
-vim.api.nvim_exec(
-	[[
-  autocmd BufEnter * setlocal cursorline 
-]],
-	false
-)
 vim.api.nvim_exec(
 	[[
   autocmd BufEnter * set relativenumber
-]],
-	false
-)
-
-vim.api.nvim_exec(
-	[[
-  autocmd BufEnter * hi WinBar guibg=NONE
-]],
-	false
-)
-
-vim.api.nvim_exec(
-	[[
-  autocmd BufEnter * hi LineNr guibg=NONE
-]],
-	false
-)
-
-vim.api.nvim_exec(
-	[[
-  autocmd BufEnter * hi SignColumn guibg=NONE
-]],
-	false
-)
-
-vim.api.nvim_exec(
-	[[
-  autocmd BufEnter * hi DropBarIconKindFunction guibg=NONE
 ]],
 	false
 )

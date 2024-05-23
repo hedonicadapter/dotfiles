@@ -401,9 +401,6 @@ in {
               max_lines = 3,
             })
 
-            vim.api.nvim_exec([[
-              autocmd BufEnter * hi TreesitterContextBottom gui=italic guisp=NONE
-            ]], false)
           '';
         }
 
