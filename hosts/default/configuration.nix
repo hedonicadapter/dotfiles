@@ -217,6 +217,7 @@ in {
     swappy
     easyeffects
     brightnessctl
+    pulseaudio
     playerctl
     spotify
     armcord
@@ -236,9 +237,11 @@ in {
 
   programs.spicetify = {
     enable = true;
-    theme = spicePkgs.themes.Orchis;
-    colorScheme = "mocha";
+    theme = spicePkgs.themes.text;
+    colorScheme = "Gruvbox";
+    injectCss = true;
 
+    enabledCustomApps = with spicePkgs.apps; [ reddit marketplace ];
     enabledExtensions = with spicePkgs.extensions; [
       fullAppDisplay
       keyboardShortcut
@@ -348,14 +351,14 @@ in {
       };
 
       emoji = {
-        package = pkgs.noto-fonts-emoji;
+        package = pkgs.noto-fonts-color-emoji;
         name = "Noto Color Emoji";
       };
 
       sizes.applications = 9;
       sizes.desktop = 9;
       sizes.popups = 9;
-      sizes.terminal = 16;
+      sizes.terminal = 9;
 
     };
   };

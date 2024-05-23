@@ -35,7 +35,7 @@ require("nvim-treesitter.configs").setup({
 vim.api.nvim_set_keymap(
 	"n",
 	"}",
-	"<cmd>lua require'nvim-treesitter.textobjects.move'.goto_next_start<CR>",
+	"<cmd>lua require'nvim-treesitter.textobjects.move'.goto_next_start()<CR>",
 	{ noremap = true }
 )
 --

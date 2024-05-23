@@ -142,6 +142,13 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
 
 vim.api.nvim_exec(
 	[[
+  autocmd BufEnter * colorscheme melange
+]],
+	false
+)
+
+vim.api.nvim_exec(
+	[[
   autocmd BufEnter * hi TreesitterContextBottom gui=underline 
 ]],
 	false

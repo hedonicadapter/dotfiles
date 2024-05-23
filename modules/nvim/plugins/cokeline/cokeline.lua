@@ -202,7 +202,6 @@ require("cokeline").setup({
 		components.filename_extension,
 		components.diagnostics,
 		components.separator,
-		right_padding,
 		components.close_or_unsaved,
 	},
 })

@@ -11,6 +11,7 @@ window.bar {
   /* background-color: black; */
   color: @theme_text_color;
   opacity: 0.85;
+  padding: 6px 24px 3px 24px;
 }
 
 button {
@@ -42,7 +43,6 @@ button:hover {
 
 .box {
   font-size: 1em;
-  padding: 5px 16px 4px 16px;
   opacity: 0.76;
 }
 .box:hover {
@@ -152,6 +152,7 @@ window.notification-popups box.notifications {
   margin: 0.5em;
   border: 1px solid @wm_borders_edge;
   background-color: @theme_bg_color;
+  opacity: 0.9;
 }
 
 .notification.critical {
@@ -188,7 +189,7 @@ window.notification-popups box.notifications {
 
 .app-item {
   font-size: 3em;
-  padding: 12px 0px;
+  /* padding: 12px 0px; */
   margin: 0px 4px;
 }
 

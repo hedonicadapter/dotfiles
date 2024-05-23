@@ -53,6 +53,8 @@ in {
 
   home.packages = with pkgs; [
 
+    google-cloud-sdk
+    firebase-tools
     grim
     slurp
     lf
@@ -100,7 +102,8 @@ in {
     prettierd
     sassc
     typescript
-    # nodePackages.typescript-language-server
+    # nodePackages.typescript-language-server this runs with bunx
+    # tailwindcss-language-server
     (with dotnetCorePackages; combinePackages [ sdk_6_0 sdk_7_0 sdk_8_0 ])
     csharp-ls
     azure-functions-core-tools
@@ -110,7 +113,6 @@ in {
     terraform
     stylua
     nixfmt
-    # tailwindcss-language-server
   ];
 
   home.file = {
@@ -188,6 +190,12 @@ in {
       extraConfig = ''
         eval "$(zoxide init zsh)"
         export XDG_RUNTIME_DIR=/run/user/$(id -u)
+        setopt HIST_EXPIRE_DUPS_FIRST
+        setopt HIST_IGNORE_DUPS
+        setopt HIST_IGNORE_ALL_DUPS
+        setopt HIST_IGNORE_SPACE
+        setopt HIST_FIND_NO_DUPS
+        setopt HIST_SAVE_NO_DUPS
       '';
       theme = "headline/headline";
     };
@@ -252,9 +260,14 @@ in {
 
   wayland.windowManager.hyprland = {
     enable = true;
+    # package = inputs.hyprland.packages.${pkgs.system}.default;
     systemd.enable = true;
     systemd.variables = [ "--all" ];
     extraConfig = "${builtins.readFile ../../modules/hyprland/hyprland.conf}";
+    # plugins = [
+    # inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
+    # inputs.hyprlock.packages.${pkgs.system}.default
+    # ];
   };
   home.file.".config/hypr/auto-start.sh".source =
     ../../modules/hyprland/auto-start.sh;
