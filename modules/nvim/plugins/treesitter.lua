@@ -30,14 +30,3 @@ require("nvim-treesitter.configs").setup({
 	-- },
 	-- parser_install_dir = "~/.config/nvim/parsers"
 })
-
--- Disable the } keybind
-vim.api.nvim_set_keymap(
-	"n",
-	"}",
-	"<cmd>lua require'nvim-treesitter.textobjects.move'.goto_next_start()<CR>",
-	{ noremap = true }
-)
---
--- -- Disable the { keybind
--- vim.api.nvim_set_keymap("n", "{", ts_move.goto_previous_start, { noremap = true })

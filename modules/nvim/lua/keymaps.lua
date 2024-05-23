@@ -103,10 +103,17 @@ vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
 
 vim.keymap.set("n", "<leader>n", "<Cmd>call search('[([{<\\|\"\\|'']')<CR>", {
-	desc = "Jump to next",
+	desc = "Jump to next brace, quote, or paren",
 })
 vim.keymap.set("n", "<leader>p", "<Cmd>call search('[([{<\\|\"\\|'']', 'b') <CR>", {
-	desc = "Jump to previous",
+	desc = "Jump to previous brace, quote, or paren",
+})
+
+vim.keymap.set("n", "}", "<Cmd>call search('[{]')<CR>", {
+	desc = "Jump to next brace",
+})
+vim.keymap.set("n", "{", "<Cmd>call search('[{]', 'b') <CR>", {
+	desc = "Jump to previous brace",
 })
 
 -- Telescope
@@ -160,4 +167,3 @@ vim.api.nvim_set_keymap(
 	"<CMD>SymbolsOutline<CR>",
 	{ desc = "Symbols outline", noremap = true, silent = true }
 )
-
