@@ -1,7 +1,8 @@
 return {
 	name = "customCursorLine",
 	init = function()
-		vim.opt.cursorline = true
+		vim.cmd.colorscheme("melange")
+		-- vim.opt.cursorline = true
 	end,
 	static = {
 		winhl = {
@@ -32,14 +33,14 @@ return {
 				d = {
 					winhl = {
 						CursorLine = { bg = "#34302C" },
-						CursorLineNr = { fg = "#867462", bg = "#34302C" },
+						CursorLineNr = { fg = "#34302C", bg = "#34302C" },
 					},
 				},
 				-- yank
 				y = {
 					winhl = {
 						CursorLine = { bg = "#7D2A2F" },
-						CursorLineNr = { fg = "#867462", bg = "#7D2A2F" },
+						CursorLineNr = { fg = "#7D2A2F", bg = "#7D2A2F" },
 					},
 				},
 			},
@@ -53,19 +54,19 @@ return {
 		c = {
 			winhl = {
 				CursorLine = { bg = "#EBC06D" },
-				CursorLineNr = { fg = "#000000", bg = "#EBC06D" },
+				CursorLineNr = { fg = "#EBC06D", bg = "#EBC06D" },
 			},
 		},
 		n = {
 			winhl = {
 				CursorLine = { bg = "#403A36" }, -- Slightly lighter gray
-				CursorLineNr = { fg = "#867462", bg = "#403A36" },
+				CursorLineNr = { fg = "#403A36", bg = "#403A36" },
 			},
 		},
 		-- visual
 		[{ "v", "V", "\x16" }] = {
 			winhl = {
-				CursorLineNr = { fg = "#867462" },
+				CursorLineNr = { fg = "#273142" },
 				Visual = { bg = "#273142" }, -- Dark blue
 			},
 		},
@@ -80,7 +81,7 @@ return {
 		R = {
 			winhl = {
 				CursorLine = { bg = "#7D2A2F" },
-				CursorLineNr = { fg = "#867462", bg = "#7D2A2F" },
+				CursorLineNr = { fg = "#7D2A2F", bg = "#7D2A2F" },
 			},
 		},
 	},

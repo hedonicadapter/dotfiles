@@ -66,7 +66,6 @@ in {
     gh
     nodePackages.pnpm
     libGLU
-    wine
 
     nwg-look
     neovide
@@ -588,10 +587,7 @@ in {
           config = toLuaFile ../../modules/nvim/plugins/twilight.lua;
         }
 
-        {
-          plugin = melange-nvim;
-          config = "colorscheme melange";
-        }
+        melange-nvim
 
         # {
         #   plugin = transparent-nvim;
@@ -606,6 +602,7 @@ in {
             require('reactive').setup {
               load = 'customCursor'
             }
+
           '';
         }
 

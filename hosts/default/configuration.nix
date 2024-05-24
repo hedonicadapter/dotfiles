@@ -200,6 +200,7 @@ in {
     bibata-cursors-translucent
     fluent-icon-theme
 
+    wine
     gcc
     python311Packages.cmake
     nodejs_21

@@ -18,10 +18,10 @@ vim.o.cmdheight = 0
 if vim.g.neovide then
 	vim.opt.linespace = 15
 
-	vim.g.neovide_padding_top = 8
+	vim.g.neovide_padding_top = 10
 	vim.g.neovide_padding_bottom = 0
-	vim.g.neovide_padding_right = 10
-	vim.g.neovide_padding_left = 10
+	vim.g.neovide_padding_right = 20
+	vim.g.neovide_padding_left = 20
 
 	vim.g.neovide_theme = "auto"
 
@@ -40,9 +40,10 @@ if vim.g.neovide then
 		return string.format("%x", math.floor(255 * vim.g.transparency or 0.8))
 	end
 	-- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
-	-- vim.g.neovide_transparency = 0.8
+	vim.g.neovide_transparency = 0.8
 	-- vim.g.transparency = 0.8
-	-- vim.g.neovide_background_color = "#34302C" -- .. alpha()
+	vim.g.neovide_background_color = "#34302C" -- .. alpha()
+	vim.g.neovide_window_blurred = true
 
 	vim.keymap.set("n", "<C-s>", ":w<CR>") -- Save
 	vim.keymap.set("v", "<C-c>", '"+y') -- Copy
@@ -137,14 +138,6 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
 		end
 	end,
 })
-
-vim.api.nvim_exec(
-	[[
-  autocmd BufEnter * colorscheme melange
-  autocmd BufEnter * ReactiveStart
-]],
-	false
-)
 
 vim.api.nvim_exec(
 	[[

@@ -9,6 +9,14 @@ require("staline").setup({
 		n = "#403A36",
 		c = "#EBC06D",
 		v = "#273142",
+		V = "#273142",
+	},
+	mode_icons = {
+		n = " NORMAL ",
+		i = " INSERT ",
+		c = " COMMAND ",
+		v = " VISUAL ",
+		V = " VISUAL ",
 	},
 	defaults = {
 		true_colors = true,
