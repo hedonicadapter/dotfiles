@@ -2,7 +2,7 @@ return {
 	name = "customCursorLine",
 	init = function()
 		vim.cmd.colorscheme("melange")
-		-- vim.opt.cursorline = true
+		vim.opt.cursorline = true
 	end,
 	static = {
 		winhl = {

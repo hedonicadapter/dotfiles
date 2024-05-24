@@ -154,6 +154,7 @@ vim.api.nvim_exec(
 vim.api.nvim_exec(
 	[[
   autocmd BufEnter * set relativenumber
+  autocmd BufEnter * set cursorline
 ]],
 	false
 )
