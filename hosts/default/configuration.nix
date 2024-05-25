@@ -201,6 +201,7 @@ in {
     fluent-icon-theme
 
     wine
+    winetricks
     gcc
     python311Packages.cmake
     nodejs_21

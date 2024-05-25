@@ -27,6 +27,7 @@
     nixneovimplugins = { url = "github:jooooscha/nixpkgs-vim-extra-plugins"; };
 
     stylix = { url = "github:danth/stylix"; };
+
   };
 
   outputs = { self, nixpkgs, spicetify-nix, stylix, ... }@inputs:
