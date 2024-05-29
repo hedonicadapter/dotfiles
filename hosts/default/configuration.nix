@@ -222,6 +222,7 @@ in {
     brightnessctl
     pulseaudio
     playerctl
+    vesktop
     spotify
     discord-canary
     betterdiscordctl

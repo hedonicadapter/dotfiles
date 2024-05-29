@@ -774,16 +774,20 @@ in {
       history-file = "${config.home.homeDirectory}/.config/tofi/history";
     };
   };
+
   home.file.".config/obsidian/global.css".source =
     ../../modules/obsidian/global.css;
 
-  home.file.".config/BetterDiscord/themes" = {
+  home.file.".config/BetterDiscord" = {
     source = ../../modules/discord;
     recursive = true;
   };
 
-  home.file.".oh-my-zsh/custom/themes/headline/headline.zsh-theme".source =
-    ../../modules/oh-my-zsh/themes/headline/headline.zsh-theme;
+  home.file.".oh-my-zsh/custom/themes" = {
+    source = ../../modules/oh-my-zsh/themes;
+    recursive = true;
+  };
+
   programs.zsh = {
     enable = true;
 
@@ -807,7 +811,7 @@ in {
         setopt HIST_FIND_NO_DUPS
         setopt HIST_SAVE_NO_DUPS
       '';
-      theme = "headline/headline";
+      theme = "roundy/roundy";
     };
   };
 
