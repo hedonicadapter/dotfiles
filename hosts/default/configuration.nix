@@ -222,11 +222,9 @@ in {
     brightnessctl
     pulseaudio
     playerctl
-    vesktop
     spotify
-    discord-canary
+    (pkgs.discord-canary.override { withOpenASAR = true; })
     betterdiscordctl
-    armcord
 
     swww
     wlsunset

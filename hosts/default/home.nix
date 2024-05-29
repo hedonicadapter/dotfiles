@@ -4,8 +4,6 @@ let
   unstable = import <nixos-unstable> { };
   spotify-wrap = pkgs.writeShellScriptBin "wrap-spotify"
     (builtins.readFile ../../wrappers/spotify.nix);
-  armcord-wrap = pkgs.writeShellScriptBin "wrap-armcord"
-    (builtins.readFile ../../wrappers/armcord.nix);
   edge-wrap = pkgs.writeShellScriptBin "wrap-edge"
     (builtins.readFile ../../wrappers/edge.nix);
   obsidian-wrap = pkgs.writeShellScriptBin "wrap-obsidian"
@@ -82,7 +80,6 @@ in {
     font-awesome
 
     spotify-wrap
-    armcord-wrap
     edge-wrap
     obsidian-wrap
     teams-wrap
@@ -811,7 +808,7 @@ in {
         setopt HIST_FIND_NO_DUPS
         setopt HIST_SAVE_NO_DUPS
       '';
-      theme = "roundy/roundy";
+      theme = "headline/headline";
     };
   };
 
@@ -887,6 +884,8 @@ in {
     ../../modules/hyprland/auto-start.sh;
   home.file.".config/hypr/wallpaper-cycler.sh".source =
     ../../modules/hyprland/wallpaper-cycler.sh;
+  home.file.".config/hypr/toggle-mic.sh".source =
+    ../../modules/hyprland/toggle-mic.sh;
 
   home.file.".config/nvim/lua" = {
     source = ../../modules/nvim/lua;
