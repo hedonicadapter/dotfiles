@@ -192,6 +192,7 @@ in {
         "steam"
         "steam-original"
         "steam-run"
+        "discord-canary"
       ];
   };
 
@@ -222,6 +223,8 @@ in {
     pulseaudio
     playerctl
     spotify
+    discord-canary
+    betterdiscordctl
     armcord
 
     swww

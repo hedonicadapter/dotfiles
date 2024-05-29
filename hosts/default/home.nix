@@ -777,6 +777,11 @@ in {
   home.file.".config/obsidian/global.css".source =
     ../../modules/obsidian/global.css;
 
+  home.file.".config/BetterDiscord/themes" = {
+    source = ../../modules/discord;
+    recursive = true;
+  };
+
   home.file.".oh-my-zsh/custom/themes/headline/headline.zsh-theme".source =
     ../../modules/oh-my-zsh/themes/headline/headline.zsh-theme;
   programs.zsh = {
@@ -784,6 +789,11 @@ in {
 
     autosuggestion = { enable = true; };
     syntaxHighlighting = { enable = true; };
+    historySubstringSearch = {
+      enable = true;
+      searchDownKey = "^n";
+      searchUpKey = "^p";
+    };
 
     oh-my-zsh = {
       enable = true;
