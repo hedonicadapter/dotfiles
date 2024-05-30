@@ -172,8 +172,8 @@ const options = mkOptions(OPTIONS, {
     progress: {
       vertical: opt(true),
       pack: {
-        h: opt<"start" | "center" | "end">("end"),
-        v: opt<"start" | "center" | "end">("center"),
+        h: opt<"start" | "center" | "end">("center"),
+        v: opt<"start" | "center" | "end">("end"),
       },
     },
     microphone: {

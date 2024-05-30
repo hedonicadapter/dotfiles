@@ -8,22 +8,25 @@ $button-radius: $radius;
 
   > * {
     border-radius: $button-radius;
-    margin: $bar-spacing;
+    // margin: $bar-spacing -6px;
+    padding: $padding * 1.2 $padding * 1;
   }
 
   label,
   image {
     font-weight: bold;
   }
-
-  > * {
-    padding: $padding * 0.4 $padding * 1.4;
-  }
 }
 
+// .bar
 .bar {
   transition: $transition;
   background-color: $bg;
+
+  > * {
+    margin: 0 $bar-spacing * 1.25;
+    // margin-bottom: -4px;
+  }
 
   .panel-button {
     @include panel-button;
@@ -40,7 +43,7 @@ $button-radius: $radius;
       min-height: 4.75pt;
       border-radius: $radius * 0.6;
       box-shadow: inset 0 0 0 $border-width $border-color;
-      margin: 0 $padding * 0.5;
+      margin: 0 $padding * 0.55;
       transition: $transition * 0.5;
       background-color: transparentize($fg, 0.8);
 

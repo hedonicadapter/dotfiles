@@ -112,6 +112,22 @@ const AudioIndicator = () =>
     self.icon = cons.find(([n]) => n <= vol * 100)?.[1] || "";
   });
 
+const VolumeIndicator = () =>
+  Widget.CircularProgress({
+    class_name: audio["speaker"]
+      .bind("is_muted")
+      .as((m) => (m ? "sys-icon sys-volume muted" : "sys-icon sys-volume")),
+    css:
+      "min-width: 9px;" + // its size is min(min-height, min-width)
+      "min-height: 9px;" +
+      "font-size: 1.5px;", // to set its thickness set font-size on it
+    // "margin: 4px;", // you can set margin on it
+    rounded: false,
+    inverted: false,
+    // startAt: 0.75,
+    value: audio["speaker"].bind("volume"),
+  });
+
 export default () =>
   PanelButton({
     window: "quicksettings",
@@ -119,14 +135,15 @@ export default () =>
     on_scroll_up: () => (audio.speaker.volume += 0.02),
     on_scroll_down: () => (audio.speaker.volume -= 0.02),
     child: Widget.Box({
-      spacing: 3,
+      spacing: 4,
       children: [
-        ProfileIndicator(),
+        // ProfileIndicator(),
         ModeIndicator(),
         DNDIndicator(),
         BluetoothIndicator(),
         NetworkIndicator(),
-        AudioIndicator(),
+        // AudioIndicator(),
+        // VolumeIndicator(),
         MicrophoneIndicator(),
       ],
     }),
