@@ -86,6 +86,7 @@ in {
     nerdfonts
     material-symbols
     font-awesome
+    hyprpicker
 
     spotify-wrap
     edge-wrap
@@ -880,10 +881,10 @@ in {
     systemd.enable = true;
     systemd.variables = [ "--all" ];
     extraConfig = "${builtins.readFile ../../modules/hyprland/hyprland.conf}";
-    # plugins = [
-    # inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
-    # inputs.hyprlock.packages.${pkgs.system}.default
-    # ];
+    plugins = [
+      # inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
+      # inputs.hyprlock.packages.${pkgs.system}.default
+    ];
   };
   home.file.".config/hypr/auto-start.sh".source =
     ../../modules/hyprland/auto-start.sh;
