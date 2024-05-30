@@ -14,7 +14,7 @@ const options = mkOptions(OPTIONS, {
   theme: {
     dark: {
       primary: {
-        bg: opt("#7B9695"),
+        bg: opt("#ECE1D7"),
         fg: opt("#141414"),
       },
       error: {

@@ -143,7 +143,7 @@ export default () =>
         BluetoothIndicator(),
         NetworkIndicator(),
         // AudioIndicator(),
-        // VolumeIndicator(),
+        VolumeIndicator(),
         MicrophoneIndicator(),
       ],
     }),
