@@ -21,7 +21,11 @@ let
     (builtins.readFile ../../modules/tofi/power-menu.sh);
 
 in {
-  imports = [ inputs.ags.homeManagerModules.default ../../cachix.nix ];
+  imports = [
+    inputs.ags.homeManagerModules.default
+    ../../cachix.nix
+    inputs.matugen.nixosModules.default
+  ];
 
   home.username = "hedonicadapter";
   home.homeDirectory = "/home/hedonicadapter";
@@ -51,6 +55,8 @@ in {
 
   home.packages = with pkgs; [
 
+    dart-sass
+
     google-cloud-sdk
     firebase-tools
     grim
@@ -76,6 +82,8 @@ in {
         builtins.readFile ../../modules/Iosevka/build-plans.toml;
       set = "Term";
     })
+    # (nerdfonts.override { fonts = [ "ProggyClean" ]; })
+    nerdfonts
     material-symbols
     font-awesome
 
@@ -743,11 +751,8 @@ in {
 
     };
   };
-  # programs.bash = {
-  #   enable = true;
-  #   historyControl = [ "erasedups" ];
-  #  bashrcExtra = "eval \"$(zoxide init bash)\"";
-  # };
+
+  programs.matugen = { enable = true; };
 
   stylix.targets.tofi.enable = false;
   programs.tofi = {

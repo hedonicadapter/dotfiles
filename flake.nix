@@ -2,6 +2,7 @@
   description = "Nixos config flake";
 
   inputs = {
+
     nixpkgs = { url = "github:nixos/nixpkgs/nixos-unstable"; };
 
     neovim-nightly-overlay = {
@@ -28,6 +29,10 @@
 
     stylix = { url = "github:danth/stylix"; };
 
+    matugen = {
+      url = "github:/InioX/Matugen";
+      # ref = "refs/tags/matugen-v0.10.0";
+    };
   };
 
   outputs = { self, nixpkgs, spicetify-nix, stylix, ... }@inputs:

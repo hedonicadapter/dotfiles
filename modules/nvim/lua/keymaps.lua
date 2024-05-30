@@ -11,7 +11,7 @@ local function set_keymap_for_all_modes(key, cmd)
 	end
 end
 
-vim.api.nvim_set_keymap("n", "<leader>ss", "<cmd>w<CR>", {
+vim.api.nvim_set_keymap("n", "<leader>sf", "<cmd>w<CR>", {
 	desc = "save",
 	noremap = true,
 	silent = true,
