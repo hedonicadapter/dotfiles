@@ -49,16 +49,16 @@ function OnScreenProgress(vertical: boolean) {
       brightness,
       () => show(brightness.kbd, icons.brightness.keyboard),
       "notify::kbd",
-    )
-    .hook(
-      audio.speaker,
-      () =>
-        show(
-          audio.speaker.volume,
-          icon(audio.speaker.icon_name || "", icons.audio.type.speaker),
-        ),
-      "notify::volume",
     );
+  // .hook(
+  //   audio.speaker,
+  //   () =>
+  //     show(
+  //       audio.speaker.volume,
+  //       icon(audio.speaker.icon_name || "", icons.audio.type.speaker),
+  //     ),
+  //   "notify::volume",
+  // );
 }
 
 function MicrophoneMute() {
