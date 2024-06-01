@@ -17,6 +17,12 @@ vim.api.nvim_set_keymap("n", "<leader>sf", "<cmd>w<CR>", {
 	silent = true,
 })
 
+vim.api.nvim_set_keymap("n", "<leader>qq", "<cmd>qa<CR>", {
+	desc = "exit",
+	noremap = true,
+	silent = true,
+})
+
 vim.api.nvim_set_keymap("n", "<leader>u", "<cmd>Telescope undo<CR>", {
 	noremap = true,
 	silent = true,
@@ -113,13 +119,6 @@ vim.keymap.set("n", "<leader>n", "<Cmd>call search('[([{<\\|\"\\|'']')<CR>", {
 })
 vim.keymap.set("n", "<leader>p", "<Cmd>call search('[([{<\\|\"\\|'']', 'b') <CR>", {
 	desc = "Jump to previous brace, quote, or paren",
-})
-
-vim.keymap.set("n", "}", "<Cmd>call search('[{]')<CR>", {
-	desc = "Jump to next brace",
-})
-vim.keymap.set("n", "{", "<Cmd>call search('[{]', 'b') <CR>", {
-	desc = "Jump to previous brace",
 })
 
 -- Telescope

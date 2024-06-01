@@ -183,10 +183,9 @@ in {
           }
         }
 
-        /* Highlight color inside browser content window */
         ::selection {
-          background-color: dodgerblue !important;
-          color: white !important;
+          background-color: #7daea3 !important;
+          color: #fbf1c7 !important;
         }
       '';
       userChrome = ''
@@ -230,7 +229,8 @@ in {
            --tab-border-radius: var(--6) !important;
            --main: #77777770;
            --item: #77777730;
-           --grey: #b8b8b8;
+           --grey: #bdae93;
+           --lightgrey: #ddc7a1;
            --red: #ff000070;
            --toolbarbutton-hover-background: transparent !important;
            --toolbarbutton-active-background: transparent !important;
@@ -247,11 +247,10 @@ in {
            border: none !important;
          }
 
-         /* Highlight Selection color */
-         ::selection {
-           background-color: dodgerblue !important;
-           color: white !important;
-         }
+        ::selection {
+          background-color: #7daea3 !important;
+          color: #fbf1c7 !important;
+        }
 
          /* Customization Panel Fix */
          #customization-panelWrapper > .panel-arrowbox > .panel-arrow {
@@ -260,7 +259,7 @@ in {
 
          /* Video Background Fix */
          video {
-           background-color: black !important;
+           background-color: #292828 !important;
          }
 
          /* ❌ Hide Items ❌ */
@@ -348,7 +347,7 @@ in {
            padding-inline: var(--6) !important;
            border-radius: var(--6) !important;
            margin: var(--8) !important;
-           background-color: blue !important;
+           background-color: #4c7a5d !important;
          }
 
          /* ℹ️ Findbar Ctrl+F */
@@ -369,7 +368,7 @@ in {
            width: 168px !important;
            padding-inline: var(--6) !important;
            height: var(--tab-min-height) !important;
-           color: black !important;
+           color: #292828 !important;
            background: none !important;
          }
          findbar toolbarbutton {
@@ -377,7 +376,7 @@ in {
            padding: 4px !important;
            margin: 0 !important;
            background: none !important;
-           fill: black !important;
+           fill: #292828 !important;
            scale: 0.7;
          }
 
@@ -407,7 +406,7 @@ in {
          #main-menubar {
            margin: 4px;
            background-color: none;
-           color: black;
+           color: #292828;
            height: 16px !important;
          }
 
@@ -416,7 +415,7 @@ in {
            border-radius: var(--8) !important;
            padding: var(--6) !important;
            background-color: var(--grey) !important;
-           color: black !important;
+           color: #292828 !important;
          }
 
          /* Menu Position */
@@ -436,9 +435,6 @@ in {
            border-radius: var(--6) !important;
            padding-inline: var(--6) !important;
            margin: 0 !important;
-
-
-
          }
          .menu-accel {
            margin-inline: var(--6) 0 !important;
@@ -449,7 +445,7 @@ in {
          menupopup > menuitem[_moz-menuactive],
          menupopup > menu[_moz-menuactive] {
            background-color: var(--main) !important;
-           color: black !important;  
+           color: #292828 !important;  
          }
          #context-navigation {
            flex-direction: column !important;
@@ -488,8 +484,7 @@ in {
          }
 
          .tabbrowser-tab[fadein]:not([selected]):not([pinned]) {
-           max-width: 120px !important;
-           min-width: 80px !important;
+           width: clamp(160px, 10vw, 200px) !important;
          }
          .tabbrowser-tab .tab-background:not([selected]) {
            background: var(--item) !important;
@@ -503,8 +498,7 @@ in {
 
          /* Tabs [Selected] */
          .tabbrowser-tab[selected][fadein]:not([pinned]) {
-           max-width: 320px !important;
-           min-width: 240px !important;
+           width: clamp(300px, 18vw, 500px) !important;
          }
          .tabbrowser-tab .tab-background[selected="true"] {
            background: var(--main) !important;
@@ -564,7 +558,7 @@ in {
            margin: 0 var(--8) var(--8) 0 !important;
            padding: 0 var(--6) !important;
            background: var(--item) !important;
-           color: grey !important;
+           color: var(--grey) !important;
            height: var(--tab-min-height);
          }
 
@@ -575,7 +569,7 @@ in {
            transition: transform 0.1s linear;
            transform: none !important;
            font-size: 1rem !important;
-           color: lightgrey !important;
+           color: var(--lightgrey) !important;
            padding-inline: 0px !important;
          }
 
@@ -604,7 +598,7 @@ in {
            padding: var(--6);
            border-radius: var(--6);
            left: 50vw;
-           width: max(50vw, 320px) !important;
+           width: clamp(300px, 18vw, 500px) !important;
            transform: translateX(-50%) !important;
          }
          #nav-bar {
@@ -680,7 +674,7 @@ in {
          #downloads-button {
            position: fixed !important;
            top: 0 !important;
-           right: 140px !important; 
+           right: 0px !important; 
            width: var(--tab-min-height);
            z-index: 1;
          }
@@ -688,14 +682,14 @@ in {
            position: fixed !important;
            align-items: end !important;
            top: var(--8) !important;
-           right: 140px !important;
+           right: 0px !important;
            left: auto !important;
            width: var(--6) !important;
            height: var(--tab-min-height) !important;
            border-radius: var(--6) !important;
            background: var(--item);
            visibility: visible !important;
-           border: 1px solid white !important;
+           border: 1px solid #fbf1c7 !important;
            margin-right: 8px;
          }
          #downloads-indicator-progress-inner {
@@ -704,11 +698,11 @@ in {
            border-radius: var(--6) !important;
          }
          #downloads-button[attention="success"] #downloads-indicator-progress-outer {
-           background: lightgreen !important;
+           background: #a9b665 !important;
          }
          #downloads-button:is([attention="warning"], [attention="severe"])
            #downloads-indicator-progress-inner {
-           background: red !important;
+           background: #ea6962 !important;
            height: var(--8) !important;
          }
 
@@ -719,7 +713,7 @@ in {
          }
          #downloadsPanel-mainView {
            background-color: #2b2a33 !important;
-           color: white;
+           color: #fbf1c7;
            padding: var(--6) !important;
          }
          #downloadsFooterButtons > button,
@@ -745,7 +739,7 @@ in {
          }
          .urlbarView {
            background-color: var(--lwt-accent-color); /* Pop-up background color (adaptive) */
-           color: grey;                               /* Pop-up text color */
+           color: var(--grey);                               /* Pop-up text color */
          }
       '';
 
@@ -762,16 +756,16 @@ in {
       height = "100%";
       border-width = 0;
       outline-width = 0;
-      padding-left = "35%";
+      padding-left = "45%";
       padding-top = "35%";
-      result-spacing = 25;
+      result-spacing = 18;
       num-results = 5;
-      font = "Work Sans";
+      font = "Public Sans";
       font-size = 24;
       background-color = "#000A";
-      prompt-color = "#ECE1D7";
-      selection-color = "#273142";
-      selection-match-color = "#233524";
+      prompt-color = "#bdae93";
+      selection-color = "#fbf1c7";
+      selection-match-color = "#a9b665";
 
       history-file = "${config.home.homeDirectory}/.config/tofi/history";
     };
