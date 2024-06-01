@@ -745,6 +745,21 @@
         "type": "github"
       }
     },
+    "nur": {
+      "locked": {
+        "lastModified": 1717231546,
+        "narHash": "sha256-qFMtR4NJZPgjAs7HXo7JbXrekQrX9QLNW506YKlz9Xs=",
+        "owner": "nix-community",
+        "repo": "NUR",
+        "rev": "0a7d504ca4d14687d8fbdc07a19efba2a58b87f7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "NUR",
+        "type": "github"
+      }
+    },
     "poetry2nix": {
       "inputs": {
         "flake-utils": [
@@ -781,6 +796,7 @@
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixneovimplugins": "nixneovimplugins",
         "nixpkgs": "nixpkgs_6",
+        "nur": "nur",
         "spicetify-nix": "spicetify-nix",
         "stylix": "stylix"
       }

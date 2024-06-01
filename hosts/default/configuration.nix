@@ -193,6 +193,9 @@ in {
         "steam-original"
         "steam-run"
         "discord-canary"
+        "terraform"
+        "beeper"
+        "rider"
       ];
   };
 
@@ -201,6 +204,7 @@ in {
     bibata-cursors-translucent
     fluent-icon-theme
 
+    jetbrains.rider
     wine
     winetricks
     gcc
@@ -343,7 +347,7 @@ in {
 
       sansSerif = {
         package = pkgs.public-sans;
-        name = "Work Sans";
+        name = "Public Sans";
       };
 
       monospace = {

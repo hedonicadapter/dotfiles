@@ -33,6 +33,7 @@ in {
   nixpkgs.overlays = [
     inputs.neovim-nightly-overlay.overlay
     inputs.nixneovimplugins.overlays.default
+    inputs.nur.overlay
   ];
 
   fonts.fontconfig.enable = true;
@@ -51,10 +52,11 @@ in {
       "steam-run"
       "steam"
       "rider"
+      "sf-pro"
     ];
 
   home.packages = with pkgs; [
-
+    nur.repos.sagikazarmark.sf-pro
     dart-sass
 
     google-cloud-sdk
@@ -73,15 +75,14 @@ in {
 
     nwg-look
     neovide
-    jetbrains.rider
     transmission
     beeper
     #(callPackage ./neovide.nix { })
-    (iosevka.override {
-      privateBuildPlan =
-        builtins.readFile ../../modules/Iosevka/build-plans.toml;
-      set = "Term";
-    })
+    # (iosevka.override {
+    #   privateBuildPlan =
+    #     builtins.readFile ../../modules/Iosevka/build-plans.toml;
+    #   set = "Term";
+    # })
     # (nerdfonts.override { fonts = [ "ProggyClean" ]; })
     nerdfonts
     material-symbols
@@ -107,8 +108,6 @@ in {
     prettierd
     sassc
     typescript
-    # nodePackages.typescript-language-server this runs with bunx
-    # tailwindcss-language-server
     (with dotnetCorePackages; combinePackages [ sdk_6_0 sdk_7_0 sdk_8_0 ])
     csharp-ls
     azure-functions-core-tools
@@ -1024,12 +1023,12 @@ in {
         }
 
         copilot-vim
-        # {
-        #   plugin = unstable.vimPlugins.CopilotChat-nvim;
-        #   config = toLua ''
-        #     require('CopilotChat').setup()
-        #   '';
-        # }
+        {
+          plugin = unstable.vimPlugins.CopilotChat-nvim;
+          config = toLua ''
+            require('CopilotChat').setup()
+          '';
+        }
 
         neodev-nvim
         {
@@ -1253,9 +1252,6 @@ in {
 
   gtk.iconTheme.package = pkgs.fluent-icon-theme;
   gtk.iconTheme.name = "Fluent";
-
-  # gtk.font.name = "Noto Sans";
-  # gtk.font.package = pkgs.noto-fonts;
 
   gtk.cursorTheme.package = pkgs.bibata-cursors-translucent;
   gtk.cursorTheme.name = "Bibata_Ghost";

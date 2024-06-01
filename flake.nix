@@ -29,13 +29,16 @@
 
     stylix = { url = "github:danth/stylix"; };
 
+    nur = { url = "github:nix-community/NUR"; };
+
     matugen = {
       url = "github:/InioX/Matugen";
       # ref = "refs/tags/matugen-v0.10.0";
     };
+
   };
 
-  outputs = { self, nixpkgs, spicetify-nix, stylix, ... }@inputs:
+  outputs = { self, nixpkgs, spicetify-nix, stylix, nur, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -46,6 +49,7 @@
           stylix.nixosModules.stylix
           ./hosts/default/configuration.nix
           inputs.home-manager.nixosModules.default
+          nur.nixosModules.nur
         ];
       };
 
