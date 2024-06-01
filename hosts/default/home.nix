@@ -1125,6 +1125,12 @@ in {
         }
 
         {
+          plugin = nvim-treesitter-textobjects;
+          config =
+            toLuaFile ../../modules/nvim/plugins/treesitter-textobjects.lua;
+        }
+
+        {
           plugin = zoxide-vim;
           config = toLua ''
             vim.cmd [[command! -bang -nargs=* -complete=customlist,zoxide#complete Z zoxide#vim_cd <args>]]

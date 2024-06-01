@@ -246,7 +246,7 @@ in {
   programs.spicetify = {
     enable = true;
     theme = spicePkgs.themes.text;
-    colorScheme = "Gruvbox";
+    colorScheme = "gruvbox";
     injectCss = true;
 
     enabledCustomApps = with spicePkgs.apps; [ reddit marketplace ];
