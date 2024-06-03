@@ -36,5 +36,5 @@ require("nvim-treesitter.configs").setup({
 	-- "vim",
 	-- "yaml",
 	-- },
-	-- parser_install_dir = "~/.config/nvim/parsers"
+	-- parser_install_dir = "~/.local/share/nvim/parsers",
 })

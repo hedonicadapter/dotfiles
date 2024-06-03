@@ -115,10 +115,64 @@ lspconfig.bicep.setup(coq.lsp_ensure_capabilities({
 }))
 vim.cmd([[ autocmd BufNewFile,BufRead *.bicep set filetype=bicep ]])
 
-lspconfig.csharp_ls.setup(coq.lsp_ensure_capabilities({
-	on_attach = on_attach,
-	capabilities = capabilities,
-}))
+-- lspconfig.omnisharp.setup(coq.lsp_ensure_capabilities({
+-- 		on_attach = on_attach,
+-- 		capabilities = capabilities,
+-- 	    cmd = { "dotnet", "OmniSharp" },
+-- 	filetypes = {"cs", "cshtml", "razor", "csproj", },
+-- handlers = {
+--     ["textDocument/definition"] = require('omnisharp_extended').definition_handler,
+--     ["textDocument/typeDefinition"] = require('omnisharp_extended').type_definition_handler,
+--     ["textDocument/references"] = require('omnisharp_extended').references_handler,
+--     ["textDocument/implementation"] = require('omnisharp_extended').implementation_handler,
+--   },
+--         keys = {
+--           {
+--             "gd",
+--             function()
+--               require("omnisharp_extended").telescope_lsp_definitions()
+--             end,
+--             desc = "Goto Definition",
+--           },
+--         },
+-- 	    settings = {
+-- 	      FormattingOptions = {
+-- 		EnableEditorConfigSupport = true,
+-- 	      },
+-- 	      MsBuild = {
+-- 		-- If true, MSBuild project system will only load projects for files that
+-- 		-- were opened in the editor. This setting is useful for big C# codebases
+-- 		-- and allows for faster initialization of code navigation features only
+-- 		-- for projects that are relevant to code that is being edited. With this
+-- 		-- setting enabled OmniSharp may load fewer projects and may thus display
+-- 		-- incomplete reference lists for symbols.
+-- 		LoadProjectsOnDemand = nil,
+-- 	      },
+-- 	      RoslynExtensionsOptions = {
+-- 		-- Enables support for roslyn analyzers, code fixes and rulesets.
+-- 		EnableAnalyzersSupport = true,
+-- 		-- Enables support for showing unimported types and unimported extension
+-- 		-- methods in completion lists. When committed, the appropriate using
+-- 		-- directive will be added at the top of the current file. This option can
+-- 		-- have a negative impact on initial completion responsiveness,
+-- 		-- particularly for the first few completion sessions after opening a
+-- 		-- solution.
+-- 		EnableImportCompletion = true,
+-- 		-- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+-- 		-- true
+-- 		AnalyzeOpenDocumentsOnly = nil,
+-- 	      },
+-- 	      Sdk = {
+-- 		IncludePrereleases = true,
+-- 	      },
+-- 	    },
+-- 	}))
+require("roslyn").setup({
+    dotnet_cmd = "dotnet", -- this is the default
+    roslyn_version = "4.8.0-3.23475.7", -- this is the default
+    on_attach = on_attach,
+    capabilities = capabilities,
+})
 lspconfig.cssls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
@@ -219,3 +273,5 @@ lspconfig.yamlls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
 }))
+
+

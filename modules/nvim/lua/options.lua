@@ -14,6 +14,8 @@ vim.g.have_nerd_font = true
 vim.opt.guifont = "JetBrainsMono Nerd Font"
 vim.o.guicursor = "n-v-c-sm-i-ci-ve:block,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor"
 vim.o.cmdheight = 0
+vim.o.sidescroll = 1
+vim.o.sidescrolloff = 20
 
 if vim.g.neovide then
 	vim.opt.linespace = 15
@@ -156,5 +158,13 @@ vim.api.nvim_exec(
   autocmd BufEnter * set relativenumber
   autocmd BufEnter * set cursorline
 ]],
+	false
+)
+
+vim.api.nvim_exec(
+	[[
+		autocmd BufEnter *.cshtml set filetype=html.cshtml.razor
+		autocmd BufEnter *.razor set filetype=html.cshtml.razor
+	]],
 	false
 )

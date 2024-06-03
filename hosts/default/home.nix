@@ -74,10 +74,10 @@ in {
     libGLU
 
     nwg-look
-    neovide
+    # neovide
+    (callPackage ../../modules/neovide/neovide.nix { })
     transmission
     beeper
-    #(callPackage ./neovide.nix { })
     # (iosevka.override {
     #   privateBuildPlan =
     #     builtins.readFile ../../modules/Iosevka/build-plans.toml;
@@ -109,7 +109,6 @@ in {
     sassc
     typescript
     (with dotnetCorePackages; combinePackages [ sdk_6_0 sdk_7_0 sdk_8_0 ])
-    csharp-ls
     azure-functions-core-tools
     csharpier
     sqlfluff
@@ -117,6 +116,7 @@ in {
     terraform
     stylua
     nixfmt
+    # omnisharp-roslyn
   ];
 
   home.file = {
@@ -829,7 +829,7 @@ in {
         dpi-aware = "yes";
         pad = "40x0";
         font-size-adjustment = 0.9;
-        line-height = 15;
+        line-height = 25;
       };
       colors = {
         foreground = "ECE1D7";
@@ -915,6 +915,7 @@ in {
 
     plugins = with pkgs.vimPlugins;
       [
+        roslyn-nvim
         {
           plugin = auto-session;
           config = toLua ''
@@ -962,6 +963,8 @@ in {
             require('git-conflict').setup()
           '';
         }
+
+        omnisharp-extended-lsp-nvim
 
         {
           plugin = nvim-lspconfig;
