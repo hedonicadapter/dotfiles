@@ -53,10 +53,12 @@ in {
       "steam"
       "rider"
       "sf-pro"
+      "warp-terminal-0.2024.02.20.08.01.stable_01"
+      "warp-terminal"
     ];
 
   home.packages = with pkgs; [
-    nur.repos.sagikazarmark.sf-pro
+    # nur.repos.sagikazarmark.sf-pro
     dart-sass
 
     google-cloud-sdk
@@ -72,10 +74,11 @@ in {
     gh
     nodePackages.pnpm
     libGLU
+    lazydocker
 
     nwg-look
-    # neovide
-    (callPackage ../../modules/neovide/neovide.nix { })
+    neovide
+    # (callPackage ../../modules/neovide/neovide.nix { })
     transmission
     beeper
     # (iosevka.override {

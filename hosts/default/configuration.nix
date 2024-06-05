@@ -181,28 +181,37 @@ in {
     permittedInsecurePackages = [
       "electron-25.9.0" # ONLY for obsidian at the moment
     ];
-    allowUnfreePredicate = pkg:
-      builtins.elem (lib.getName pkg) [
-        "nvidia-x11"
-        "spotify"
-        "microsoft-edge-dev"
-        "vscode"
-        "obsidian"
-        "nvidia-settings"
-        "steam"
-        "steam-original"
-        "steam-run"
-        "discord-canary"
-        "terraform"
-        "beeper"
-        "rider"
-      ];
+    packageOverrides = pkgs: {
+      warp-beta = import (fetchTarball
+        "https://github.com/imadnyc/nixpkgs/archive/refs/heads/warp-terminal-initial-linux.zip") {
+          config = config.nixpkgs.config;
+        };
+    };
+    allowUnfree = true;
+    # allowUnfreePredicate = pkg:
+    #   builtins.elem (lib.getName pkg) [
+    #     "nvidia-x11"
+    #     "spotify"
+    #     "microsoft-edge-dev"
+    #     "vscode"
+    #     "obsidian"
+    #     "nvidia-settings"
+    #     "steam"
+    #     "steam-original"
+    #     "steam-run"
+    #     "discord-canary"
+    #     "terraform"
+    #     "beeper"
+    #     "rider"
+    #     "warp-terminal-0.2024.02.20.08.01.stable_01"
+    #   ];
   };
 
   environment.systemPackages = with pkgs; [
     # orchis-theme
     bibata-cursors-translucent
     fluent-icon-theme
+    warp-beta.warp-terminal
 
     jetbrains.rider
     wine
