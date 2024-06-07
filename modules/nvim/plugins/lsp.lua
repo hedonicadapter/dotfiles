@@ -1,6 +1,6 @@
 local on_attach = function(_, bufnr)
 	vim.g.inlay_hints_visible = true
-	vim.lsp.inlay_hint(bufnr, true)
+	vim.lsp.inlay_hint.enable(bufnr, true)
 
 	local bufmap = function(keys, func)
 		vim.keymap.set("n", keys, func, { buffer = bufnr })

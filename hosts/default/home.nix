@@ -1214,6 +1214,12 @@ in {
         }
 
         melange-nvim
+        {
+          plugin = gruvbox-nvim;
+          config = toLua ''
+            require("gruvbox").setup()
+          '';
+        }
 
         # {
         #   plugin = transparent-nvim;

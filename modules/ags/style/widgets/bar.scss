@@ -10,6 +10,7 @@ $button-radius: $radius;
     border-radius: $button-radius;
     // margin: $bar-spacing -6px;
     padding: $padding * 1.2 $padding * 1;
+    padding-bottom: $padding * 0.735;
   }
 
   label,
@@ -25,7 +26,7 @@ $button-radius: $radius;
 
   > * {
     margin: 0 $bar-spacing * 1.25;
-    margin-top: 0;
+    // margin-top: -2px;
   }
 
   .panel-button {
