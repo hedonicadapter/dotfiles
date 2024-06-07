@@ -172,3 +172,10 @@ vim.api.nvim_set_keymap(
 	"<CMD>SymbolsOutline<CR>",
 	{ desc = "Symbols outline", noremap = true, silent = true }
 )
+
+vim.api.nvim_set_keymap(
+	"n",
+	"<leader>0",
+	"<CMD>CopilotChat><CR>",
+	{ desc = "Open Copilot Chat", noremap = true, silent = true }
+)

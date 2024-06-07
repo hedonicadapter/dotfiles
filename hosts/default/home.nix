@@ -75,6 +75,7 @@ in {
     nodePackages.pnpm
     libGLU
     lazydocker
+    docker-compose
 
     nwg-look
     neovide

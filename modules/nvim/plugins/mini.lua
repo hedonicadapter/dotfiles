@@ -62,3 +62,14 @@ require("mini.move").setup({
 	},
 })
 require("mini.indentscope").setup()
+require("mini.ai").setup()
+require("mini.clue").setup({ window = { delay = 250 } })
+require("mini.cursorword").setup()
+local map = require("mini.map")
+map.setup({
+	integrations = {
+		map.gen_integration.builtin_search(),
+		map.gen_integration.gitsigns(),
+		map.gen_integration.diagnostic(),
+	},
+})

@@ -213,6 +213,7 @@ in {
     fluent-icon-theme
     warp-beta.warp-terminal
 
+    onlyoffice-bin
     jetbrains.rider
     wine
     winetricks
