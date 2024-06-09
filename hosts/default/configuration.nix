@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, lib, stdenv, unzip, fetchFromGitHub, ... }:
+{ config, pkgs, inputs, lib, ... }:
 let
   spicetify-nix = inputs.spicetify-nix;
   spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
@@ -14,14 +14,22 @@ let
 
   monoLisaNF = fontPatcher {
     font = (import ../../modules/monolisa/monolisa.nix {
+      stdenv = pkgs.stdenv;
       lib = lib;
-      stdenv = stdenv;
-      fetchFromGitHub = fetchFromGitHub;
-      unzip = unzip;
+      fetchFromGitHub = pkgs.fetchFromGitHub;
+      unzip = pkgs.unzip;
     });
+    nerd-font-patcher = pkgs.nerd-font-patcher;
+    stdenv = pkgs.stdenv;
   };
 
-  nerd-font-patcher = pkgs.nerd-font-patcher;
+  operator-caska = (import ../../modules/operator-caska/operator-caska.nix {
+    stdenv = pkgs.stdenv;
+    lib = lib;
+    fetchFromGitHub = pkgs.fetchFromGitHub;
+    unzip = pkgs.unzip;
+  });
+
 in {
   services.blueman.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -177,7 +185,11 @@ in {
   };
 
   home-manager = {
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = {
+      inherit inputs;
+      monoLisaNF = monoLisaNF;
+      operator-caska = operator-caska;
+    };
     users = { "hedonicadapter" = import ./home.nix; };
   };
 
@@ -265,8 +277,6 @@ in {
 
     fsearch
   ];
-
-  fonts.fonts = with pkgs; [ monoLisaNF ];
 
   programs.spicetify = {
     enable = true;
@@ -394,10 +404,10 @@ in {
       };
 
       monospace = {
-        package = pkgs.maple-mono-NF;
+        package = operator-caska;
         # package = pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
         # package = pkgs.nerdfonts.override { fonts = [ "ProggyClean" ]; };
-        name = "Maple Mono NF";
+        name = "Operator-Caska";
       };
 
       emoji = {

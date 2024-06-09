@@ -830,7 +830,7 @@ in {
         shell = "zsh";
         # font = "Iosevka Term:size=8";
         # font = "JetBrainsMono Nerd Font:size=13";
-        font = "Maple Mono NF:size=13";
+        font = "Operator-Caska:size=13";
         dpi-aware = "yes";
         pad = "40x0";
         font-size-adjustment = 0.9;

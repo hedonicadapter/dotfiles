@@ -1,5 +1,4 @@
-{ nerd-font-patcher, stdenv }:
-font:
+{ nerd-font-patcher, stdenv, font }:
 stdenv.mkDerivation {
   name = "${font.name}-nerd-font-patched";
   src = font;
