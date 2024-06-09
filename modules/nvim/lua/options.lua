@@ -11,11 +11,13 @@ vim.opt.smartcase = true
 vim.opt.backspace = "indent,eol,start"
 vim.opt.clipboard:append("unnamedplus")
 vim.g.have_nerd_font = true
-vim.opt.guifont = "JetBrainsMono Nerd Font"
+vim.opt.guifont = "Maple Mono NF"
 vim.o.guicursor = "n-v-c-sm-i-ci-ve:block,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor"
 vim.o.cmdheight = 0
 vim.o.sidescroll = 1
 vim.o.sidescrolloff = 20
+vim.opt.undofile = true
+vim.opt.fillchars:append(",eob: ")
 
 if vim.g.neovide then
 	vim.opt.linespace = 15
@@ -31,7 +33,7 @@ if vim.g.neovide then
 	vim.g.neovide_refresh_rate_idle = 5
 	vim.g.neovide_fullscreen = false
 	vim.g.neovide_remember_window_size = false
-	vim.g.neovide_scale_factor = 0.75
+	vim.g.neovide_scale_factor = 0.8
 
 	vim.g.neovide_scroll_animation_length = 0.1
 	vim.g.neovide_cursor_smooth_blink = true
@@ -94,21 +96,21 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
-vim.api.nvim_create_autocmd("CmdlineEnter", {
-	group = vim.api.nvim_create_augroup("cmdheight_1_on_cmdlineenter", {
-		clear = true,
-	}),
-	desc = "Don't hide the status line when typing a command",
-	command = ":set cmdheight=1",
-})
+-- vim.api.nvim_create_autocmd("CmdlineEnter", {
+-- 	group = vim.api.nvim_create_augroup("cmdheight_1_on_cmdlineenter", {
+-- 		clear = true,
+-- 	}),
+-- 	desc = "Don't hide the status line when typing a command",
+-- 	command = ":set cmdheight=1",
+-- })
 
-vim.api.nvim_create_autocmd("CmdlineLeave", {
-	group = vim.api.nvim_create_augroup("cmdheight_0_on_cmdlineleave", {
-		clear = true,
-	}),
-	desc = "Hide cmdline when not typing a command",
-	command = ":set cmdheight=0",
-})
+-- vim.api.nvim_create_autocmd("CmdlineLeave", {
+-- 	group = vim.api.nvim_create_augroup("cmdheight_0_on_cmdlineleave", {
+-- 		clear = true,
+-- 	}),
+-- 	desc = "Hide cmdline when not typing a command",
+-- 	command = ":set cmdheight=0",
+-- })
 
 vim.api.nvim_create_autocmd("BufWritePost", {
 	group = vim.api.nvim_create_augroup("hide_message_after_write", {

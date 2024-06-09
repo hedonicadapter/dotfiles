@@ -208,6 +208,7 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
+    (import ../../modules/monolisa/monolisa.nix { })
     # orchis-theme
     bibata-cursors-translucent
     fluent-icon-theme
@@ -379,9 +380,10 @@ in {
       };
 
       monospace = {
-        package = pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
+        package = pkgs.maple-mono-NF;
+        # package = pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
         # package = pkgs.nerdfonts.override { fonts = [ "ProggyClean" ]; };
-        name = "JetBrainsMono Nerd Font";
+        name = "Maple Mono NF";
       };
 
       emoji = {

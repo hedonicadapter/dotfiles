@@ -1,6 +1,9 @@
-local on_attach = function(_, bufnr)
+-- local navbuddy = require("nvim-navbuddy")
+
+local on_attach = function(client, bufnr)
 	vim.g.inlay_hints_visible = true
-	vim.lsp.inlay_hint.enable(bufnr, true)
+	vim.lsp.inlay_hint.enable(true)
+	-- navbuddy.attach(client, bufnr)
 
 	local bufmap = function(keys, func)
 		vim.keymap.set("n", keys, func, { buffer = bufnr })

@@ -89,6 +89,7 @@ in {
     # })
     # (nerdfonts.override { fonts = [ "ProggyClean" ]; })
     nerdfonts
+    maple-mono-NF
     material-symbols
     font-awesome
     hyprpicker
@@ -829,7 +830,8 @@ in {
 
         shell = "zsh";
         # font = "Iosevka Term:size=8";
-        font = "JetBrainsMono Nerd Font:size=13";
+        # font = "JetBrainsMono Nerd Font:size=13";
+        font = "Maple Mono NF:size=13";
         dpi-aware = "yes";
         pad = "40x0";
         font-size-adjustment = 0.9;
@@ -954,6 +956,7 @@ in {
           '';
         }
 
+        # nvim-navbuddy
         {
           plugin = symbols-outline-nvim;
           config = toLua ''
@@ -1031,13 +1034,68 @@ in {
           '';
         }
 
+        cmp-cmdline
+        cmp-nvim-lsp
+        cmp-async-path
+        cmp-buffer
         neodev-nvim
         {
           plugin = nvim-cmp;
           config = toLuaFile ../../modules/nvim/plugins/cmp.lua;
         }
-        cmp-nvim-lsp
 
+        nui-nvim
+        {
+          plugin = noice-nvim;
+          config = toLua ''
+            require("noice").setup({
+              lsp = {
+                override = {
+                  ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                  ["vim.lsp.util.stylize_markdown"] = true,
+                  ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+                },
+              },
+
+            views = {
+                  cmdline_popup = {
+                    position = {
+                      row = 5,
+                      col = "50%",
+                    },
+                    size = {
+                      width = 40,
+                      height = "auto",
+                    },
+                    border = {
+                      style = "none"
+                    },
+                    win_options = {
+                      winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+                    },
+                  },
+                  popupmenu = {
+                    relative = "editor",
+                    position = {
+                      row = 8,
+                      col = "50%",
+                    },
+                    size = {
+                      width = 40,
+                      height = 10,
+                    },
+                    border = {
+                      style = "none",
+                      padding = { 0, 1 },
+                    },
+                    win_options = {
+                      winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+                    },
+                  },
+                },
+            })
+          '';
+        }
         {
           plugin = dressing-nvim;
           config = toLua ''
