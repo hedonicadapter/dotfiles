@@ -1,4 +1,4 @@
-{ inputs, outputs, pkgs, lib, config, ... }:
+{ inputs, outputs, pkgs, lib, config, cartograph-cf, ... }:
 
 let
   unstable = import <nixos-unstable> { };
@@ -89,6 +89,7 @@ in {
     # })
     nerdfonts
     maple-mono-NF
+    cartograph-cf
     material-symbols
     font-awesome
     hyprpicker
@@ -830,7 +831,7 @@ in {
         shell = "zsh";
         # font = "Iosevka Term:size=8";
         # font = "JetBrainsMono Nerd Font:size=13";
-        font = "Operator-Caska:size=13";
+        font = "Cartograph CF:size=13";
         dpi-aware = "yes";
         pad = "40x0";
         font-size-adjustment = 0.9;

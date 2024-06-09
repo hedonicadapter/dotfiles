@@ -12,18 +12,18 @@ let
 
   fontPatcher = import ../../modules/font-patcher/font-patcher.nix;
 
-  monoLisaNF = fontPatcher {
-    font = (import ../../modules/monolisa/monolisa.nix {
-      stdenv = pkgs.stdenv;
-      lib = lib;
-      fetchFromGitHub = pkgs.fetchFromGitHub;
-      unzip = pkgs.unzip;
-    });
-    nerd-font-patcher = pkgs.nerd-font-patcher;
-    stdenv = pkgs.stdenv;
-  };
+  # monoLisaNF = fontPatcher {
+  #   font = (import ../../modules/monolisa/monolisa.nix {
+  #     stdenv = pkgs.stdenv;
+  #     lib = lib;
+  #     fetchFromGitHub = pkgs.fetchFromGitHub;
+  #     unzip = pkgs.unzip;
+  #   });
+  #   nerd-font-patcher = pkgs.nerd-font-patcher;
+  #   stdenv = pkgs.stdenv;
+  # };
 
-  operator-caska = (import ../../modules/operator-caska/operator-caska.nix {
+  cartograph-cf = (import ../../modules/cartograph-cf/cartograph-cf.nix {
     stdenv = pkgs.stdenv;
     lib = lib;
     fetchFromGitHub = pkgs.fetchFromGitHub;
@@ -187,8 +187,8 @@ in {
   home-manager = {
     extraSpecialArgs = {
       inherit inputs;
-      monoLisaNF = monoLisaNF;
-      operator-caska = operator-caska;
+      # monoLisaNF = monoLisaNF;
+      cartograph-cf = cartograph-cf;
     };
     users = { "hedonicadapter" = import ./home.nix; };
   };
@@ -404,10 +404,10 @@ in {
       };
 
       monospace = {
-        package = operator-caska;
+        package = cartograph-cf;
         # package = pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
         # package = pkgs.nerdfonts.override { fonts = [ "ProggyClean" ]; };
-        name = "Operator-Caska";
+        name = "Cartograph CF";
       };
 
       emoji = {
