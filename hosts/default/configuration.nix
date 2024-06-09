@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, lib, ... }:
+{ config, pkgs, inputs, lib, stdenv, unzip, fetchFromGitHub, ... }:
 let
   spicetify-nix = inputs.spicetify-nix;
   spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
@@ -9,6 +9,19 @@ let
   contrast = 40;
   fillColor = "black";
   saturation = 180; # Increase the saturation by 20%
+
+  fontPatcher = import ../../modules/font-patcher/font-patcher.nix;
+
+  monoLisaNF = fontPatcher {
+    font = (import ../../modules/monolisa/monolisa.nix {
+      lib = lib;
+      stdenv = stdenv;
+      fetchFromGitHub = fetchFromGitHub;
+      unzip = unzip;
+    });
+  };
+
+  nerd-font-patcher = pkgs.nerd-font-patcher;
 in {
   services.blueman.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -208,7 +221,6 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
-    (import ../../modules/monolisa/monolisa.nix { })
     # orchis-theme
     bibata-cursors-translucent
     fluent-icon-theme
@@ -253,6 +265,8 @@ in {
 
     fsearch
   ];
+
+  fonts.fonts = with pkgs; [ monoLisaNF ];
 
   programs.spicetify = {
     enable = true;

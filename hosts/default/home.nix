@@ -87,7 +87,6 @@ in {
     #     builtins.readFile ../../modules/Iosevka/build-plans.toml;
     #   set = "Term";
     # })
-    # (nerdfonts.override { fonts = [ "ProggyClean" ]; })
     nerdfonts
     maple-mono-NF
     material-symbols

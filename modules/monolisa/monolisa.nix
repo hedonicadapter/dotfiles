@@ -8,12 +8,13 @@ stdenv.mkDerivation rec {
     owner = "lauer3912";
     repo = "Monolisa";
     rev = "master";
-    sha256 = "sha256";
+    sha256 = "sha256-NhXcSkbLO2xvwUD2s6xvG/0Sjhd4YazQPjpVcY2oSDc=";
   };
 
   nativeBuildInputs = [ unzip ];
 
   installPhase = ''
-    cp *.ttf $out/share/fonts
+    mkdir -p $out/share/fonts/truetype
+    cp *.ttf $out/share/fonts/truetype
   '';
 }
