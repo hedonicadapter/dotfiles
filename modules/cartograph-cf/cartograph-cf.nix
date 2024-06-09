@@ -1,21 +1,16 @@
-{ lib, stdenv, fetchFromGitHub, unzip }:
-
-stdenv.mkDerivation rec {
-  pname = "cartograph-cf";
-  version = "1.0.0";
-
-  src = fetchFromGitHub {
-    owner = "xiyaowong";
-    repo = "Cartograph-CF";
-    rev = "main";
-    sha256 = "sha256-NhXcSkbLO2xvwUD2s6xvG/0Sjhd4YazQPjpVcY2oSDc=";
+{ lib, stdenv, fetchurl, unzip }:
+let
+  src = builtins.fetchGit {
+    url = "https://github.com/xiyaowong/Cartograph-CF";
+    rev = "619de85c103dbd5c150e1d5df039357f8ac2ed52";
   };
-
-  nativeBuildInputs = [ unzip ];
+in stdenv.mkDerivation {
+  name = "cartograph-cf";
+  # nativeBuildInputs = [ unzip ];
+  unpackPhase = "true"; # disable the unpackPhase
 
   installPhase = ''
     mkdir -p $out/share/fonts/truetype
-    cd "Nerd Font"
-    cp *.ttf $out/share/fonts/truetype
+    cp -r ${src}/Nerd\ Font/* $out/share/fonts/truetype
   '';
 }

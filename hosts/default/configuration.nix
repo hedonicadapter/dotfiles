@@ -26,7 +26,7 @@ let
   cartograph-cf = (import ../../modules/cartograph-cf/cartograph-cf.nix {
     stdenv = pkgs.stdenv;
     lib = lib;
-    fetchFromGitHub = pkgs.fetchFromGitHub;
+    fetchurl = pkgs.fetchurl;
     unzip = pkgs.unzip;
   });
 
@@ -407,7 +407,7 @@ in {
         package = cartograph-cf;
         # package = pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
         # package = pkgs.nerdfonts.override { fonts = [ "ProggyClean" ]; };
-        name = "Cartograph CF";
+        name = "CartographCF Nerd Font";
       };
 
       emoji = {
