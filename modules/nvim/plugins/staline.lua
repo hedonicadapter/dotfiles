@@ -5,11 +5,11 @@ require("staline").setup({
 		right = { "file_name" },
 	},
 	mode_colors = {
-		i = "#6c782e",
-		n = "#4c7a5d",
-		c = "#c35e0a",
-		v = "#45707a",
-		V = "#45707a",
+		i = "#87875f",
+		n = "#dfdfaf",
+		c = "#af5f00",
+		v = "#87afaf",
+		V = "#87afaf",
 	},
 	mode_icons = {
 		n = " NORMAL ",

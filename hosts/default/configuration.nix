@@ -330,25 +330,43 @@ in {
       } -fill ${fillColor} $out
     '';
     polarity = "dark";
-    base16Scheme = {
-      base00 = "#292828";
-      base01 = "#32302f";
-      base02 = "#504945";
-      base03 = "#665c54";
-      base04 = "#bdae93";
-      base05 = "#ddc7a1";
-      base06 = "#ebdbb2";
-      base07 = "#fbf1c7";
-      base08 = "#ea6962";
-      base09 = "#e78a4e";
-      base0A = "#d8a657";
-      base0B = "#a9b665";
-      base0C = "#89b482";
-      base0D = "#7daea3";
-      base0E = "#d3869b";
-      base0F = "#bd6f3e";
+    base16Scheme = { # melliflluous alduin
+      base00 = "#878787";
+      base01 = "#87875f";
+      base02 = "#af875f";
+      base03 = "#dfaf87";
+      base04 = "#dfdfaf";
+      base05 = "#ffdf87";
+      base06 = "#87afaf";
+      base07 = "#af5f5f";
+      base08 = "#af8787";
+      base09 = "#875f5f";
+      base0A = "#af5f00";
+      base0B = "#87875f";
+      base0C = "#87afaf";
+      base0D = "#dfaf87";
+      base0E = "#dfdfaf";
+      base0F = "#ffdf87";
     };
-    # base16Scheme = {
+    # base16Scheme = { gruvbox
+    #   base00 = "#292828";
+    #   base01 = "#32302f";
+    #   base02 = "#504945";
+    #   base03 = "#665c54";
+    #   base04 = "#bdae93";
+    #   base05 = "#ddc7a1";
+    #   base06 = "#ebdbb2";
+    #   base07 = "#fbf1c7";
+    #   base08 = "#ea6962";
+    #   base09 = "#e78a4e";
+    #   base0A = "#d8a657";
+    #   base0B = "#a9b665";
+    #   base0C = "#89b482";
+    #   base0D = "#7daea3";
+    #   base0E = "#d3869b";
+    #   base0F = "#bd6f3e";
+    # };
+    # base16Scheme = { melange
     #   base00 = "#292522";
     #   base01 = "#34302C";
     #   base02 = "#403A36";
@@ -366,7 +384,7 @@ in {
     #   base0E = "#78997A";
     #   base0F = "#7B9695";
     # };
-    # base16Scheme = {
+    # base16Scheme = { cupcake
     #   base00 = "#FBF1F2";
     #   base01 = "#8B8198";
     #   base02 = "#BFB9C6";

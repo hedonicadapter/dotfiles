@@ -36,6 +36,10 @@
       # ref = "refs/tags/matugen-v0.10.0";
     };
 
+    awesome-neovim-plugins = {
+      url = "github:m15a/flake-awesome-neovim-plugins";
+    };
+
   };
 
   outputs = { self, nixpkgs, spicetify-nix, stylix, nur, ... }@inputs:

@@ -24,8 +24,8 @@ return {
 				-- change
 				c = {
 					winhl = {
-						CursorLine = { bg = "#d8a657" },
-						CursorLineNr = { fg = "#d8a657", bg = "#d8a657" },
+						CursorLine = { bg = "#ffdf87" },
+						CursorLineNr = { fg = "##ffdf87", bg = "##ffdf87" },
 					},
 				},
 				-- delete
@@ -38,35 +38,35 @@ return {
 				-- yank
 				y = {
 					winhl = {
-						CursorLine = { bg = "#654735" },
-						CursorLineNr = { fg = "#654735", bg = "#654735" },
+						CursorLine = { bg = "#875f5f" },
+						CursorLineNr = { fg = "#875f5f", bg = "#875f5f" },
 					},
 				},
 			},
 		},
 		i = {
 			winhl = {
-				CursorLine = { bg = "#6c782e" },
-				CursorLineNr = { fg = "#6c782e", bg = "#6c782e" },
+				CursorLine = { bg = "#87875f" },
+				CursorLineNr = { fg = "#87875f", bg = "#87875f" },
 			},
 		},
 		c = {
 			winhl = {
-				CursorLine = { bg = "#c35e0a" },
-				CursorLineNr = { fg = "#c35e0a", bg = "#c35e0a" },
+				CursorLine = { bg = "#af5f00" },
+				CursorLineNr = { fg = "#af5f00", bg = "#af5f00" },
 			},
 		},
 		n = {
 			winhl = {
-				CursorLine = { bg = "#4c7a5d" },
-				CursorLineNr = { fg = "#4c7a5d", bg = "#4c7a5d" },
+				CursorLine = { bg = "#dfdfaf" },
+				CursorLineNr = { fg = "#dfdfaf", bg = "#dfdfaf" },
 			},
 		},
 		-- visual
 		[{ "v", "V", "\x16" }] = {
 			winhl = {
-				CursorLineNr = { fg = "#45707a" },
-				Visual = { bg = "#45707a" },
+				CursorLineNr = { fg = "#87afaf" },
+				Visual = { bg = "#87afaf" },
 			},
 		},
 		-- select
@@ -79,8 +79,8 @@ return {
 		-- replace
 		R = {
 			winhl = {
-				CursorLine = { bg = "#7D2A2F" },
-				CursorLineNr = { fg = "#7D2A2F", bg = "#7D2A2F" },
+				CursorLine = { bg = "#af5f5f" },
+				CursorLineNr = { fg = "#af5f5f", bg = "#af5f5f" },
 			},
 		},
 	},
