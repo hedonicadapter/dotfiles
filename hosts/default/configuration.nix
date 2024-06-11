@@ -260,6 +260,7 @@ in {
     easyeffects
     brightnessctl
     pulseaudio
+
     playerctl
     spotify
     (pkgs.discord-canary.override { withOpenASAR = true; })
@@ -331,19 +332,19 @@ in {
     '';
     polarity = "dark";
     base16Scheme = { # melliflluous alduin
-      base00 = "#878787";
-      base01 = "#87875f";
+      base00 = "#141414";
+      base01 = "#292828";
       base02 = "#af875f";
-      base03 = "#dfaf87";
-      base04 = "#dfdfaf";
-      base05 = "#ffdf87";
+      base03 = "#875f5f";
+      base04 = "#dfaf87";
+      base05 = "#FFEFC2";
       base06 = "#87afaf";
       base07 = "#af5f5f";
       base08 = "#af8787";
       base09 = "#875f5f";
-      base0A = "#af5f00";
+      base0A = "#87afaf";
       base0B = "#87875f";
-      base0C = "#87afaf";
+      base0C = "#af5f00";
       base0D = "#dfaf87";
       base0E = "#dfdfaf";
       base0F = "#ffdf87";

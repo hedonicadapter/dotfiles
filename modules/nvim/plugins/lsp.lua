@@ -201,7 +201,7 @@ lspconfig.jsonls.setup(coq.lsp_ensure_capabilities({
 	capabilities = capabilities,
 }))
 lspconfig.tsserver.setup(coq.lsp_ensure_capabilities({
-  cmd = {"bunx", "--bun typescript-language-server", "--stdio" },
+  cmd = {"bunx --bun typescript-language-server --stdio"},
   capabilities = capabilities,
   single_file_support = true,
   completions = {
@@ -250,7 +250,7 @@ lspconfig.somesass_ls.setup(coq.lsp_ensure_capabilities({
 	capabilities = capabilities,
 }))
 lspconfig.tailwindcss.setup(coq.lsp_ensure_capabilities({
-  cmd = { "bunx", "--bun tailwindcss-language-server", "--stdio" },
+  cmd = { "bunx --bun tailwindcss-language-server --stdio"},
   capabilities = capabilities,
   completions = {
     completeFunctionCalls = true,

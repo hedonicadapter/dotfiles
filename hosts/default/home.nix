@@ -62,6 +62,8 @@ in {
     # nur.repos.sagikazarmark.sf-pro
     dart-sass
 
+    webcord
+
     google-cloud-sdk
     firebase-tools
     grim
@@ -885,6 +887,7 @@ in {
       # inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
       # inputs.hyprlock.packages.${pkgs.system}.default
     ];
+    xwayland.enable = true;
   };
   home.file.".config/hypr/auto-start.sh".source =
     ../../modules/hyprland/auto-start.sh;
@@ -1046,57 +1049,57 @@ in {
       }
 
       nui-nvim
-      {
-        plugin = noice-nvim;
-        config = toLua ''
-          require("noice").setup({
-            lsp = {
-              override = {
-                ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                ["vim.lsp.util.stylize_markdown"] = true,
-                ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-              },
-            },
-
-          views = {
-                cmdline_popup = {
-                  position = {
-                    row = 5,
-                    col = "50%",
-                  },
-                  size = {
-                    width = 40,
-                    height = "auto",
-                  },
-                  border = {
-                    style = "none"
-                  },
-                  win_options = {
-                    winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
-                  },
-                },
-                popupmenu = {
-                  relative = "editor",
-                  position = {
-                    row = 8,
-                    col = "50%",
-                  },
-                  size = {
-                    width = 40,
-                    height = 10,
-                  },
-                  border = {
-                    style = "none",
-                    padding = { 0, 1 },
-                  },
-                  win_options = {
-                    winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
-                  },
-                },
-              },
-          })
-        '';
-      }
+      # {
+      #   plugin = noice-nvim;
+      #   config = toLua ''
+      #     require("noice").setup({
+      #       lsp = {
+      #         override = {
+      #           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      #           ["vim.lsp.util.stylize_markdown"] = true,
+      #           ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+      #         },
+      #       },
+      #
+      #     views = {
+      #           cmdline_popup = {
+      #             position = {
+      #               row = 5,
+      #               col = "50%",
+      #             },
+      #             size = {
+      #               width = 40,
+      #               height = "auto",
+      #             },
+      #             border = {
+      #               style = "none"
+      #             },
+      #             win_options = {
+      #               winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+      #             },
+      #           },
+      #           popupmenu = {
+      #             relative = "editor",
+      #             position = {
+      #               row = 8,
+      #               col = "50%",
+      #             },
+      #             size = {
+      #               width = 40,
+      #               height = 10,
+      #             },
+      #             border = {
+      #               style = "none",
+      #               padding = { 0, 1 },
+      #             },
+      #             win_options = {
+      #               winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+      #             },
+      #           },
+      #         },
+      #     })
+      #   '';
+      # }
 
       {
         plugin = conform-nvim;
