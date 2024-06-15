@@ -116,6 +116,7 @@ in {
     prettierd
     sassc
     typescript
+    mono # for sniprun c#
     (with dotnetCorePackages; combinePackages [ sdk_6_0 sdk_7_0 sdk_8_0 ])
     azure-functions-core-tools
     csharpier
@@ -841,26 +842,26 @@ in {
         line-height = 25;
       };
       colors = {
-        foreground = "ECE1D7";
-        background = "292522";
-        selection-background = "403A36";
-        selection-foreground = "ECE1D7";
-        regular0 = "34302C";
-        regular1 = "BD8183";
-        regular2 = "78997A";
-        regular3 = "E49B5D";
-        regular4 = "7F91B2";
-        regular5 = "B380B0";
-        regular6 = "7B9695";
-        regular7 = "C1A78E";
-        bright0 = "867462";
-        bright1 = "D47766";
-        bright2 = "85B695";
-        bright3 = "EBC06D";
-        bright4 = "A3A9CE";
-        bright5 = "CF9BC2";
-        bright6 = "89B3B6";
-        bright7 = "ECE1D7";
+        foreground = "FFEFC2";
+        background = "141414";
+        selection-background = "292828";
+        selection-foreground = "FFEFC2";
+        regular0 = "af875f";
+        regular1 = "875f5f";
+        regular2 = "dfaf87";
+        regular3 = "FFEFC2";
+        regular4 = "87afaf";
+        regular5 = "af5f5f";
+        regular6 = "af8787";
+        regular7 = "875f5f";
+        bright0 = "87afaf";
+        bright1 = "87875f";
+        bright2 = "af5f00";
+        bright3 = "dfaf87";
+        bright4 = "dfdfaf";
+        bright5 = "ffdf87";
+        bright6 = "af875f";
+        bright7 = "FFEFC2";
       };
       cursor = { blink = "yes"; };
     };
@@ -945,7 +946,6 @@ in {
             display = {
               preview = {
                 border = "rounded",
-                        
               },
             },
           }
@@ -979,6 +979,14 @@ in {
       {
         plugin = nvim-lspconfig;
         config = toLuaFile ../../modules/nvim/plugins/lsp.lua;
+      }
+
+      {
+        plugin = sniprun;
+        config = toLua ''
+          require'sniprun'.setup({
+          })
+        '';
       }
 
       nvim-web-devicons
@@ -1016,6 +1024,26 @@ in {
           	"<cmd>lua require('spider').motion('b')<CR>",
           	{ desc = "Spider-b" }
           )
+        '';
+      }
+
+      # {
+      #   plugin = leap-nvim;
+      #   config = toLua ''
+      #     require('leap').create_default_mappings()
+      #   '';
+      # }
+      {
+        plugin = flash-nvim;
+        config = toLua ''
+          require('flash').setup({
+              label = {
+                rainbow = {
+                    enabled = true,
+                    shade = 5,
+                },
+              },
+          })
         '';
       }
 
@@ -1142,7 +1170,14 @@ in {
       {
         plugin = oil-nvim;
         config = toLua ''
-          require('oil').setup()
+          require('oil').setup({
+            delete_to_trash = true,
+            show_hidden = true,
+            natural_order = true,
+            is_always_hidden = function(name,_)
+              return name == '..' or name == '.git'
+            end,
+          })
           vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
         '';
       }

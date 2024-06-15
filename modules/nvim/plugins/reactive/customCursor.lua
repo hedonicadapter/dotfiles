@@ -25,7 +25,7 @@ return {
 				c = {
 					winhl = {
 						CursorLine = { bg = "#ffdf87" },
-						CursorLineNr = { fg = "##ffdf87", bg = "##ffdf87" },
+						CursorLineNr = { fg = "#ffdf87", bg = "#ffdf87" },
 					},
 				},
 				-- delete
@@ -65,8 +65,8 @@ return {
 		-- visual
 		[{ "v", "V", "\x16" }] = {
 			winhl = {
-				CursorLineNr = { fg = "#87afaf" },
-				Visual = { bg = "#87afaf" },
+				CursorLineNr = { fg = "#2B2D42" },
+				Visual = { bg = "#2B2D42" },
 			},
 		},
 		-- select

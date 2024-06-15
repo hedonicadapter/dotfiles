@@ -8,8 +8,8 @@ require("staline").setup({
 		i = "#87875f",
 		n = "#dfdfaf",
 		c = "#af5f00",
-		v = "#87afaf",
-		V = "#87afaf",
+		v = "#2B2D42",
+		V = "#2B2D42",
 	},
 	mode_icons = {
 		n = " NORMAL ",

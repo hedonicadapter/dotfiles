@@ -7,9 +7,6 @@ mkShell {
     powershell
     zoxide
     fzf
-    nodejs_21
-    nodePackages.pnpm
-    azure-cloud-functions-core-tools
   ];
 
   shellHook = ''

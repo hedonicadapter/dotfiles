@@ -179,3 +179,25 @@ vim.api.nvim_set_keymap(
 	"<CMD>CopilotChat<CR>",
 	{ desc = "Open Copilot Chat", noremap = true, silent = true }
 )
+
+-- SnipRun
+vim.api.nvim_set_keymap("n", "<leader>sr", "<CMD>SnipRun<CR>", { desc = "Run SnipRun", noremap = true, silent = true })
+vim.keymap.set(
+	{ "v", "x" },
+	"<leader>sr",
+	":'<,'>SnipRun<CR>",
+	{ desc = "Run SnipRun in visual mode", noremap = true, silent = true }
+)
+
+-- flash.nvim
+vim.keymap.set({ "n", "x", "o" }, "s", function()
+	require("flash").jump()
+end, { noremap = true })
+vim.keymap.set({ "n", "x", "o" }, "S", function()
+	require("flash").treesitter()
+end, { noremap = true })
+-- keys = {
+--     { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+--     { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+--     { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+--   },
