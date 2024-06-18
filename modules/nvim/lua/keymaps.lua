@@ -17,11 +17,7 @@ vim.api.nvim_set_keymap("n", "<leader>sf", "<cmd>w<CR>", {
 	silent = true,
 })
 
-vim.api.nvim_set_keymap("n", "<leader>qq", "<cmd>qa<CR>", {
-	desc = "exit",
-	noremap = true,
-	silent = true,
-})
+set_keymap_for_all_modes("<leader>qq", "<cmd>qa<CR>")
 
 vim.api.nvim_set_keymap("n", "<leader>u", "<cmd>Telescope undo<CR>", {
 	noremap = true,

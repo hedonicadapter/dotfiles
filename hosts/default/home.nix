@@ -1070,7 +1070,6 @@ in {
       cmp-nvim-lsp
       cmp-async-path
       cmp-buffer
-      neodev-nvim
       {
         plugin = nvim-cmp;
         config = toLuaFile ../../modules/nvim/plugins/cmp.lua;
