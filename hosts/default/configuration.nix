@@ -160,8 +160,6 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-
-    #media-session.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -169,10 +167,7 @@ in {
     isNormalUser = true;
     description = "hedonicadapter";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs;
-      [
-        #  thunderbird
-      ];
+    packages = with pkgs; [ ];
   };
 
   virtualisation.docker.enable = true;
@@ -206,37 +201,13 @@ in {
     permittedInsecurePackages = [
       "electron-25.9.0" # ONLY for obsidian at the moment
     ];
-    packageOverrides = pkgs: {
-      warp-beta = import (fetchTarball
-        "https://github.com/imadnyc/nixpkgs/archive/refs/heads/warp-terminal-initial-linux.zip") {
-          config = config.nixpkgs.config;
-        };
-    };
+
     allowUnfree = true;
-    # allowUnfreePredicate = pkg:
-    #   builtins.elem (lib.getName pkg) [
-    #     "nvidia-x11"
-    #     "spotify"
-    #     "microsoft-edge-dev"
-    #     "vscode"
-    #     "obsidian"
-    #     "nvidia-settings"
-    #     "steam"
-    #     "steam-original"
-    #     "steam-run"
-    #     "discord-canary"
-    #     "terraform"
-    #     "beeper"
-    #     "rider"
-    #     "warp-terminal-0.2024.02.20.08.01.stable_01"
-    #   ];
   };
 
   environment.systemPackages = with pkgs; [
-    # orchis-theme
     bibata-cursors-translucent
     fluent-icon-theme
-    warp-beta.warp-terminal
 
     onlyoffice-bin
     jetbrains.rider
@@ -250,6 +221,7 @@ in {
     git
     nix-output-monitor
 
+    neofetch
     wev # event viewer
     atac
     zoxide
@@ -260,7 +232,6 @@ in {
     easyeffects
     brightnessctl
     pulseaudio
-
     playerctl
     spotify
     (pkgs.discord-canary.override { withOpenASAR = true; })

@@ -64,53 +64,6 @@ in {
 
     webcord
 
-    google-cloud-sdk
-    firebase-tools
-    grim
-    slurp
-    lf
-    jq
-    cargo
-    rustc
-    azure-cli
-    bicep
-    gh
-    nodePackages.pnpm
-    libGLU
-    lazydocker
-    docker-compose
-
-    nwg-look
-    neovide
-    # (callPackage ../../modules/neovide/neovide.nix { })
-    transmission
-    beeper
-    # (iosevka.override {
-    #   privateBuildPlan =
-    #     builtins.readFile ../../modules/Iosevka/build-plans.toml;
-    #   set = "Term";
-    # })
-    nerdfonts
-    maple-mono-NF
-    cartograph-cf
-    material-symbols
-    font-awesome
-    hyprpicker
-
-    spotify-wrap
-    edge-wrap
-    obsidian-wrap
-    teams-wrap
-    vscode-wrap
-    beeper-wrap
-    steam-wrap
-    steamcmd
-    # cachix
-    bottles
-    lutris
-
-    tofi-power-menu
-
     bun
     nodePackages.prettier
     prettierd
@@ -126,6 +79,51 @@ in {
     stylua
     nixfmt
     # omnisharp-roslyn
+    google-cloud-sdk
+    firebase-tools
+    grim
+    slurp
+    lf
+    jq
+    cargo
+    rustc
+    azure-cli
+    bicep
+    gh
+    libGLU
+    lazydocker
+    docker-compose
+
+    neovide
+    # (callPackage ../../modules/neovide/neovide.nix { })
+    transmission
+    beeper
+
+    # (iosevka.override {
+    #   privateBuildPlan =
+    #     builtins.readFile ../../modules/Iosevka/build-plans.toml;
+    #   set = "Term";
+    # })
+    nerdfonts
+    maple-mono-NF
+    cartograph-cf
+    material-symbols
+    font-awesome
+
+    hyprpicker
+
+    # spotify-wrap
+    # edge-wrap
+    # obsidian-wrap
+    # teams-wrap
+    # vscode-wrap
+    # beeper-wrap
+    # steam-wrap
+    steamcmd
+    bottles
+    lutris
+
+    tofi-power-menu
   ];
 
   home.file = {
@@ -835,7 +833,7 @@ in {
         shell = "zsh";
         # font = "Iosevka Term:size=8";
         # font = "JetBrainsMono Nerd Font:size=13";
-        font = "CartographCF Nerd Font:size=13";
+        font = "CartographCF Nerd Font:size=9";
         dpi-aware = "yes";
         pad = "40x0";
         font-size-adjustment = 0.9;
