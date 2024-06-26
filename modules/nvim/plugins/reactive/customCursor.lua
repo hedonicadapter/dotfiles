@@ -3,14 +3,14 @@ return {
 	init = function()
 		vim.opt.cursorline = true
 	end,
-	static = {
-		winhl = {
-			inactive = {
-				CursorLine = { bg = "#202020" },
-				CursorLineNr = { fg = "#b0b0b0", bg = "#202020" },
-			},
-		},
-	},
+	-- static = {
+	-- 	winhl = {
+	-- 		inactive = {
+	-- 			CursorLine = { bg = "#202020" },
+	-- 			CursorLineNr = { fg = "#b0b0b0", bg = "#202020" },
+	-- 		},
+	-- 	},
+	-- },
 	modes = {
 		no = {
 			operators = {
@@ -46,8 +46,11 @@ return {
 		},
 		i = {
 			winhl = {
-				CursorLine = { bg = "#87875f" },
-				CursorLineNr = { fg = "#87875f", bg = "#87875f" },
+				CursorLine = { bg = "#273C2C" },
+				CursorLineNr = { fg = "#273C2C", bg = "#273C2C" },
+			},
+			hl = {
+				Cursor = { bg = "#87875f" },
 			},
 		},
 		c = {
@@ -58,8 +61,11 @@ return {
 		},
 		n = {
 			winhl = {
-				CursorLine = { bg = "#dfdfaf" },
-				CursorLineNr = { fg = "#dfdfaf", bg = "#dfdfaf" },
+				CursorLine = { bg = "#dfaf87" },
+				CursorLineNr = { fg = "#dfaf87", bg = "#dfaf87" },
+			},
+			hl = {
+				Cursor = { bg = "#dfaf87" },
 			},
 		},
 		-- visual
@@ -67,6 +73,9 @@ return {
 			winhl = {
 				CursorLineNr = { fg = "#2B2D42" },
 				Visual = { bg = "#2B2D42" },
+			},
+			hl = {
+				Cursor = { bg = "#87afaf" },
 			},
 		},
 		-- select

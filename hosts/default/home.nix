@@ -62,6 +62,7 @@ in {
     # nur.repos.sagikazarmark.sf-pro
     dart-sass
 
+    gimp-with-plugins
     webcord
 
     bun
@@ -956,6 +957,7 @@ in {
           require('gitsigns').setup()
         '';
       }
+      diffview-nvim
 
       # nvim-navbuddy
       {
@@ -1332,7 +1334,6 @@ in {
           require('reactive').setup {
             load = 'customCursor'
           }
-
         '';
       }
 
