@@ -989,8 +989,6 @@ in {
         '';
       }
 
-      nvim-web-devicons
-      # tiny-devicons-auto-colors-nvim
       telescope-fzf-native-nvim
       plenary-nvim
       nvim-ts-autotag
@@ -1318,6 +1316,28 @@ in {
         plugin = pkgs.awesomeNeovimPlugins.mellifluous-nvim;
         config = toLua ''
           require("mellifluous").setup({color_set = "alduin"})
+        '';
+      }
+
+      nvim-web-devicons
+      {
+        plugin = pkgs.awesomeNeovimPlugins.tiny-devicons-auto-colors-nvim;
+        config = toLua ''
+          require('tiny-devicons-auto-colors').setup({
+              colors = {
+                  "#af875f",
+                  "#dfaf87",
+                  "#af5f00",
+                  "#af8787",
+                  "#ff8000",
+                  "#af5f5f",
+                  "#875f5f",
+                  "#87afaf",
+                  "#87875f",
+                  "#dfdfaf",
+                  "#ffdf87"
+              },
+          })
         '';
       }
 
