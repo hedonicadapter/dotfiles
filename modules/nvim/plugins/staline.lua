@@ -2,7 +2,7 @@ require("staline").setup({
 	sections = {
 		left = { "mode" },
 		mid = { "file_name", "lsp" },
-		right = { "", "cwd", " ", "branch" },
+		right = { "", "cwd", "branch" },
 	},
 	mode_colors = {
 		i = "#273C2C",
@@ -12,11 +12,11 @@ require("staline").setup({
 		V = "#2B2D42",
 	},
 	mode_icons = {
-		n = " NORMAL ",
-		i = " INSERT ",
-		c = " COMMAND ",
-		v = " VISUAL ",
-		V = " VISUAL ",
+		n = "  NORMAL ",
+		i = "  INSERT ",
+		c = "  COMMAND ",
+		v = "  VISUAL ",
+		V = "  VISUAL ",
 	},
 	defaults = {
 		true_colors = true,

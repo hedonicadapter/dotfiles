@@ -3,14 +3,6 @@ return {
 	init = function()
 		vim.opt.cursorline = true
 	end,
-	-- static = {
-	-- 	winhl = {
-	-- 		inactive = {
-	-- 			CursorLine = { bg = "#202020" },
-	-- 			CursorLineNr = { fg = "#b0b0b0", bg = "#202020" },
-	-- 		},
-	-- 	},
-	-- },
 	modes = {
 		no = {
 			operators = {

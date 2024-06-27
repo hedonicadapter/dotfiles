@@ -152,6 +152,7 @@ vim.api.nvim_exec(
   autocmd BufEnter * hi LineNr guibg=NONE
   autocmd BufEnter * hi SignColumn guibg=NONE
   autocmd BufEnter * hi DropBarIconKindFunction guibg=NONE
+  autocmd BufEnter * hi TabLineFill guibg=NONE
 ]],
 	false
 )

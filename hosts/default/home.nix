@@ -2,21 +2,6 @@
 
 let
   unstable = import <nixos-unstable> { };
-  spotify-wrap = pkgs.writeShellScriptBin "wrap-spotify"
-    (builtins.readFile ../../wrappers/spotify.nix);
-  edge-wrap = pkgs.writeShellScriptBin "wrap-edge"
-    (builtins.readFile ../../wrappers/edge.nix);
-  obsidian-wrap = pkgs.writeShellScriptBin "wrap-obsidian"
-    (builtins.readFile ../../wrappers/obsidian.nix);
-  teams-wrap = pkgs.writeShellScriptBin "wrap-teams"
-    (builtins.readFile ../../wrappers/teams.nix);
-  vscode-wrap = pkgs.writeShellScriptBin "wrap-vscode"
-    (builtins.readFile ../../wrappers/vscode.nix);
-  beeper-wrap = pkgs.writeShellScriptBin "wrap-beeper"
-    (builtins.readFile ../../wrappers/beeper.nix);
-  steam-wrap = pkgs.writeShellScriptBin "wrap-steam"
-    (builtins.readFile ../../wrappers/steam.nix);
-
   tofi-power-menu = pkgs.writeShellScriptBin "tofi-power-menu"
     (builtins.readFile ../../modules/tofi/power-menu.sh);
 
@@ -79,7 +64,6 @@ in {
     terraform
     stylua
     nixfmt
-    # omnisharp-roslyn
     google-cloud-sdk
     firebase-tools
     grim
@@ -113,13 +97,6 @@ in {
 
     hyprpicker
 
-    # spotify-wrap
-    # edge-wrap
-    # obsidian-wrap
-    # teams-wrap
-    # vscode-wrap
-    # beeper-wrap
-    # steam-wrap
     steamcmd
     bottles
     lutris
@@ -143,7 +120,6 @@ in {
   home.sessionVariables = {
     EDITOR = "neovide";
     NIXOS_OZONE_WL = "1";
-    # GTK_THEME = "Orchis-Yellow-Dark-Compact";
     ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";
 
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
@@ -1025,20 +1001,19 @@ in {
         '';
       }
 
-      # {
-      #   plugin = leap-nvim;
-      #   config = toLua ''
-      #     require('leap').create_default_mappings()
-      #   '';
-      # }
       {
         plugin = flash-nvim;
         config = toLua ''
           require('flash').setup({
+              prompt = {
+                  enabled = true,
+                  prefix = { { "   FLASH", "FlashPromptIcon" } },
+              },
               label = {
+                uppercase = false,
                 rainbow = {
                     enabled = true,
-                    shade = 5,
+                    shade = 6,
                 },
               },
           })
@@ -1246,12 +1221,12 @@ in {
         '';
       }
 
-      # {
-      #   plugin = indent-blankline-nvim;
-      #   config = toLua ''
-      #     require("ibl").setup {}
-      #   '';
-      # }
+      {
+        plugin = indent-blankline-nvim;
+        config = toLua ''
+          require("ibl").setup {}
+        '';
+      }
 
       {
         plugin = comment-nvim;
