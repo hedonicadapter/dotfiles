@@ -222,6 +222,7 @@ in {
     nix-output-monitor
 
     neofetch
+    corectrl
     wev # event viewer
     atac
     zoxide

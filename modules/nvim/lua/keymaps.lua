@@ -197,8 +197,10 @@ end, { noremap = true })
 vim.keymap.set({ "n", "x", "o" }, "S", function()
 	require("flash").treesitter()
 end, { noremap = true })
--- keys = {
---     { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
---     { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
---     { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
---   },
+
+vim.api.nvim_set_keymap(
+	"v",
+	"<leader>ls",
+	":lua require('plugins.toggle_print').toggle_print()<CR>",
+	{ noremap = true, silent = true }
+)
