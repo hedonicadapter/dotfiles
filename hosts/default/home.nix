@@ -168,8 +168,8 @@ in {
         }
 
         ::selection {
-          background-color: #7daea3 !important;
-          color: #fbf1c7 !important;
+          background-color: #2B2D42 !important;
+          color: #87afaf !important;
         }
       '';
       userChrome = ''
@@ -232,8 +232,8 @@ in {
          }
 
         ::selection {
-          background-color: #7daea3 !important;
-          color: #fbf1c7 !important;
+          background-color: #2B2D42 !important;
+          color: #87afaf !important;
         }
 
          /* Customization Panel Fix */
@@ -455,18 +455,20 @@ in {
          padding-top:2px !important;
         }
          #tabbrowser-tabs > * {
-           padding-block: 2px !important;
+           padding-top: 2px !important;
            padding-inline:5px !important;
            margin-block: 2px !important;
-           margin-inline:5px !important;
          }
          tab {
-           margin: 0 4px 0 0 !important;
+           margin: 0 2px 0 0 !important;
          }
          :root:not([customizing]) #titlebar {
            margin-bottom: -24px;
          }
 
+         .tabbrowser-tab {
+            --tab-label-mask-size: 1.5em !important;
+         }
          .tabbrowser-tab[fadein]:not([selected]):not([pinned]) {
            width: clamp(160px, 10vw, 200px) !important;
          }
@@ -484,6 +486,13 @@ in {
          .tabbrowser-tab[selected][fadein]:not([pinned]) {
            width: clamp(300px, 18vw, 500px) !important;
          }
+         .tabbrowser-tab:not([pinned]) {
+          transition: min-width 250ms ease-out, max-width 250ms ease-out, opacity 150ms ease-out !important;
+          transition-delay: 350ms !important;
+         }
+         .tabbrowser-tab[selected] {
+            min-width:max-content !important;
+         }
          .tabbrowser-tab .tab-background[selected="true"] {
            background: var(--main) !important;
          }
@@ -496,7 +505,10 @@ in {
          /* Tabs Audio */
          #tabbrowser-tabs .tabbrowser-tab:is([soundplaying]) .tab-background {
            background-color: var(--red) !important;
-           transition: background-color 0.1s ease !important;
+           transition: background-color 0.1s ease-out !important;
+         }
+         .tabbrowser-tab:is([soundplaying]){
+            opacity:1 !important;
          }
 
          /* Tabs Audio Favicon */
@@ -593,6 +605,13 @@ in {
          /* 📐 Click Tab to Focus Urlbar */
          /* Source: https://github.com/MrOtherGuy/firefox-csshacks/.../click_selected_tab_to_focus_urlbar.css*/
 
+         .tabbrowser-tab:hover {
+            min-width:30vw !important;
+            opacity:1 !important;
+         }
+        .tabbrowser-tab:not([selected]){
+          opacity:0.5;
+        }
          /* Make selected tab unclickable => click > capture box */
          .tabbrowser-tab:not([pinned])[selected] {
            pointer-events: none;
@@ -1049,57 +1068,6 @@ in {
       }
 
       nui-nvim
-      # {
-      #   plugin = noice-nvim;
-      #   config = toLua ''
-      #     require("noice").setup({
-      #       lsp = {
-      #         override = {
-      #           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-      #           ["vim.lsp.util.stylize_markdown"] = true,
-      #           ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-      #         },
-      #       },
-      #
-      #     views = {
-      #           cmdline_popup = {
-      #             position = {
-      #               row = 5,
-      #               col = "50%",
-      #             },
-      #             size = {
-      #               width = 40,
-      #               height = "auto",
-      #             },
-      #             border = {
-      #               style = "none"
-      #             },
-      #             win_options = {
-      #               winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
-      #             },
-      #           },
-      #           popupmenu = {
-      #             relative = "editor",
-      #             position = {
-      #               row = 8,
-      #               col = "50%",
-      #             },
-      #             size = {
-      #               width = 40,
-      #               height = 10,
-      #             },
-      #             border = {
-      #               style = "none",
-      #               padding = { 0, 1 },
-      #             },
-      #             win_options = {
-      #               winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
-      #             },
-      #           },
-      #         },
-      #     })
-      #   '';
-      # }
 
       {
         plugin = conform-nvim;
@@ -1339,19 +1307,6 @@ in {
           vim.o.winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
         '';
       }
-
-      # {
-      #   plugin = dressing-nvim;
-      #   config = toLua ''
-      #     require("dressing").setup({
-      #         select = {
-      #             telescope = {
-      #             borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
-      #         },
-      #       },
-      #     })
-      #   '';
-      # }
     ];
 
     extraLuaConfig = ''

@@ -9,6 +9,7 @@ M.print_statements = {
 	typescriptreact = "console.log('%s')",
 }
 
+-- stolen from fzf
 function M.tbl_length(T)
 	local count = 0
 	for _ in pairs(T) do
@@ -17,6 +18,7 @@ function M.tbl_length(T)
 	return count
 end
 
+-- stolen from fzf
 function M.get_visual_selection()
 	-- this will exit visual mode
 	-- use 'gv' to reselect the text

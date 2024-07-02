@@ -201,6 +201,6 @@ end, { noremap = true })
 vim.api.nvim_set_keymap(
 	"v",
 	"<leader>ls",
-	":lua require('plugins.toggle_print').toggle_print()<CR>",
+	":lua require('plugins.toggle-print').toggle_print()<CR>",
 	{ noremap = true, silent = true }
 )
