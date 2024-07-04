@@ -227,8 +227,10 @@ in {
                  /* Clean UI */
                  * {
                    outline: none !important;
-                   box-shadow: none !important;
                    border: none !important;
+                 }
+                 #TabsToolbar #firefox-view-button[open] > .toolbarbutton-icon, #tabbrowser-tabs:not([noshadowfortests]) .tab-background:is([selected], [multiselected]) {
+                    box-shadow: none !important;
                  }
 
                 ::selection {
@@ -471,18 +473,20 @@ in {
 
                  .tabbrowser-tab {
                     --tab-label-mask-size: 1.5em !important;
+                    position:relative;
+                    border-radius:var(--tab-border-radius);
                  }
                  .tabbrowser-tab[fadein]:not([selected]):not([pinned]) {
                    width: clamp(160px, 10vw, 200px) !important;
                  }
                  .tabbrowser-tab .tab-background:not([selected]) {
-                   background: var(--item) !important;
                  }
                  .tab-label-container:not([selected]) {
                    opacity: 0.5 !important;
                  }
                  .tab-content {
                    padding-inline: 8px !important;
+                   color: #fbf1c7 !important;
                  }
 
                  /* Tabs [Selected] */
@@ -491,10 +495,10 @@ in {
                  }
                  .tabbrowser-tab:not([pinned]) {
                   transition: min-width 250ms ease-out, max-width 250ms ease-out, opacity 150ms ease-out !important;
-                  transition-delay: 350ms !important;
                  }
                  .tabbrowser-tab[selected] {
                     min-width:max-content !important;
+                   box-shadow: none !important;
                  }
                  .tabbrowser-tab .tab-background[selected="true"] {
                    background: var(--main) !important;
@@ -595,7 +599,7 @@ in {
                    border-radius: var(--6);
                    left: 50vw;
                    width: clamp(500px, 60%, 700px) !important;
-                   transform: translateX(-50%) !important;
+                   transform: translateX(0%) !important;
                  }
                  #nav-bar {
                    height: var(--tab-min-height) !important;
@@ -605,10 +609,33 @@ in {
                  /* 📐 Click Tab to Focus Urlbar */
                  /* Source: https://github.com/MrOtherGuy/firefox-csshacks/.../click_selected_tab_to_focus_urlbar.css*/
 
-                 .tabbrowser-tab:hover {
-                    min-width:30vw !important;
+                 .tabbrowser-tab:not([selected]):hover {
                     opacity:1 !important;
+                    overflow:visible !important;
                  }
+                 .tab-stack {
+                  transition: transform 0.15s ease-out;
+                 }
+                 .tabbrowser-tab:hover .tab-stack {
+                    min-width:max-content !important;
+                    position:absolute;
+                    top:0;
+                    left:0;
+                    right:0;
+                    transform:translateX(-50%);
+                 }
+                 .tabbrowser-tab:hover .tab-background {
+                    background-color: var(--lwt-accent-color) !important; 
+                    overflow: visible !important;
+                    outline: 1px solid var(--main) !important;
+                    border-radius:var(--tab-border-radius); }
+                 .tabbrowser-tab:hover .tab-content {
+                   color: var(--grey);                               /* Pop-up text color */
+                 }
+                 .tabbrowser-tab:hover {
+                    z-index:6;
+                 }
+
                 .tabbrowser-tab:not([selected]){
                   opacity:0.5;
                 }
@@ -773,7 +800,7 @@ in {
 
                  .urlbarView {
                    background-color: var(--lwt-accent-color); /* Pop-up background color (adaptive) */
-                   color: var(--grey);                               /* Pop-up text color */
+                   color: #fbf1c7 !important;
                  }
       '';
 
@@ -843,6 +870,21 @@ in {
       '';
       theme = "headline/headline";
     };
+  };
+
+  programs.tmux = {
+    enable = true;
+    clock24 = true;
+    baseIndex = 1;
+    keyMode = "vi";
+    prefix = "C-Space";
+    terminal = "screen-256color";
+    extraConfig = ''
+      bindkey h select-pane -L
+      bindkey j select-pane -D
+      bindkey k select-pane -U
+      bindkey l select-pane -R
+    '';
   };
 
   programs.fzf = {
