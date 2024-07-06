@@ -327,7 +327,16 @@ in {
     TERM = "foot";
   };
 
-  xdg.portal.enable = true;
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    config = {
+      common.default = [ "gtk" ];
+      hyprland.default = [ "gtk" "hyprland" ];
+    };
+
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
 
   stylix = {
     image = pkgs.runCommand "dimmed-background.png" { } ''

@@ -4,7 +4,7 @@ let
   unstable = import <nixos-unstable> { };
   tofi-power-menu = pkgs.writeShellScriptBin "tofi-power-menu"
     (builtins.readFile ../../modules/tofi/power-menu.sh);
-
+  tmuxResurrectPath = "~/.config/tmux/resurrect/";
 in {
   imports = [
     inputs.ags.homeManagerModules.default
@@ -207,7 +207,7 @@ in {
                  :root {
                    --6: 5px;
                    --8: 8px;
-                   --tab-min-height: 24px !important;
+                   --tab-min-height: 22px !important;
                    --tab-min-width: 24px !important;
                    --toolbarbutton-border-radius: var(--6) !important;
                    --tab-border-radius: var(--6) !important;
@@ -226,7 +226,6 @@ in {
 
                  /* Clean UI */
                  * {
-                   outline: none !important;
                    border: none !important;
                  }
                  #TabsToolbar #firefox-view-button[open] > .toolbarbutton-icon, #tabbrowser-tabs:not([noshadowfortests]) .tab-background:is([selected], [multiselected]) {
@@ -457,15 +456,12 @@ in {
                    height: none !important;
                  }
                 #tabbrowser-tabs{
-                 padding-top:2px !important;
+                 padding-top:4px !important;
                 }
                  #tabbrowser-tabs > * {
-                   padding-top: 2px !important;
+                   padding-top: 3px !important;
+                   padding-bottom: 2px !important;
                    padding-inline:5px !important;
-                   margin-block: 2px !important;
-                 }
-                 tab {
-                   margin: 0 2px 0 0 !important;
                  }
                  :root:not([customizing]) #titlebar {
                    margin-bottom: -24px;
@@ -475,6 +471,7 @@ in {
                     --tab-label-mask-size: 1.5em !important;
                     position:relative;
                     border-radius:var(--tab-border-radius);
+                    margin: -2px 1px !important;
                  }
                  .tabbrowser-tab[fadein]:not([selected]):not([pinned]) {
                    width: clamp(160px, 10vw, 200px) !important;
@@ -485,8 +482,11 @@ in {
                    opacity: 0.5 !important;
                  }
                  .tab-content {
-                   padding-inline: 8px !important;
+                   padding-inline: 6px !important;
+                 }
+                 .tab-text {
                    color: #fbf1c7 !important;
+                   mix-blend-mode: exclusion !important;
                  }
 
                  /* Tabs [Selected] */
@@ -494,7 +494,7 @@ in {
                    width: clamp(300px, 18vw, 500px) !important;
                  }
                  .tabbrowser-tab:not([pinned]) {
-                  transition: min-width 250ms ease-out, max-width 250ms ease-out, opacity 150ms ease-out !important;
+                    transition: opacity 150ms ease-out !important;
                  }
                  .tabbrowser-tab[selected] {
                     min-width:max-content !important;
@@ -512,7 +512,7 @@ in {
                  /* Tabs Audio */
                  #tabbrowser-tabs .tabbrowser-tab:is([soundplaying]) .tab-background {
                    background-color: var(--red) !important;
-                   transition: background-color 0.1s ease-out !important;
+                   transition: background-color 0.15s ease-out !important;
                  }
                  .tabbrowser-tab:is([soundplaying]){
                     opacity:1 !important;
@@ -527,11 +527,13 @@ in {
                  /* Tab Close on hover */
                  tab:not([pinned]):hover .tab-close-button {
                    display: flex !important;
+                   opacity: 1;
                  }
                  .tab-close-button {
                    margin: -6px !important;
-                   opacity: 0.5;
+                   opacity: 0;
                    background-color: transparent !important;
+                   transition: opacity 0.15s ease-out !important;
                  }
 
                  /* New Tab by MMB on Tabs Toolbar  */
@@ -599,7 +601,7 @@ in {
                    border-radius: var(--6);
                    left: 50vw;
                    width: clamp(500px, 60%, 700px) !important;
-                   transform: translateX(0%) !important;
+                   transform: translateX(-50%) !important;
                  }
                  #nav-bar {
                    height: var(--tab-min-height) !important;
@@ -614,30 +616,31 @@ in {
                     overflow:visible !important;
                  }
                  .tab-stack {
-                  transition: transform 0.15s ease-out;
-                 }
-                 .tabbrowser-tab:hover .tab-stack {
-                    min-width:max-content !important;
-                    position:absolute;
+                    transition: max-width 150ms ease-out !important;
+                    position:relative;
                     top:0;
                     left:0;
                     right:0;
-                    transform:translateX(-50%);
+                 }
+                 .tabbrowser-tab:not([selected]):hover .tab-stack {
+                    min-width:max-content !important;
+                    position:absolute;
+                    z-index:6;
+                 }
+                 .tab-background {
+                    outline: 1px solid transparent;
+                    transition: background-color 150ms ease-out, outline-color 150ms ease-out !important;
+                    transition-delay: 0.1s;
                  }
                  .tabbrowser-tab:hover .tab-background {
                     background-color: var(--lwt-accent-color) !important; 
                     overflow: visible !important;
-                    outline: 1px solid var(--main) !important;
+                    outline-color: var(--main) !important;
                     border-radius:var(--tab-border-radius); }
-                 .tabbrowser-tab:hover .tab-content {
-                   color: var(--grey);                               /* Pop-up text color */
-                 }
-                 .tabbrowser-tab:hover {
-                    z-index:6;
-                 }
 
                 .tabbrowser-tab:not([selected]){
                   opacity:0.5;
+                  transition: min-width 250ms ease-out, max-width 250ms ease-out, opacity 150ms ease-out !important;
                 }
                  /* Make selected tab unclickable => click > capture box */
                  .tabbrowser-tab:not([pinned])[selected] {
@@ -847,7 +850,11 @@ in {
 
   programs.zsh = {
     enable = true;
-
+    shellAliases = {
+      "refresh" = ''
+        sudo nixos-rebuild switch --flake /etc/nixos#default --show-trace --impure && tmux source ~/.config/tmux/tmux.conf
+      '';
+    };
     autosuggestion = { enable = true; };
     syntaxHighlighting = { enable = true; };
     historySubstringSearch = {
@@ -879,12 +886,48 @@ in {
     keyMode = "vi";
     prefix = "C-Space";
     terminal = "screen-256color";
+
     extraConfig = ''
-      bindkey h select-pane -L
-      bindkey j select-pane -D
-      bindkey k select-pane -U
-      bindkey l select-pane -R
+      set-option -g status-style bg=default
+
+      run-shell "if [ ! -d ${tmuxResurrectPath} ]; then tmux new-session -d -s init-resurrect; ${pkgs.tmuxPlugins.resurrect}/share/tmux-plugins/resurrect/scripts/save.sh; fi"
+      bind-key h select-pane -L
+      bind-key j select-pane -D
+      bind-key k select-pane -U
+      bind-key l select-pane -R
+
+      bind-key -n C-h resize-pane -L
+      bind-key -n C-j resize-pane -D
+      bind-key -n C-k resize-pane -U
+      bind-key -n C-l resize-pane -R
+
+      bind Tab next-window
+      bind C-Tab previous-window
     '';
+    plugins = with pkgs.tmuxPlugins; [
+      {
+        plugin = prefix-highlight;
+        extraConfig = ''
+          set -g status-left '#{prefix_highlight}'
+        '';
+      }
+      {
+        plugin = resurrect;
+        extraConfig = ''
+          set -g @resurrect-strategy-nvim 'session'
+          set -g @resurrect-dir ${tmuxResurrectPath}
+          set -g @resurrect-hook-post-save-all 'sed -i -E "s|(pane.nvim\s:)[^;]+;.*\s([^ ]+)$|\1nvim \2|" ${tmuxResurrectPath}/last'
+        '';
+      }
+      {
+        plugin = continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-interval '10' 
+          set -g @continuum-boot 'on'
+        '';
+      }
+    ];
   };
 
   programs.fzf = {
@@ -902,15 +945,14 @@ in {
         shell = "zsh";
         # font = "Iosevka Term:size=8";
         # font = "JetBrainsMono Nerd Font:size=13";
-        font = "CartographCF Nerd Font:size=9";
+        font = "CartographCF Nerd Font:size=7.5";
         dpi-aware = "yes";
-        pad = "40x0";
-        font-size-adjustment = 0.9;
-        line-height = 25;
+        pad = "24x0";
+        line-height = 22.5;
       };
       colors = {
         foreground = "FFEFC2";
-        background = "141414";
+        background = "1c1c1c";
         selection-background = "292828";
         selection-foreground = "FFEFC2";
         regular0 = "af875f";

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
 
 # nm-applet --indicator &
 hyprctl setcursor Bibata_Ghost 30 &
