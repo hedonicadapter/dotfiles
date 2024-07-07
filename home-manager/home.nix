@@ -1,8 +1,6 @@
 { inputs, outputs, pkgs, lib, config, ... }:
 
-let
-  unstable = import <nixos-unstable> { };
-  tmuxResurrectPath = "~/.config/tmux/resurrect/";
+let unstable = import <nixos-unstable> { };
 in {
   # You can import other home-manager modules here
   imports = [
@@ -25,11 +23,10 @@ in {
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
 
-      inputs.neovim-nightly-overlay.overlay
-      inputs.nixneovimplugins.overlays.default
+      inputs.neovim-nightly-overlay.overlays.default
       inputs.nur.overlay
       inputs.awesome-neovim-plugins.overlays.default
-
+      inputs.nixneovimplugins.overlays.default
       # You can also add overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
     ];
@@ -47,6 +44,8 @@ in {
           "sf-pro"
           "warp-terminal-0.2024.02.20.08.01.stable_01"
           "warp-terminal"
+          "copilot.vim"
+          "ticktick"
         ];
     };
   };
@@ -89,7 +88,6 @@ in {
     steamcmd
     bottles
     lutris
-    tofi-power-menu
 
     dart-sass
     sassc
@@ -123,7 +121,7 @@ in {
 
     nerdfonts
     maple-mono-NF
-    outputs.cartograph-cf
+    cartograph-cf
     material-symbols
     font-awesome
   ];

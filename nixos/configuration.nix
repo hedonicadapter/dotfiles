@@ -13,12 +13,18 @@ let
 in {
   # You can import other NixOS modules here
   imports = [
+    inputs.home-manager.nixosModules.home-manager
     inputs.stylix.nixosModules.stylix
     inputs.nur.nixosModules.nur
     spicetify-nix.nixosModules.default
 
     ./hardware-configuration.nix
   ];
+
+  home-manager = {
+    extraSpecialArgs = { inherit inputs outputs; };
+    users = { hedonicadapter = import ../home-manager/home.nix; };
+  };
 
   nixpkgs = {
     overlays = [

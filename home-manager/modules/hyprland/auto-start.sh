@@ -10,7 +10,7 @@ hyperctl dispatch exec "[workspace 2 silent] wrap-obsidian" &
 
 ags &
 
-swww-daemon &
+swww-daemon --format xrgb &
 
 while ! pgrep -x "swww-daemon" >/dev/null
 do

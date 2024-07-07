@@ -1,4 +1,6 @@
-{
+{ pkgs, ... }:
+let tmuxResurrectPath = "~/.config/tmux/resurrect/";
+in {
   programs.tmux = {
     enable = true;
     clock24 = true;

@@ -1,4 +1,4 @@
-{
+{ pkgs, ... }: {
   programs.neovim = let
     toLua = str: ''
       lua << EOF
@@ -11,7 +11,7 @@
       EOF
     '';
   in {
-    package = pkgs.neovim-nightly;
+    # package = pkgs.neovim-nightly;
     enable = true;
     viAlias = true;
     vimAlias = true;
@@ -151,7 +151,7 @@
 
       copilot-vim
       {
-        plugin = unstable.vimPlugins.CopilotChat-nvim;
+        plugin = CopilotChat-nvim;
         config = toLua ''
           require('CopilotChat').setup()
         '';
@@ -323,7 +323,7 @@
       }
 
       {
-        plugin = unstable.vimPlugins.staline-nvim;
+        plugin = staline-nvim;
         config = toLuaFile ./modules/nvim/plugins/staline.lua;
       }
 
