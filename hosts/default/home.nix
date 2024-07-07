@@ -1,7 +1,6 @@
 { inputs, outputs, pkgs, lib, config, cartograph-cf, ... }:
 
 let
-  unstable = import <nixos-unstable> { };
   tofi-power-menu = pkgs.writeShellScriptBin "tofi-power-menu"
     (builtins.readFile ../../modules/tofi/power-menu.sh);
   tmuxResurrectPath = "~/.config/tmux/resurrect/";
@@ -16,7 +15,7 @@ in {
   home.homeDirectory = "/home/hedonicadapter";
 
   nixpkgs.overlays = [
-    inputs.neovim-nightly-overlay.overlay
+    # inputs.neovim-nightly-overlay.packages.${pkgs.system}.default
     inputs.nixneovimplugins.overlays.default
     inputs.nur.overlay
     inputs.awesome-neovim-plugins.overlays.default
@@ -41,6 +40,7 @@ in {
       "sf-pro"
       "warp-terminal-0.2024.02.20.08.01.stable_01"
       "warp-terminal"
+      "copilot.vim"
     ];
 
   home.packages = with pkgs; [
@@ -1027,7 +1027,7 @@ in {
       EOF
     '';
   in {
-    package = pkgs.neovim-nightly;
+    package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
     enable = true;
     viAlias = true;
     vimAlias = true;
@@ -1167,7 +1167,7 @@ in {
 
       copilot-vim
       {
-        plugin = unstable.vimPlugins.CopilotChat-nvim;
+        plugin = CopilotChat-nvim;
         config = toLua ''
           require('CopilotChat').setup()
         '';
@@ -1342,7 +1342,7 @@ in {
       }
 
       {
-        plugin = unstable.vimPlugins.staline-nvim;
+        plugin = staline-nvim;
         config = toLuaFile ../../modules/nvim/plugins/staline.lua;
       }
 

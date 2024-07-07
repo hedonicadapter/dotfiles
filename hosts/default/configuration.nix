@@ -37,10 +37,9 @@ in {
   # Authentication agent
   security.polkit.enable = true;
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
   };
 
   # Load nvidia driver for Xorg and Wayland
@@ -202,6 +201,8 @@ in {
       cartograph-cf = cartograph-cf;
     };
     users = { "hedonicadapter" = import ./home.nix; };
+
+    backupFileExtension = "backup" ;
   };
 
   # services.displayManager.autoLogin.enable = false;
@@ -245,7 +246,7 @@ in {
     winetricks
     gcc
     python311Packages.cmake
-    nodejs_21
+    nodejs_22
     microsoft-edge-dev
     xorg.xmodmap
     git
@@ -273,7 +274,7 @@ in {
     (pkgs.discord-canary.override { withOpenASAR = true; })
     betterdiscordctl
 
-    swww
+    #swww
     wlsunset
     cliphist
     wl-clip-persist
@@ -335,7 +336,6 @@ in {
       hyprland.default = [ "gtk" "hyprland" ];
     };
 
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
   stylix = {
