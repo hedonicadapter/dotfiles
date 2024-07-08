@@ -1,5 +1,11 @@
-{ inputs, outputs, lib, config, pkgs, ... }:
-let
+{
+  inputs,
+  outputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}: let
   spicetify-nix = inputs.spicetify-nix;
   spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
 
@@ -9,7 +15,6 @@ let
   contrast = 40;
   fillColor = "black";
   saturation = 180;
-
 in {
   # You can import other NixOS modules here
   imports = [
@@ -22,8 +27,8 @@ in {
   ];
 
   home-manager = {
-    extraSpecialArgs = { inherit inputs outputs; };
-    users = { hedonicadapter = import ../home-manager/home.nix; };
+    extraSpecialArgs = {inherit inputs outputs;};
+    users = {hedonicadapter = import ../home-manager/home.nix;};
   };
 
   nixpkgs = {
@@ -41,7 +46,8 @@ in {
     };
   };
 
-  nix = let flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+  nix = let
+    flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
   in {
     settings = {
       # Enable flakes and new 'nix' command
@@ -53,7 +59,7 @@ in {
     };
 
     # Opinionated: make flake registry and nix path match flake inputs
-    registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
+    registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
@@ -92,10 +98,11 @@ in {
     pulseaudio
     playerctl
     spotify
-    (pkgs.discord-canary.override { withOpenASAR = true; })
+    (pkgs.discord-canary.override {withOpenASAR = true;})
+    # discord-canary # run once as vanilla if openasar error
     betterdiscordctl
 
-    swww
+    inputs.swww.packages.${pkgs.system}.swww
     wlsunset
     cliphist
     wl-clip-persist
@@ -114,7 +121,7 @@ in {
     colorScheme = "gruvbox";
     injectCss = true;
 
-    enabledCustomApps = with spicePkgs.apps; [ reddit marketplace ];
+    enabledCustomApps = with spicePkgs.apps; [reddit marketplace];
     enabledExtensions = with spicePkgs.extensions; [
       fullAppDisplay
       keyboardShortcut
@@ -153,14 +160,14 @@ in {
     enable = true;
     xdgOpenUsePortal = true;
     config = {
-      common.default = [ "gtk" ];
-      hyprland.default = [ "gtk" "hyprland" ];
+      common.default = ["gtk"];
+      hyprland.default = ["gtk" "hyprland"];
     };
   };
 
   stylix = {
     enable = true;
-    image = pkgs.runCommand "dimmed-background.png" { } ''
+    image = pkgs.runCommand "dimmed-background.png" {} ''
       ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${
         toString brightness
       },${toString contrast} -modulate 100,${
@@ -168,7 +175,8 @@ in {
       } -fill ${fillColor} $out
     '';
     polarity = "dark";
-    base16Scheme = { # melliflluous alduin
+    base16Scheme = {
+      # melliflluous alduin
       base00 = "#141414";
       base01 = "#292828";
       base02 = "#af875f";
@@ -247,8 +255,6 @@ in {
     };
 
     fonts = {
-      # pkgs.public-sans
-
       serif = {
         package = pkgs.merriweather;
         name = "Merriweather";
@@ -273,7 +279,6 @@ in {
       sizes.desktop = 9;
       sizes.popups = 9;
       sizes.terminal = 9;
-
     };
   };
 
@@ -286,7 +291,7 @@ in {
   };
 
   boot = {
-    extraModulePackages = [ config.boot.kernelPackages.lenovo-legion-module ];
+    extraModulePackages = [config.boot.kernelPackages.lenovo-legion-module];
     # plymouth = {
     #   enable = true;
     #   theme = "abstract_ring";
@@ -342,7 +347,7 @@ in {
 
     # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
     # Enable this if you have graphical corruption issues or application crashes after waking
-    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
+    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
     # of just the bare essentials.
     powerManagement.enable = false;
 
@@ -352,9 +357,9 @@ in {
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
+    # Support is limited to the Turing and later architectures. Full list of
+    # supported GPUs is at:
+    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+
     # Currently alpha-quality/buggy, so false is currently the recommended setting.
     open = true;
@@ -407,8 +412,8 @@ in {
   users.users = {
     hedonicadapter = {
       isNormalUser = true;
-      openssh.authorizedKeys.keys = [ ];
-      extraGroups = [ "networkmanager" "wheel" "docker" ];
+      openssh.authorizedKeys.keys = [];
+      extraGroups = ["networkmanager" "wheel" "docker"];
     };
   };
 
@@ -420,11 +425,11 @@ in {
   '';
 
   # List services that you want to enable:
-  services.logind = { lidSwitch = "ignore"; };
+  services.logind = {lidSwitch = "ignore";};
   # bluetooth
   services.blueman.enable = true;
   # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = ["nvidia"];
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   # Enable the GNOME Desktop Environment.

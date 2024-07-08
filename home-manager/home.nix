@@ -1,6 +1,12 @@
-{ inputs, outputs, pkgs, lib, config, ... }:
-
-let unstable = import <nixos-unstable> { };
+{
+  inputs,
+  outputs,
+  pkgs,
+  lib,
+  config,
+  ...
+}: let
+  unstable = import <nixos-unstable> {};
 in {
   # You can import other home-manager modules here
   imports = [
@@ -53,7 +59,7 @@ in {
   home.username = "hedonicadapter";
   home.homeDirectory = "/home/hedonicadapter";
 
-  programs.matugen = { enable = true; };
+  programs.matugen = {enable = true;};
 
   programs.fzf = {
     enable = true;
@@ -66,14 +72,14 @@ in {
     userEmail = "mailservice.samherman@gmail.com";
     extraConfig = {
       credential.helper = "${
-          pkgs.git.override { withLibsecret = true; }
-        }/bin/git-credential-libsecret";
+        pkgs.git.override {withLibsecret = true;}
+      }/bin/git-credential-libsecret";
     };
   };
 
   programs.ags = {
     enable = true;
-    extraPackages = with pkgs; [ gtksourceview webkitgtk accountsservice ];
+    extraPackages = with pkgs; [gtksourceview webkitgtk accountsservice];
   };
 
   home.packages = with pkgs; [
@@ -96,7 +102,7 @@ in {
     prettierd
     typescript
     mono # for sniprun c#
-    (with dotnetCorePackages; combinePackages [ sdk_6_0 sdk_7_0 sdk_8_0 ])
+    (with dotnetCorePackages; combinePackages [sdk_6_0 sdk_7_0 sdk_8_0])
     azure-functions-core-tools
     csharpier
     sqlfluff
@@ -130,7 +136,7 @@ in {
     enable = true;
     # package = inputs.hyprland.packages.${pkgs.system}.default;
     systemd.enable = true;
-    systemd.variables = [ "--all" ];
+    systemd.variables = ["--all"];
     extraConfig = "${builtins.readFile ./modules/hyprland/hyprland.conf}";
     plugins = [
       # inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
