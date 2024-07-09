@@ -1,7 +1,7 @@
 require("staline").setup({
 	sections = {
 		left = { "mode" },
-		mid = { "file_name", "lsp" },
+		mid = {},
 		right = { "", "cwd", "branch" },
 	},
 	mode_colors = {

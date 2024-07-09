@@ -16,7 +16,6 @@ local palette = {
 		beige = "#dfaf87",
 	},
 }
-
 local comments_fg = get_hex("Comment", "fg")
 local errors_fg = get_hex("DiagnosticError", "fg")
 local warnings_fg = get_hex("DiagnosticWarn", "fg")
@@ -36,9 +35,13 @@ local components = {
 			elseif buffer.diagnostics.errors ~= 0 then
 				return "(٥¯ ¯) "
 			elseif buffer.diagnostics.warnings ~= 0 then
-				return "(˶˃⤙˂˶) "
+				return "~(˶˃⤙˂˶)> "
 			elseif buffer.is_modified then
 				return "~(‾ࡇ‾)/ "
+			elseif buffer.diagnostics.infos ~= 0 then
+				return "(｡- .•) "
+			elseif buffer.diagnostics.hints ~= 0 then
+				return "ヾ( ‾o‾)◞ "
 			else
 				return "(~‾⌣‾)~ "
 			end
@@ -51,6 +54,10 @@ local components = {
 				return palette.normal.yellow
 			elseif buffer.is_modified then
 				return palette.normal.green
+			elseif buffer.diagnostics.infos ~= 0 then
+				return palette.normal.blue
+			elseif buffer.diagnostics.hints ~= 0 then
+				return palette.normal.cyan
 			else
 				return palette.normal.white
 			end
@@ -76,9 +83,13 @@ local components = {
 			return buffer.index .. " "
 		end,
 		fg = function(buffer)
-			return (buffer.diagnostics.errors ~= 0 and errors_fg)
-				or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
-				or palette.normal.black
+			if buffer.diagnostics.errors ~= 0 then
+				return palette.normal.red
+			elseif not buffer.is_focused then
+				return comments_fg
+			else
+				return palette.normal.white
+			end
 		end,
 		truncation = { priority = 1 },
 	},
@@ -88,13 +99,21 @@ local components = {
 			return vim.fn.fnamemodify(buffer.filename, ":r")
 		end,
 		fg = function(buffer)
-			return (buffer.diagnostics.errors ~= 0 and errors_fg)
-				or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
-				or nil
+			if buffer.diagnostics.errors ~= 0 then
+				return palette.normal.red
+			elseif buffer.diagnostics.warnings ~= 0 then
+				return palette.normal.yellow
+			elseif buffer.diagnostics.infos ~= 0 then
+				return palette.normal.blue
+			elseif buffer.diagnostics.hints ~= 0 then
+				return palette.normal.cyan
+			else
+				return palette.normal.white
+			end
 		end,
 		style = function(buffer)
 			return ((buffer.is_focused and buffer.diagnostics.errors ~= 0) and "bold,underline")
-				or (buffer.is_focused and "bold")
+				or (buffer.is_focused and "bold,italic")
 				or (buffer.diagnostics.errors ~= 0 and "underline")
 				or nil
 		end,
@@ -110,14 +129,24 @@ local components = {
 			return ext ~= "" and "." .. ext or ""
 		end,
 		fg = function(buffer)
-			return (buffer.diagnostics.errors ~= 0 and errors_fg)
-				or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
-				or palette.normal.black
+			if buffer.diagnostics.errors ~= 0 then
+				return palette.normal.red
+			elseif buffer.is_focused then
+				if buffer.diagnostics.warnings ~= 0 then
+					return palette.normal.yellow
+				elseif buffer.diagnostics.infos ~= 0 then
+					return palette.normal.blue
+				elseif buffer.diagnostics.hints ~= 0 then
+					return palette.normal.cyan
+				else
+					return palette.normal.white
+				end
+			else
+				return palette.normal.black
+			end
 		end,
 		style = function(buffer)
-			return ((buffer.is_focused and buffer.diagnostics.errors ~= 0) and "bold,underline")
-				or (buffer.diagnostics.errors ~= 0 and "underline")
-				or nil
+			return (buffer.is_focused and buffer.diagnostics.errors ~= 0 and "bold,underline") or nil
 		end,
 		truncation = {
 			priority = 2,
@@ -127,8 +156,10 @@ local components = {
 
 	diagnostics = {
 		text = function(buffer)
-			return (buffer.diagnostics.errors ~= 0 and "  " .. buffer.diagnostics.errors)
-				or (buffer.diagnostics.warnings ~= 0 and "  " .. buffer.diagnostics.warnings)
+			return (buffer.diagnostics.errors ~= 0 and "  " .. buffer.diagnostics.errors .. " ")
+				or (buffer.diagnostics.warnings ~= 0 and "  " .. buffer.diagnostics.warnings .. " ")
+				or (buffer.diagnostics.infos ~= 0 and "  " .. buffer.diagnostics.infos .. " ")
+				or (buffer.diagnostics.hints ~= 0 and "  " .. buffer.diagnostics.hints .. " ")
 				or ""
 		end,
 		hl = {
@@ -138,6 +169,20 @@ local components = {
 					or nil
 			end,
 		},
+		bg = function(buffer)
+			if buffer.diagnostics.errors ~= 0 then
+				return palette.normal.red
+			elseif buffer.diagnostics.warnings ~= 0 then
+				return palette.normal.yellow
+			elseif buffer.diagnostics.infos ~= 0 then
+				return palette.normal.blue
+			elseif buffer.diagnostics.hints ~= 0 then
+				return palette.normal.cyan
+			else
+				return "NONE"
+			end
+		end,
+		style = "bold",
 		truncation = { priority = 1 },
 	},
 
@@ -208,6 +253,7 @@ require("cokeline").setup({
 		components.devicon_or_pick_letter,
 		components.filename_root,
 		components.filename_extension,
+		components.separator,
 		components.diagnostics,
 		components.separator,
 		components.close_or_unsaved,
