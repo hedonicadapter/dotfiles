@@ -36,7 +36,7 @@ in {
       # You can also add overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
     ];
-    # Configure your nixpkgs instance
+
     config = {
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
@@ -98,9 +98,11 @@ in {
     dart-sass
     sassc
     bun
+    tailwindcss-language-server
+    typescript
+    nodePackages.typescript-language-server
     nodePackages.prettier
     prettierd
-    typescript
     mono # for sniprun c#
     (with dotnetCorePackages; combinePackages [sdk_6_0 sdk_7_0 sdk_8_0])
     azure-functions-core-tools
@@ -110,6 +112,7 @@ in {
     terraform
     stylua
     alejandra
+    nil
     google-cloud-sdk
     firebase-tools
     grim
@@ -174,9 +177,7 @@ in {
   };
 
   programs.home-manager.enable = true;
-
-  # Nicely reload system units when changing configs
-  systemd.user.startServices = "sd-switch";
+  systemd.user.startServices = "sd-switch"; # Nicely reload system units when changing configs
 
   fonts.fontconfig.enable = true;
 

@@ -5,14 +5,15 @@ local rep = string.rep
 
 local palette = {
 	normal = {
-		black = "#1e1e1e",
-		red = "#f44747",
-		green = "#608b4e",
-		yellow = "#dcdcaa",
+		black = "#292828",
+		red = "#af5f5f",
+		green = "#87875f",
+		yellow = "#ffdf87",
 		blue = "#569cd6",
-		magenta = "#c678dd",
-		cyan = "#56b6c2",
-		white = "#d4d4d4",
+		magenta = "#af8787",
+		cyan = "#87afaf",
+		white = "#FFEFC2",
+		beige = "#dfaf87",
 	},
 }
 
@@ -28,11 +29,32 @@ local components = {
 		truncation = { priority = 1 },
 	},
 
-	left_half_circle = {
+	lil_guy = {
 		text = function(buffer)
-			return buffer.is_focused and "(~‾⌣‾)~ " or ""
+			if not buffer.is_focused then
+				return ""
+			elseif buffer.diagnostics.errors ~= 0 then
+				return "(٥¯ ¯) "
+			elseif buffer.diagnostics.warnings ~= 0 then
+				return "(˶˃⤙˂˶) "
+			elseif buffer.is_modified then
+				return "~(‾ࡇ‾)/ "
+			else
+				return "(~‾⌣‾)~ "
+			end
 		end,
 		bg = "NONE",
+		fg = function(buffer)
+			if buffer.diagnostics.errors ~= 0 then
+				return palette.normal.red
+			elseif buffer.diagnostics.warnings ~= 0 then
+				return palette.normal.yellow
+			elseif buffer.is_modified then
+				return palette.normal.green
+			else
+				return palette.normal.white
+			end
+		end,
 		truncation = { priority = 1 },
 	},
 
@@ -51,27 +73,15 @@ local components = {
 
 	index = {
 		text = function(buffer)
-			return buffer.index .. ": "
+			return buffer.index .. " "
 		end,
 		fg = function(buffer)
 			return (buffer.diagnostics.errors ~= 0 and errors_fg)
 				or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
-				or nil
+				or palette.normal.black
 		end,
 		truncation = { priority = 1 },
 	},
-
-	-- unique_prefix = {
-	-- 	text = function(buffer)
-	-- 		return buffer.unique_prefix
-	-- 	end,
-	-- 	fg = comments_fg,
-	-- 	style = "italic",
-	-- 	truncation = {
-	-- 		priority = 4,
-	-- 		direction = "left",
-	-- 	},
-	-- },
 
 	filename_root = {
 		text = function(buffer)
@@ -102,11 +112,10 @@ local components = {
 		fg = function(buffer)
 			return (buffer.diagnostics.errors ~= 0 and errors_fg)
 				or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
-				or nil
+				or palette.normal.black
 		end,
 		style = function(buffer)
 			return ((buffer.is_focused and buffer.diagnostics.errors ~= 0) and "bold,underline")
-				or (buffer.is_focused and "bold")
 				or (buffer.diagnostics.errors ~= 0 and "underline")
 				or nil
 		end,
@@ -134,7 +143,7 @@ local components = {
 
 	close_or_unsaved = {
 		text = function(buffer)
-			return buffer.is_modified and " ●  " or (buffer.is_focused and "   " or "   ")
+			return buffer.is_modified and " ●  " or ""
 		end,
 		fg = function(buffer)
 			return buffer.is_modified and palette.normal.green or nil
@@ -194,11 +203,9 @@ require("cokeline").setup({
 	components = {
 		components.separator,
 		components.separator,
-		components.left_half_circle,
-		left_padding,
-		components.devicon_or_pick_letter,
 		components.index,
-		-- components.unique_prefix,
+		components.lil_guy,
+		components.devicon_or_pick_letter,
 		components.filename_root,
 		components.filename_extension,
 		components.diagnostics,

@@ -292,6 +292,7 @@ in {
 
   boot = {
     extraModulePackages = [config.boot.kernelPackages.lenovo-legion-module];
+    kernelPackages = pkgs.linuxPackages_zen;
     # plymouth = {
     #   enable = true;
     #   theme = "abstract_ring";

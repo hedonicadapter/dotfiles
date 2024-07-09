@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   programs.neovim = let
     toLua = str: ''
       lua << EOF
@@ -97,7 +97,7 @@
           require('spider').setup({
             skipInsignificantPunctuation = false,
           })
-                      
+
           vim.keymap.set(
           	{ "n", "o", "x" },
           	"w",
@@ -173,7 +173,8 @@
         config = toLua ''
           require('conform').setup({
            formatters_by_ft = {
-           lua = { "stylua" },
+            lua = { "stylua" },
+            nix = { "alejandra" },
             javascript = { { "prettierd", "prettier" } },
             typescript = { { "prettierd", "prettier" } },
             javascriptreact = { { "prettierd", "prettier" } },
@@ -188,8 +189,8 @@
             bicep = { "bicep" },
             cs = {"csharpier"},
             go = {"gofmt"},
-           sql = {"sqlfluff"},
-           tf = {"terraform_fmt"},
+            sql = {"sqlfluff"},
+            tf = {"terraform_fmt"},
           },
           format_on_save = {
               -- These options will be passed to conform.format()
@@ -234,7 +235,7 @@
       }
 
       {
-        plugin = (nvim-treesitter.withPlugins (p: [
+        plugin = nvim-treesitter.withPlugins (p: [
           p.tree-sitter-nix
           p.tree-sitter-vim
           p.tree-sitter-bash
@@ -253,7 +254,7 @@
           p.tree-sitter-typescript
           p.tree-sitter-tsx
           p.tree-sitter-terraform
-        ]));
+        ]);
         config = toLuaFile ./modules/nvim/plugins/treesitter.lua;
       }
 
@@ -399,7 +400,7 @@
       {
         plugin = dropbar-nvim;
         config = toLua ''
-          require('dropbar').setup() 
+          require('dropbar').setup()
           vim.o.winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
         '';
       }

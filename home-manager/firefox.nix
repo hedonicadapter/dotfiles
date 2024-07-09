@@ -156,9 +156,11 @@
           #statuspanel #statuspanel-label {
             font-weight: 600 !important;
             padding-inline: var(--6) !important;
+            padding-block: 2px !important;
             border-radius: var(--6) !important;
             margin: var(--8) !important;
-            background-color: blue !important;
+            background-color: #292828 !important;
+            color: #FFEFC2 !important;
           }
 
           /* ℹ️ Findbar Ctrl+F */
@@ -296,19 +298,6 @@
             margin-bottom: -24px;
           }
 
-          .tabbrowser-tab {
-            position:relative;
-          }
-
-          .tabbrowser-tab:not([pinned]):not([selected]) {
-            min-width: 80px !important;
-            flex:1 !important;
-          }
-          .tabbrowser-tab[fadein]:not([selected]):not([pinned]) {
-            min-width: 80px !important;
-            opacity: 0.4;
-            flex:1 !important;
-          }
           .tabbrowser-tab .tab-background:not([selected]) {
             background: var(--item) !important;
           }
@@ -317,11 +306,6 @@
             color: #FFEFC2 !important;
           }
 
-          /* Tabs [Selected] */
-          .tabbrowser-tab[selected][fadein]:not([pinned]) {
-            width: max-content;
-            flex:5 !important;
-          }
           .tabbrowser-tab .tab-background[selected="true"] {
             background: var(--main) !important;
           }
@@ -360,11 +344,6 @@
             align-items: stretch !important;
             opacity: 0 !important;
             -moz-window-dragging: drag !important;
-          }
-          #tabbrowser-arrowscrollbox {
-            flex-direction:row !important;
-            flex-wrap:wrap;
-            align-items:stretch !important;
           }
 
           /* 🪟 Bookmarks Multi-row  */
@@ -591,10 +570,31 @@
             outline-color: var(--main) !important;
             border-radius:var(--tab-border-radius); }
 
-        .tabbrowser-tab:not([selected]){
-          opacity:0.5;
-          transition: min-width 250ms ease-out, max-width 250ms ease-out, opacity 150ms ease-out !important;
-        }
+          #tabbrowser-arrowscrollbox {
+            flex-direction:row !important;
+            flex-wrap: wrap;
+            align-items:stretch !important;
+          }
+
+          .tabbrowser-tab {
+            position:relative;
+          }
+
+          .tabbrowser-tab:not([pinned]){
+            flex-basis: 10vw !important;
+            max-width: 10vw !important;
+            width: auto !important;
+            overflow:hidden !important;
+            transition: all 0.25s ease-out !important;
+            opacity:0.4;
+          }
+
+          .tabbrowser-tab[selected] {
+            max-width: 70vw !important; /* Set a large enough max-width */
+            flex-basis:auto !important;
+            width:max-content;
+            opacity:1 !important;
+          }
       '';
     };
   };
