@@ -42,9 +42,9 @@ local components = {
 			elseif buffer.diagnostics.infos ~= 0 then
 				return "(｡- .•) "
 			elseif buffer.diagnostics.hints ~= 0 then
-				return "ヾ( ‾o‾)◞ "
+				return "ヾ( ‾ ｡‾)◞ "
 			else
-				return "(~‾⌣‾)~ "
+				return "(~‾⌣‾)> "
 			end
 		end,
 		bg = "NONE",
@@ -176,6 +176,7 @@ local components = {
 					or nil
 			end,
 		},
+		fg = palette.normal.black,
 		bg = function(buffer)
 			if buffer.diagnostics.errors ~= 0 then
 				return palette.normal.red
