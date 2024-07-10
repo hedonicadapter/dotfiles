@@ -35,7 +35,7 @@ local lspconfig = require("lspconfig")
 local coq = require("coq")
 
 vim.diagnostic.config(
-{
+	{
 		underline = true,
 		update_in_insert = false,
 		virtual_text = {
@@ -52,11 +52,10 @@ vim.diagnostic.config(
 				[vim.diagnostic.severity.INFO] = ,
 			},
 		},
-
-	inlay_hints = {
-		enabled = true,
-	},
-}
+		inlay_hints = {
+			enabled = true,
+		},
+	}
 )
 
 lspconfig.lua_ls.setup(coq.lsp_ensure_capabilities({
@@ -98,10 +97,6 @@ lspconfig.azure_pipelines_ls.setup(coq.lsp_ensure_capabilities({
 			},
 		},
 	},
-}))
-lspconfig.astro.setup(coq.lsp_ensure_capabilities({
-	on_attach = on_attach,
-	capabilities = capabilities,
 }))
 lspconfig.bashls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
@@ -236,15 +231,7 @@ lspconfig.lua_ls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
 }))
-lspconfig.spectral.setup(coq.lsp_ensure_capabilities({
-	on_attach = on_attach,
-	capabilities = capabilities,
-}))
-lspconfig.sqlls.setup(coq.lsp_ensure_capabilities({
-	on_attach = on_attach,
-	capabilities = capabilities,
-}))
-lspconfig.somesass_ls.setup(coq.lsp_ensure_capabilities({
+lspconfig.sqls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
 }))

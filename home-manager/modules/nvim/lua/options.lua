@@ -144,24 +144,6 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
 	end,
 })
 
-function _G.check_empty_buffer()
-	local bufname = vim.api.nvim_buf_get_name(0)
-	if bufname == "" then
-		vim.api.nvim_command("bd")
-	end
-end
-
--- delete empty buffers
-vim.api.nvim_exec(
-	[[
-  augroup CheckEmptyBuffer
-    autocmd!
-    autocmd BufEnter * lua check_empty_buffer()
-  augroup END
-]],
-	false
-)
-
 vim.api.nvim_exec(
 	[[
 	  autocmd BufEnter * hi TreesitterContextBottom guisp=NONE

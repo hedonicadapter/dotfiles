@@ -95,38 +95,54 @@ in {
     bottles
     lutris
 
-    dart-sass
-    sassc
-    bun
-    tailwindcss-language-server
-    typescript
-    nodePackages.typescript-language-server
-    nodePackages.prettier
-    prettierd
-    mono # for sniprun c#
-    (with dotnetCorePackages; combinePackages [sdk_6_0 sdk_7_0 sdk_8_0])
-    azure-functions-core-tools
-    csharpier
-    sqlfluff
+    # Languages
     go
     terraform
-    stylua
-    alejandra
+    dart-sass
+    sassc
+    typescript
+    bun
+    mono # for sniprun c#
+    (with dotnetCorePackages; combinePackages [sdk_6_0 sdk_7_0 sdk_8_0])
+    cargo
+    rustc
+
+    # Language servers
+    lua-language-server
+    tailwindcss-language-server
+    nodePackages.typescript-language-server
+    nodePackages."@astrojs/language-server"
+    vscode-langservers-extracted
+    yaml-language-server
+    terraform-ls
     nil
+    dockerfile-language-server-nodejs
+    htmx-lsp
+    sqls
+    vim-language-server
+
+    # Formatters
+    nodePackages.prettier
+    prettierd
+    csharpier
+    alejandra
+    stylua
+    sqlfluff
+
+    azure-functions-core-tools
     google-cloud-sdk
     firebase-tools
+    docker-compose
+    azure-cli
+
     grim
     slurp
     lf
     jq
-    cargo
-    rustc
-    azure-cli
     bicep
     gh
     libGLU
     lazydocker
-    docker-compose
 
     nerdfonts
     maple-mono-NF
