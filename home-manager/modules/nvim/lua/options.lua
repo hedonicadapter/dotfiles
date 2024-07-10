@@ -20,7 +20,7 @@ vim.opt.undofile = true
 vim.opt.fillchars:append(",eob: ")
 
 if vim.g.neovide then
-	vim.opt.linespace = 15
+	vim.opt.linespace = 12
 
 	vim.g.neovide_padding_top = 10
 	vim.g.neovide_padding_bottom = 0
@@ -144,16 +144,34 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
 	end,
 })
 
+function _G.check_empty_buffer()
+	local bufname = vim.api.nvim_buf_get_name(0)
+	if bufname == "" then
+		vim.api.nvim_command("bd")
+	end
+end
+
+-- delete empty buffers
 vim.api.nvim_exec(
 	[[
-  autocmd BufEnter * hi TreesitterContextBottom guisp=NONE
-  autocmd BufEnter * hi TreesitterContext guibg=NONE gui=italic
-  autocmd BufEnter * hi WinBar guibg=NONE
-  autocmd BufEnter * hi LineNr guibg=NONE
-  autocmd BufEnter * hi SignColumn guibg=NONE
-  autocmd BufEnter * hi DropBarIconKindFunction guibg=NONE
-  autocmd BufEnter * hi TabLineFill guibg=NONE
+  augroup CheckEmptyBuffer
+    autocmd!
+    autocmd BufEnter * lua check_empty_buffer()
+  augroup END
 ]],
+	false
+)
+
+vim.api.nvim_exec(
+	[[
+	  autocmd BufEnter * hi TreesitterContextBottom guisp=NONE
+	  autocmd BufEnter * hi TreesitterContext guibg=NONE gui=italic
+	  autocmd BufEnter * hi WinBar guibg=NONE
+	  autocmd BufEnter * hi LineNr guibg=NONE
+	  autocmd BufEnter * hi SignColumn guibg=NONE
+	  autocmd BufEnter * hi DropBarIconKindFunction guibg=NONE
+	  autocmd BufEnter * hi TabLineFill guibg=NONE
+	]],
 	false
 )
 

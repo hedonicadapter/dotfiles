@@ -1,12 +1,12 @@
 local M = {}
 
 M.print_statements = {
-	lua = "print('%s')",
-	python = "print('%s')",
-	javascript = "console.log('%s')",
-	javascriptreact = "console.log('%s')",
-	typescript = "console.log('%s')",
-	typescriptreact = "console.log('%s')",
+	lua = "print(%s)",
+	python = "print(%s)",
+	javascript = "console.log(%s)",
+	javascriptreact = "console.log(%s)",
+	typescript = "console.log(%s)",
+	typescriptreact = "console.log(%s)",
 }
 
 -- stolen from fzf

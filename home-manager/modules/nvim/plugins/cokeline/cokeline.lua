@@ -13,6 +13,7 @@ local palette = {
 		magenta = "#af8787",
 		cyan = "#87afaf",
 		white = "#FFEFC2",
+		white_dim = "#877F68",
 		beige = "#dfaf87",
 	},
 }
@@ -101,14 +102,18 @@ local components = {
 		fg = function(buffer)
 			if buffer.diagnostics.errors ~= 0 then
 				return palette.normal.red
+			elseif buffer.is_modified then
+				return palette.normal.green
 			elseif buffer.diagnostics.warnings ~= 0 then
 				return palette.normal.yellow
 			elseif buffer.diagnostics.infos ~= 0 then
 				return palette.normal.blue
 			elseif buffer.diagnostics.hints ~= 0 then
 				return palette.normal.cyan
-			else
+			elseif buffer.is_focused then
 				return palette.normal.white
+			else
+				return palette.normal.white_dim
 			end
 		end,
 		style = function(buffer)
@@ -132,7 +137,9 @@ local components = {
 			if buffer.diagnostics.errors ~= 0 then
 				return palette.normal.red
 			elseif buffer.is_focused then
-				if buffer.diagnostics.warnings ~= 0 then
+				if buffer.is_modified then
+					return palette.normal.green
+				elseif buffer.diagnostics.warnings ~= 0 then
 					return palette.normal.yellow
 				elseif buffer.diagnostics.infos ~= 0 then
 					return palette.normal.blue

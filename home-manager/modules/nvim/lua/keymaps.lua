@@ -204,3 +204,6 @@ vim.api.nvim_set_keymap(
 	":lua require('plugins.toggle-print').toggle_print()<CR>",
 	{ noremap = true, silent = true }
 )
+
+vim.keymap.set("n", "<leader>dn", "<cmd>lua vim.diagnostic.goto_next()<CR>")
+vim.keymap.set("n", "<leader>dp", "<cmd>lua vim.diagnostic.goto_prev()<CR>")

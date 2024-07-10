@@ -202,6 +202,7 @@ lspconfig.jsonls.setup(coq.lsp_ensure_capabilities({
 lspconfig.tsserver.setup(coq.lsp_ensure_capabilities({
   capabilities = capabilities,
   single_file_support = true,
+  root_dir = require('lspconfig.util').root_pattern('.git'),
   completions = {
     completeFunctionCalls = true,
   },
