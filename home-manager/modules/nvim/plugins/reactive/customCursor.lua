@@ -16,8 +16,8 @@ return {
 				-- change
 				c = {
 					winhl = {
-						CursorLine = { bg = "#ffdf87" },
-						CursorLineNr = { fg = "#ffdf87", bg = "#ffdf87" },
+						CursorLine = { bg = vim.g.colors_yellow },
+						CursorLineNr = { fg = vim.g.colors_yellow, bg = vim.g.colors_yellow },
 					},
 				},
 				-- delete
@@ -30,8 +30,8 @@ return {
 				-- yank
 				y = {
 					winhl = {
-						CursorLine = { bg = "#875f5f" },
-						CursorLineNr = { fg = "#875f5f", bg = "#875f5f" },
+						CursorLine = { bg = vim.g.colors_burgundy },
+						CursorLineNr = { fg = vim.g.colors_burgundy, bg = vim.g.colors_burgundy },
 					},
 				},
 			},
@@ -42,22 +42,22 @@ return {
 				CursorLineNr = { fg = "#273C2C", bg = "#273C2C" },
 			},
 			hl = {
-				Cursor = { bg = "#87875f" },
+				Cursor = { bg = vim.g.colors_green },
 			},
 		},
 		c = {
 			winhl = {
-				CursorLine = { bg = "#af5f00" },
-				CursorLineNr = { fg = "#af5f00", bg = "#af5f00" },
+				CursorLine = { bg = vim.g.colors_orange },
+				CursorLineNr = { fg = vim.g.colors_orange, bg = vim.g.colors_orange },
 			},
 		},
 		n = {
 			winhl = {
-				CursorLine = { bg = "#dfaf87" },
-				CursorLineNr = { fg = "#dfaf87", bg = "#dfaf87" },
+				CursorLine = { bg = vim.g.colors_beige },
+				CursorLineNr = { fg = vim.g.colors_beige, bg = vim.g.colors_beige },
 			},
 			hl = {
-				Cursor = { bg = "#dfaf87" },
+				Cursor = { bg = vim.g.colors_beige },
 			},
 		},
 		-- visual
@@ -67,7 +67,7 @@ return {
 				Visual = { bg = "#2B2D42" },
 			},
 			hl = {
-				Cursor = { bg = "#87afaf" },
+				Cursor = { bg = vim.g.colors_cyan },
 			},
 		},
 		-- select
@@ -80,8 +80,8 @@ return {
 		-- replace
 		R = {
 			winhl = {
-				CursorLine = { bg = "#af5f5f" },
-				CursorLineNr = { fg = "#af5f5f", bg = "#af5f5f" },
+				CursorLine = { bg = vim.g.colors_red },
+				CursorLineNr = { fg = vim.g.colors_red, bg = vim.g.colors_red },
 			},
 		},
 	},

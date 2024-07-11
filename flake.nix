@@ -55,6 +55,31 @@
     inherit (self) outputs;
     systems = ["x86_64-linux"];
     forAllSystems = nixpkgs.lib.genAttrs systems;
+
+    colors = {
+      # melliflluous alduin
+      black = "#292828";
+      grey = "#292828";
+      red = "#af5f5f";
+      red_dim = "#713E3E";
+      burgundy = "#875f5f";
+      yellow = "#ffdf87";
+      yellow_dim = "#A38E56";
+      orange = "#af5f00";
+      orange_dim = "#af875f";
+      orange_bright = "#ff8000";
+      green = "#87875f";
+      green_dim = "#56563D";
+      blue = "#569cd6";
+      blue_dim = "#39658A";
+      blush = "#af8787";
+      cyan = "#87afaf";
+      cyan_dim = "#567070";
+      white = "#FFEFC2";
+      white_dim = "#877F68";
+      beige = "#dfaf87";
+      vanilla_pear = "#dfdfaf";
+    };
   in {
     # Accessible through 'nix build', 'nix shell', etc
     packages =
@@ -70,6 +95,8 @@
 
     # These are usually stuff you would upstream into home-manager
     homeManagerModules = import ./modules/home-manager;
+
+    colors = colors;
 
     # NixOS configuration entrypoint
     nixosConfigurations = {

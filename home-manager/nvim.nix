@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  outputs,
+  pkgs,
+  ...
+}: {
   programs.neovim = let
     toLua = str: ''
       lua << EOF
@@ -10,12 +14,14 @@
       ${builtins.readFile file}
       EOF
     '';
+    luaColors = builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: "vim.g['colors_${name}'] = ${builtins.toJSON value}") outputs.colors));
   in {
     # package = pkgs.neovim-nightly;
     enable = true;
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
+    extraConfig = "";
 
     plugins = with pkgs.vimPlugins; [
       roslyn-nvim
@@ -280,7 +286,7 @@
         config = toLua ''
           require('guess-indent').setup()
 
-          vim.api.nvim_exec2([[
+          vim.api.nvim_exec([[
             autocmd BufEnter * silent! :GuessIndent
           ]], false)
         '';
@@ -365,17 +371,17 @@
         config = toLua ''
           require('tiny-devicons-auto-colors').setup({
               colors = {
-                  "#af875f",
-                  "#dfaf87",
-                  "#af5f00",
-                  "#af8787",
-                  "#ff8000",
-                  "#af5f5f",
-                  "#875f5f",
-                  "#87afaf",
-                  "#87875f",
-                  "#dfdfaf",
-                  "#ffdf87"
+                  "${outputs.colors.orange_dim}",
+                  "${outputs.colors.beige}",
+                  "${outputs.colors.orange}",
+                  "${outputs.colors.blush}",
+                  "${outputs.colors.orange_bright}",
+                  "${outputs.colors.red}",
+                  "${outputs.colors.burgundy}",
+                  "${outputs.colors.cyan}",
+                  "${outputs.colors.green}",
+                  "${outputs.colors.vanilla_pear}",
+                  "${outputs.colors.yellow}",
               },
           })
         '';
@@ -407,6 +413,7 @@
     ];
 
     extraLuaConfig = ''
+      ${luaColors}
       ${builtins.readFile ./modules/nvim/init.lua}
     '';
   };

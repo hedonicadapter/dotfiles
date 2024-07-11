@@ -176,23 +176,22 @@ in {
     '';
     polarity = "dark";
     base16Scheme = {
-      # melliflluous alduin
-      base00 = "#141414";
-      base01 = "#292828";
-      base02 = "#af875f";
-      base03 = "#875f5f";
-      base04 = "#dfaf87";
-      base05 = "#FFEFC2";
-      base06 = "#87afaf";
-      base07 = "#af5f5f";
-      base08 = "#af8787";
-      base09 = "#875f5f";
-      base0A = "#87afaf";
-      base0B = "#87875f";
-      base0C = "#af5f00";
-      base0D = "#dfaf87";
-      base0E = "#dfdfaf";
-      base0F = "#ffdf87";
+      base00 = outputs.colors.black;
+      base01 = outputs.colors.grey;
+      base02 = outputs.colors.orange_dim;
+      base03 = outputs.colors.burgundy;
+      base04 = outputs.colors.beige;
+      base05 = outputs.colors.white;
+      base06 = outputs.colors.cyan;
+      base07 = outputs.colors.red;
+      base08 = outputs.colors.blush;
+      base09 = outputs.colors.burgundy;
+      base0A = outputs.colors.cyan;
+      base0B = outputs.colors.green;
+      base0C = outputs.colors.orange;
+      base0D = outputs.colors.beige;
+      base0E = outputs.colors.vanilla_pear;
+      base0F = outputs.colors.yellow;
     };
     # base16Scheme = { gruvbox
     #   base00 = "#292828";

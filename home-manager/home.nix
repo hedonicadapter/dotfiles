@@ -20,7 +20,7 @@ in {
     ./zsh.nix
     ./foot.nix
     ./tofi.nix
-    ./nvim.nix
+    (import ./nvim.nix {inherit outputs pkgs;})
   ];
 
   nixpkgs = {

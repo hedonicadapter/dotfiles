@@ -3,25 +3,6 @@ local get_hex = util.get_hex
 
 local rep = string.rep
 
-local palette = {
-	normal = {
-		black = "#292828",
-		red = "#af5f5f",
-		red_dim = "#713E3E",
-		green = "#87875f",
-		green_dim = "#56563D",
-		yellow = "#ffdf87",
-		yellow_dim = "#A38E56",
-		blue = "#569cd6",
-		blue_dim = "#39658A",
-		magenta = "#af8787",
-		cyan = "#87afaf",
-		cyan_dim = "#567070",
-		white = "#FFEFC2",
-		white_dim = "#877F68",
-		beige = "#dfaf87",
-	},
-}
 local comments_fg = get_hex("Comment", "fg")
 local errors_fg = get_hex("DiagnosticError", "fg")
 local warnings_fg = get_hex("DiagnosticWarn", "fg")
@@ -56,31 +37,31 @@ local components = {
 		fg = function(buffer)
 			if buffer.is_focused then
 				if buffer.diagnostics.errors ~= 0 then
-					return palette.normal.red
+					return vim.g.colors_red
 				elseif buffer.diagnostics.warnings ~= 0 then
-					return palette.normal.yellow
+					return vim.g.colors_yellow
 				elseif buffer.is_modified then
-					return palette.normal.green
+					return vim.g.colors_green
 				elseif buffer.diagnostics.infos ~= 0 then
-					return palette.normal.blue
+					return vim.g.colors_blue
 				elseif buffer.diagnostics.hints ~= 0 then
-					return palette.normal.cyan
+					return vim.g.colors_cyan
 				else
-					return palette.normal.white
+					return vim.g.colors_white
 				end
 			else
 				if buffer.diagnostics.errors ~= 0 then
-					return palette.normal.red_dim
+					return vim.g.colors_red_dim
 				elseif buffer.diagnostics.warnings ~= 0 then
-					return palette.normal.yellow_dim
+					return vim.g.colors_yellow_dim
 				elseif buffer.is_modified then
-					return palette.normal.green_dim
+					return vim.g.colors_green_dim
 				elseif buffer.diagnostics.infos ~= 0 then
-					return palette.normal.blue_dim
+					return vim.g.colors_blue_dim
 				elseif buffer.diagnostics.hints ~= 0 then
-					return palette.normal.cyan_dim
+					return vim.g.colors_cyan_dim
 				else
-					return palette.normal.white_dim
+					return vim.g.colors_white_dim
 				end
 			end
 		end,
@@ -115,31 +96,31 @@ local components = {
 		fg = function(buffer)
 			if buffer.is_focused then
 				if buffer.diagnostics.errors ~= 0 then
-					return palette.normal.red
+					return vim.g.colors_red
 				elseif buffer.is_modified then
-					return palette.normal.green
+					return vim.g.colors_green
 				elseif buffer.diagnostics.warnings ~= 0 then
-					return palette.normal.yellow
+					return vim.g.colors_yellow
 				elseif buffer.diagnostics.infos ~= 0 then
-					return palette.normal.blue
+					return vim.g.colors_blue
 				elseif buffer.diagnostics.hints ~= 0 then
-					return palette.normal.cyan
+					return vim.g.colors_cyan
 				else
-					return palette.normal.white
+					return vim.g.colors_white
 				end
 			else
 				if buffer.diagnostics.errors ~= 0 then
-					return palette.normal.red_dim
+					return vim.g.colors_red_dim
 				elseif buffer.is_modified then
-					return palette.normal.green_dim
+					return vim.g.colors_green_dim
 				elseif buffer.diagnostics.warnings ~= 0 then
-					return palette.normal.yellow_dim
+					return vim.g.colors_yellow_dim
 				elseif buffer.diagnostics.infos ~= 0 then
-					return palette.normal.blue_dim
+					return vim.g.colors_blue_dim
 				elseif buffer.diagnostics.hints ~= 0 then
-					return palette.normal.cyan_dim
+					return vim.g.colors_cyan_dim
 				else
-					return palette.normal.white_dim
+					return vim.g.colors_white_dim
 				end
 			end
 		end,
@@ -163,31 +144,31 @@ local components = {
 		fg = function(buffer)
 			if buffer.is_focused then
 				if buffer.diagnostics.errors ~= 0 then
-					return palette.normal.red
+					return vim.g.colors_red
 				elseif buffer.is_modified then
-					return palette.normal.green
+					return vim.g.colors_green
 				elseif buffer.diagnostics.warnings ~= 0 then
-					return palette.normal.yellow
+					return vim.g.colors_yellow
 				elseif buffer.diagnostics.infos ~= 0 then
-					return palette.normal.blue
+					return vim.g.colors_blue
 				elseif buffer.diagnostics.hints ~= 0 then
-					return palette.normal.cyan
+					return vim.g.colors_cyan
 				else
-					return palette.normal.white
+					return vim.g.colors_white
 				end
 			else
 				if buffer.diagnostics.errors ~= 0 then
-					return palette.normal.red_dim
+					return vim.g.colors_red_dim
 				elseif buffer.is_modified then
-					return palette.normal.green_dim
+					return vim.g.colors_green_dim
 				elseif buffer.diagnostics.warnings ~= 0 then
-					return palette.normal.yellow_dim
+					return vim.g.colors_yellow_dim
 				elseif buffer.diagnostics.infos ~= 0 then
-					return palette.normal.blue_dim
+					return vim.g.colors_blue_dim
 				elseif buffer.diagnostics.hints ~= 0 then
-					return palette.normal.cyan_dim
+					return vim.g.colors_cyan_dim
 				else
-					return palette.normal.black
+					return vim.g.colors_black
 				end
 			end
 		end,
@@ -218,25 +199,25 @@ local components = {
 		fg = function(buffer)
 			if buffer.is_focused then
 				if buffer.diagnostics.errors ~= 0 then
-					return palette.normal.red
+					return vim.g.colors_red
 				elseif buffer.diagnostics.warnings ~= 0 then
-					return palette.normal.yellow
+					return vim.g.colors_yellow
 				elseif buffer.diagnostics.infos ~= 0 then
-					return palette.normal.blue
+					return vim.g.colors_blue
 				elseif buffer.diagnostics.hints ~= 0 then
-					return palette.normal.cyan
+					return vim.g.colors_cyan
 				else
 					return "NONE"
 				end
 			else
 				if buffer.diagnostics.errors ~= 0 then
-					return palette.normal.red_dim
+					return vim.g.colors_red_dim
 				elseif buffer.diagnostics.warnings ~= 0 then
-					return palette.normal.yellow_dim
+					return vim.g.colors_yellow_dim
 				elseif buffer.diagnostics.infos ~= 0 then
-					return palette.normal.blue_dim
+					return vim.g.colors_blue_dim
 				elseif buffer.diagnostics.hints ~= 0 then
-					return palette.normal.cyan_dim
+					return vim.g.colors_cyan_dim
 				else
 					return "NONE"
 				end
@@ -257,9 +238,9 @@ local components = {
 			end
 
 			if buffer.is_focused then
-				return palette.normal.green
+				return vim.g.colors_green
 			else
-				return palette.normal.green_dim
+				return vim.g.colors_green_dim
 			end
 		end,
 		truncation = { priority = 1 },

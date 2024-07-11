@@ -4,7 +4,7 @@ local g = vim.g
 local keymap = vim.keymap
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
-local exec = vim.api.nvim_exec2
+local exec = vim.api.nvim_exec
 
 o.showmode = false
 o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
@@ -171,6 +171,7 @@ exec(
   autocmd BufEnter * set relativenumber
   autocmd BufEnter * set number
   autocmd BufEnter * set cursorline
+  autocmd BufEnter * set nowrap
 ]],
 	false
 )

@@ -1,9 +1,15 @@
-{pkgs, ...}: {
+{
+  outputs,
+  pkgs,
+  ...
+}: {
   programs.firefox = {
     enable = true;
+    package = pkgs.firefox-beta;
     profiles.hedonicadapter = {
       settings = {
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        "unifiedExtensions.enabled" = false;
       };
       search.engines = {
         "Nix Packages" = {
@@ -36,6 +42,13 @@
             display: none !important;
           }
         }
+
+        html {
+          background: none !important;
+        }
+        body {
+          background: rgba(0,0,0,0.25) !important;
+        }
       '';
       userChrome = ''
           /* Firefox Alpha v 1.1.0 */
@@ -49,16 +62,17 @@
             --tab-border-radius: var(--6) !important;
             --main: #7C797970;
             --item: #7C797930;
-            --grey: #292828;
-            --red: #af5f5f70;
+            --grey: ${outputs.colors.grey};
+            --easink: cubic-bezier(0, 0, 0.58, 1);
 
             --toolbarbutton-hover-background: transparent !important;
             --toolbarbutton-active-background: transparent !important;
+            --tabpanel-background-color: rgba(0,0,0,0.25) !important;
+            background: rgba(0,0,0,0.25) !important;
           }
 
           /* Clean UI */
           * {
-            outline: none !important;
             box-shadow: none !important;
             border: none !important;
           }
@@ -70,7 +84,7 @@
 
           /* Video Background Fix */
           video {
-            background-color: black !important;
+            background-color: transparent !important;
           }
 
           /* ❌ Hide Items ❌ */
@@ -159,8 +173,8 @@
             padding-block: 2px !important;
             border-radius: var(--6) !important;
             margin: var(--8) !important;
-            background-color: #292828 !important;
-            color: #FFEFC2 !important;
+            background-color: ${outputs.colors.black} !important;
+            color: ${outputs.colors.black} !important;
           }
 
           /* ℹ️ Findbar Ctrl+F */
@@ -169,8 +183,9 @@
             margin: 0 8px !important;
             border-radius: var(--6) !important;
             width: 240px;
-            background: var(--grey) !important;
+            background: ${outputs.colors.grey} !important;
             order: -1;
+            position:absolute;
           }
           .findbar-container {
             padding: 0 !important;
@@ -181,7 +196,7 @@
             width: 168px !important;
             padding-inline: var(--6) !important;
             height: var(--tab-min-height) !important;
-            color: black !important;
+            color: ${outputs.colors.white} !important;
             background: none !important;
           }
           findbar toolbarbutton {
@@ -189,7 +204,7 @@
             padding: 4px !important;
             margin: 0 !important;
             background: none !important;
-            fill: black !important;
+            fill: ${outputs.colors.white} !important;
             scale: 0.7;
           }
 
@@ -203,7 +218,7 @@
           #toolbar-menubar {
             height: 24px !important;
             border-radius: var(--6);
-            background-color: var(--grey);
+            background-color: transparent;
             position: relative;
             margin: var(--6) var(--6) 0 var(--6);
             z-index: 3;
@@ -219,7 +234,7 @@
           #main-menubar {
             margin: 4px;
             background-color: none;
-            color: black;
+            color: ${outputs.colors.black};
             height: 16px !important;
           }
 
@@ -227,8 +242,8 @@
           .menupopup-arrowscrollbox {
             border-radius: var(--8) !important;
             padding: var(--6) !important;
-            background-color: var(--grey) !important;
-            color: black !important;
+            background-color: ${outputs.colors.grey} !important;
+            color: ${outputs.colors.black} !important;
           }
           #scrollbutton-down, #scrollbutton-up {
              display: none !important;
@@ -251,9 +266,6 @@
             border-radius: var(--6) !important;
             padding-inline: var(--6) !important;
             margin: 0 !important;
-
-
-
           }
           .menu-accel {
             margin-inline: var(--6) 0 !important;
@@ -264,7 +276,7 @@
           menupopup > menuitem[_moz-menuactive],
           menupopup > menu[_moz-menuactive] {
             background-color: var(--main) !important;
-            color: black !important;
+            color: ${outputs.colors.white} !important;
           }
           #context-navigation {
             flex-direction: column !important;
@@ -303,7 +315,7 @@
           }
           .tab-content {
             padding-inline: var(--6) !important;
-            color: #FFEFC2 !important;
+            color: ${outputs.colors.white} !important;
           }
 
           .tabbrowser-tab .tab-background[selected="true"] {
@@ -317,8 +329,9 @@
 
           /* Tabs Audio */
           #tabbrowser-tabs .tabbrowser-tab:is([soundplaying]) .tab-background {
-            background-color: var(--red) !important;
-            transition: background-color 0.1s ease !important;
+            background-color: ${outputs.colors.red} !important;
+            transition: background-color 0.15s !important;
+            transition-timing-function: var(--easink) !important;
           }
 
           /* Tabs Audio Favicon */
@@ -364,7 +377,7 @@
             margin: 0 var(--8) var(--8) 0 !important;
             padding: 0 var(--6) !important;
             background: var(--item) !important;
-            color: grey !important;
+            color: ${outputs.colors.grey} !important;
             height: var(--tab-min-height);
           }
 
@@ -372,7 +385,8 @@
 
           /* 🔗 URLBAR Inbut https: */
           #urlbar-input {
-            transition: transform 0.1s linear;
+            transition: transform 0.15s !important;
+            transition-timing-function: var(--easink) !important;
             transform: none !important;
             font-size: 1rem !important;
             color: lightgrey !important;
@@ -503,16 +517,16 @@
             visibility: visible !important;
           }
           #downloads-indicator-progress-inner {
-            background: url("data:image/svg+xml;charset=UTF-8,%3csvg width='6' height='24' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='6' height='24' fill='dodgerblue'/%3e%3c/svg%3e") bottom no-repeat !important;
+            background: url("data:image/svg+xml;charset=UTF-8,%3csvg width='6' height='24' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='6' height='24' fill='${outputs.colors.blue}'/%3e%3c/svg%3e") bottom no-repeat !important;
             height: var(--download-progress-pcent) !important;
             border-radius: var(--6) !important;
           }
           #downloads-button[attention="success"] #downloads-indicator-progress-outer {
-            background: deepskyblue !important;
+            background: ${outputs.colors.blue} !important;
           }
           #downloads-button:is([attention="warning"], [attention="severe"])
             #downloads-indicator-progress-inner {
-            background: orange !important;
+            background: ${outputs.colors.orange} !important;
             height: var(--8) !important;
           }
 
@@ -522,8 +536,8 @@
             margin: 4px var(--6) !important;
           }
           #downloadsPanel-mainView {
-            background-color: var(--grey) !important;
-            color: black;
+            background-color: ${outputs.colors.grey} !important;
+            color: ${outputs.colors.black};
             padding: var(--6) !important;
           }
           #downloadsFooterButtons > button,
@@ -548,7 +562,8 @@
               overflow:visible !important;
            }
          .tab-stack {
-            transition: max-width 150ms ease-out !important;
+            transition: max-width 150ms !important;
+            transition-timing-function: var(--easink) !important;
             position:relative;
             top:0;
             left:0;
@@ -561,7 +576,8 @@
          }
          .tab-background {
             outline: 1px solid transparent;
-            transition: background-color 150ms ease-out, outline-color 150ms ease-out !important;
+            transition: background-color 150ms, outline-color 150ms !important;
+            transition-timing-function: var(--easink) !important;
             transition-delay: 0.1s;
          }
          .tabbrowser-tab:hover .tab-background {
@@ -578,19 +594,20 @@
 
           .tabbrowser-tab {
             position:relative;
+            overflow:hidden !important;
           }
 
           .tabbrowser-tab:not([pinned]){
             flex-basis: 10vw !important;
             max-width: 10vw !important;
             width: auto !important;
-            overflow:hidden !important;
-            transition: all 0.25s ease-out !important;
+            transition: all 0.25s !important;
+            transition-timing-function: var(--easink) !important;
             opacity:0.4;
           }
 
           .tabbrowser-tab[selected] {
-            max-width: 70vw !important; /* Set a large enough max-width */
+            max-width: 50vw !important; /* Set a large enough max-width */
             flex-basis:auto !important;
             width:max-content;
             opacity:1 !important;
