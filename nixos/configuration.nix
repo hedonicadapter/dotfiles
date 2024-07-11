@@ -91,7 +91,6 @@ in {
     zoxide
     ripgrep
     fd
-    wl-clipboard
     swappy
     easyeffects
     brightnessctl
@@ -104,6 +103,7 @@ in {
 
     inputs.swww.packages.${pkgs.system}.swww
     wlsunset
+    wl-clipboard
     cliphist
     wl-clip-persist
     teams-for-linux

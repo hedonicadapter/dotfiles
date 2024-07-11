@@ -7,11 +7,16 @@ local palette = {
 	normal = {
 		black = "#292828",
 		red = "#af5f5f",
+		red_dim = "#713E3E",
 		green = "#87875f",
+		green_dim = "#56563D",
 		yellow = "#ffdf87",
+		yellow_dim = "#A38E56",
 		blue = "#569cd6",
+		blue_dim = "#39658A",
 		magenta = "#af8787",
 		cyan = "#87afaf",
+		cyan_dim = "#567070",
 		white = "#FFEFC2",
 		white_dim = "#877F68",
 		beige = "#dfaf87",
@@ -36,7 +41,7 @@ local components = {
 			elseif buffer.diagnostics.errors ~= 0 then
 				return "(٥¯ ¯) "
 			elseif buffer.diagnostics.warnings ~= 0 then
-				return "~(˶˃⤙˂˶)> "
+				return "<(˶˃⤙˂˶)> "
 			elseif buffer.is_modified then
 				return "~(‾ࡇ‾)/ "
 			elseif buffer.diagnostics.infos ~= 0 then
@@ -49,18 +54,34 @@ local components = {
 		end,
 		bg = "NONE",
 		fg = function(buffer)
-			if buffer.diagnostics.errors ~= 0 then
-				return palette.normal.red
-			elseif buffer.diagnostics.warnings ~= 0 then
-				return palette.normal.yellow
-			elseif buffer.is_modified then
-				return palette.normal.green
-			elseif buffer.diagnostics.infos ~= 0 then
-				return palette.normal.blue
-			elseif buffer.diagnostics.hints ~= 0 then
-				return palette.normal.cyan
+			if buffer.is_focused then
+				if buffer.diagnostics.errors ~= 0 then
+					return palette.normal.red
+				elseif buffer.diagnostics.warnings ~= 0 then
+					return palette.normal.yellow
+				elseif buffer.is_modified then
+					return palette.normal.green
+				elseif buffer.diagnostics.infos ~= 0 then
+					return palette.normal.blue
+				elseif buffer.diagnostics.hints ~= 0 then
+					return palette.normal.cyan
+				else
+					return palette.normal.white
+				end
 			else
-				return palette.normal.white
+				if buffer.diagnostics.errors ~= 0 then
+					return palette.normal.red_dim
+				elseif buffer.diagnostics.warnings ~= 0 then
+					return palette.normal.yellow_dim
+				elseif buffer.is_modified then
+					return palette.normal.green_dim
+				elseif buffer.diagnostics.infos ~= 0 then
+					return palette.normal.blue_dim
+				elseif buffer.diagnostics.hints ~= 0 then
+					return palette.normal.cyan_dim
+				else
+					return palette.normal.white_dim
+				end
 			end
 		end,
 		truncation = { priority = 1 },
@@ -83,15 +104,7 @@ local components = {
 		text = function(buffer)
 			return buffer.index .. " "
 		end,
-		fg = function(buffer)
-			if buffer.diagnostics.errors ~= 0 then
-				return palette.normal.red
-			elseif not buffer.is_focused then
-				return comments_fg
-			else
-				return palette.normal.white
-			end
-		end,
+		fg = comments_fg,
 		truncation = { priority = 1 },
 	},
 
@@ -100,20 +113,34 @@ local components = {
 			return vim.fn.fnamemodify(buffer.filename, ":r")
 		end,
 		fg = function(buffer)
-			if buffer.diagnostics.errors ~= 0 then
-				return palette.normal.red
-			elseif buffer.is_modified then
-				return palette.normal.green
-			elseif buffer.diagnostics.warnings ~= 0 then
-				return palette.normal.yellow
-			elseif buffer.diagnostics.infos ~= 0 then
-				return palette.normal.blue
-			elseif buffer.diagnostics.hints ~= 0 then
-				return palette.normal.cyan
-			elseif buffer.is_focused then
-				return palette.normal.white
+			if buffer.is_focused then
+				if buffer.diagnostics.errors ~= 0 then
+					return palette.normal.red
+				elseif buffer.is_modified then
+					return palette.normal.green
+				elseif buffer.diagnostics.warnings ~= 0 then
+					return palette.normal.yellow
+				elseif buffer.diagnostics.infos ~= 0 then
+					return palette.normal.blue
+				elseif buffer.diagnostics.hints ~= 0 then
+					return palette.normal.cyan
+				else
+					return palette.normal.white
+				end
 			else
-				return palette.normal.white_dim
+				if buffer.diagnostics.errors ~= 0 then
+					return palette.normal.red_dim
+				elseif buffer.is_modified then
+					return palette.normal.green_dim
+				elseif buffer.diagnostics.warnings ~= 0 then
+					return palette.normal.yellow_dim
+				elseif buffer.diagnostics.infos ~= 0 then
+					return palette.normal.blue_dim
+				elseif buffer.diagnostics.hints ~= 0 then
+					return palette.normal.cyan_dim
+				else
+					return palette.normal.white_dim
+				end
 			end
 		end,
 		style = function(buffer)
@@ -134,10 +161,10 @@ local components = {
 			return ext ~= "" and "." .. ext or ""
 		end,
 		fg = function(buffer)
-			if buffer.diagnostics.errors ~= 0 then
-				return palette.normal.red
-			elseif buffer.is_focused then
-				if buffer.is_modified then
+			if buffer.is_focused then
+				if buffer.diagnostics.errors ~= 0 then
+					return palette.normal.red
+				elseif buffer.is_modified then
 					return palette.normal.green
 				elseif buffer.diagnostics.warnings ~= 0 then
 					return palette.normal.yellow
@@ -149,7 +176,19 @@ local components = {
 					return palette.normal.white
 				end
 			else
-				return palette.normal.black
+				if buffer.diagnostics.errors ~= 0 then
+					return palette.normal.red_dim
+				elseif buffer.is_modified then
+					return palette.normal.green_dim
+				elseif buffer.diagnostics.warnings ~= 0 then
+					return palette.normal.yellow_dim
+				elseif buffer.diagnostics.infos ~= 0 then
+					return palette.normal.blue_dim
+				elseif buffer.diagnostics.hints ~= 0 then
+					return palette.normal.cyan_dim
+				else
+					return palette.normal.black
+				end
 			end
 		end,
 		style = function(buffer)
@@ -163,43 +202,65 @@ local components = {
 
 	diagnostics = {
 		text = function(buffer)
-			return (buffer.diagnostics.errors ~= 0 and "  " .. buffer.diagnostics.errors .. " ")
-				or (buffer.diagnostics.warnings ~= 0 and "  " .. buffer.diagnostics.warnings .. " ")
-				or (buffer.diagnostics.infos ~= 0 and "  " .. buffer.diagnostics.infos .. " ")
-				or (buffer.diagnostics.hints ~= 0 and "  " .. buffer.diagnostics.hints .. " ")
+			return (buffer.diagnostics.errors ~= 0 and "󰰱 " .. buffer.diagnostics.errors .. " ")
+				or (buffer.diagnostics.warnings ~= 0 and " " .. buffer.diagnostics.warnings .. " ")
+				or (buffer.diagnostics.infos ~= 0 and " " .. buffer.diagnostics.infos .. " ")
+				or (buffer.diagnostics.hints ~= 0 and "󱠂 " .. buffer.diagnostics.hints .. " ")
 				or ""
 		end,
-		hl = {
-			fg = function(buffer)
-				return (buffer.diagnostics.errors ~= 0 and errors_fg)
-					or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
-					or nil
-			end,
-		},
-		fg = palette.normal.black,
-		bg = function(buffer)
-			if buffer.diagnostics.errors ~= 0 then
-				return palette.normal.red
-			elseif buffer.diagnostics.warnings ~= 0 then
-				return palette.normal.yellow
-			elseif buffer.diagnostics.infos ~= 0 then
-				return palette.normal.blue
-			elseif buffer.diagnostics.hints ~= 0 then
-				return palette.normal.cyan
+		-- hl = {
+		-- 	fg = function(buffer)
+		-- 		return (buffer.diagnostics.errors ~= 0 and errors_fg)
+		-- 			or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
+		-- 			or nil
+		-- 	end,
+		-- },
+		fg = function(buffer)
+			if buffer.is_focused then
+				if buffer.diagnostics.errors ~= 0 then
+					return palette.normal.red
+				elseif buffer.diagnostics.warnings ~= 0 then
+					return palette.normal.yellow
+				elseif buffer.diagnostics.infos ~= 0 then
+					return palette.normal.blue
+				elseif buffer.diagnostics.hints ~= 0 then
+					return palette.normal.cyan
+				else
+					return "NONE"
+				end
 			else
-				return "NONE"
+				if buffer.diagnostics.errors ~= 0 then
+					return palette.normal.red_dim
+				elseif buffer.diagnostics.warnings ~= 0 then
+					return palette.normal.yellow_dim
+				elseif buffer.diagnostics.infos ~= 0 then
+					return palette.normal.blue_dim
+				elseif buffer.diagnostics.hints ~= 0 then
+					return palette.normal.cyan_dim
+				else
+					return "NONE"
+				end
 			end
 		end,
+		bg = "NONE",
 		style = "bold",
 		truncation = { priority = 1 },
 	},
 
 	close_or_unsaved = {
 		text = function(buffer)
-			return buffer.is_modified and " ●  " or ""
+			return buffer.is_modified and "● " or ""
 		end,
 		fg = function(buffer)
-			return buffer.is_modified and palette.normal.green or nil
+			if not buffer.is_modified then
+				return nil
+			end
+
+			if buffer.is_focused then
+				return palette.normal.green
+			else
+				return palette.normal.green_dim
+			end
 		end,
 		truncation = { priority = 1 },
 	},
@@ -263,7 +324,7 @@ require("cokeline").setup({
 		components.filename_extension,
 		components.separator,
 		components.diagnostics,
-		components.separator,
 		components.close_or_unsaved,
+		components.separator,
 	},
 })

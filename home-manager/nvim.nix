@@ -280,7 +280,7 @@
         config = toLua ''
           require('guess-indent').setup()
 
-          vim.api.nvim_exec([[
+          vim.api.nvim_exec2([[
             autocmd BufEnter * silent! :GuessIndent
           ]], false)
         '';

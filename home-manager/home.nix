@@ -16,6 +16,7 @@ in {
 
     ./firefox.nix
     ./tmux.nix
+    ./zellij.nix
     ./zsh.nix
     ./foot.nix
     ./tofi.nix
@@ -82,74 +83,80 @@ in {
     extraPackages = with pkgs; [gtksourceview webkitgtk accountsservice];
   };
 
-  home.packages = with pkgs; [
-    ticktick
-    gimp-with-plugins
-    webcord
-    neovide
-    # (callPackage ./modules/neovide/neovide.nix { })
-    transmission
-    beeper
-    hyprpicker
-    steamcmd
-    bottles
-    lutris
+  home.packages = with pkgs;
+    [
+      ticktick
+      gimp-with-plugins
+      webcord
+      neovide
+      # (callPackage ./modules/neovide/neovide.nix { })
+      transmission
+      beeper
+      hyprpicker
+      steamcmd
+      bottles
+      lutris
 
+      azure-functions-core-tools
+      google-cloud-sdk
+      firebase-tools
+      docker-compose
+      azure-cli
+
+      grim
+      slurp
+      lf
+      jq
+      bicep
+      gh
+      libGLU
+      lazydocker
+    ]
     # Languages
-    go
-    terraform
-    dart-sass
-    sassc
-    typescript
-    bun
-    mono # for sniprun c#
-    (with dotnetCorePackages; combinePackages [sdk_6_0 sdk_7_0 sdk_8_0])
-    cargo
-    rustc
-
+    ++ [
+      go
+      terraform
+      dart-sass
+      sassc
+      typescript
+      bun
+      mono # for sniprun c#
+      (with dotnetCorePackages; combinePackages [sdk_6_0 sdk_7_0 sdk_8_0])
+      cargo
+      rustc
+    ]
     # Language servers
-    lua-language-server
-    tailwindcss-language-server
-    nodePackages.typescript-language-server
-    nodePackages."@astrojs/language-server"
-    vscode-langservers-extracted
-    yaml-language-server
-    terraform-ls
-    nil
-    dockerfile-language-server-nodejs
-    htmx-lsp
-    sqls
-    vim-language-server
-
+    ++ [
+      lua-language-server
+      tailwindcss-language-server
+      nodePackages.typescript-language-server
+      nodePackages."@astrojs/language-server"
+      vscode-langservers-extracted
+      yaml-language-server
+      terraform-ls
+      nil
+      dockerfile-language-server-nodejs
+      htmx-lsp
+      sqls
+      vim-language-server
+    ]
     # Formatters
-    nodePackages.prettier
-    prettierd
-    csharpier
-    alejandra
-    stylua
-    sqlfluff
-
-    azure-functions-core-tools
-    google-cloud-sdk
-    firebase-tools
-    docker-compose
-    azure-cli
-
-    grim
-    slurp
-    lf
-    jq
-    bicep
-    gh
-    libGLU
-    lazydocker
-
-    nerdfonts
-    maple-mono-NF
-    cartograph-cf
-    material-symbols
-    font-awesome
-  ];
+    ++ [
+      nodePackages.prettier
+      prettierd
+      csharpier
+      alejandra
+      stylua
+      sqlfluff
+    ]
+    # Fonts
+    ++ [
+      nerdfonts
+      maple-mono-NF
+      cartograph-cf
+      material-symbols
+      font-awesome
+    ];
 
   wayland.windowManager.hyprland = {
     enable = true;

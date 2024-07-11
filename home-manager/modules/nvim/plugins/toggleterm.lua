@@ -3,7 +3,7 @@ require("toggleterm").setup({
 	hide_numbers = false,
 })
 
-vim.api.nvim_exec(
+vim.api.nvim_exec2(
 	[[
   autocmd TermOpen term://*toggleterm* startinsert | normal! A
   autocmd TermLeave term://*toggleterm* stopinsert
