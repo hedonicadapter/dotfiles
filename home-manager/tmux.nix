@@ -1,5 +1,5 @@
-{ pkgs, ... }:
-let tmuxResurrectPath = "~/.config/tmux/resurrect/";
+{pkgs, ...}: let
+  tmuxResurrectPath = "~/.config/tmux/resurrect/";
 in {
   programs.tmux = {
     enable = true;
@@ -12,7 +12,8 @@ in {
     extraConfig = ''
       set-option -g status-style bg=default
 
-      run-shell "if [ ! -d ${tmuxResurrectPath} ]; then tmux new-session -d -s init-resurrect; ${pkgs.tmuxPlugins.resurrect}/share/tmux-plugins/resurrect/scripts/save.sh; fi"
+
+
       bind-key h select-pane -L
       bind-key j select-pane -D
       bind-key k select-pane -U
@@ -36,16 +37,16 @@ in {
       {
         plugin = resurrect;
         extraConfig = ''
-          set -g @resurrect-strategy-nvim 'session'
-          set -g @resurrect-dir ${tmuxResurrectPath}
-          set -g @resurrect-hook-post-save-all 'sed -i -E "s|(pane.nvim\s:)[^;]+;.*\s([^ ]+)$|\1nvim \2|" ${tmuxResurrectPath}/last'
+          resurrect_dir="$HOME/.tmux/resurrect"
+          set -g @resurrect-dir $resurrect_dir
+          set -g @resurrect-hook-post-save-all 'target=$(readlink -f $resurrect_dir/last); sed "s| --cmd .*-vim-pack-dir||g; s|/etc/profiles/per-user/$USER/bin/||g; s|/home/$USER/.nix-profile/bin/||g" $target | sponge $target'
         '';
       }
       {
         plugin = continuum;
         extraConfig = ''
           set -g @continuum-restore 'on'
-          set -g @continuum-save-interval '10' 
+          set -g @continuum-save-interval '10'
           set -g @continuum-boot 'on'
         '';
       }

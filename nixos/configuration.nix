@@ -362,7 +362,7 @@ in {
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+
     # Currently alpha-quality/buggy, so false is currently the recommended setting.
-    open = true;
+    open = false;
 
     nvidiaSettings = true;
 
@@ -441,6 +441,24 @@ in {
     xkb.variant = "";
   };
   services.printing.enable = true;
+  services.thermald.enable = true;
+
+  services.power-profiles-daemon.enable = false;
+
+  services.auto-cpufreq = {
+    enable = true;
+    settings = {
+      battery = {
+        governor = "powersave";
+        turbo = "never";
+        preference = "power";
+      };
+      charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
+    };
+  };
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
