@@ -12,6 +12,13 @@ in {
     enable = true;
     package = pkgs.firefox-beta;
     profiles.hedonicadapter = {
+      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        vimium
+        ublock-origin-lite
+        seventv
+        betterttv
+        adaptive-tab-bar-colour
+      ];
       settings = {
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "unifiedExtensions.enabled" = false;

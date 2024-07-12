@@ -212,6 +212,7 @@ menupopup > menu {
   border-radius: var(--6) !important;
   padding-inline: var(--6) !important;
   margin: 0 !important;
+  color: var(--color-white_dim) !important;
 }
 .menu-accel {
   margin-inline: var(--6) 0 !important;

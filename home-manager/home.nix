@@ -53,6 +53,7 @@ in {
           "warp-terminal"
           "copilot.vim"
           "ticktick"
+          "betterttv"
         ];
     };
   };
