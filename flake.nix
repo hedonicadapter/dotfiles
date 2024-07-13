@@ -8,6 +8,8 @@
       url = "github:nix-community/neovim-nightly-overlay";
     };
 
+    nixos-hardware = {url = "github:NixOS/nixos-hardware/master";};
+
     hyprland = {
       type = "git";
       url = "https://github.com/hyprwm/Hyprland";
@@ -54,6 +56,7 @@
     self,
     nixpkgs,
     home-manager,
+    nixos-hardware,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -108,6 +111,10 @@
         specialArgs = {inherit inputs outputs;};
 
         modules = [
+          nixos-hardware.nixosModules.common-cpu-intel
+          nixos-hardware.nixosModules.common-pc-laptop
+          nixos-hardware.nixosModules.common-pc-laptop-ssd
+          nixos-hardware.nixosModules.common-pc-laptop-hdd
           # > Our main nixos configuration file <
           ./nixos/configuration.nix
         ];
