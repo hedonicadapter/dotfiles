@@ -11,6 +11,7 @@ import Workspaces from "./buttons/Workspaces";
 import ScreenRecord from "./buttons/ScreenRecord";
 import Messages from "./buttons/Messages";
 import options from "options";
+import Temperature from "./buttons/Temperature";
 
 const { start, center, end } = options.bar.layout;
 const { transparent, position } = options.bar;
@@ -25,6 +26,7 @@ const widget = {
   media: Media,
   powermenu: PowerMenu,
   systray: SysTray,
+  temp: Temperature,
   system: SystemIndicators,
   taskbar: Taskbar,
   workspaces: Workspaces,

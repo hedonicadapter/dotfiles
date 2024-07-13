@@ -354,7 +354,7 @@ in {
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    # powerManagement.finegrained = true;
+    powerManagement.finegrained = true;
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
@@ -465,7 +465,6 @@ in {
   services.thermald.enable = true;
 
   services.power-profiles-daemon.enable = false;
-
   services.auto-cpufreq = {
     enable = true;
     settings = {
@@ -475,7 +474,7 @@ in {
         preference = "power";
       };
       charger = {
-        governor = "powersave";
+        governor = "performance";
         turbo = "auto";
       };
     };

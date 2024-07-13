@@ -6,6 +6,11 @@ import icons from "lib/icons";
 const options = mkOptions(OPTIONS, {
   autotheme: opt(false),
 
+  system: {
+    fetchInterval: opt(1000),
+    // temperature: opt("/sys/class/thermal/thermal_zone*/temp"),
+  },
+
   wallpaper: {
     resolution: opt<import("service/wallpaper").Resolution>(1920),
     market: opt<import("service/wallpaper").Market>("random"),
@@ -80,6 +85,7 @@ const options = mkOptions(OPTIONS, {
         "screenrecord",
         "system",
         // "battery",
+        "temp",
         "date",
         // "powermenu",
       ]),

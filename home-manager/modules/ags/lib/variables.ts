@@ -1,23 +1,25 @@
-import GLib from "gi://GLib"
-// import options from "options"
+import GLib from "gi://GLib";
+import options from "options";
 //
-// const intval = options.system.fetchInterval.value
-// const tempPath = options.system.temperature.value
+const intval = options.system.fetchInterval.value;
+// const tempPath = options.system.temperature.value;
 
 export const clock = Variable(GLib.DateTime.new_now_local(), {
-    poll: [1000, () => GLib.DateTime.new_now_local()],
-})
+  poll: [1000, () => GLib.DateTime.new_now_local()],
+});
 
 export const uptime = Variable(0, {
-    poll: [60_000, "cat /proc/uptime", line =>
-        Number.parseInt(line.split(".")[0]) / 60,
-    ],
-})
+  poll: [
+    60_000,
+    "cat /proc/uptime",
+    (line) => Number.parseInt(line.split(".")[0]) / 60,
+  ],
+});
 
 export const distro = {
-    id: GLib.get_os_info("ID"),
-    logo: GLib.get_os_info("LOGO"),
-}
+  id: GLib.get_os_info("ID"),
+  logo: GLib.get_os_info("LOGO"),
+};
 
 // const divide = ([total, free]: string[]) => Number.parseInt(free) / Number.parseInt(total)
 //
@@ -35,8 +37,18 @@ export const distro = {
 //         .splice(1, 2) || ["1", "1"])],
 // })
 //
-// export const temperature = Variable(0, {
-//     poll: [intval, `cat ${tempPath}`, n => {
-//         return Number.parseInt(n) / 100_000
-//     }],
-// })
+export const temperature = Variable(0, {
+  poll: [
+    intval,
+    `bash -c '
+      max_temp=0
+      for zone in /sys/class/thermal/thermal_zone*/temp; do
+        temp=$(cat "$zone")
+        if (( temp > max_temp )); then
+          max_temp=$temp
+        fi
+      done
+      echo $((max_temp / 1000))
+    '`,
+  ],
+});

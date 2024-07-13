@@ -45,6 +45,16 @@
   margin-right: 8px;
 }
 
+.val-low {
+  color: grey;
+}
+.val-mid {
+  color: yellow;
+}
+.val-high {
+  color: red;
+}
+
 window#datemenu .datemenu {
   @include floating-widget;
 

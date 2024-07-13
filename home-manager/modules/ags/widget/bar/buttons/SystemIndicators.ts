@@ -114,14 +114,21 @@ const AudioIndicator = () =>
 
 const VolumeIndicator = () =>
   Widget.CircularProgress({
-    class_name: audio["speaker"]
-      .bind("is_muted")
-      .as((m) => (m ? "sys-icon sys-volume muted" : "sys-icon sys-volume")),
+    class_name: Utils.merge(
+      [audio["speaker"].bind("volume"), audio["speaker"].bind("is_muted")],
+      (vol, m) => {
+        let className = m ? "muted " : " ";
+        if (vol < 0.34) className += "val-low";
+        else if (vol < 0.67) className += "val-mid";
+        else className += "val-high";
+
+        return className;
+      },
+    ),
     css:
       "min-width: 9px;" + // its size is min(min-height, min-width)
       "min-height: 9px;" +
       "font-size: 1.5px;", // to set its thickness set font-size on it
-    // "margin: 4px;", // you can set margin on it
     rounded: false,
     inverted: false,
     // startAt: 0.75,
