@@ -22,6 +22,7 @@ in {
     inputs.stylix.nixosModules.stylix
     inputs.nur.nixosModules.nur
     spicetify-nix.nixosModules.default
+    inputs.xremap-flake.nixosModules.default
 
     ./hardware-configuration.nix
   ];
@@ -425,6 +426,17 @@ in {
   '';
 
   # List services that you want to enable:
+  services.xremap = {
+    config = {
+      modmap = [
+        {
+          name = "Global";
+          remap = {"CapsLock" = "Esc";};
+          remap = {"Esc" = "CapsLock";};
+        }
+      ];
+    };
+  };
   services.logind = {lidSwitch = "ignore";};
   # bluetooth
   services.blueman.enable = true;

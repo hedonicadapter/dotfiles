@@ -14,6 +14,7 @@ opt.wrap = false
 opt.termguicolors = true
 opt.signcolumn = "yes"
 opt.updatetime = 250
+opt.ttimeoutlen = 10
 opt.ignorecase = true
 opt.smartcase = true
 opt.backspace = "indent,eol,start"

@@ -19,6 +19,7 @@
 
 /* Clean UI */
 * {
+  outline: none !important;
   box-shadow: none !important;
   border: none !important;
 }
@@ -68,7 +69,7 @@ tooltip,
           #nav-bar-overflow-button,
 
           /* ❌ url-bar Icons */
-          #urlbar-zoom-button,#tracking-protection-icon-container,#identity-box,
+          #urlbar-zoom-button,#tracking-protection-icon-container,.identity-box,
 
           /* ❌ Bookmark Folder Icons */
           #PlacesToolbar .bookmark-item:not([label=""]) > .toolbarbutton-icon,
@@ -120,7 +121,7 @@ tooltip,
   border-radius: var(--6) !important;
   margin: var(--8) !important;
   background-color: var(--color-black) !important;
-  color: var(--color-black) !important;
+  color: var(--color-white) !important;
 }
 
 /* ℹ️ Findbar Ctrl+F */
@@ -188,7 +189,7 @@ menucaption[_moz-menuactive="true"]:not([disabled="true"]) {
   border-radius: var(--8) !important;
   padding: var(--6) !important;
   background-color: var(--color-grey) !important;
-  color: var(--color-black) !important;
+  color: var(--color-white) !important;
 }
 #scrollbutton-down,
 #scrollbutton-up {
@@ -329,7 +330,7 @@ tab:not([pinned]):hover .tab-close-button {
 }
 
 /* 🔗 URLBAR Inbut https: */
-#urlbar-input {
+.urlbar-input {
   transition: transform 0.15s !important;
   transition-timing-function: var(--easink) !important;
   transform: none !important;
@@ -355,7 +356,7 @@ tab:not([pinned]):hover .tab-close-button {
   z-index: 2;
   position: relative;
 }
-#urlbar-input-container > :not(.urlbar-input-box) {
+.urlbar-input-container > :not(.urlbar-input-box) {
   opacity: 0;
 }
 #urlbar-background {
@@ -396,7 +397,7 @@ tab:not([pinned]):hover .tab-close-button {
 }
 
 /* Capture box: click to focus urlbar */
-:root:not([customizing]) #urlbar-input-container::before {
+:root:not([customizing]) .urlbar-input-container::before {
   position: fixed;
   display: flex;
   flex: 1;
@@ -406,7 +407,7 @@ tab:not([pinned]):hover .tab-close-button {
   bottom: var(--8);
   content: "";
 }
-#urlbar-input-container:focus-within::before {
+.urlbar-input-container:focus-within::before {
   display: none !important;
 }
 
@@ -429,12 +430,12 @@ tab:not([pinned]):hover .tab-close-button {
   background-position: var(--6) !important;
   background-color: var(--main) !important;
   background-size: auto !important;
-  background-image: -moz-element("#urlbar-input") !important;
+  background-image: -moz-element(.urlbar-input) !important;
 }
 
 /* 🪟 Drag Window from urlbar */
 .urlbar-input-box,
-#urlbar-input,
+.urlbar-input,
 #urlbar-scheme,
 #urlbar-container {
   -moz-window-dragging: drag;

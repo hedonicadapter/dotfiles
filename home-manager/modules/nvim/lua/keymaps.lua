@@ -104,8 +104,6 @@ vim.keymap.set({ "n", "x" }, "p", "p`[v`]o", { noremap = true, silent = true })
 -- yank and then reselect yanked text
 vim.keymap.set({ "n", "x" }, "y", "y`[v`]", { noremap = true, silent = true })
 
-vim.api.nvim_set_keymap("i", "jj", "<Esc>", { noremap = true })
-
 vim.keymap.set("x", "<leader>p", '"_dP') -- Paste without copying
 vim.keymap.set("n", "<leader>ra", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 

@@ -44,6 +44,10 @@
     awesome-neovim-plugins = {
       url = "github:m15a/flake-awesome-neovim-plugins";
     };
+
+    xremap-flake = {
+      url = "github:xremap/nix-flake";
+    };
   };
 
   outputs = {
