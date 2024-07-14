@@ -207,6 +207,11 @@ in {
       source = ./modules/ags;
       recursive = true;
     };
+    # ".config/ags/style/extra.scss" = {
+    #   text =
+    #     builtins.readFile ./modules/ags/style/extra-uncopied.scss
+    #     + " * { ${outputs.cssColorVariables} } ";
+    # };
     ".config/obsidian/global.css".source = ./modules/obsidian/global.css;
     ".config/BetterDiscord" = {
       source = ./modules/discord;

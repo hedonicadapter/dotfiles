@@ -464,6 +464,23 @@ in {
   services.printing.enable = true;
   services.thermald.enable = true;
 
+  services.undervolt = {
+    enable = true;
+    useTimer = true;
+    verbose = true;
+    uncoreOffset = -50;
+    turbo = 0;
+    tempAc = 75;
+    tempBat = 70;
+    temp = 75;
+    p2.window = 0.002;
+    p2.limit = 90;
+    p1.window = 28;
+    p1.limit = 45;
+    gpuOffset = -50;
+    coreOffset = -50;
+    analogioOffset = -50;
+  };
   services.power-profiles-daemon.enable = false;
   services.auto-cpufreq = {
     enable = true;

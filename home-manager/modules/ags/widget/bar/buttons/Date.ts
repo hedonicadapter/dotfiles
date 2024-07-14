@@ -12,6 +12,6 @@ export default () =>
     child: Widget.Label({
       class_name: "datelabel",
       justification: "center",
-      label: time.bind(),
+      label: time.bind().as((t) => t?.toUpperCase()),
     }),
   });

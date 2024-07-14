@@ -87,6 +87,11 @@
       beige = "#dfaf87";
       vanilla_pear = "#dfdfaf";
     };
+
+    colorNames = builtins.attrNames colors;
+    cssColorVariables = builtins.concatStringsSep "\n" (
+      builtins.map (color: "--color-${color}: ${colors.${color}};") colorNames
+    );
   in {
     # Accessible through 'nix build', 'nix shell', etc
     packages =
@@ -104,6 +109,7 @@
     homeManagerModules = import ./modules/home-manager;
 
     colors = colors;
+    cssColorVariables = cssColorVariables;
 
     # NixOS configuration entrypoint
     nixosConfigurations = {

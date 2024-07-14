@@ -75,13 +75,13 @@ const options = mkOptions(OPTIONS, {
     layout: {
       start: opt<Array<import("widget/bar/Bar").BarWidget>>([
         "workspaces",
+        "media",
+        "systray",
         "taskbar",
       ]),
       center: opt<Array<import("widget/bar/Bar").BarWidget>>(["clienttitle"]),
       end: opt<Array<import("widget/bar/Bar").BarWidget>>([
         "expander",
-        "media",
-        "systray",
         "screenrecord",
         "system",
         // "battery",
@@ -91,7 +91,7 @@ const options = mkOptions(OPTIONS, {
       ]),
     },
     date: {
-      format: opt("%H:%M:%S %A %b %d"),
+      format: opt("%a %d %b %H %M %S"),
       action: opt(() => App.toggleWindow("datemenu")),
     },
     battery: {

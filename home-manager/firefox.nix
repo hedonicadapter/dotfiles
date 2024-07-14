@@ -2,12 +2,7 @@
   outputs,
   pkgs,
   ...
-}: let
-  colorNames = builtins.attrNames outputs.colors;
-  cssColorVariables = builtins.concatStringsSep "\n" (
-    builtins.map (color: "--color-${color}: ${outputs.colors.${color}};") colorNames
-  );
-in {
+}: {
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-beta;
@@ -59,7 +54,7 @@ in {
       userChrome =
         ''
           :root {
-            ${cssColorVariables}
+            ${outputs.cssColorVariables}
           }
         ''
         + builtins.readFile ./modules/firefox/userChrome.css;

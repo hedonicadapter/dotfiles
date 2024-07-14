@@ -39,20 +39,21 @@
 }
 
 .datelabel {
-  font-size: 0.9em;
+  font-size: 0.85em;
   color: transparentize($fg, 0.16);
   font-weight: bold;
   margin-right: 8px;
+  font-style: italic;
 }
 
 .val-low {
-  color: grey;
+  color: #877f68;
 }
 .val-mid {
-  color: yellow;
+  color: #ffdf87;
 }
 .val-high {
-  color: red;
+  color: #af5f5f;
 }
 
 window#datemenu .datemenu {
