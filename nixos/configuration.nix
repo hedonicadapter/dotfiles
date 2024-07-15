@@ -82,6 +82,7 @@ in {
 
     polkit_gnome
     neofetch
+    imagemagick # for neofetch
     gnumake # for lenovo-legion
     linuxHeaders # for lenovo-legion
     dmidecode # for lenovo-legion

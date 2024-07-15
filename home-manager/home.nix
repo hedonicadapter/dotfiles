@@ -221,6 +221,7 @@ in {
       source = ./modules/oh-my-zsh/themes;
       recursive = true;
     };
+    ".config/neofetch".source = ./modules/neofetch;
   };
 
   programs.home-manager.enable = true;

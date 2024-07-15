@@ -8,7 +8,10 @@
     };
     initExtra = "neofetch";
     autosuggestion = {enable = true;};
-    syntaxHighlighting = {enable = true;};
+    syntaxHighlighting = {
+      enable = true;
+      highlighters = ["main" "brackets" "pattern" "regexp" "cursor" "root" "line"];
+    };
     historySubstringSearch = {
       enable = true;
       searchDownKey = "^n";
