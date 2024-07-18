@@ -78,10 +78,16 @@ const options = mkOptions(OPTIONS, {
         "media",
         "systray",
         "taskbar",
+        // "dividerLeft",
       ]),
-      center: opt<Array<import("widget/bar/Bar").BarWidget>>(["clienttitle"]),
+      center: opt<Array<import("widget/bar/Bar").BarWidget>>([
+        // "dividerRight",
+        "clienttitle",
+        // "dividerLeft",
+      ]),
       end: opt<Array<import("widget/bar/Bar").BarWidget>>([
         "expander",
+        // "dividerRight",
         "screenrecord",
         "system",
         // "battery",
@@ -90,8 +96,12 @@ const options = mkOptions(OPTIONS, {
         // "powermenu",
       ]),
     },
+    clock: {
+      format: opt("%H %M %S"),
+      action: opt(() => App.toggleWindow("datemenu")),
+    },
     date: {
-      format: opt("%a %d %b %H %M %S"),
+      format: opt("%a %d %b"),
       action: opt(() => App.toggleWindow("datemenu")),
     },
     battery: {

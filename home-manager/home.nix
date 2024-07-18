@@ -122,6 +122,8 @@ in {
       docker-compose
       azure-cli
 
+      # neofetch
+      # imagemagick # for neofetch
       grim
       slurp
       lf

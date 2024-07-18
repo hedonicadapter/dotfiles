@@ -141,17 +141,19 @@ export default () =>
     on_clicked: () => App.toggleWindow("quicksettings"),
     on_scroll_up: () => (audio.speaker.volume += 0.02),
     on_scroll_down: () => (audio.speaker.volume -= 0.02),
-    child: Widget.Box({
-      spacing: 4,
-      children: [
-        // ProfileIndicator(),
-        ModeIndicator(),
-        DNDIndicator(),
-        BluetoothIndicator(),
-        NetworkIndicator(),
-        // AudioIndicator(),
-        VolumeIndicator(),
-        MicrophoneIndicator(),
-      ],
-    }),
+    children: [
+      Widget.Box({
+        spacing: 4,
+        children: [
+          // ProfileIndicator(),
+          ModeIndicator(),
+          DNDIndicator(),
+          BluetoothIndicator(),
+          NetworkIndicator(),
+          // AudioIndicator(),
+          VolumeIndicator(),
+          MicrophoneIndicator(),
+        ],
+      }),
+    ],
   });

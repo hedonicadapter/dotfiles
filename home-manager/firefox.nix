@@ -68,10 +68,63 @@
         }
 
         html {
-          background: none !important;
+          background: rgba(0,0,0,0.25) !important;
         }
         body {
+          background: none !important;
+        }
+        * {
+          border-radius:0.5rem;
+        }
+
+        /* new tab */
+        .search-handoff-button {
           background: rgba(0,0,0,0.25) !important;
+        }
+
+        /* youtube */
+        ytd-app, ytd-mini-guide-renderer, ytd-mini-guide-entry-renderer, ytd-masthead #background, ytd-watch-flexy, .ytd-watch-flexy  {
+          background: rgba(0,0,0,0) !important;
+        }
+
+        /* twitch */
+        .top-nav__menu {
+          background: rgba(0,0,0,0) !important;
+        }
+        .channel-root, .channel-root__info .channel-info-content {
+          background: rgba(0,0,0,0) !important;
+        }
+        .user-menu-toggle > div {
+          background: transparent !important;
+        }
+        .side-nav, .side-nav-expanded {
+          background: transparent !important;
+        }
+
+        /*reddit*/
+        :root.theme-dark .sidebar-grid,
+        :root.theme-dark .grid-container.grid,
+        :root.theme-dark
+          .sidebar-grid
+          .theme-beta:not(.stickied):not(#left-sidebar-container):not(
+            .left-sidebar-container
+          ),
+        :root.theme-dark
+          .sidebar-grid
+          .theme-rpl:not(.stickied):not(#left-sidebar-container):not(
+            .left-sidebar-container
+          ),
+        :root.theme-dark
+          .grid-container.grid
+          .theme-beta:not(.stickied):not(#left-sidebar-container):not(
+            .left-sidebar-container
+          ),
+        :root.theme-dark
+          .grid-container.grid
+          .theme-rpl:not(.stickied):not(#left-sidebar-container):not(
+            .left-sidebar-container
+          ) {
+          background: rgba(0, 0, 0, 0) !important;
         }
       '';
     };

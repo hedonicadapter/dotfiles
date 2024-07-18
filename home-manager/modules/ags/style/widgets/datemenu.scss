@@ -39,21 +39,31 @@
 }
 
 .datelabel {
+  font-size: 0.8em;
+  color: transparentize($fg, 0.16);
+  font-weight: normal;
+  margin-right: 8px;
+  font-style: italic;
+  opacity: 0.86;
+}
+.clocklabel {
   font-size: 0.85em;
   color: transparentize($fg, 0.16);
   font-weight: bold;
   margin-right: 8px;
-  font-style: italic;
 }
 
 .val-low {
   color: #877f68;
+  opacity: 0.8;
 }
 .val-mid {
   color: #ffdf87;
+  opacity: 0.9;
 }
 .val-high {
   color: #af5f5f;
+  opacity: 1;
 }
 
 window#datemenu .datemenu {

@@ -32,6 +32,8 @@ const widget = {
   workspaces: Workspaces,
   screenrecord: ScreenRecord,
   messages: Messages,
+  dividerLeft: () => Widget.Label(".ೃ࿔*:⟡•┈"),
+  dividerRight: () => Widget.Label("┈•⟡:*.ೃ࿔"),
   expander: () => Widget.Box({ expand: true }),
 };
 

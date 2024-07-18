@@ -111,7 +111,6 @@
     colors = colors;
     cssColorVariables = cssColorVariables;
 
-    # NixOS configuration entrypoint
     nixosConfigurations = {
       default = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};

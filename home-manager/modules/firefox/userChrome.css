@@ -1,3 +1,7 @@
+#navigator-toolbox {
+  background: rgba(0, 0, 0, 0.25) !important;
+}
+
 /* Firefox Alpha v 1.1.0 */
 /* Source: https://github.com/Tagggar/Firefox-Alpha/ */
 :root {

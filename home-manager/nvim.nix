@@ -76,6 +76,19 @@
 
       omnisharp-extended-lsp-nvim
 
+      promise-async
+      {
+        plugin = nvim-ufo;
+        config = toLua ''
+          vim.o.foldcolumn = '0'
+          vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+          vim.o.foldlevelstart = 99
+          vim.o.foldenable = true
+
+          vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+          vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+        '';
+      }
       {
         plugin = nvim-lspconfig;
         config = toLuaFile ./modules/nvim/plugins/lsp.lua;
@@ -155,7 +168,7 @@
         '';
       }
 
-      copilot-vim
+      # copilot-vim
       {
         plugin = CopilotChat-nvim;
         config = toLua ''
@@ -387,12 +400,12 @@
         '';
       }
 
-      # {
-      #   plugin = transparent-nvim;
-      #   config = toLua ''
-      #     require("transparent").setup()
-      #   '';
-      # }
+      {
+        plugin = transparent-nvim;
+        config = toLua ''
+          require("transparent").setup()
+        '';
+      }
 
       {
         plugin = pkgs.vimExtraPlugins.reactive-nvim;

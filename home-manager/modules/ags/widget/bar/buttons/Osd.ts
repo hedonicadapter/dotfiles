@@ -5,7 +5,7 @@ import options from "options"
 
 export default () => PanelButton({
     window: "powermenu",
-    child: Widget.Icon(icons.powermenu.shutdown),
+    children: [Widget.Icon(icons.powermenu.shutdown)],
     setup: self => self.hook(monochrome, () => {
         self.toggleClassName("colored", !monochrome.value)
         self.toggleClassName("box")

@@ -12,7 +12,7 @@
         font = "CartographCF Nerd Font:size=7.5";
         dpi-aware = "yes";
         pad = "24x0";
-        line-height = 22.5;
+        line-height = 16;
       };
       colors = {
         foreground = "FFEFC2";
@@ -36,7 +36,7 @@
         bright6 = "af875f";
         bright7 = "FFEFC2";
       };
-      cursor = { blink = "yes"; };
+      cursor = {blink = "yes";};
     };
   };
 }

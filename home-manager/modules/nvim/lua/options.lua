@@ -72,8 +72,6 @@ if g.neovide then
 	keymap.set("v", "<C-v>", "<C-R>+", { noremap = true, silent = true })
 end
 
-vim.cmd([[highlight Normal guibg=none]])
-
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
 autocmd("LspAttach", {
@@ -163,17 +161,23 @@ exec(
 	  autocmd BufEnter * hi SignColumn guibg=NONE
 	  autocmd BufEnter * hi DropBarIconKindFunction guibg=NONE
 	  autocmd BufEnter * hi TabLineFill guibg=NONE
+	  autocmd BufEnter * hi DiagnosticSignError guibg=NONE
+	  autocmd BufEnter * hi DiagnosticSignWarn guibg=NONE
+	  autocmd BufEnter * hi DiagnosticSignInfo guibg=NONE
+	  autocmd BufEnter * hi DiagnosticSignHint guibg=NONE
+	  autocmd BufEnter * hi DiagnosticSignOk guibg=NONE
+	  autocmd BufEnter * hi Folded guibg=NONE
 	]],
 	false
 )
 
 exec(
 	[[
-  autocmd BufEnter * set relativenumber
-  autocmd BufEnter * set number
-  autocmd BufEnter * set cursorline
-  autocmd BufEnter * set nowrap
-]],
+		autocmd BufEnter * set relativenumber
+		autocmd BufEnter * set number
+		autocmd BufEnter * set cursorline
+		autocmd BufEnter * if expand('<afile>:t') != 'copilot-chat' | set nowrap | endif
+	]],
 	false
 )
 

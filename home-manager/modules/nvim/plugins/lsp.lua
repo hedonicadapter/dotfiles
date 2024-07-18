@@ -1,8 +1,8 @@
 -- local navbuddy = require("nvim-navbuddy")
 
 local on_attach = function(client, bufnr)
-	vim.g.inlay_hints_visible = true
-	vim.lsp.inlay_hint.enable(true)
+	-- vim.g.inlay_hints_visible = true
+	-- vim.lsp.inlay_hint.enable(true)
 	-- navbuddy.attach(client, bufnr)
 
 	local bufmap = function(keys, func)
@@ -31,6 +31,11 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
+capabilities.textDocument.foldingRange = {
+    dynamicRegistration = false,
+    lineFoldingOnly = true
+}
+
 local lspconfig = require("lspconfig")
 local coq = require("coq")
 
@@ -53,7 +58,7 @@ vim.diagnostic.config(
 			},
 		},
 		inlay_hints = {
-			enabled = true,
+			enabled = false,
 		},
 	}
 )
@@ -204,24 +209,24 @@ lspconfig.tsserver.setup(coq.lsp_ensure_capabilities({
   settings = {
     javascript = {
       inlayHints = {
-        includeInlayEnumMemberValueHints = true,
-        includeInlayFunctionLikeReturnTypeHints = true,
-        includeInlayFunctionParameterTypeHints = true,
-        includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
-        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayEnumMemberValueHints = false,
+        includeInlayFunctionLikeReturnTypeHints = false,
+        includeInlayFunctionParameterTypeHints = false,
+        includeInlayParameterNameHints = "none", -- 'none' | 'literals' | 'all';
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+        includeInlayPropertyDeclarationTypeHints = false,
         includeInlayVariableTypeHints = false,
       },
     },
 
     typescript = {
       inlayHints = {
-        includeInlayEnumMemberValueHints = true,
-        includeInlayFunctionLikeReturnTypeHints = true,
-        includeInlayFunctionParameterTypeHints = true,
-        includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
-        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayEnumMemberValueHints = false,
+        includeInlayFunctionLikeReturnTypeHints = false,
+        includeInlayFunctionParameterTypeHints = false,
+        includeInlayParameterNameHints = "none", -- 'none' | 'literals' | 'all';
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+        includeInlayPropertyDeclarationTypeHints = false,
         includeInlayVariableTypeHints = false,
       },
     },
@@ -292,4 +297,5 @@ lspconfig.yamlls.setup(coq.lsp_ensure_capabilities({
 	capabilities = capabilities,
 }))
 
+require('ufo').setup()
 

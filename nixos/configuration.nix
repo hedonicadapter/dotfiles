@@ -9,12 +9,11 @@
   spicetify-nix = inputs.spicetify-nix;
   spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
 
-  inputImage =
-    /home/hedonicadapter/Pictures/wallpapers-original/a_group_of_white_flowers_on_a_bush.jpg;
+  inputImage = /home/hedonicadapter/Pictures/wallpapers/Frame14.png;
   brightness = 0;
-  contrast = 40;
+  contrast = 0;
   fillColor = "black";
-  saturation = 180;
+  saturation = 100;
 in {
   # You can import other NixOS modules here
   imports = [
@@ -30,6 +29,7 @@ in {
   home-manager = {
     extraSpecialArgs = {inherit inputs outputs;};
     users = {hedonicadapter = import ../home-manager/home.nix;};
+    backupFileExtension = "backup";
   };
 
   nixpkgs = {
@@ -80,9 +80,9 @@ in {
     git
     nix-output-monitor
 
-    polkit_gnome
     neofetch
     imagemagick # for neofetch
+    polkit_gnome
     gnumake # for lenovo-legion
     linuxHeaders # for lenovo-legion
     dmidecode # for lenovo-legion
@@ -99,7 +99,10 @@ in {
     pulseaudio
     playerctl
     spotify
-    (pkgs.discord-canary.override {withOpenASAR = true;})
+    (pkgs.discord-canary.override {
+      withOpenASAR = true;
+      withVencord = true;
+    })
     # discord-canary # run once as vanilla if openasar error
     betterdiscordctl
 
@@ -469,11 +472,11 @@ in {
     enable = true;
     useTimer = true;
     verbose = true;
-    uncoreOffset = -50;
+    uncoreOffset = -75;
     turbo = 0;
-    tempAc = 75;
-    tempBat = 70;
-    temp = 75;
+    tempAc = 70;
+    tempBat = 65;
+    temp = 70;
     p2.window = 0.002;
     p2.limit = 90;
     p1.window = 28;
