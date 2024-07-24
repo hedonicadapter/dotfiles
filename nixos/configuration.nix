@@ -9,11 +9,15 @@
   spicetify-nix = inputs.spicetify-nix;
   spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
 
-  inputImage = /home/hedonicadapter/Pictures/wallpapers/Frame14.png;
+  inputImage = /home/hedonicadapter/Pictures/wallpapers/Frame21.png;
   brightness = 0;
   contrast = 0;
   fillColor = "black";
   saturation = 100;
+
+  removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
+
+  colorsRGB = builtins.mapAttrs (name: value: removeHash value) outputs.colors;
 in {
   # You can import other NixOS modules here
   imports = [
@@ -105,6 +109,7 @@ in {
     })
     # discord-canary # run once as vanilla if openasar error
     betterdiscordctl
+    acpi
 
     inputs.swww.packages.${pkgs.system}.swww
     wlsunset
@@ -123,7 +128,27 @@ in {
   programs.spicetify = {
     enable = true;
     theme = spicePkgs.themes.text;
-    colorScheme = "gruvbox";
+    colorScheme = "custom";
+
+    # color definition for custom color scheme. (rosepine)
+    customColorScheme = {
+      text = colorsRGB.blush;
+      subtext = colorsRGB.white;
+      sidebar-text = colorsRGB.vanilla_pear;
+      main = colorsRGB.black;
+      sidebar = colorsRGB.grey;
+      player = colorsRGB.black;
+      card = colorsRGB.orange;
+      shadow = colorsRGB.burgundy;
+      selected-row = colorsRGB.blue;
+      button = colorsRGB.cyan;
+      button-active = colorsRGB.blue;
+      button-disabled = colorsRGB.grey;
+      tab-active = colorsRGB.blush;
+      notification = colorsRGB.green;
+      notification-error = colorsRGB.red;
+      misc = colorsRGB.white_dim;
+    };
     injectCss = true;
 
     enabledCustomApps = with spicePkgs.apps; [reddit marketplace];
@@ -158,7 +183,7 @@ in {
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
-    TERM = "foot";
+    TERM = "kitty";
   };
 
   xdg.portal = {
@@ -452,7 +477,7 @@ in {
   };
   services.logind = {lidSwitch = "ignore";};
   # bluetooth
-  services.blueman.enable = true;
+  hardware.bluetooth.enable = true;
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = ["nvidia"];
   # Enable the X11 windowing system.
@@ -467,10 +492,14 @@ in {
   };
   services.printing.enable = true;
   services.thermald.enable = true;
+  services.fwupd.enable = true; # Firmware updator
+  services.upower.enable = true; # battery
+
+  services.system76-scheduler.enable = true;
 
   services.undervolt = {
     enable = true;
-    useTimer = true;
+    # useTimer = true;
     verbose = true;
     uncoreOffset = -75;
     turbo = 0;

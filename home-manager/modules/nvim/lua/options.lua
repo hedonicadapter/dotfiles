@@ -29,7 +29,7 @@ opt.undofile = true
 opt.fillchars:append(",eob: ")
 
 if g.neovide then
-	opt.linespace = 12
+	opt.linespace = 10
 
 	g.neovide_padding_top = 10
 	g.neovide_padding_bottom = 0
@@ -56,7 +56,7 @@ if g.neovide then
 	-- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
 	g.neovide_transparency = 0.8
 	-- g.transparency = 0.8
-	g.neovide_background_color = "#34302C" -- .. alpha()
+	-- g.neovide_background_color = "#34302C" -- .. alpha()
 	g.neovide_window_blurred = true
 
 	keymap.set("n", "<C-s>", ":w<CR>") -- Save
@@ -154,19 +154,24 @@ autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
 
 exec(
 	[[
-	  autocmd BufEnter * hi TreesitterContextBottom guisp=NONE
-	  autocmd BufEnter * hi TreesitterContext guibg=NONE gui=italic
-	  autocmd BufEnter * hi WinBar guibg=NONE
-	  autocmd BufEnter * hi LineNr guibg=NONE
-	  autocmd BufEnter * hi SignColumn guibg=NONE
-	  autocmd BufEnter * hi DropBarIconKindFunction guibg=NONE
-	  autocmd BufEnter * hi TabLineFill guibg=NONE
-	  autocmd BufEnter * hi DiagnosticSignError guibg=NONE
-	  autocmd BufEnter * hi DiagnosticSignWarn guibg=NONE
-	  autocmd BufEnter * hi DiagnosticSignInfo guibg=NONE
-	  autocmd BufEnter * hi DiagnosticSignHint guibg=NONE
-	  autocmd BufEnter * hi DiagnosticSignOk guibg=NONE
-	  autocmd BufEnter * hi Folded guibg=NONE
+		autocmd BufEnter * hi TreesitterContextBottom guisp=NONE
+		autocmd BufEnter * hi TreesitterContext guibg=NONE gui=italic
+		autocmd BufEnter * hi WinBar guibg=NONE
+		autocmd BufEnter * hi LineNr guibg=NONE
+		autocmd BufEnter * hi SignColumn guibg=NONE
+		autocmd BufEnter * hi DropBarIconKindFunction guibg=NONE
+		autocmd BufEnter * hi TabLineFill guibg=NONE
+		autocmd BufEnter * hi DiagnosticSignError guibg=NONE
+		autocmd BufEnter * hi DiagnosticSignWarn guibg=NONE
+		autocmd BufEnter * hi DiagnosticSignInfo guibg=NONE
+		autocmd BufEnter * hi DiagnosticSignHint guibg=NONE
+		autocmd BufEnter * hi DiagnosticSignOk guibg=NONE
+		autocmd BufEnter * hi Folded guibg=NONE
+		autocmd BufEnter * hi Twilight guibg=NONE
+		autocmd BufEnter * hi GitSignsAdd guibg=NONE
+		autocmd BufEnter * hi GitSignsChange guibg=NONE
+		autocmd BufEnter * hi GitSignsDelete guibg=NONE
+		autocmd BufEnter * hi VertSplit guibg=NONE ctermbg=NONE
 	]],
 	false
 )
@@ -176,7 +181,7 @@ exec(
 		autocmd BufEnter * set relativenumber
 		autocmd BufEnter * set number
 		autocmd BufEnter * set cursorline
-		autocmd BufEnter * if expand('<afile>:t') != 'copilot-chat' | set nowrap | endif
+		autocmd BufEnter * if expand('<afile>:t') != 'copilot-chat' | set nowrap | setlocal signcolumn=no | endif
 	]],
 	false
 )

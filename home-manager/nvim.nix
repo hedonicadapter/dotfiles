@@ -51,14 +51,6 @@
         '';
       }
 
-      {
-        plugin = gitsigns-nvim;
-        config = toLua ''
-          require('gitsigns').setup()
-        '';
-      }
-      diffview-nvim
-
       # nvim-navbuddy
       {
         plugin = symbols-outline-nvim;
@@ -172,7 +164,12 @@
       {
         plugin = CopilotChat-nvim;
         config = toLua ''
-          require('CopilotChat').setup()
+          require('CopilotChat').setup({
+            show_help = false,
+            separator = "჻჻჻",
+            context = "buffers",
+            answer_header = "## (~‾⌣‾)> "
+          })
         '';
       }
 
@@ -283,6 +280,13 @@
       }
 
       {
+        plugin = indent-blankline-nvim;
+        config = toLua ''
+          require("ibl").setup {}
+        '';
+      }
+
+      {
         plugin = zoxide-vim;
         config = toLua ''
           vim.cmd [[command! -bang -nargs=* -complete=customlist,zoxide#complete Z zoxide#vim_cd <args>]]
@@ -302,13 +306,6 @@
           vim.api.nvim_exec([[
             autocmd BufEnter * silent! :GuessIndent
           ]], false)
-        '';
-      }
-
-      {
-        plugin = indent-blankline-nvim;
-        config = toLua ''
-          require("ibl").setup {}
         '';
       }
 
@@ -353,9 +350,23 @@
       }
 
       {
-        plugin = satellite-nvim;
+        plugin = gitsigns-nvim;
         config = toLua ''
-          require('satellite').setup()
+          require('gitsigns').setup()
+        '';
+      }
+      diffview-nvim
+
+      {
+        plugin = nvim-scrollbar;
+        config = toLua ''
+          require("scrollbar").setup({
+            hide_if_all_visible = true,
+            handle = {
+              blend = 40,
+            },
+          })
+          require("scrollbar.handlers.gitsigns").setup()
         '';
       }
 

@@ -1,4 +1,8 @@
-{
+{outputs, ...}: let
+  removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
+
+  colorsRGB = builtins.mapAttrs (name: value: removeHash value) outputs.colors;
+in {
   stylix.targets.foot.enable = false;
   programs.foot = {
     enable = true;
@@ -11,30 +15,31 @@
         # font = "JetBrainsMono Nerd Font:size=13";
         font = "CartographCF Nerd Font:size=7.5";
         dpi-aware = "yes";
-        pad = "24x0";
+        pad = "24x1";
         line-height = 16;
       };
       colors = {
-        foreground = "FFEFC2";
-        background = "1c1c1c";
-        selection-background = "292828";
-        selection-foreground = "FFEFC2";
-        regular0 = "af875f";
-        regular1 = "875f5f";
-        regular2 = "dfaf87";
-        regular3 = "FFEFC2";
-        regular4 = "87afaf";
-        regular5 = "af5f5f";
-        regular6 = "af8787";
-        regular7 = "875f5f";
-        bright0 = "87afaf";
-        bright1 = "87875f";
-        bright2 = "af5f00";
-        bright3 = "dfaf87";
-        bright4 = "dfdfaf";
-        bright5 = "ffdf87";
-        bright6 = "af875f";
-        bright7 = "FFEFC2";
+        alpha = 0.86;
+        foreground = colorsRGB.vanilla_pear;
+        background = colorsRGB.black;
+        selection-background = colorsRGB.grey;
+        selection-foreground = colorsRGB.vanilla_pear;
+        regular0 = colorsRGB.beige;
+        regular1 = colorsRGB.burgundy;
+        regular2 = colorsRGB.orange_dim;
+        regular3 = colorsRGB.vanilla_pear;
+        regular4 = colorsRGB.cyan;
+        regular5 = colorsRGB.red;
+        regular6 = colorsRGB.blush;
+        regular7 = colorsRGB.burgundy;
+        bright0 = colorsRGB.cyan;
+        bright1 = colorsRGB.green;
+        bright2 = colorsRGB.orange;
+        bright3 = colorsRGB.orange_dim;
+        bright4 = colorsRGB.beige;
+        bright5 = colorsRGB.yellow;
+        bright6 = colorsRGB.beige;
+        bright7 = colorsRGB.vanilla_pear;
       };
       cursor = {blink = "yes";};
     };

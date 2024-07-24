@@ -68,7 +68,7 @@
         }
 
         html {
-          background: rgba(0,0,0,0.25) !important;
+          background: rgba(0,0,0,0) !important;
         }
         body {
           background: none !important;
@@ -82,9 +82,26 @@
           background: rgba(0,0,0,0.25) !important;
         }
 
-        /* youtube */
-        ytd-app, ytd-mini-guide-renderer, ytd-mini-guide-entry-renderer, ytd-masthead #background, ytd-watch-flexy, .ytd-watch-flexy  {
+        /* google */
+        .sfbg {
           background: rgba(0,0,0,0) !important;
+        }
+        #appbar {
+          background: rgba(0,0,0,0) !important;
+        }
+        .RNNXgb{
+          background: rgba(0,0,0,0) !important;
+        }
+
+        /* youtube */
+        #contentContainer, #guide-content, ytd-app, ytd-mini-guide-renderer, ytd-mini-guide-entry-renderer, ytd-masthead #background, .ytd-searchbox, ytd-watch-flexy, .ytd-watch-flexy  {
+          background: rgba(0,0,0,0) !important;
+        }
+        #chips-wrapper.ytd-feed-filter-chip-bar-renderer, ytd-feed-filter-chip-bar-renderer[is-dark-theme] #right-arrow.ytd-feed-filter-chip-bar-renderer::before, #right-arrow.ytd-feed-filter-chip-bar-renderer::before {
+          background: rgba(0,0,0,0) !important;
+        }
+        .ytd-searchbox, #search-icon-legacy.ytd-searchbox {
+          border-color: transparent !important;
         }
 
         /* twitch */
@@ -94,11 +111,23 @@
         .channel-root, .channel-root__info .channel-info-content {
           background: rgba(0,0,0,0) !important;
         }
-        .user-menu-toggle > div {
+        .user-menu-toggle > div, .eKDZrJ {
           background: transparent !important;
         }
         .side-nav, .side-nav-expanded {
           background: transparent !important;
+        }
+        nav > div {
+          box-shadow:none !important;
+        }
+        input[type="search"] {
+          background: transparent !important;
+        }
+        .stream-chat, .stream-chat-header, .chat-room, .Layout-sc-1xcs6mc-0 jWHzQH {
+          background: transparent !important;
+        }
+        :root {
+          --color-background-body: transparent !important;
         }
 
         /*reddit*/
@@ -125,6 +154,18 @@
             .left-sidebar-container
           ) {
           background: rgba(0, 0, 0, 0) !important;
+        }
+        .bg-neutral-background {
+          background: transparent !important;
+        }
+        .reddit-search-bar{
+          background: transparent !important;
+        }
+        reddit-sidebar-nav {
+          background: transparent !important;
+        }
+        shreddit-post {
+          background: transparent !important;
         }
       '';
     };

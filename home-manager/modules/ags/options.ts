@@ -90,7 +90,7 @@ const options = mkOptions(OPTIONS, {
         // "dividerRight",
         "screenrecord",
         "system",
-        // "battery",
+        "battery",
         "temp",
         "date",
         // "powermenu",

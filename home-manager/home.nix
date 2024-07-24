@@ -18,7 +18,8 @@ in {
     ./tmux.nix
     # ./zellij.nix
     ./zsh.nix
-    ./foot.nix
+    (import ./foot.nix {inherit outputs;})
+    (import ./kitty.nix {inherit outputs pkgs lib;})
     ./tofi.nix
     (import ./nvim.nix {inherit outputs pkgs;})
   ];
@@ -126,7 +127,7 @@ in {
       # imagemagick # for neofetch
       grim
       slurp
-      lf
+      yazi
       jq
       bicep
       gh

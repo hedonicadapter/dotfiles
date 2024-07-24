@@ -175,7 +175,7 @@ vim.api.nvim_set_keymap(
 vim.api.nvim_set_keymap(
 	"n",
 	"<leader>0",
-	"<CMD>CopilotChat<CR>",
+	"<CMD>lua require('CopilotChat').toggle()<CR>",
 	{ desc = "Open Copilot Chat", noremap = true, silent = true }
 )
 

@@ -1,29 +1,29 @@
 #navigator-toolbox {
   background: rgba(0, 0, 0, 0.25) !important;
 }
-
 /* Firefox Alpha v 1.1.0 */
 /* Source: https://github.com/Tagggar/Firefox-Alpha/ */
 :root {
-  --6: 6px;
+  --6: 4px;
   --8: 8px;
-  --tab-min-height: 24px !important;
-  --tab-min-width: 24px !important;
+  --tab-min-height: 25px !important;
+  --tab-min-width: 25px !important;
   --toolbarbutton-border-radius: var(--6) !important;
   --tab-border-radius: var(--6) !important;
-  --main: #7c797970;
+  --main: rgba(255, 255, 255, 0.1);
   --item: #7c797930;
   --easink: cubic-bezier(0, 0, 0.58, 1);
 
   --toolbarbutton-hover-background: transparent !important;
   --toolbarbutton-active-background: transparent !important;
   --tabpanel-background-color: rgba(0, 0, 0, 0.25) !important;
+  --tab-selected-bgcolor: rgba(0, 0, 0, 0.35) !important;
   background: rgba(0, 0, 0, 0.25) !important;
 }
 
 /* Clean UI */
 * {
-  outline: none !important;
+  outline-color: transparent !important;
   box-shadow: none !important;
   border: none !important;
 }
@@ -151,7 +151,7 @@ findbar {
   background: none !important;
 }
 findbar toolbarbutton {
-  width: 24px;
+  width: 25px;
   padding: 4px !important;
   margin: 0 !important;
   background: none !important;
@@ -167,7 +167,7 @@ findbar toolbarbutton {
 }
 
 #toolbar-menubar {
-  height: 24px !important;
+  height: 25px !important;
   border-radius: var(--6);
   background-color: transparent;
   position: relative;
@@ -252,14 +252,14 @@ scrollbox[part][orient="horizontal"] {
 }
 
 #tabbrowser-tabs > * {
-  padding: 2px !important;
-  margin: 2px !important;
+  padding: 3px !important;
+  margin: 3px !important;
 }
 tab {
-  margin: 0 4px 0 0 !important;
+  margin: 0 4px 5px 0 !important;
 }
 :root:not([customizing]) #titlebar {
-  margin-bottom: -24px;
+  margin-bottom: -25px;
 }
 
 .tabbrowser-tab .tab-background:not([selected]) {
@@ -467,7 +467,7 @@ tab:not([pinned]):hover .tab-close-button {
   visibility: visible !important;
 }
 #downloads-indicator-progress-inner {
-  background: url("data:image/svg+xml;charset=UTF-8,%3csvg width='6' height='24' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='6' height='24' fill='var(--color-blue)'/%3e%3c/svg%3e")
+  background: url("data:image/svg+xml;charset=UTF-8,%3csvg width='6' height='25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='6' height='25' fill='var(--color-blue)'/%3e%3c/svg%3e")
     bottom no-repeat !important;
   height: var(--download-progress-pcent) !important;
   border-radius: var(--6) !important;
@@ -526,18 +526,20 @@ tab:not([pinned]):hover .tab-close-button {
   z-index: 6;
 }
 .tab-background {
-  outline: 1px solid transparent;
+  outline: 1px solid;
+  outline-color: #ffffff47 !important;
   transition:
     background-color 150ms,
     outline-color 150ms !important;
   transition-timing-function: var(--easink) !important;
   transition-delay: 0.1s;
+  margin-block: 1px !important;
+  outline-offset: 0 !important;
+  border-radius: var(--tab-border-radius);
 }
 .tabbrowser-tab:hover .tab-background {
   background-color: var(--lwt-accent-color) !important;
   overflow: visible !important;
-  outline-color: var(--main) !important;
-  border-radius: var(--tab-border-radius);
 }
 
 #tabbrowser-arrowscrollbox {
@@ -551,6 +553,12 @@ tab:not([pinned]):hover .tab-close-button {
   overflow: hidden !important;
 }
 
+.tab-label-container {
+  #tabbrowser-tabs:not([secondarytext-unsupported]) & {
+    height: 2.3em !important;
+  }
+}
+
 .tabbrowser-tab:not([pinned]) {
   flex-basis: 10vw !important;
   max-width: 10vw !important;
@@ -561,8 +569,11 @@ tab:not([pinned]):hover .tab-close-button {
 }
 
 .tabbrowser-tab[selected] {
-  max-width: 50vw !important; /* Set a large enough max-width */
+  max-width: 35vw !important; /* Set a large enough max-width */
   flex-basis: auto !important;
   width: max-content;
   opacity: 1 !important;
+}
+.tabbrowser-tab[selected] .tab-background {
+  outline-color: #ffffff52 !important;
 }

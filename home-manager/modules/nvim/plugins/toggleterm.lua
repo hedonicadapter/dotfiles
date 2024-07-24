@@ -1,6 +1,7 @@
 require("toggleterm").setup({
 	shell = "zsh",
 	hide_numbers = false,
+	shade_terminals = false,
 	highlights = {
 		Normal = {
 			guibg = "NONE",
@@ -14,9 +15,9 @@ require("toggleterm").setup({
 
 vim.api.nvim_exec(
 	[[
-  autocmd TermOpen term://*toggleterm* startinsert | normal! A
-  autocmd TermLeave term://*toggleterm* stopinsert
-]],
+		autocmd TermOpen term://*toggleterm* startinsert | normal! A
+		autocmd TermLeave term://*toggleterm* stopinsert
+	]],
 	false
 )
 
