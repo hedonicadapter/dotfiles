@@ -112,6 +112,7 @@ in {
     acpi
 
     inputs.swww.packages.${pkgs.system}.swww
+    bc
     wlsunset
     wl-clipboard
     cliphist

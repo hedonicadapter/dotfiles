@@ -66,7 +66,7 @@
     colors = {
       # melliflluous alduin
       black = "#292828";
-      grey = "#292828";
+      grey = "#2A2828";
       red = "#af5f5f";
       red_dim = "#713E3E";
       burgundy = "#875f5f";

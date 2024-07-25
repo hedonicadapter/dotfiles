@@ -254,6 +254,9 @@
         plugin = nvim-treesitter.withPlugins (p: [
           p.tree-sitter-nix
           p.tree-sitter-vim
+          p.tree-sitter-vimdoc
+          p.tree-sitter-luadoc
+          p.tree-sitter-markdown
           p.tree-sitter-bash
           p.tree-sitter-lua
           p.tree-sitter-json
@@ -277,13 +280,6 @@
       {
         plugin = nvim-treesitter-textobjects;
         config = toLuaFile ./modules/nvim/plugins/treesitter-textobjects.lua;
-      }
-
-      {
-        plugin = indent-blankline-nvim;
-        config = toLua ''
-          require("ibl").setup {}
-        '';
       }
 
       {
@@ -373,6 +369,24 @@
       {
         plugin = twilight-nvim;
         config = toLuaFile ./modules/nvim/plugins/twilight.lua;
+      }
+
+      {
+        plugin = indent-blankline-nvim;
+        config = toLua ''
+          require("ibl").setup {
+            indent = {
+              char = "│",
+              highlight = "@comment",
+            },
+            scope = {
+              enabled = true,
+              show_start = true,
+              show_end = true,
+              show_exact_scope = true,
+              },
+          }
+        '';
       }
 
       melange-nvim

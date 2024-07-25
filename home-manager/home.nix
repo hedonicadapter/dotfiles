@@ -15,10 +15,10 @@ in {
     inputs.matugen.nixosModules.default
 
     ./firefox.nix
-    ./tmux.nix
+    # ./tmux.nix
     # ./zellij.nix
     ./zsh.nix
-    (import ./foot.nix {inherit outputs;})
+    # (import ./foot.nix {inherit outputs;})
     (import ./kitty.nix {inherit outputs pkgs lib;})
     ./tofi.nix
     (import ./nvim.nix {inherit outputs pkgs;})
