@@ -32,75 +32,107 @@ telescope.setup({
 		create_layout = function(picker)
 			local border = {
 				results = {
-					top_left = " ",
-					top = " ",
-					top_right = " ",
-					right = " ",
-					bottom_right = "",
-					bottom = "",
-					bottom_left = "",
-					left = " ",
+					top_left = "╭",
+					top = "─",
+					top_right = "╮",
+					right = "│",
+					bottom_right = "╯",
+					bottom = "─",
+					bottom_left = "╰",
+					left = "│",
 				},
 				results_patch = {
 					minimal = {
-						top_left = " ",
-						top_right = " ",
+						top_left = "",
+						top_right = "",
 					},
 					horizontal = {
-						top_left = " ",
-						top_right = " ",
+						top_left = "╭",
+						top = "─",
+						top_right = "╮",
+						right = "│",
+						bottom_right = "╯",
+						bottom = "─",
+						bottom_left = "╰",
+						left = "│",
 					},
 					vertical = {
-						top_left = " ",
-						top_right = " ",
+						top_left = "╭",
+						top = "─",
+						top_right = "╮",
+						right = "│",
+						bottom_right = "╯",
+						bottom = "─",
+						bottom_left = "╰",
+						left = "│",
 					},
 				},
 				prompt = {
-					top_left = " ",
-					top = " ",
-					top_right = " ",
-					right = " ",
-					bottom_right = " ",
-					bottom = " ",
-					bottom_left = " ",
-					left = " ",
+					top_left = "╭",
+					top = "─",
+					top_right = "╮",
+					right = "│",
+					bottom_right = "╯",
+					bottom = "─",
+					bottom_left = "╰",
+					left = "│",
 				},
 				prompt_patch = {
 					minimal = {
-						bottom_right = " ",
+						bottom_right = "╯",
 					},
 					horizontal = {
-						bottom_right = " ",
+						top_left = "╭",
+						top = "─",
+						top_right = "╮",
+						right = "│",
+						bottom_right = "╯",
+						bottom = "─",
+						bottom_left = "╰",
+						left = "│",
 					},
 					vertical = {
-						bottom_right = " ",
+						top_left = "╭",
+						top = "─",
+						top_right = "╮",
+						right = "│",
+						bottom_right = "╯",
+						bottom = "─",
+						bottom_left = "╰",
+						left = "│",
 					},
 				},
 				preview = {
-					top_left = " ",
-					top = " ",
-					top_right = " ",
-					right = " ",
-					bottom_right = " ",
-					bottom = " ",
-					bottom_left = " ",
-					left = " ",
+					top_left = "╭",
+					top = "─",
+					top_right = "╮",
+					right = "│",
+					bottom_right = "╯",
+					bottom = "─",
+					bottom_left = "╰",
+					left = "│",
 				},
 				preview_patch = {
 					minimal = {},
 					horizontal = {
-						bottom = " ",
-						bottom_left = "",
-						bottom_right = " ",
-						left = "",
-						top_left = "",
+						top_left = "╭",
+						top = "─",
+						top_right = "╮",
+						right = "│",
+						bottom_right = "╯",
+						bottom = "─",
+						bottom_left = "╰",
+						left = "│",
 					},
 					vertical = {
-						bottom = "",
-						bottom_left = "",
-						bottom_right = "",
-						left = " ",
-						top_left = " ",
+						top_left = "╭",
+						top = "─",
+						top_right = "╮",
+						right = "│",
+						bottom_right = "╯",
+						bottom = "─",
+						bottom_left = "╰",
+						left = "│",
 					},
 				},
 			}
@@ -224,9 +256,9 @@ telescope.setup({
 	},
 	extensions = {
 		fzf = {
-			fuzzy = true, -- false will only do exact matching
-			override_generic_sorter = true, -- override the generic sorter
-			override_file_sorter = true, -- override the file sorter
+			fuzzy = true,
+			override_generic_sorter = true,
+			override_file_sorter = true,
 			case_mode = "smart_case", -- or "ignore_case" or "respect_case"
 		},
 	},
@@ -235,3 +267,11 @@ telescope.setup({
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("undo")
 require("telescope").load_extension("session-lens")
+
+vim.api.nvim_exec(
+	[[
+  autocmd ColorScheme * highlight TelescopeNormal guibg=NONE
+  autocmd ColorScheme * highlight TelescopePreviewNormal guibg=NONE
+]],
+	false
+)

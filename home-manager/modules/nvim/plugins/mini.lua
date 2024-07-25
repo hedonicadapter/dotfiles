@@ -1,7 +1,3 @@
--- require("mini.sessions").setup({
--- 	directory = "~/.config/nvim/sessions",
--- 	file = "''",
--- })
 local starter = require("mini.starter")
 local getFilesInDirectory = require("utils").getFilesInDirectory
 
@@ -61,7 +57,6 @@ require("mini.move").setup({
 		up = "K",
 	},
 })
-require("mini.indentscope").setup()
 require("mini.ai").setup()
 require("mini.clue").setup({ window = { delay = 250 } })
 require("mini.cursorword").setup()

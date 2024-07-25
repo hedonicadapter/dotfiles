@@ -67,6 +67,26 @@
       }
 
       omnisharp-extended-lsp-nvim
+      {
+        plugin = lsp_signature-nvim;
+        config = toLua ''
+          vim.api.nvim_create_autocmd("LspAttach", {
+            callback = function(args)
+              local bufnr = args.buf
+              local client = vim.lsp.get_client_by_id(args.data.client_id)
+              if vim.tbl_contains({ 'null-ls' }, client.name) then  -- blacklist lsp
+                return
+              end
+              require("lsp_signature").on_attach({
+                bind = true,
+                handler_opts = {
+                  border = "rounded"
+                }
+              }, bufnr)
+            end,
+          })
+        '';
+      }
 
       promise-async
       {
@@ -84,6 +104,19 @@
       {
         plugin = nvim-lspconfig;
         config = toLuaFile ./modules/nvim/plugins/lsp.lua;
+      }
+      {
+        plugin = pkgs.awesomeNeovimPlugins.garbage-day-nvim;
+        config = toLua ''
+          require("garbage-day").setup({})
+        '';
+      }
+
+      {
+        plugin = pkgs.awesomeNeovimPlugins.hawtkeys-nvim;
+        config = toLua ''
+          require("hawtkeys").setup({})
+        '';
       }
 
       {
@@ -367,27 +400,29 @@
       }
 
       {
+        plugin = pkgs.awesomeNeovimPlugins.hlchunk-nvim;
+        config = toLua ''
+          require("hlchunk").setup({
+            chunk = {
+              enable = true,
+              style = { vim.g.colors_yellow },
+              delay = 100,
+            },
+          })
+        '';
+      }
+
+      {
         plugin = twilight-nvim;
         config = toLuaFile ./modules/nvim/plugins/twilight.lua;
       }
 
-      {
-        plugin = indent-blankline-nvim;
-        config = toLua ''
-          require("ibl").setup {
-            indent = {
-              char = "│",
-              highlight = "@comment",
-            },
-            scope = {
-              enabled = true,
-              show_start = true,
-              show_end = true,
-              show_exact_scope = true,
-              },
-          }
-        '';
-      }
+      # {
+      #   plugin = indent-blankline-nvim;
+      #   config = toLua ''
+      #     require("ibl").setup({})
+      #   '';
+      # }
 
       melange-nvim
       {
@@ -446,6 +481,36 @@
         config = toLua ''
           require('dropbar').setup()
           vim.o.winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
+        '';
+      }
+
+      {
+        plugin = dial-nvim;
+        config = toLua ''
+          vim.keymap.set("n", "<C-a>", function()
+              require("dial.map").manipulate("increment", "normal")
+          end)
+          vim.keymap.set("n", "<C-x>", function()
+              require("dial.map").manipulate("decrement", "normal")
+          end)
+          vim.keymap.set("n", "g<C-a>", function()
+              require("dial.map").manipulate("increment", "gnormal")
+          end)
+          vim.keymap.set("n", "g<C-x>", function()
+              require("dial.map").manipulate("decrement", "gnormal")
+          end)
+          vim.keymap.set("v", "<C-a>", function()
+              require("dial.map").manipulate("increment", "visual")
+          end)
+          vim.keymap.set("v", "<C-x>", function()
+              require("dial.map").manipulate("decrement", "visual")
+          end)
+          vim.keymap.set("v", "g<C-a>", function()
+              require("dial.map").manipulate("increment", "gvisual")
+          end)
+          vim.keymap.set("v", "g<C-x>", function()
+              require("dial.map").manipulate("decrement", "gvisual")
+          end)
         '';
       }
     ];
