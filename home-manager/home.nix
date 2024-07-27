@@ -105,7 +105,6 @@ in {
 
   home.packages = with pkgs;
     [
-      ticktick
       gimp-with-plugins
       webcord
       neovide
@@ -177,7 +176,6 @@ in {
       maple-mono-NF
       cartograph-cf
       material-symbols
-      font-awesome
     ];
 
   wayland.windowManager.hyprland = {
