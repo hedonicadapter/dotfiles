@@ -195,6 +195,7 @@ in {
 
   home.file = {
     ".config/hypr/auto-start.sh".source = ./modules/hyprland/auto-start.sh;
+    ".config/hypr/monitor-auto-brightness.sh".source = ./modules/hyprland/monitor-auto-brightness.sh;
     ".config/hypr/wallpaper-cycler.sh".source =
       ./modules/hyprland/wallpaper-cycler.sh;
     ".config/hypr/toggle-mic.sh".source = ./modules/hyprland/toggle-mic.sh;

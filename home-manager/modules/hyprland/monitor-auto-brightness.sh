@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 max_brightness=$(brightnessctl max | awk '{print $1}')
@@ -18,7 +17,7 @@ while true; do
     proportion=$(echo "$elapsed_time / $total_day_length" | bc -l)
 
     # Define the maximum and minimum brightness levels
-    min_brightness=$((max_brightness / 5))
+    min_brightness=$((max_brightness / 50))
 
     proportion=$(echo "$elapsed_time / $total_day_length" | bc -l)
 

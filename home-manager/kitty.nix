@@ -21,6 +21,9 @@ in {
 
       modify_font cell_height 135%
       modify_font cell_width 95%
+
+      modify_font underline_position 2px
+      modify_font underline_thickness 150%
     '';
     settings = {
       scrollback_indicator_opacity = "0.7";
