@@ -182,6 +182,8 @@ in {
   programs.gamemode.enable = true;
 
   environment.sessionVariables = {
+    LATITUDE = "57.7";
+    LONGITUDE = "12";
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
     TERM = "kitty";

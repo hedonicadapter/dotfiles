@@ -47,3 +47,4 @@ Misc
 # Todo
 - [ ] Select wallpaper by brightness and time of day
 - [ ] Hyprland workspace session manager(?)
+- [ ] Centralized script logs(?)

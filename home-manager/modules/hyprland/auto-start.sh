@@ -14,7 +14,7 @@ done &
 
 /home/hedonicadapter/.config/hypr/wallpaper-cycler.sh
 
-wlsunset -l 57.7 -L 12 
+wlsunset -l $LATITUDE -L $LONGITUDE
 
 
 wl-clip-persist --clipboard regular --all-mime-type-regex '(?i)^(?!image/x-inkscape-svg).+'
