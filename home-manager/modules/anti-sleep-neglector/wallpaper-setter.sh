@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+swww-daemon &
+while ! pgrep -x "swww-daemon" >/dev/null
+do
+    sleep 1
+done &
+
 time_to_minutes_since_midnight() {
     IFS=: read -r h m s <<< "${1%% *}"
     echo $(( 10#$h * 60 + 10#$m ))

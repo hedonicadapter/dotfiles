@@ -250,7 +250,6 @@ in {
   };
 
   home.sessionVariables = {
-    WALLPAPERS_DIR = "${config.home.homeDirectory}/Pictures/wallpapers";
     EDITOR = "neovide";
     NIXOS_OZONE_WL = "1";
     ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";

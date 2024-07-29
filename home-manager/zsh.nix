@@ -29,6 +29,8 @@
         setopt HIST_IGNORE_SPACE
         setopt HIST_FIND_NO_DUPS
         setopt HIST_SAVE_NO_DUPS
+
+        source ${/home/hedonicadapter/.config/hypr/circadian-env-variables.sh}
       '';
       theme = "headline/headline";
     };
