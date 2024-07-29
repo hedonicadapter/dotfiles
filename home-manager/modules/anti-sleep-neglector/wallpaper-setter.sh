@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 swww-daemon &
 while ! pgrep -x "swww-daemon" >/dev/null
 do
