@@ -20,6 +20,7 @@ in {
     ./zsh.nix
     # (import ./foot.nix {inherit outputs;})
     (import ./kitty.nix {inherit outputs pkgs lib;})
+    (import ./yazi.nix {inherit pkgs;})
     ./tofi.nix
     (import ./nvim.nix {inherit outputs pkgs;})
   ];
@@ -126,7 +127,6 @@ in {
       # imagemagick # for neofetch
       grim
       slurp
-      yazi
       jq
       bicep
       gh
@@ -148,6 +148,7 @@ in {
     ]
     # Language servers
     ++ [
+      nodePackages.bash-language-server
       lua-language-server
       tailwindcss-language-server
       nodePackages.typescript-language-server
@@ -193,6 +194,7 @@ in {
 
   home.file = {
     ".config/hypr/auto-start.sh".source = ./modules/hyprland/auto-start.sh;
+    ".config/hypr/circadian-env-variables.sh".source = ./modules/hyprland/circadian-env-variables.sh;
     ".config/hypr/monitor-auto-brightness.sh".source = ./modules/hyprland/monitor-auto-brightness.sh;
     ".config/hypr/wallpaper-cycler.sh".source =
       ./modules/hyprland/wallpaper-cycler.sh;
@@ -248,6 +250,7 @@ in {
   };
 
   home.sessionVariables = {
+    WALLPAPERS_DIR = "${config.home.homeDirectory}/Pictures/wallpapers";
     EDITOR = "neovide";
     NIXOS_OZONE_WL = "1";
     ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";

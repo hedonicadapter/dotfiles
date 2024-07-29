@@ -1,54 +1,49 @@
 #!/usr/bin/env bash
-function time_to_seconds {
-    IFS=":" read -r hour minute second <<< "$1"
-    echo $((hour*3600 + minute*60 + second))
+
+time_to_seconds() {
+    IFS=: read -r h m s <<< "$1"
+    echo $(( 10#$h * 3600 + 10#$m * 60 + 10#$s ))
 }
 
-function lerp {
-    echo $(( $1 + ($3 - $1) * (($4 - $2) / ($5 - $2)) ))
-}
+# Get max and min brightness
+max_brightness=$(brightnessctl max | awk '{print $1}')
+min_brightness=$((max_brightness / 40))
 
-last_fetch=0
 
 while true; do
-    current_time=$(date +%s)
+    current_time=$(date +%H:%M:%S)
+    current_seconds=$(time_to_seconds "$current_time")
+    first_light_seconds=$(time_to_seconds "$FIRST_LIGHT")
+    dawn_seconds=$(time_to_seconds "$DAWN")
+    sunrise_seconds=$(time_to_seconds "$SUNRISE")
+    solar_noon_seconds=$(time_to_seconds "$SOLAR_NOON")
+    sunset_seconds=$(time_to_seconds "$SUNSET")
+    last_light_seconds=$(time_to_seconds "$LAST_LIGHT")
 
-    if (( current_time - last_fetch >= 86400 || last_fetch == 0 )); then
-        response=$(curl -s "https://api.sunrisesunset.io/json?lat=$LATITUDE&lng=$LONGITUDE")
-
-        first_light=$(date -d "$(echo $response | jq -r '.results.first_light')" +%T)
-        dawn=$(date -d "$(echo $response | jq -r '.results.dawn')" +%T)
-        sunrise=$(date -d "$(echo $response | jq -r '.results.sunrise')" +%T)
-        solar_noon=$(date -d "$(echo $response | jq -r '.results.solar_noon')" +%T)
-        sunset=$(date -d "$(echo $response | jq -r '.results.sunset')" +%T)
-        last_light=$(date -d "$(echo $response | jq -r '.results.last_light')" +%T)
-
-        max_brightness=$(brightnessctl max | awk '{print $1}')
-        min_brightness=$((max_brightness / 60))
-
-        dawn_brightness=$((max_brightness * 20 / 100))
-        sunrise_brightness=$((max_brightness * 70 / 100))
-        solar_noon_brightness=$((max_brightness * 100 / 100))
-        sunset_brightness=$((max_brightness * 30 / 100))
-
-        brightness_levels=($min_brightness $dawn_brightness $sunrise_brightness $solar_noon_brightness $sunset_brightness $min_brightness)
-
-        times=( $(time_to_seconds $first_light) $(time_to_seconds $dawn) $(time_to_seconds $sunrise) $(time_to_seconds $solar_noon) $(time_to_seconds $sunset) $(time_to_seconds $last_light) )
-         
-        start_of_day=$(date -d "$(date +%Y-%m-%d)" +%s)
-        current_time=$((current_time - start_of_day))
-
-        last_fetch=$current_time
+    # Calculate brightness based on time of day
+    if [ $current_seconds -lt $first_light_seconds ] || [ $current_seconds -ge $last_light_seconds ]; then
+        # Night time
+        desired_brightness=$min_brightness
+    elif [ $current_seconds -lt $sunrise_seconds ]; then
+        # Dawn
+        range=$((sunrise_seconds - first_light_seconds))
+        progress=$((current_seconds - first_light_seconds))
+        desired_brightness=$(( min_brightness + (max_brightness - min_brightness) * progress / range ))
+    elif [ $current_seconds -lt $solar_noon_seconds ]; then
+        # Morning
+        desired_brightness=$max_brightness
+    elif [ $current_seconds -lt $sunset_seconds ]; then
+        # Afternoon
+        desired_brightness=$max_brightness
+    else
+        # Dusk
+        range=$((last_light_seconds - sunset_seconds))
+        progress=$((last_light_seconds - current_seconds))
+        desired_brightness=$(( min_brightness + (max_brightness - min_brightness) * progress / range ))
     fi
 
-    for ((i=0; i<${#times[@]}-1; i++)); do
-        if (( current_time >= times[i] && current_time < ${times[i+1]} )); then
-            desired_brightness=$(lerp ${brightness_levels[i]} ${times[i]} ${brightness_levels[i+1]} ${times[i+1]} $current_time)
-            
-            brightnessctl set $(printf "%.0f" $desired_brightness)
-            break
-        fi
-    done
+    # Set the brightness
+    brightnessctl set "$(printf "%.0f" "$desired_brightness")"
 
     sleep 60
 done

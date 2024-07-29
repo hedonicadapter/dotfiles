@@ -12,9 +12,10 @@ do
     sleep 1
 done &
 
+/home/hedonicadapter/.config/hypr/circadian-env-variables.sh &
 /home/hedonicadapter/.config/hypr/wallpaper-cycler.sh
-
-wlsunset -l $LATITUDE -L $LONGITUDE
+/home/hedonicadapter/.config/hypr/monitor-auto-brightness.sh
+wlsunset -l "$LATITUDE" -L "$LONGITUDE"
 
 
 wl-clip-persist --clipboard regular --all-mime-type-regex '(?i)^(?!image/x-inkscape-svg).+'
