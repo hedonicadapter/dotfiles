@@ -9,13 +9,17 @@
     enable = true;
     enableZshIntegration = true;
     settings = {
-      show_hidden = true;
-      sort_by = "modified";
-      sort_sensitive = true;
-      sort_dir_first = true;
-      linemode = "mtime";
-      scrolloff = 999;
-      image_filter = "nearest";
+      manager = {
+        show_hidden = true;
+        sort_by = "modified";
+        sort_sensitive = true;
+        sort_dir_first = true;
+        linemode = "mtime";
+        scrolloff = 255;
+      };
+      preview = {
+        image_filter = "nearest";
+      };
     };
   };
 }
