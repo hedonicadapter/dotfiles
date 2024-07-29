@@ -23,6 +23,7 @@ in {
     (import ./yazi.nix {inherit pkgs;})
     ./tofi.nix
     (import ./nvim.nix {inherit outputs pkgs;})
+    (import ./modules/anti-sleep-neglector/service.nix {inherit config pkgs;})
   ];
 
   nixpkgs = {
@@ -194,10 +195,6 @@ in {
 
   home.file = {
     ".config/hypr/auto-start.sh".source = ./modules/hyprland/auto-start.sh;
-    ".config/hypr/circadian-env-variables.sh".source = ./modules/hyprland/circadian-env-variables.sh;
-    ".config/hypr/monitor-auto-brightness.sh".source = ./modules/hyprland/monitor-auto-brightness.sh;
-    ".config/hypr/wallpaper-cycler.sh".source =
-      ./modules/hyprland/wallpaper-cycler.sh;
     ".config/hypr/toggle-mic.sh".source = ./modules/hyprland/toggle-mic.sh;
     ".config/nvim/lua" = {
       source = ./modules/nvim/lua;
