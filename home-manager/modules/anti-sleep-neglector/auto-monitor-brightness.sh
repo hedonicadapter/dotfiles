@@ -7,10 +7,9 @@ time_to_seconds() {
 max_brightness=$(brightnessctl max | awk '{print $1}')
 min_brightness=$((max_brightness / 40))
 
-
 while true; do
-    current_time=$(date +%H:%M:%S)
-    current_seconds=$(time_to_seconds "$current_time")
+    refresh_circadian
+    current_seconds=$(time_to_seconds "$(date +%T)")
     first_light_seconds=$(time_to_seconds "$FIRST_LIGHT")
     dawn_seconds=$(time_to_seconds "$DAWN")
     sunrise_seconds=$(time_to_seconds "$SUNRISE")

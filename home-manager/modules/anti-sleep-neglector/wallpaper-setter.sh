@@ -10,6 +10,7 @@ time_to_minutes_since_midnight() {
 }
 
 while true; do
+    refresh_circadian
     current_time=$(date +%H:%M:%S)
     current_minutes=$(time_to_minutes_since_midnight "$current_time")
 

@@ -23,8 +23,21 @@ in {
     (import ./yazi.nix {inherit pkgs;})
     ./tofi.nix
     (import ./nvim.nix {inherit outputs pkgs;})
-    (import ./modules/anti-sleep-neglector/service.nix {inherit config pkgs;})
+    (import ./modules/anti-sleep-neglector/service.nix {inherit config lib pkgs;})
   ];
+
+  services.anti-sleep-neglector = {
+    enable = true;
+    longitude = "12";
+    latitude = "57.7";
+  };
+  services.anti-sleep-neglector-monitor = {
+    enable = true;
+  };
+  services.anti-sleep-neglector-wallpaper = {
+    enable = true;
+    wallpapersDir = "${config.home.homeDirectory}/Pictures/wallpapers";
+  };
 
   nixpkgs = {
     overlays = [

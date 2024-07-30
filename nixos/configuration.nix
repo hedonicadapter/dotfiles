@@ -136,7 +136,7 @@ in {
       text = colorsRGB.blush;
       subtext = colorsRGB.white;
       sidebar-text = colorsRGB.vanilla_pear;
-      main = colorsRGB.black;
+      main = "#00000005";
       sidebar = colorsRGB.grey;
       player = colorsRGB.black;
       card = colorsRGB.orange;
@@ -384,7 +384,7 @@ in {
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = true;
+    # powerManagement.finegrained = true;
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
@@ -398,10 +398,11 @@ in {
     nvidiaSettings = true;
 
     prime = {
-      offload = {
-        enable = true;
-        enableOffloadCmd = true;
-      };
+      # offload = {
+      #   enable = true;
+      #   enableOffloadCmd = true;
+      # };
+      sync.enable = true;
       intelBusId = "PCI:00:02:0";
       nvidiaBusId = "PCI:01:00:0";
     };
