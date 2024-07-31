@@ -16,13 +16,18 @@
       submodules = true;
     };
 
+    split-monitor-workspaces = {
+      url = "github:Duckonaut/split-monitor-workspaces";
+      inputs.hyprland.follows = "hyprland";
+    };
+
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -125,16 +130,6 @@
         ];
       };
     };
-
-    # Standalone home-manager configuration entrypoint
-    # homeConfigurations = {
-    #   "hedonicadapter@default" = home-manager.lib.homeManagerConfiguration {
-    #     pkgs = nixpkgs.legacyPackages.x86_64-linux;
-    #     extraSpecialArgs = { inherit inputs outputs; };
-    #
-    #     modules = [ ./home-manager/home.nix ];
-    #   };
-    # };
 
     devShell.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.mkShell {
       buildInputs = with nixpkgs.legacyPackages.x86_64-linux; [

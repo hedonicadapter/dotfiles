@@ -31,9 +31,9 @@ in {
     longitude = "12";
     latitude = "57.7";
   };
-  services.anti-sleep-neglector-monitor = {
-    enable = true;
-  };
+  # services.anti-sleep-neglector-monitor = {
+  #   enable = true;
+  # };
   services.anti-sleep-neglector-wallpaper = {
     enable = true;
     wallpapersDir = "${config.home.homeDirectory}/Pictures/wallpapers";
@@ -195,13 +195,14 @@ in {
 
   wayland.windowManager.hyprland = {
     enable = true;
-    # package = inputs.hyprland.packages.${pkgs.system}.default;
+    package = inputs.hyprland.packages.${pkgs.system}.default;
     systemd.enable = true;
     systemd.variables = ["--all"];
     extraConfig = "${builtins.readFile ./modules/hyprland/hyprland.conf}";
     plugins = [
       # inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
       # inputs.hyprlock.packages.${pkgs.system}.default
+      inputs.split-monitor-workspaces.packages.${pkgs.system}.default
     ];
     xwayland.enable = true;
   };
