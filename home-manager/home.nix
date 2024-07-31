@@ -123,7 +123,6 @@ in {
       gimp-with-plugins
       webcord
       neovide
-      # (callPackage ./modules/neovide/neovide.nix { })
       transmission
       beeper
       hyprpicker

@@ -1,3 +1,4 @@
+# lotta claude.ai juice on here cause idk how to shell script
 {
   config,
   lib,
@@ -146,46 +147,75 @@ in {
           }
 
           set -x
-          exec &> /tmp/anti-sleep-neglector-brightness.log
-
-          time_to_seconds() {
-              IFS=: read -r h m s <<< "$1"
-              echo $(( 10#$h * 3600 + 10#$m * 60 + 10#$s ))
-          }
-
-          # Get max and min brightness
-          max_brightness=$(brightnessctl max | awk '{print $1}')
-          min_brightness=$((max_brightness / 40))
+          exec &> /tmp/anti-sleep-neglector-monitor.log
 
           export FIRST_LIGHT=$(get_circadian_period FIRST_LIGHT) DAWN=$(get_circadian_period DAWN) SUNRISE=$(get_circadian_period SUNRISE) SOLAR_NOON=$(get_circadian_period SOLAR_NOON) SUNSET=$(get_circadian_period SUNSET) LAST_LIGHT=$(get_circadian_period LAST_LIGHT) || echo "Failed to update sun variables" &
-          current_seconds=$(time_to_seconds "$(date +%T)")
-          first_light_seconds=$(time_to_seconds "$FIRST_LIGHT")
-          dawn_seconds=$(time_to_seconds "$DAWN")
-          sunrise_seconds=$(time_to_seconds "$SUNRISE")
-          solar_noon_seconds=$(time_to_seconds "$SOLAR_NOON")
-          sunset_seconds=$(time_to_seconds "$SUNSET")
-          last_light_seconds=$(time_to_seconds "$LAST_LIGHT")
 
-          # Calculate brightness based on time of day
-          if [ $current_seconds -lt $first_light_seconds ] || [ $current_seconds -ge $last_light_seconds ]; then
+          # Function to convert time to minutes since midnight
+          time_to_minutes() {
+              IFS=: read -r h m s <<< "$1"
+              echo $(( 10#$h * 60 + 10#$m ))
+          }
+
+          # Get current time in minutes
+          current_time=$(date +%H:%M:%S)
+          current_minutes=$(time_to_minutes "$current_time")
+
+          # Convert environment variables to minutes
+          first_light_min=$(time_to_minutes "$FIRST_LIGHT")
+          dawn_min=$(time_to_minutes "$DAWN")
+          sunrise_min=$(time_to_minutes "$SUNRISE")
+          solar_noon_min=$(time_to_minutes "$SOLAR_NOON")
+          sunset_min=$(time_to_minutes "$SUNSET")
+          last_light_min=$(time_to_minutes "$LAST_LIGHT")
+
+          # Get max brightness
+          max_brightness=$(brightnessctl max | awk '{print $1}')
+
+          # Define brightness levels (percentages)
+          night_brightness=10
+          day_brightness=100
+
+          # Function to calculate brightness based on current time
+          calculate_brightness() {
+              local start_time=$1
+              local end_time=$2
+              local start_brightness=$3
+              local end_brightness=$4
+
+              local time_range=$((end_time - start_time))
+              local brightness_range=$((end_brightness - start_brightness))
+              local time_elapsed=$((current_minutes - start_time))
+
+              local brightness_percent
+              if [ $time_range -eq 0 ]; then
+                  brightness_percent=$start_brightness
+              else
+                  brightness_percent=$(( start_brightness + (brightness_range * time_elapsed / time_range) ))
+              fi
+
+              echo $(( max_brightness * brightness_percent / 100 ))
+          }
+
+          # Determine the appropriate brightness based on current time
+          if [ $current_minutes -lt $first_light_min ] || [ $current_minutes -ge $last_light_min ]; then
               # Night time
-              desired_brightness=$min_brightness
-          elif [ $current_seconds -lt $sunrise_seconds ]; then
-              # Dawn
-              range=$((sunrise_seconds - first_light_seconds))
-              progress=$((current_seconds - first_light_seconds))
-              desired_brightness=$(( min_brightness + (max_brightness - min_brightness) * progress / range ))
-          elif [ $current_seconds -lt $solar_noon_seconds ]; then
-              # Morning
-              desired_brightness=$max_brightness
-          elif [ $current_seconds -lt $sunset_seconds ]; then
-              # Afternoon
-              desired_brightness=$max_brightness
-          else
-              # Dusk
-              range=$((last_light_seconds - sunset_seconds))
-              progress=$((last_light_seconds - current_seconds))
-              desired_brightness=$(( min_brightness + (max_brightness - min_brightness) * progress / range ))
+              desired_brightness=$((max_brightness * night_brightness / 100))
+          elif [ $current_minutes -lt $dawn_min ]; then
+              # First light to dawn
+              desired_brightness=$(calculate_brightness $first_light_min $dawn_min $night_brightness $((night_brightness + 20)))
+          elif [ $current_minutes -lt $sunrise_min ]; then
+              # Dawn to sunrise
+              desired_brightness=$(calculate_brightness $dawn_min $sunrise_min $((night_brightness + 20)) $((day_brightness - 20)))
+          elif [ $current_minutes -lt $solar_noon_min ]; then
+              # Sunrise to solar noon
+              desired_brightness=$(calculate_brightness $sunrise_min $solar_noon_min $((day_brightness - 20)) $day_brightness)
+          elif [ $current_minutes -lt $sunset_min ]; then
+              # Solar noon to sunset
+              desired_brightness=$(calculate_brightness $solar_noon_min $sunset_min $day_brightness $((day_brightness - 20)))
+          elif [ $current_minutes -lt $last_light_min ]; then
+              # Sunset to last light
+              desired_brightness=$(calculate_brightness $sunset_min $last_light_min $((day_brightness - 20)) $night_brightness)
           fi
 
           # Set the brightness
@@ -227,6 +257,10 @@ in {
           #!/usr/bin/env bash
           export PATH="${pkgs.coreutils}/bin:${pkgs.procps}/bin:$PATH"
 
+           if ! pgrep -x "swww-daemon" > /dev/null; then
+                swww-daemon &
+            fi
+
           function get_circadian_period() {
             local value
             value=$(systemctl --user show-environment | grep "^$1=" | cut -d= -f2-)
@@ -241,84 +275,97 @@ in {
           set -x
           exec &> /tmp/anti-sleep-neglector-wallpaper.log
 
-          if ! pgrep -x "swww-daemon" > /dev/null; then
-              swww-daemon &
-          fi
-          time_to_minutes_since_midnight() {
-              IFS=: read -r h m s <<< "''${1%% *}"
-              echo $(( 10#$h * 60 + 10#$m ))
+          get_circadian_period &
+
+          get_brightness() {
+              magick "$1" -colorspace gray -format "%[fx:mean]" info:
           }
 
+          # Function to get current time in seconds since midnight
+          get_current_time_seconds() {
+              date +%s
+          }
+
+          # Function to convert time string to seconds since midnight
+          time_to_seconds() {
+              IFS=: read -r h m s <<< "$1"
+              echo $(( 10#$h * 3600 + 10#$m * 60 + 10#$s ))
+          }
+
+          # Initialize daylight periods
+          declare -A periods
+          periods[FIRST_LIGHT]=$(time_to_seconds "$FIRST_LIGHT")
+          periods[DAWN]=$(time_to_seconds "$DAWN")
+          periods[SUNRISE]=$(time_to_seconds "$SUNRISE")
+          periods[SOLAR_NOON]=$(time_to_seconds "$SOLAR_NOON")
+          periods[SUNSET]=$(time_to_seconds "$SUNSET")
+          periods[LAST_LIGHT]=$(time_to_seconds "$LAST_LIGHT")
+
+          # Sort periods
+          sorted_periods=($(for period in "''${!periods[@]}"; do echo "''${periods[$period]}:$period"; done | sort -n | cut -d: -f2))
+
+          get_current_period() {
+              current_time=$(get_current_time_seconds)
+              for period in "''${sorted_periods[@]}"; do
+                  if (( current_time < periods[$period] )); then
+                      echo "$period"
+                      return
+                  fi
+              done
+              echo "''${sorted_periods[0]}"  # If after last period, return first period of next day
+          }
+
+          get_next_period() {
+              current_period=$1
+              for i in "''${!sorted_periods[@]}"; do
+                  if [[ "''${sorted_periods[$i]}" == "$current_period" ]]; then
+                      next_index=$(( (i + 1) % ''${#sorted_periods[@]} ))
+                      echo "''${sorted_periods[$next_index]}"
+                      return
+                  fi
+              done
+          }
+
+          # Group wallpapers by brightness
+          group_wallpapers() {
+              declare -A grouped_wallpapers
+              for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
+                  brightness=$(get_brightness "$wallpaper")
+                  if (( $(echo "$brightness < 0.3" | bc -l) )); then
+                      grouped_wallpapers[FIRST_LIGHT]+="$wallpaper "
+                      grouped_wallpapers[LAST_LIGHT]+="$wallpaper "
+                  elif (( $(echo "$brightness < 0.5" | bc -l) )); then
+                      grouped_wallpapers[DAWN]+="$wallpaper "
+                      grouped_wallpapers[SUNSET]+="$wallpaper "
+                  else
+                      grouped_wallpapers[SUNRISE]+="$wallpaper "
+                      grouped_wallpapers[SOLAR_NOON]+="$wallpaper "
+                  fi
+              done
+              echo "$(declare -p grouped_wallpapers)"
+          }
 
           while true; do
-            export FIRST_LIGHT=$(get_circadian_period FIRST_LIGHT) DAWN=$(get_circadian_period DAWN) SUNRISE=$(get_circadian_period SUNRISE) SOLAR_NOON=$(get_circadian_period SOLAR_NOON) SUNSET=$(get_circadian_period SUNSET) LAST_LIGHT=$(get_circadian_period LAST_LIGHT) || echo "Failed to update sun variables" &
-            current_time=$(date +%H:%M:%S)
-            current_minutes=$(time_to_minutes_since_midnight "$current_time")
+              eval "$(group_wallpapers)"
+              current_period=$(get_current_period)
 
-            # Convert environment variables to minutes
-            first_light_minutes=$(time_to_minutes_since_midnight "$FIRST_LIGHT")
-            dawn_minutes=$(time_to_minutes_since_midnight "$DAWN")
-            sunrise_minutes=$(time_to_minutes_since_midnight "$SUNRISE")
-            solar_noon_minutes=$(time_to_minutes_since_midnight "$SOLAR_NOON")
-            sunset_minutes=$(time_to_minutes_since_midnight "$SUNSET")
-            last_light_minutes=$(time_to_minutes_since_midnight "$LAST_LIGHT")
+              # Select and set wallpaper
+              wallpapers_for_period=(''${grouped_wallpapers[$current_period]})
+              if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
+                  selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
+                  swww img "$selected_wallpaper" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144
+              fi
 
-            # Determine the brightness range based on current time
-            if (( current_minutes < first_light_minutes )); then
-                min_brightness=0.0
-                max_brightness=0.2
-            elif (( current_minutes < dawn_minutes )); then
-                min_brightness=0.1
-                max_brightness=0.3
-            elif (( current_minutes < sunrise_minutes )); then
-                min_brightness=0.2
-                max_brightness=0.4
-            elif (( current_minutes < solar_noon_minutes )); then
-                min_brightness=0.4
-                max_brightness=0.8
-            elif (( current_minutes < sunset_minutes )); then
-                min_brightness=0.3
-                max_brightness=0.7
-            elif (( current_minutes < last_light_minutes )); then
-                min_brightness=0.2
-                max_brightness=0.4
-            else
-                min_brightness=0.0
-                max_brightness=0.2
-            fi
+              # Calculate time to next period
+              next_period=$(get_next_period "$current_period")
+              current_time=$(get_current_time_seconds)
+              next_time=''${periods[$next_period]}
+              if (( next_time <= current_time )); then
+                  next_time=$(( next_time + 24*60*60 ))  # Add 24 hours if next period is tomorrow
+              fi
+              wait_time=$(( next_time - current_time ))
 
-            # Find a suitable wallpaper
-            suitable_wallpaper=""
-            for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
-                brightness=$(magick "$wallpaper" -colorspace gray -format "%[fx:mean]" info:)
-                if (( $(echo "$brightness >= $min_brightness && $brightness <= $max_brightness" | bc -l) )); then
-                    suitable_wallpaper="$wallpaper"
-                    break
-                fi
-            done
-
-            # If no suitable wallpaper found, use the closest match
-            if [ -z "$suitable_wallpaper" ]; then
-                closest_diff=1
-                for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
-                    brightness=$(magick "$wallpaper" -colorspace gray -format "%[fx:mean]" info:)
-                    diff=$(echo "scale=4; a=$brightness - ($min_brightness + $max_brightness)/2; sqrt(a*a)" | bc)
-                    if (( $(echo "$diff < $closest_diff" | bc -l) )); then
-                        closest_diff=$diff
-                        suitable_wallpaper="$wallpaper"
-                    fi
-                done
-            fi
-
-            # Set the wallpaper
-            if [ -n "$suitable_wallpaper" ]; then
-                echo $suitable_wallpaper
-                swww img "$suitable_wallpaper" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144
-            else
-                echo "No suitable wallpaper found."
-            fi
-
-            sleep 45m
+              sleep $wait_time
           done
         ''}";
       };
