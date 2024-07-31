@@ -11,7 +11,7 @@ in {
   # You can import other home-manager modules here
   imports = [
     inputs.ags.homeManagerModules.default
-    ../cachix.nix
+    # ../cachix.nix
     inputs.matugen.nixosModules.default
 
     ./firefox.nix
@@ -28,12 +28,10 @@ in {
 
   services.anti-sleep-neglector = {
     enable = true;
-    longitude = "12";
-    latitude = "57.7";
   };
-  # services.anti-sleep-neglector-monitor = {
-  #   enable = true;
-  # };
+  services.anti-sleep-neglector-monitor = {
+    enable = true;
+  };
   services.anti-sleep-neglector-wallpaper = {
     enable = true;
     wallpapersDir = "${config.home.homeDirectory}/Pictures/wallpapers";

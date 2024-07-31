@@ -81,7 +81,11 @@ in {
               echo "$time"
           }
 
-          response=$(curl -s "https://api.sunrisesunset.io/json?lat=${cfg.latitude}&lng=${cfg.longitude}")
+          loc_response=$(curl -s ipinfo.io/loc)
+          lat=$(echo $loc_response | cut -d ',' -f1)
+          long=$(echo $loc_response | cut -d ',' -f2)
+
+          response=$(curl -s "https://api.sunrisesunset.io/json?lat=$lat&lng=$long")
 
           FIRST_LIGHT=$(get_time "first_light" "06:00:00")
           systemctl --user set-environment FIRST_LIGHT="$FIRST_LIGHT"
