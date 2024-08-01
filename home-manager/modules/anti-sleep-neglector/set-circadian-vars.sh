@@ -17,8 +17,8 @@ while true; do
     current_time=$(date +%s)
     if (( current_time - last_fetch >= 86400 || last_fetch == 0 )); then
         loc_response=$(curl -s ipinfo.io/loc)
-        lat=$(echo $loc_response | cut -d ',' -f1)
-        long=$(echo $loc_response | cut -d ',' -f2)
+        lat=$(echo "$loc_response" | cut -d ',' -f1)
+        long=$(echo "$loc_response" | cut -d ',' -f2)
 
         response=$(curl -s "https://api.sunrisesunset.io/json?lat=$lat&lng=$long")
 

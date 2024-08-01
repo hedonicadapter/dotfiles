@@ -7,6 +7,43 @@
 }:
 with lib; let
   cfg = config.services.anti-sleep-neglector;
+  circadianVars = ''
+    function get_circadian_period() {
+        if [ -z "$1" ]; then
+            echo "Error: No period specified" >&2
+            return 1
+        fi
+
+        local value
+        value=$(systemctl --user show-environment | grep "^$1=" | cut -d= -f2-)
+
+        if [ -z "$value" ]; then
+            # Provide default values if the environment variable is not set
+            case "$1" in
+                FIRST_LIGHT)  value="06:00:00" ;;
+                DAWN)         value="06:30:00" ;;
+                SUNRISE)      value="07:00:00" ;;
+                SOLAR_NOON)   value="12:00:00" ;;
+                SUNSET)       value="19:00:00" ;;
+                LAST_LIGHT)   value="20:00:00" ;;
+                *)
+                    echo "Error: Unknown period $1" >&2
+                    return 1
+                    ;;
+            esac
+            echo "Warning: Using default value for $1: $value" >&2
+        fi
+
+        echo "$value"
+    }
+
+    FIRST_LIGHT=$(get_circadian_period FIRST_LIGHT)
+    DAWN=$(get_circadian_period DAWN)
+    SUNRISE=$(get_circadian_period SUNRISE)
+    SOLAR_NOON=$(get_circadian_period SOLAR_NOON)
+    SUNSET=$(get_circadian_period SUNSET)
+    LAST_LIGHT=$(get_circadian_period LAST_LIGHT)
+  '';
 in {
   options = {
     services.anti-sleep-neglector = {
@@ -63,6 +100,11 @@ in {
 
       Service = {
         Type = "oneshot";
+        Path = with pkgs; [
+          "${coreutils}/bin"
+          "${jq}/bin"
+          "${procps}/bin"
+        ];
         ExecStart = "${pkgs.writeShellScript "set_circadian_vars" ''
           #!/usr/bin/env bash
 
@@ -82,8 +124,8 @@ in {
           }
 
           loc_response=$(curl -s ipinfo.io/loc)
-          lat=$(echo $loc_response | cut -d ',' -f1)
-          long=$(echo $loc_response | cut -d ',' -f2)
+          lat=$(echo "$loc_response" | cut -d ',' -f1)
+          long=$(echo "$loc_response" | cut -d ',' -f2)
 
           response=$(curl -s "https://api.sunrisesunset.io/json?lat=$lat&lng=$long")
 
@@ -137,23 +179,17 @@ in {
 
       Service = {
         Type = "oneshot";
+        Path = with pkgs; [
+          "${coreutils}/bin"
+          "${brightnessctl}/bin"
+        ];
         ExecStart = "${pkgs.writeShellScript "set-monitor-brightness" ''
           #!/usr/bin/env bash
-
-          function get_circadian_period() {
-            local value
-            value=$(systemctl --user show-environment | grep "^$1=" | cut -d= -f2-)
-            if [ -z "$value" ]; then
-              echo "Error: Variable $1 not found" >&2
-              return 1
-            fi
-            echo "$value"
-          }
 
           set -x
           exec &> /tmp/anti-sleep-neglector-monitor.log
 
-          export FIRST_LIGHT=$(get_circadian_period FIRST_LIGHT) DAWN=$(get_circadian_period DAWN) SUNRISE=$(get_circadian_period SUNRISE) SOLAR_NOON=$(get_circadian_period SOLAR_NOON) SUNSET=$(get_circadian_period SUNSET) LAST_LIGHT=$(get_circadian_period LAST_LIGHT) || echo "Failed to update sun variables" &
+          ${circadianVars}
 
           # Function to convert time to minutes since midnight
           time_to_minutes() {
@@ -255,31 +291,25 @@ in {
 
       Service = {
         Type = "simple";
+        Path = with pkgs; [
+          "${coreutils}/bin"
+          "${bc}/bin"
+          "${procps}/bin"
+          "${imagemagick}/bin"
+          "${swww}/bin"
+        ];
         Restart = "always";
         RestartSec = "30s";
         ExecStart = "${pkgs.writeShellScript "set-wallpaper" ''
           #!/usr/bin/env bash
-          export PATH="${pkgs.coreutils}/bin:${pkgs.procps}/bin:$PATH"
-
-           if ! pgrep -x "swww-daemon" > /dev/null; then
-                swww-daemon &
-            fi
-
-          function get_circadian_period() {
-            local value
-            value=$(systemctl --user show-environment | grep "^$1=" | cut -d= -f2-)
-            if [ -z "$value" ]; then
-              echo "Error: Variable $1 not found" >&2
-              return 1
-            fi
-            echo "$value"
-          }
-
-
           set -x
           exec &> /tmp/anti-sleep-neglector-wallpaper.log
 
-          get_circadian_period &
+          if ! pgrep -x "swww-daemon" > /dev/null; then
+            swww-daemon &
+          fi
+
+          ${circadianVars}
 
           get_brightness() {
               magick "$1" -colorspace gray -format "%[fx:mean]" info:
@@ -354,7 +384,7 @@ in {
               current_period=$(get_current_period)
 
               # Select and set wallpaper
-              wallpapers_for_period=(''${grouped_wallpapers[$current_period]})
+              wallpapers_for_period=("''${grouped_wallpapers[$current_period]}")
               if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
                   selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
                   swww img "$selected_wallpaper" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144
@@ -362,12 +392,31 @@ in {
 
               # Calculate time to next period
               next_period=$(get_next_period "$current_period")
+              next_period_in_seconds=$(date -d "$next_period")
               current_time=$(get_current_time_seconds)
-              next_time=''${periods[$next_period]}
+              # Get the start of the current day in Unix timestamp
+              start_of_day=$(date -d "today 00:00:00" +%s)
+
+              # Calculate next_time as Unix timestamp
+              next_time=$((start_of_day + next_period_in_seconds))
+
+              # If next_time is in the past, add 24 hours
               if (( next_time <= current_time )); then
-                  next_time=$(( next_time + 24*60*60 ))  # Add 24 hours if next period is tomorrow
+                  next_time=$((next_time + 24*60*60))
               fi
-              wait_time=$(( next_time - current_time ))
+
+              wait_time=$((next_time - current_time))
+
+              # Safeguard against negative wait times
+              if (( wait_time < 0 )); then
+                  echo "Error: Negative wait time calculated. Using default of 60 seconds."
+                  wait_time= 30 * 60
+              fi
+
+              echo "Debug: start_of_day = $start_of_day"
+              echo "Debug: current_time = $current_time"
+              echo "Debug: next_time = $next_time"
+              echo "Debug: wait_time = $wait_time"
 
               sleep $wait_time
           done

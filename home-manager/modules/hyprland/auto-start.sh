@@ -5,9 +5,9 @@ dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
 ags
 
-response=$(curl -s ipinfo.io/loc)
-lat=$(echo response | cut -d ',' -f1)
-long=$(echo response | cut -d ',' -f2)
+loc_response=$(curl -s ipinfo.io/loc)
+lat=$(echo "$loc_response" | cut -d ',' -f1)
+long=$(echo "$loc_response" | cut -d ',' -f2)
 wlsunset -l "$lat" -L "$long"
 
 wl-clip-persist --clipboard regular --all-mime-type-regex '(?i)^(?!image/x-inkscape-svg).+'
