@@ -27,6 +27,7 @@ in {
     spicetify-nix.nixosModules.default
     inputs.xremap-flake.nixosModules.default
 
+    ./maintenance.nix
     ./hardware-configuration.nix
   ];
 
