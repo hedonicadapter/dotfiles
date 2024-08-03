@@ -100,16 +100,78 @@ in {
 
       Service = {
         Type = "oneshot";
-        Path = with pkgs; [
-          "${coreutils}/bin"
-          "${jq}/bin"
-          "${procps}/bin"
-        ];
         ExecStart = "${pkgs.writeShellScript "set_circadian_vars" ''
           #!/usr/bin/env bash
+          PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.jq pkgs.procps pkgs.curl pkgs.wlsunset]}
 
           set -x
           exec &> /tmp/anti-sleep-neglector.log
+
+          get_season() {
+              local month=$(date +%m)
+              local day=$(date +%d)
+              local hemisphere=$1
+
+              if [ "$hemisphere" = "north" ]; then
+                  if [ "$month" -ge 3 ] && [ "$month" -le 5 ]; then
+                      echo "spring"
+                  elif [ "$month" -ge 6 ] && [ "$month" -le 8 ]; then
+                      echo "summer"
+                  elif [ "$month" -ge 9 ] && [ "$month" -le 11 ]; then
+                      echo "autumn"
+                  else
+                      echo "winter"
+                  fi
+              else
+                  if [ "$month" -ge 3 ] && [ "$month" -le 5 ]; then
+                      echo "autumn"
+                  elif [ "$month" -ge 6 ] && [ "$month" -le 8 ]; then
+                      echo "winter"
+                  elif [ "$month" -ge 9 ] && [ "$month" -le 11 ]; then
+                      echo "spring"
+                  else
+                      echo "summer"
+                  fi
+              fi
+          }
+
+          get_default_times() {
+              local latitude=$1
+              local season=$2
+
+              local lat_abs=$(echo $latitude | awk '{print sqrt($1*$1)}')
+
+              if [ "$lat_abs" -lt 23 ]; then
+                  # Near equator
+                  echo "05:30:00 06:00:00 06:30:00 12:00:00 18:00:00 18:30:00"
+              elif [ "$lat_abs" -lt 45 ]; then
+                  # Mid latitudes
+                  case $season in
+                      "summer")
+                          echo "04:30:00 05:00:00 05:30:00 12:00:00 20:00:00 21:00:00"
+                          ;;
+                      "winter")
+                          echo "06:30:00 07:00:00 07:30:00 12:00:00 16:30:00 17:00:00"
+                          ;;
+                      *)
+                          echo "05:30:00 06:00:00 06:30:00 12:00:00 18:00:00 18:30:00"
+                          ;;
+                  esac
+              else
+                  # High latitudes
+                  case $season in
+                      "summer")
+                          echo "03:00:00 03:30:00 04:00:00 12:00:00 21:00:00 22:00:00"
+                          ;;
+                      "winter")
+                          echo "08:00:00 09:00:00 10:00:00 12:00:00 14:00:00 15:00:00"
+                          ;;
+                      *)
+                          echo "05:00:00 06:00:00 07:00:00 12:00:00 18:00:00 19:00:00"
+                          ;;
+                  esac
+              fi
+          }
 
           get_time() {
               local time_raw
@@ -127,26 +189,32 @@ in {
           lat=$(echo "$loc_response" | cut -d ',' -f1)
           long=$(echo "$loc_response" | cut -d ',' -f2)
 
+          hemisphere=$([ $(echo "$lat" | awk '{print ($1 >= 0)}') -eq 1 ] && echo "north" || echo "south")
+          season=$(get_season $hemisphere)
+
+          default_times=($(get_default_times $lat $season))
+
+          wlsunset -l "$lat" -L "$long"
+
           response=$(curl -s "https://api.sunrisesunset.io/json?lat=$lat&lng=$long")
 
-          FIRST_LIGHT=$(get_time "first_light" "06:00:00")
+          FIRST_LIGHT=$(get_time "first_light" "''${default_times[0]}")
           systemctl --user set-environment FIRST_LIGHT="$FIRST_LIGHT"
 
-          DAWN=$(get_time "dawn" "07:00:00")
+          DAWN=$(get_time "dawn" "''${default_times[1]}")
           systemctl --user set-environment DAWN="$DAWN"
 
-          SUNRISE=$(get_time "sunrise" "08:00:00")
+          SUNRISE=$(get_time "sunrise" "''${default_times[2]}")
           systemctl --user set-environment SUNRISE="$SUNRISE"
 
-          SOLAR_NOON=$(get_time "solar_noon" "12:00:00")
+          SOLAR_NOON=$(get_time "solar_noon" "''${default_times[3]}")
           systemctl --user set-environment SOLAR_NOON="$SOLAR_NOON"
 
-          SUNSET=$(get_time "sunset" "16:00:00")
+          SUNSET=$(get_time "sunset" "''${default_times[4]}")
           systemctl --user set-environment SUNSET="$SUNSET"
 
-          LAST_LIGHT=$(get_time "last_light" "18:00:00")
+          LAST_LIGHT=$(get_time "last_light" "''${default_times[5]}")
           systemctl --user set-environment LAST_LIGHT="$LAST_LIGHT"
-
         ''}";
       };
 
@@ -179,19 +247,15 @@ in {
 
       Service = {
         Type = "oneshot";
-        Path = with pkgs; [
-          "${coreutils}/bin"
-          "${brightnessctl}/bin"
-        ];
         ExecStart = "${pkgs.writeShellScript "set-monitor-brightness" ''
           #!/usr/bin/env bash
+          PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep pkgs.brightnessctl]}
 
           set -x
           exec &> /tmp/anti-sleep-neglector-monitor.log
 
           ${circadianVars}
 
-          # Function to convert time to minutes since midnight
           time_to_minutes() {
               IFS=: read -r h m s <<< "$1"
               echo $(( 10#$h * 60 + 10#$m ))
@@ -291,17 +355,12 @@ in {
 
       Service = {
         Type = "simple";
-        Path = with pkgs; [
-          "${coreutils}/bin"
-          "${bc}/bin"
-          "${procps}/bin"
-          "${imagemagick}/bin"
-          "${swww}/bin"
-        ];
         Restart = "always";
         RestartSec = "30s";
         ExecStart = "${pkgs.writeShellScript "set-wallpaper" ''
           #!/usr/bin/env bash
+          PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep pkgs.bc pkgs.procps pkgs.imagemagick pkgs.swww]}
+
           set -x
           exec &> /tmp/anti-sleep-neglector-wallpaper.log
 
@@ -310,10 +369,6 @@ in {
           fi
 
           ${circadianVars}
-
-          get_brightness() {
-              magick "$1" -colorspace gray -format "%[fx:mean]" info:
-          }
 
           # Function to get current time in seconds since midnight
           get_current_time_seconds() {
@@ -360,15 +415,41 @@ in {
               done
           }
 
-          # Group wallpapers by brightness
+          get_brightness() {
+              magick "$1" -colorspace gray -format "%[fx:mean]" info:
+          }
+
           group_wallpapers() {
               declare -A grouped_wallpapers
+              local -a brightnesses
+              local min_brightness max_brightness
+
+              # First pass: get all brightnesses
               for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
                   brightness=$(get_brightness "$wallpaper")
-                  if (( $(echo "$brightness < 0.3" | bc -l) )); then
+                  brightnesses+=("$brightness")
+              done
+
+              # Sort brightnesses and get min and max
+              IFS=$'\n' sorted=($(sort -g <<<"''${brightnesses[*]}"))
+              unset IFS
+              min_brightness=''${sorted[0]}
+              max_brightness=''${sorted[-1]}
+
+              # Calculate range
+              brightness_range=$(bc <<< "$max_brightness - $min_brightness")
+
+              # Define thresholds as percentages of the range
+              threshold1=$(bc <<< "$min_brightness + $brightness_range * 0.33")
+              threshold2=$(bc <<< "$min_brightness + $brightness_range * 0.66")
+
+              # Second pass: group wallpapers
+              for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
+                  brightness=$(get_brightness "$wallpaper")
+                  if (( $(echo "$brightness < $threshold1" | bc -l) )); then
                       grouped_wallpapers[FIRST_LIGHT]+="$wallpaper "
                       grouped_wallpapers[LAST_LIGHT]+="$wallpaper "
-                  elif (( $(echo "$brightness < 0.5" | bc -l) )); then
+                  elif (( $(echo "$brightness < $threshold2" | bc -l) )); then
                       grouped_wallpapers[DAWN]+="$wallpaper "
                       grouped_wallpapers[SUNSET]+="$wallpaper "
                   else

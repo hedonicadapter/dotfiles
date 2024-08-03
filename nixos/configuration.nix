@@ -210,7 +210,7 @@ in {
       base00 = outputs.colors.black;
       base01 = outputs.colors.grey;
       base02 = outputs.colors.orange_dim;
-      base03 = outputs.colors.burgundy;
+      base03 = outputs.colors.white_dim;
       base04 = outputs.colors.beige;
       base05 = outputs.colors.white;
       base06 = outputs.colors.cyan;
@@ -219,10 +219,10 @@ in {
       base09 = outputs.colors.burgundy;
       base0A = outputs.colors.cyan;
       base0B = outputs.colors.green;
-      base0C = outputs.colors.orange;
+      base0C = outputs.colors.yellow;
       base0D = outputs.colors.beige;
       base0E = outputs.colors.vanilla_pear;
-      base0F = outputs.colors.yellow;
+      base0F = outputs.colors.orange_bright;
     };
     # base16Scheme = { gruvbox
     #   base00 = "#292828";
@@ -500,7 +500,7 @@ in {
 
   services.undervolt = {
     enable = true;
-    # useTimer = true;
+    useTimer = true;
     verbose = true;
     uncoreOffset = -75;
     turbo = 0;

@@ -1,6 +1,5 @@
 {
   outputs,
-  pkgs,
   lib,
   ...
 }: let

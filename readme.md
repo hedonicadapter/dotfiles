@@ -45,6 +45,6 @@ Misc
 + Spicetify
 
 # Todo
-- [ ] Select wallpaper by brightness and time of day
 - [ ] Hyprland workspace session manager(?)
-- [ ] Centralized script logs(?)
+- [ ] Inject colors from flake into ags
+- [ ] Change light/dark mode depending on time of day
