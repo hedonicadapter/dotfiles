@@ -5,11 +5,11 @@ require("staline").setup({
 		right = { "", "cwd", "branch" },
 	},
 	mode_colors = {
-		i = "#273C2C",
-		n = "#dfaf87",
-		c = "#af5f00",
-		v = "#2B2D42",
-		V = "#2B2D42",
+		i = vim.g.colors_green_opaque,
+		n = vim.g.colors_beige_opaque,
+		c = vim.g.colors_orange_opaque,
+		v = vim.g.colors_blue_opaque,
+		V = vim.g.colors_blue_opaque,
 	},
 	mode_icons = {
 		n = "  NORMAL ",

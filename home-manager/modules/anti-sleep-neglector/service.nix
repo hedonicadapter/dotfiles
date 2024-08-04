@@ -189,13 +189,12 @@ in {
           lat=$(echo "$loc_response" | cut -d ',' -f1)
           long=$(echo "$loc_response" | cut -d ',' -f2)
 
-          hemisphere=$([ $(echo "$lat" | awk '{print ($1 >= 0)}') -eq 1 ] && echo "north" || echo "south")
+          hemisphere=$(awk -v lat="$lat" 'BEGIN {print (lat >= 0 ? "north" : "south")}')
           season=$(get_season $hemisphere)
 
           default_times=($(get_default_times $lat $season))
 
           wlsunset -l "$lat" -L "$long"
-
           response=$(curl -s "https://api.sunrisesunset.io/json?lat=$lat&lng=$long")
 
           FIRST_LIGHT=$(get_time "first_light" "''${default_times[0]}")
@@ -363,6 +362,18 @@ in {
 
           set -x
           exec &> /tmp/anti-sleep-neglector-wallpaper.log
+
+          export RUST_BACKTRACE=1
+
+          # Wait for Wayland to be up
+          timeout=60
+          counter=0
+          while [ -z "$WAYLAND_DISPLAY" ] && [ $counter -lt $timeout ]; do
+            sleep 1
+            counter=$((counter + 1))
+            # Try to get WAYLAND_DISPLAY from the user's session
+            export WAYLAND_DISPLAY=$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type | grep -q wayland && echo wayland-0)
+          done
 
           if ! pgrep -x "swww-daemon" > /dev/null; then
             swww-daemon &

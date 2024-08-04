@@ -9,4 +9,13 @@
       "-L"
     ];
   };
+  nix.gc = {
+    automatic = true;
+    dates = "19:10";
+    options = "--delete-older-than 30d";
+  };
+  nix.optimise = {
+    automatic = true;
+    dates = ["19:20"];
+  };
 }

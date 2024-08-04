@@ -68,28 +68,36 @@
     systems = ["x86_64-linux"];
     forAllSystems = nixpkgs.lib.genAttrs systems;
 
+    darkenColor = color: amount: let
+      inherit (nixpkgs.lib) stringToCharacters toHexString;
+      chars = stringToCharacters color;
+      r = toHexString (builtins.sub (builtins.fromTOML "0x${builtins.substring 1 2 color}") amount);
+      g = toHexString (builtins.sub (builtins.fromTOML "0x${builtins.substring 3 2 color}") amount);
+      b = toHexString (builtins.sub (builtins.fromTOML "0x${builtins.substring 5 2 color}") amount);
+    in "#${r}${g}${b}";
+
     colors = {
-      black = "#14181a";
-      grey = "#282828";
-      red = "#d75f5f";
-      red_dim = "#ba3d3d";
-      burgundy = "#b16286";
-      yellow = "#d69617";
-      yellow_dim = "#cea64a";
-      orange = "#d65d0e";
-      orange_dim = "#e78a4e";
-      orange_bright = "#e78a4e";
-      green = "#a8a81c";
-      green_dim = "#8b9553";
-      blue = "#458588";
-      blue_dim = "#83a598";
-      blush = "#d3869b";
-      cyan = "#689d6a";
-      cyan_dim = "#87af87";
-      white = "#dfbf8e";
-      white_dim = "#d5c4a1";
-      beige = "#bdae93";
-      vanilla_pear = "#a89984";
+      black = "#000000";
+      grey = "#1F1F1F";
+      red = "#E8786D";
+      red_dim = "#af7070";
+      burgundy = "#835353";
+      yellow = "#FFE4B3";
+      yellow_dim = "#E8A86D";
+      orange = "#E8A86D";
+      orange_dim = "#9c705e";
+      orange_bright = "#ff78a7";
+      green = "#D4D4D4";
+      green_dim = "#A6A6A6";
+      blue = "#cfcfcf";
+      blue_dim = "#8f5b56";
+      blush = "#ff78a7";
+      cyan = "#706767";
+      cyan_dim = "#4b4b4b";
+      white = "#f5f5f5";
+      white_dim = "#D4D4D4";
+      beige = "#FFE4B3";
+      vanilla_pear = "#ffa885";
       # black = "#261C1E";
       # grey = "#3A2624";
       # red = "#E94554";
@@ -136,6 +144,18 @@
       # vanilla_pear = "#dfdfaf";
     };
 
+    isOpaque = color:
+      builtins.stringLength color == 7 && builtins.substring 0 1 color == "#";
+
+    colors_opaque = builtins.listToAttrs (
+      builtins.filter (x: isOpaque (builtins.getAttr x.name colors))
+      (builtins.map (name: {
+          inherit name;
+          value = builtins.getAttr name colors;
+        })
+        (builtins.attrNames colors))
+    );
+
     colorNames = builtins.attrNames colors;
     cssColorVariables = builtins.concatStringsSep "\n" (
       builtins.map (color: "--color-${color}: ${colors.${color}};") colorNames
@@ -157,6 +177,8 @@
     homeManagerModules = import ./modules/home-manager;
 
     colors = colors;
+    colors_opaque = colors_opaque;
+    darkenColor = darkenColor;
     cssColorVariables = cssColorVariables;
 
     nixosConfigurations = {

@@ -47,4 +47,5 @@ Misc
 # Todo
 - [ ] Hyprland workspace session manager(?)
 - [ ] Inject colors from flake into ags
+- [ ] Generate Reactive.nvim and staline colors from flake
 - [ ] Change light/dark mode depending on time of day

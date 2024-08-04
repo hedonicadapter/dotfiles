@@ -15,6 +15,7 @@
       EOF
     '';
     luaColors = builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: "vim.g['colors_${name}'] = ${builtins.toJSON value}") outputs.colors));
+    luaColorsOpaque = builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: "vim.g['colors_${name}_opaque'] = ${builtins.toJSON value}") outputs.colors_opaque));
   in {
     # package = pkgs.neovim-nightly;
     enable = true;
@@ -516,7 +517,19 @@
     ];
 
     extraLuaConfig = ''
+
       ${luaColors}
+      ${luaColorsOpaque}
+      vim.g['darken_color'] = function(color, amount)
+          color = color:gsub("^#", "")
+          local r = tonumber(color:sub(1, 2), 16)
+          local g = tonumber(color:sub(3, 4), 16)
+          local b = tonumber(color:sub(5, 6), 16)
+          r = math.max(0, r - amount)
+          g = math.max(0, g - amount)
+          b = math.max(0, b - amount)
+          return string.format("#%02x%02x%02x", r, g, b)
+      end
       ${builtins.readFile ./modules/nvim/init.lua}
     '';
   };

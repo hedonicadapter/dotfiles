@@ -9,8 +9,8 @@ return {
 				-- switch case
 				[{ "gu", "gU", "g~", "~" }] = {
 					winhl = {
-						CursorLine = { bg = "#292522" },
-						CursorLineNr = { fg = "#867462", bg = "#292522" },
+						CursorLine = { bg = vim.g.colors_black_opaque },
+						CursorLineNr = { fg = "#867462", bg = vim.g.colors_black_opaque },
 					},
 				},
 				-- change
@@ -42,22 +42,22 @@ return {
 				CursorLineNr = { fg = "#273C2C", bg = "#273C2C" },
 			},
 			hl = {
-				Cursor = { bg = vim.g.colors_green },
+				Cursor = { bg = vim.g.colors_green_opaque },
 			},
 		},
 		c = {
 			winhl = {
-				CursorLine = { bg = vim.g.colors_orange },
-				CursorLineNr = { fg = vim.g.colors_orange, bg = vim.g.colors_orange },
+				CursorLine = { bg = vim.g.colors_orange_opaque },
+				CursorLineNr = { fg = vim.g.colors_orange_opaque, bg = vim.g.colors_orange_opaque },
 			},
 		},
 		n = {
 			winhl = {
-				CursorLine = { bg = vim.g.colors_beige },
-				CursorLineNr = { fg = vim.g.colors_beige, bg = vim.g.colors_beige },
+				CursorLine = { bg = vim.g.colors_beige_opaque },
+				CursorLineNr = { fg = vim.g.colors_beige_opaque, bg = vim.g.colors_beige_opaque },
 			},
 			hl = {
-				Cursor = { bg = vim.g.colors_beige },
+				Cursor = { bg = vim.g.colors_beige_opaque },
 			},
 		},
 		-- visual
@@ -67,7 +67,7 @@ return {
 				Visual = { bg = "#2B2D42" },
 			},
 			hl = {
-				Cursor = { bg = vim.g.colors_cyan },
+				Cursor = { bg = vim.g.colors_cyan_opaque },
 			},
 		},
 		-- select
@@ -80,8 +80,8 @@ return {
 		-- replace
 		R = {
 			winhl = {
-				CursorLine = { bg = vim.g.colors_red },
-				CursorLineNr = { fg = vim.g.colors_red, bg = vim.g.colors_red },
+				CursorLine = { bg = vim.g.colors_red_opaque },
+				CursorLineNr = { fg = vim.g.colors_red_opaque, bg = vim.g.colors_red_opaque },
 			},
 		},
 	},
