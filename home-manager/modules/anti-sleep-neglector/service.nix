@@ -478,7 +478,7 @@ in {
               # Select and set wallpaper
               wallpapers_for_period=("''${grouped_wallpapers[$current_period]}")
               if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
-                  selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
+                  selected_wallpaper=$(echo "''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}" | xargs)
                   swww img "$selected_wallpaper" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144
               fi
 
