@@ -14,7 +14,7 @@ Performance and usability
 
 # Aesthetics
 Non-minimalist without being cluttered
-+ Transparent, blurry, and grainy everything (even firefox)
++ Transparent, blurry, and grainy everything (firefox, discord, obsidian, kitty)
 + Extremely minimal space saving firefox theme forked from Firefox Alpha
 + Wallpaper cycling from folder script 
 + Neovim kaomoji active tab indicator
@@ -46,6 +46,5 @@ Misc
 
 # Todo
 - [ ] Hyprland workspace session manager(?)
-- [ ] Inject colors from flake into ags
-- [ ] Generate Reactive.nvim and staline colors from flake
+- [ ] Inject colors from flake into ags, discord, and obsidian
 - [ ] Change light/dark mode depending on time of day

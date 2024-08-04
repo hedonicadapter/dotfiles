@@ -418,20 +418,6 @@
         config = toLuaFile ./modules/nvim/plugins/twilight.lua;
       }
 
-      # {
-      #   plugin = indent-blankline-nvim;
-      #   config = toLua ''
-      #     require("ibl").setup({})
-      #   '';
-      # }
-
-      melange-nvim
-      {
-        plugin = gruvbox-nvim;
-        config = toLua ''
-          require("gruvbox").setup()
-        '';
-      }
       {
         plugin = pkgs.awesomeNeovimPlugins.mellifluous-nvim;
         config = toLua ''

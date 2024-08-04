@@ -43,6 +43,18 @@ with lib; let
     SOLAR_NOON=$(get_circadian_period SOLAR_NOON)
     SUNSET=$(get_circadian_period SUNSET)
     LAST_LIGHT=$(get_circadian_period LAST_LIGHT)
+    LATITUDE=$(systemctl --user show-environment | grep "^LATITUDE=" | cut -d= -f2-)
+    LONGITUDE=$(systemctl --user show-environment | grep "^LONGITUDE=" | cut -d= -f2-)
+  '';
+  waitForWayland = ''
+    timeout=60
+    counter=0
+    while [ -z "$WAYLAND_DISPLAY" ] && [ $counter -lt $timeout ]; do
+      sleep 1
+      counter=$((counter + 1))
+      # Try to get WAYLAND_DISPLAY from the user's session
+      export WAYLAND_DISPLAY=$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type | grep -q wayland && echo wayland-0)
+    done
   '';
 in {
   options = {
@@ -102,7 +114,7 @@ in {
         Type = "oneshot";
         ExecStart = "${pkgs.writeShellScript "set_circadian_vars" ''
           #!/usr/bin/env bash
-          PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.jq pkgs.procps pkgs.curl pkgs.wlsunset]}
+          PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.jq pkgs.procps pkgs.curl pkgs.bc]}
 
           set -x
           exec &> /tmp/anti-sleep-neglector.log
@@ -141,11 +153,11 @@ in {
 
               local lat_abs=$(echo $latitude | awk '{print sqrt($1*$1)}')
 
-              if [ "$lat_abs" -lt 23 ]; then
-                  # Near equator
+              echo "Latitude: $latitude, Absolute latitude: $lat_abs, Season: $season" >> /tmp/anti-sleep-neglector.log
+
+              if (( $(echo "$lat_abs < 23" | bc -l) )); then
                   echo "05:30:00 06:00:00 06:30:00 12:00:00 18:00:00 18:30:00"
-              elif [ "$lat_abs" -lt 45 ]; then
-                  # Mid latitudes
+              elif (( $(echo "$lat_abs < 45" | bc -l) )); then
                   case $season in
                       "summer")
                           echo "04:30:00 05:00:00 05:30:00 12:00:00 20:00:00 21:00:00"
@@ -158,7 +170,6 @@ in {
                           ;;
                   esac
               else
-                  # High latitudes
                   case $season in
                       "summer")
                           echo "03:00:00 03:30:00 04:00:00 12:00:00 21:00:00 22:00:00"
@@ -186,34 +197,51 @@ in {
           }
 
           loc_response=$(curl -s ipinfo.io/loc)
-          lat=$(echo "$loc_response" | cut -d ',' -f1)
-          long=$(echo "$loc_response" | cut -d ',' -f2)
 
-          hemisphere=$(awk -v lat="$lat" 'BEGIN {print (lat >= 0 ? "north" : "south")}')
+          LATITUDE=$(echo "$loc_response" | cut -d ',' -f1)
+          systemctl --user set-environment LATITUDE="$LATITUDE"
+          echo "LATITUDE: $LATITUDE" >> /tmp/anti-sleep-neglector.log
+
+          LONGITUDE=$(echo "$loc_response" | cut -d ',' -f2)
+          systemctl --user set-environment LONGITUDE="$LONGITUDE"
+          echo "LONGITUDE: $LONGITUDE" >> /tmp/anti-sleep-neglector.log
+
+          hemisphere=$(awk -v LATITUDE="$LATITUDE" 'BEGIN {print (LATITUDE >= 0 ? "north" : "south")}')
           season=$(get_season $hemisphere)
 
-          default_times=($(get_default_times $lat $season))
+          echo "Hemisphere: $hemisphere" >> /tmp/anti-sleep-neglector.log
+          echo "Season: $season" >> /tmp/anti-sleep-neglector.log
 
-          wlsunset -l "$lat" -L "$long"
-          response=$(curl -s "https://api.sunrisesunset.io/json?lat=$lat&lng=$long")
+          default_times=($(get_default_times $LATITUDE $season))
 
-          FIRST_LIGHT=$(get_time "first_light" "''${default_times[0]}")
-          systemctl --user set-environment FIRST_LIGHT="$FIRST_LIGHT"
+          response=$(curl -s "https://api.sunrisesunset.io/json?lat=$LATITUDE&lng=$LONGITUDE")
+          echo "Response: $response" >> /tmp/anti-sleep-neglector.log
 
           DAWN=$(get_time "dawn" "''${default_times[1]}")
           systemctl --user set-environment DAWN="$DAWN"
+          echo "DAWN: $DAWN" >> /tmp/anti-sleep-neglector.log
 
           SUNRISE=$(get_time "sunrise" "''${default_times[2]}")
           systemctl --user set-environment SUNRISE="$SUNRISE"
+          echo "SUNRISE: $SUNRISE" >> /tmp/anti-sleep-neglector.log
 
           SOLAR_NOON=$(get_time "solar_noon" "''${default_times[3]}")
           systemctl --user set-environment SOLAR_NOON="$SOLAR_NOON"
+          echo "SOLAR_NOON: $SOLAR_NOON" >> /tmp/anti-sleep-neglector.log
 
           SUNSET=$(get_time "sunset" "''${default_times[4]}")
           systemctl --user set-environment SUNSET="$SUNSET"
+          echo "SUNSET: $SUNSET" >> /tmp/anti-sleep-neglector.log
 
-          LAST_LIGHT=$(get_time "last_light" "''${default_times[5]}")
+          # Calculate FIRST_LIGHT as 45 minutes before DAWN
+          FIRST_LIGHT=$(date -d "$DAWN 45 minutes ago" +%T)
+          systemctl --user set-environment FIRST_LIGHT="$FIRST_LIGHT"
+          echo "Calculated FIRST_LIGHT: $FIRST_LIGHT" >> /tmp/anti-sleep-neglector.log
+
+          # Calculate LAST_LIGHT as 45 minutes after SUNSET
+          LAST_LIGHT=$(date -d "$SUNSET 45 minutes" +%T)
           systemctl --user set-environment LAST_LIGHT="$LAST_LIGHT"
+          echo "Calculated LAST_LIGHT: $LAST_LIGHT" >> /tmp/anti-sleep-neglector.log
         ''}";
       };
 
@@ -347,6 +375,35 @@ in {
       };
     };
 
+    systemd.user.services."anti-sleep-neglector-gamma" = {
+      Unit = {
+        Description = "Whether to enable anti-sleep-neglector selecting wallpapers by brightness and circadian period.";
+      };
+
+      Service = {
+        Type = "simple";
+        Restart = "on-failure";
+        RestartSec = "10s";
+        ExecStart = "${pkgs.writeShellScript "set_gamma" ''
+          #!/usr/bin/env bash
+          PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep pkgs.wlsunset]}
+
+          set -x
+          exec &> /tmp/anti-sleep-neglector-gamma.log
+
+          ${waitForWayland}
+
+          ${circadianVars}
+
+          wlsunset -l "''${LATITUDE:-${toString cfg.latitude}}" -L "''${LONGITUDE:-${toString cfg.longitude}}"
+        ''}";
+      };
+
+      Install = {
+        WantedBy = ["default.target"];
+      };
+    };
+
     systemd.user.services."anti-sleep-neglector-wallpaper" = {
       Unit = {
         Description = "Whether to enable anti-sleep-neglector selecting wallpapers by brightness and circadian period.";
@@ -365,15 +422,7 @@ in {
 
           export RUST_BACKTRACE=1
 
-          # Wait for Wayland to be up
-          timeout=60
-          counter=0
-          while [ -z "$WAYLAND_DISPLAY" ] && [ $counter -lt $timeout ]; do
-            sleep 1
-            counter=$((counter + 1))
-            # Try to get WAYLAND_DISPLAY from the user's session
-            export WAYLAND_DISPLAY=$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type | grep -q wayland && echo wayland-0)
-          done
+          ${waitForWayland}
 
           if ! pgrep -x "swww-daemon" > /dev/null; then
             swww-daemon &
@@ -477,9 +526,11 @@ in {
 
               # Select and set wallpaper
               wallpapers_for_period=("''${grouped_wallpapers[$current_period]}")
+              wallpapers_for_period=($wallpapers_for_period)
               if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
-                  selected_wallpaper=$(echo "''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}" | xargs)
-                  swww img "$selected_wallpaper" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144
+                  selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
+                  selected_wallpaper_trimmed=$(echo $selected_wallpaper | xargs)
+                  swww img "$selected_wallpaper_trimmed" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144
               fi
 
               # Calculate time to next period
@@ -521,5 +572,3 @@ in {
     };
   };
 }
-# wlsunset -l "$LATITUDE" -L "$LONGITUDE"
-

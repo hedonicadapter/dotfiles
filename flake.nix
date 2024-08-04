@@ -77,8 +77,8 @@
     in "#${r}${g}${b}";
 
     colors = {
-      black = "#000000";
-      grey = "#1F1F1F";
+      black = "#0F1F1F";
+      grey = "#292828";
       red = "#E8786D";
       red_dim = "#af7070";
       burgundy = "#835353";

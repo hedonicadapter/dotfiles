@@ -224,7 +224,7 @@ in {
     #     builtins.readFile ./modules/ags/style/extra-uncopied.scss
     #     + " * { ${outputs.cssColorVariables} } ";
     # };
-    ".config/obsidian/global.css".source = ./modules/obsidian/global.css;
+    "${config.home.homeDirectory}/Documents/notes/Braing/.obsidian/snippets/global.css".source = ./modules/obsidian/global.css;
     ".config/BetterDiscord" = {
       source = ./modules/discord;
       recursive = true;
