@@ -32,6 +32,9 @@ in {
   services.anti-sleep-neglector-monitor = {
     enable = true;
   };
+  services.anti-sleep-neglector-gamma = {
+    enable = true;
+  };
   services.anti-sleep-neglector-wallpaper = {
     enable = true;
     wallpapersDir = "${config.home.homeDirectory}/Pictures/wallpapers";
@@ -134,8 +137,6 @@ in {
       docker-compose
       azure-cli
 
-      # neofetch
-      # imagemagick # for neofetch
       grim
       slurp
       jq
@@ -143,6 +144,7 @@ in {
       gh
       libGLU
       lazydocker
+      socat # for listening to unix socket events
     ]
     # Languages
     ++ [
@@ -206,6 +208,7 @@ in {
 
   home.file = {
     ".config/hypr/auto-start.sh".source = ./modules/hyprland/auto-start.sh;
+    ".config/hypr/auto-float-unfloat.sh".source = ./modules/hyprland/auto-float-unfloat.sh;
     ".config/hypr/toggle-mic.sh".source = ./modules/hyprland/toggle-mic.sh;
     ".config/nvim/lua" = {
       source = ./modules/nvim/lua;
