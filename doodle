@@ -1,0 +1,6 @@
+ags -r "App.applyCss(`
+        * {
+
+        }
+`)"
+

@@ -22,7 +22,7 @@ in {
     (import ./kitty.nix {inherit outputs pkgs lib;})
     (import ./yazi.nix {inherit pkgs;})
     ./tofi.nix
-    (import ./nvim.nix {inherit outputs pkgs;})
+    (import ./nvim.nix {inherit config outputs pkgs;})
     (import ./modules/anti-sleep-neglector/service.nix {inherit config lib pkgs;})
   ];
 
@@ -222,11 +222,9 @@ in {
       source = ./modules/ags;
       recursive = true;
     };
-    # ".config/ags/style/extra.scss" = {
-    #   text =
-    #     builtins.readFile ./modules/ags/style/extra-uncopied.scss
-    #     + " * { ${outputs.cssColorVariables} } ";
-    # };
+    ".config/ags/colors.json" = {
+      text = builtins.toJSON outputs.colors;
+    };
     "${config.home.homeDirectory}/Documents/notes/Braing/.obsidian/snippets/global.css".source = ./modules/obsidian/global.css;
     ".config/BetterDiscord" = {
       source = ./modules/discord;

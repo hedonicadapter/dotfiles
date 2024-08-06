@@ -54,16 +54,13 @@
 }
 
 .val-low {
-  color: #877f68;
-  opacity: 0.8;
+  color: transparentize($common-white, 0.8);
 }
 .val-mid {
-  color: #ffdf87;
-  opacity: 0.9;
+  color: transparentize($common-yellow, 0.9);
 }
 .val-high {
-  color: #af5f5f;
-  opacity: 1;
+  color: $common-red;
 }
 
 window#datemenu .datemenu {

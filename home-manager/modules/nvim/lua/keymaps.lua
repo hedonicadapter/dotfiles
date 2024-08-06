@@ -1,17 +1,20 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+local keymap = vim.keymap
+local nvim_set_keymap = vim.api.nvim_set_keymap
+
 local function set_keymap_for_all_modes(key, cmd)
 	local modes = { "n", "v", "x", "s", "o", "l" }
 	for _, mode in ipairs(modes) do
-		vim.api.nvim_set_keymap(mode, key, cmd, {
+		nvim_set_keymap(mode, key, cmd, {
 			noremap = true,
 			silent = true,
 		})
 	end
 end
 
-vim.api.nvim_set_keymap("n", "<leader>sf", "<cmd>w<CR>", {
+nvim_set_keymap("n", "<leader>sf", "<cmd>w<CR>", {
 	desc = "save",
 	noremap = true,
 	silent = true,
@@ -19,104 +22,104 @@ vim.api.nvim_set_keymap("n", "<leader>sf", "<cmd>w<CR>", {
 
 set_keymap_for_all_modes("<leader>qq", "<cmd>qa<CR>")
 
-vim.api.nvim_set_keymap("n", "<leader>u", "<cmd>Telescope undo<CR>", {
+nvim_set_keymap("n", "<leader>u", "<cmd>Telescope undo<CR>", {
 	noremap = true,
 	silent = true,
 })
 
-vim.api.nvim_set_keymap("n", "<Esc>", "<cmd>nohlsearch<CR>", {
+nvim_set_keymap("n", "<Esc>", "<cmd>nohlsearch<CR>", {
 	noremap = true,
 	silent = true,
 })
 
-vim.api.nvim_set_keymap("n", "<leader>sv", "<C-w>v", {
+nvim_set_keymap("n", "<leader>sv", "<C-w>v", {
 	noremap = true,
 	desc = "split vertical",
 })
-vim.api.nvim_set_keymap("n", "<leader>sh", "<C-w>s", {
+nvim_set_keymap("n", "<leader>sh", "<C-w>s", {
 	noremap = true,
 	desc = "split horizontal",
 })
-vim.api.nvim_set_keymap("n", "<leader>sx", ":close<CR>", {
+nvim_set_keymap("n", "<leader>sx", ":close<CR>", {
 	noremap = true,
 	desc = "close window",
 })
 
-vim.api.nvim_set_keymap("n", "<leader>bd", ":bd<CR><CR>", {
+nvim_set_keymap("n", "<leader>bd", ":bd<CR><CR>", {
 	noremap = true,
 	desc = "close buffer",
 })
 
-vim.api.nvim_set_keymap("v", "y", "ygv<esc>", {
+nvim_set_keymap("v", "y", "ygv<esc>", {
 	noremap = true,
 })
 
-vim.api.nvim_set_keymap("t", "<Esc>", "<C-\\><C-n>", {
+nvim_set_keymap("t", "<Esc>", "<C-\\><C-n>", {
 	noremap = true,
 })
 
-vim.api.nvim_set_keymap("n", "<Tab>", ":bnext<CR>", {
+nvim_set_keymap("n", "<Tab>", ":bnext<CR>", {
 	noremap = true,
 	silent = true,
 })
-vim.api.nvim_set_keymap("n", "<S-Tab>", ":bprev<CR>", {
-	noremap = true,
-	silent = true,
-})
-
-vim.api.nvim_set_keymap("n", "<C-j>", ":m .+1<CR>==", { -- move line down
-	noremap = true,
-	silent = true,
-})
-vim.api.nvim_set_keymap("n", "<C-k>", ":m .-2<CR>==", { -- move line up
-	noremap = true,
-	silent = true,
-})
-vim.api.nvim_set_keymap("i", "<C-j>", "<Esc>:m .+1<CR>==gi", {
-	noremap = true,
-	silent = true,
-})
-vim.api.nvim_set_keymap("i", "<C-k>", "<Esc>:m .-2<CR>==gi", {
-	noremap = true,
-	silent = true,
-})
-vim.api.nvim_set_keymap("v", "<C-j>", ":m '>+1<CR>gv", {
-	noremap = true,
-	silent = true,
-})
-vim.api.nvim_set_keymap("v", "<C-k>", ":m '<-2<CR>gv", {
+nvim_set_keymap("n", "<S-Tab>", ":bprev<CR>", {
 	noremap = true,
 	silent = true,
 })
 
-vim.api.nvim_set_keymap("v", "y", "ygv", {
+nvim_set_keymap("n", "<C-j>", ":m .+1<CR>==", { -- move line down
+	noremap = true,
+	silent = true,
+})
+nvim_set_keymap("n", "<C-k>", ":m .-2<CR>==", { -- move line up
+	noremap = true,
+	silent = true,
+})
+nvim_set_keymap("i", "<C-j>", "<Esc>:m .+1<CR>==gi", {
+	noremap = true,
+	silent = true,
+})
+nvim_set_keymap("i", "<C-k>", "<Esc>:m .-2<CR>==gi", {
+	noremap = true,
+	silent = true,
+})
+nvim_set_keymap("v", "<C-j>", ":m '>+1<CR>gv", {
+	noremap = true,
+	silent = true,
+})
+nvim_set_keymap("v", "<C-k>", ":m '<-2<CR>gv", {
+	noremap = true,
+	silent = true,
+})
+
+nvim_set_keymap("v", "y", "ygv", {
 	noremap = true,
 })
-vim.api.nvim_set_keymap("v", ">", ">gv", {
+nvim_set_keymap("v", ">", ">gv", {
 	noremap = true,
 })
-vim.api.nvim_set_keymap("v", "<", "<gv", {
+nvim_set_keymap("v", "<", "<gv", {
 	noremap = true,
 })
 
 -- paste and then reselect pasted text
-vim.keymap.set({ "n", "x" }, "p", "p`[v`]o", { noremap = true, silent = true })
+keymap.set({ "n", "x" }, "p", "p`[v`]o", { noremap = true, silent = true })
 -- yank and then reselect yanked text
-vim.keymap.set({ "n", "x" }, "y", "y`[v`]", { noremap = true, silent = true })
+keymap.set({ "n", "x" }, "y", "y`[v`]", { noremap = true, silent = true })
 
-vim.keymap.set("x", "<leader>p", '"_dP') -- Paste without copying
-vim.keymap.set("n", "<leader>ra", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+keymap.set("x", "<leader>p", '"_dP') -- Paste without copying
+keymap.set("n", "<leader>ra", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set("n", "<space>e", vim.diagnostic.open_float)
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
-vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
+keymap.set("n", "<space>e", vim.diagnostic.open_float)
+keymap.set("n", "[d", vim.diagnostic.goto_prev)
+keymap.set("n", "]d", vim.diagnostic.goto_next)
+keymap.set("n", "<space>q", vim.diagnostic.setloclist)
 
-vim.keymap.set("n", "<leader>n", "<Cmd>call search('[([{<\\|\"\\|'']')<CR>", {
+keymap.set("n", "<leader>n", "<Cmd>call search('[([{<\\|\"\\|'']')<CR>", {
 	desc = "Jump to next brace, quote, or paren",
 })
-vim.keymap.set("n", "<leader>p", "<Cmd>call search('[([{<\\|\"\\|'']', 'b') <CR>", {
+keymap.set("n", "<leader>p", "<Cmd>call search('[([{<\\|\"\\|'']', 'b') <CR>", {
 	desc = "Jump to previous brace, quote, or paren",
 })
 
@@ -138,9 +141,9 @@ vim.api.nvim_exec(
 	false
 )
 
-vim.api.nvim_set_keymap("n", "<leader>ss", "<cmd>Telescope session-lens<cr>", { noremap = true, silent = true })
+nvim_set_keymap("n", "<leader>ss", "<cmd>Telescope session-lens<cr>", { noremap = true, silent = true })
 
-vim.api.nvim_set_keymap(
+nvim_set_keymap(
 	"n",
 	"<leader>fw",
 	[[:lua require('telescope.builtin').live_grep({ default_text = vim.fn.expand('<cword>') })<CR>]],
@@ -151,7 +154,7 @@ vim.api.nvim_set_keymap(
 	}
 )
 
-vim.api.nvim_set_keymap(
+nvim_set_keymap(
 	"v",
 	"<leader>fs",
 	[[:lua require('telescope.builtin').live_grep({ default_text = vim.fn.GetVisualSelection() })<CR>]],
@@ -165,14 +168,14 @@ set_keymap_for_all_modes("<leader>ff", ":Telescope find_files<CR>")
 set_keymap_for_all_modes("<leader>fr", ":Telescope resume<CR>")
 set_keymap_for_all_modes("<leader>lg", ":Telescope live_grep<CR>")
 
-vim.api.nvim_set_keymap(
+nvim_set_keymap(
 	"n",
 	"<leader>o",
 	"<CMD>SymbolsOutline<CR>",
 	{ desc = "Symbols outline", noremap = true, silent = true }
 )
 
-vim.api.nvim_set_keymap(
+nvim_set_keymap(
 	"n",
 	"<leader>0",
 	"<CMD>lua require('CopilotChat').toggle()<CR>",
@@ -180,8 +183,8 @@ vim.api.nvim_set_keymap(
 )
 
 -- SnipRun
-vim.api.nvim_set_keymap("n", "<leader>sr", "<CMD>SnipRun<CR>", { desc = "Run SnipRun", noremap = true, silent = true })
-vim.keymap.set(
+nvim_set_keymap("n", "<leader>sr", "<CMD>SnipRun<CR>", { desc = "Run SnipRun", noremap = true, silent = true })
+keymap.set(
 	{ "v", "x" },
 	"<leader>sr",
 	":'<,'>SnipRun<CR>",
@@ -189,19 +192,30 @@ vim.keymap.set(
 )
 
 -- flash.nvim
-vim.keymap.set({ "n", "x", "o" }, "s", function()
+keymap.set({ "n", "x", "o" }, "s", function()
 	require("flash").jump()
 end, { noremap = true })
-vim.keymap.set({ "n", "x", "o" }, "S", function()
+keymap.set({ "n", "x", "o" }, "S", function()
 	require("flash").treesitter()
 end, { noremap = true })
 
-vim.api.nvim_set_keymap(
+nvim_set_keymap(
 	"v",
 	"<leader>ls",
 	":lua require('plugins.toggle-print').toggle_print()<CR>",
 	{ noremap = true, silent = true }
 )
 
-vim.keymap.set("n", "<leader>dn", "<cmd>lua vim.diagnostic.goto_next()<CR>")
-vim.keymap.set("n", "<leader>dp", "<cmd>lua vim.diagnostic.goto_prev()<CR>")
+keymap.set("n", "<leader>dn", "<cmd>lua vim.diagnostic.goto_next()<CR>")
+keymap.set("n", "<leader>dp", "<cmd>lua vim.diagnostic.goto_prev()<CR>")
+
+-- credit: u/xmsxms
+keymap.set("n", "<leader>bc", function()
+	local curbufnr = vim.api.nvim_get_current_buf()
+	local buflist = vim.api.nvim_list_bufs()
+	for _, bufnr in ipairs(buflist) do
+		if vim.bo[bufnr].buflisted and bufnr ~= curbufnr and (vim.fn.getbufvar(bufnr, "bufpersist") ~= 1) then
+			vim.cmd("bd " .. tostring(bufnr))
+		end
+	end
+end, { silent = true, desc = "Close unused buffers" })

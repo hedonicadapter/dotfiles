@@ -16,7 +16,7 @@ Performance and usability
 Non-minimalist without being cluttered
 + Transparent, blurry, and grainy everything (firefox, discord, obsidian, kitty)
 + Extremely minimal space saving firefox theme forked from Firefox Alpha
-+ Wallpaper cycling from folder script 
++ Auto-picks wallpapers from a folder based on its brightness and time of day (not for sleep neglectors)
 + Neovim kaomoji active tab indicator
 + Neovim color coded mode indicators
 + Fonts with ligatures and cursive variants
@@ -28,9 +28,9 @@ Non-minimalist without being cluttered
 + Tofi
 
 Terminal
-+ Neovim
 + Kitty
 + Tmux
++ Neovim
 
 CLI
 + Atuin
@@ -46,5 +46,7 @@ Misc
 
 # Todo
 - [ ] Hyprland workspace session manager(?)
-- [ ] Inject colors from flake into ags, discord, and obsidian
+- [ ] Inject colors from flake into discord, and obsidian
 - [ ] Change light/dark mode depending on time of day
+- [ ] Pick wallpaper based on hue and time of day
+- [ ] System-wide font selection

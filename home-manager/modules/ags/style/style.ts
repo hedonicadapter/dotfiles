@@ -13,6 +13,7 @@ const deps = [
 ];
 
 const {
+  common,
   dark,
   light,
   blur,
@@ -104,6 +105,11 @@ const variables = () => [
   $("bar-battery-blocks", options.bar.battery.blocks),
   $("bar-position", options.bar.position),
   $("hyprland-gaps-multiplier", options.hyprland.gaps),
+
+  // from flake
+  ...Object.entries(common).map(([key, value]) =>
+    $(`common-${key.replace(/_/g, "-")}`, value),
+  ),
 ];
 
 async function resetCss() {

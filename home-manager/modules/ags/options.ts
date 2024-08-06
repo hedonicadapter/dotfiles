@@ -3,8 +3,11 @@ import { distro } from "lib/variables";
 import { icon } from "lib/utils";
 import icons from "lib/icons";
 
+const colorsJson = Utils.readFile(`${App.configDir}/colors.json`);
+const colors = colorsJson ? JSON.parse(colorsJson) : null;
+
 const options = mkOptions(OPTIONS, {
-  autotheme: opt(false),
+  autotheme: opt(true),
 
   system: {
     fetchInterval: opt(1000),
@@ -17,40 +20,41 @@ const options = mkOptions(OPTIONS, {
   },
 
   theme: {
+    common: colors,
     dark: {
       primary: {
-        bg: opt("#FFEFC2"),
-        fg: opt("#141414"),
+        bg: opt(colors?.beige ?? "#FFEFC2"),
+        fg: opt(colors?.black ?? "#141414"),
       },
       error: {
-        bg: opt("#D47766"),
-        fg: opt("#141414"),
+        bg: opt(colors?.red ?? "#d47766"),
+        fg: opt(colors?.black ?? "#141414"),
       },
-      bg: opt("#171717"),
-      fg: opt("#FFEFC2"),
-      widget: opt("#FFEFC2"),
-      border: opt("#FFEFC2"),
+      bg: opt(colors?.grey ?? "#171717"),
+      fg: opt(colors?.beige ?? "#FFEFC2"),
+      widget: opt(colors?.beige ?? "#FFEFC2"),
+      border: opt(colors?.beige ?? "#FFEFC2"),
     },
     light: {
       primary: {
-        bg: opt("#426ede"),
-        fg: opt("#eeeeee"),
+        bg: opt(colors?.blue ?? "#426ede"),
+        fg: opt(colors?.white ?? "#eeeeee"),
       },
       error: {
-        bg: opt("#b13558"),
-        fg: opt("#eeeeee"),
+        bg: opt(colors?.red ?? "#d47766"),
+        fg: opt(colors?.white ?? "#eeeeee"),
       },
-      bg: opt("#fffffa"),
-      fg: opt("#080808"),
-      widget: opt("#080808"),
-      border: opt("#080808"),
+      bg: opt(colors?.beige ?? "#fffffa"),
+      fg: opt(colors?.black ?? "#080808"),
+      widget: opt(colors?.black ?? "#080808"),
+      border: opt(colors?.black ?? "#080808"),
     },
 
     blur: opt(14),
     scheme: opt<"dark" | "light">("dark"),
     widget: { opacity: opt(94) },
     border: {
-      width: opt(2),
+      width: opt(1),
       opacity: opt(96),
     },
 
@@ -60,7 +64,7 @@ const options = mkOptions(OPTIONS, {
     radius: opt(13),
   },
 
-  transition: opt(200),
+  transition: opt(150),
 
   font: {
     size: opt(9),
@@ -106,7 +110,7 @@ const options = mkOptions(OPTIONS, {
     },
     battery: {
       bar: opt<"hidden" | "regular" | "whole">("regular"),
-      charging: opt("#00D787"),
+      charging: opt(colors?.green ?? "#00D787"),
       percentage: opt(true),
       blocks: opt(7),
       width: opt(50),

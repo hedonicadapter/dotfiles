@@ -500,7 +500,7 @@ in {
 
   services.undervolt = {
     enable = true;
-    useTimer = true;
+    # useTimer = true;
     verbose = true;
     uncoreOffset = -75;
     turbo = 0;

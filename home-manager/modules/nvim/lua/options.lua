@@ -106,21 +106,30 @@ autocmd("LspAttach", {
 	end,
 })
 
--- autocmd("CmdlineEnter", {
--- 	group = augroup("cmdheight_1_on_cmdlineenter", {
--- 		clear = true,
--- 	}),
--- 	desc = "Don't hide the status line when typing a command",
--- 	command = ":set cmdheight=1",
--- })
+-- clear unused buffers
+-- credit: u/xmsxms
+local id = vim.api.nvim_create_augroup("startup", {
+	clear = false,
+})
 
--- autocmd("CmdlineLeave", {
--- 	group = augroup("cmdheight_0_on_cmdlineleave", {
--- 		clear = true,
--- 	}),
--- 	desc = "Hide cmdline when not typing a command",
--- 	command = ":set cmdheight=0",
--- })
+local persistbuffer = function(bufnr)
+	bufnr = bufnr or vim.api.nvim_get_current_buf()
+	vim.fn.setbufvar(bufnr, "bufpersist", 1)
+end
+
+autocmd({ "BufRead" }, {
+	group = id,
+	pattern = { "*" },
+	callback = function()
+		vim.api.nvim_create_autocmd({ "InsertEnter", "BufModifiedSet" }, {
+			buffer = 0,
+			once = true,
+			callback = function()
+				persistbuffer()
+			end,
+		})
+	end,
+})
 
 autocmd("BufWritePost", {
 	group = augroup("hide_message_after_write", {

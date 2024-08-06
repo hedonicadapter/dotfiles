@@ -47,13 +47,13 @@ with lib; let
     LONGITUDE=$(systemctl --user show-environment | grep "^LONGITUDE=" | cut -d= -f2-)
   '';
   waitForWayland = ''
-    timeout=60
+    timeout=180
     counter=0
     while [ -z "$WAYLAND_DISPLAY" ] && [ $counter -lt $timeout ]; do
       sleep 1
       counter=$((counter + 1))
       # Try to get WAYLAND_DISPLAY from the user's session
-      export WAYLAND_DISPLAY=$(loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type | grep -q wayland && echo wayland-0)
+      export WAYLAND_DISPLAY=$(loginctl show-session $(loginctl | grep $(whoami) | cut -d' ' -f1) -p Type | grep -q wayland && echo wayland-0)
     done
   '';
 in {
@@ -391,7 +391,7 @@ in {
     (mkIf config.services.anti-sleep-neglector-gamma.enable {
       systemd.user.services."anti-sleep-neglector-gamma" = {
         Unit = {
-          Description = "Whether to enable anti-sleep-neglector selecting wallpapers by brightness and circadian period.";
+          Description = "Whether to enable anti-sleep-neglector starting wlsunset by your coordinates.";
         };
 
         Service = {
@@ -431,7 +431,7 @@ in {
           RestartSec = "30s";
           ExecStart = "${pkgs.writeShellScript "set-wallpaper" ''
             #!/usr/bin/env bash
-            PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep pkgs.bc pkgs.procps pkgs.imagemagick pkgs.swww]}
+            PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep pkgs.findutils pkgs.bc pkgs.procps pkgs.imagemagick pkgs.swww]}
 
             set -x
             exec &> /tmp/anti-sleep-neglector-wallpaper.log
