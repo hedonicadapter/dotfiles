@@ -84,8 +84,7 @@ in {
     git
     nix-output-monitor
 
-    neofetch
-    imagemagick # for neofetch
+    fastfetch
     polkit_gnome
     gnumake # for lenovo-legion
     linuxHeaders # for lenovo-legion

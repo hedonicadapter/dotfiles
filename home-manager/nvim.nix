@@ -1,4 +1,5 @@
 {
+  inputs,
   outputs,
   pkgs,
   config,
@@ -18,7 +19,7 @@
     luaColors = builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: "vim.g['colors_${name}'] = ${builtins.toJSON value}") outputs.colors));
     luaColorsOpaque = builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: "vim.g['colors_${name}_opaque'] = ${builtins.toJSON value}") outputs.colors_opaque));
   in {
-    # package = pkgs.neovim-nightly;
+    package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
     enable = true;
     viAlias = true;
     vimAlias = true;
@@ -372,7 +373,35 @@
 
       {
         plugin = staline-nvim;
-        config = toLuaFile ./modules/nvim/plugins/staline.lua;
+        # config = toLuaFile ./modules/nvim/plugins/staline.lua;
+        config = toLua ''
+          require("staline").setup({
+            sections = {
+              left = { "mode" },
+              mid = {},
+              right = { "", "cwd", "branch" },
+            },
+            mode_colors = {
+              i = "${outputs.colors_opaque.green}",
+              n = "${outputs.colors_opaque.beige}",
+              c = "${outputs.colors_opaque.orange}",
+              v = "${outputs.colors_opaque.blue}",
+              V = "${outputs.colors_opaque.blue}",
+            },
+            mode_icons = {
+              n = " ",
+              i = " ",
+              c = " ",
+              v = " ",
+              V = " ",
+            },
+            defaults = {
+              true_colors = true,
+              branch_symbol = " ",
+            },
+          })
+
+        '';
       }
 
       {
@@ -407,7 +436,7 @@
           require("hlchunk").setup({
             chunk = {
               enable = true,
-              style = { vim.g.colors_yellow },
+              style = { "${outputs.colors_opaque.yellow}" },
               delay = 100,
             },
           })
@@ -432,17 +461,17 @@
         config = toLua ''
           require('tiny-devicons-auto-colors').setup({
               colors = {
-                  "${outputs.colors.orange_dim}",
-                  "${outputs.colors.beige}",
-                  "${outputs.colors.orange}",
-                  "${outputs.colors.blush}",
-                  "${outputs.colors.orange_bright}",
-                  "${outputs.colors.red}",
-                  "${outputs.colors.burgundy}",
-                  "${outputs.colors.cyan}",
-                  "${outputs.colors.green}",
-                  "${outputs.colors.vanilla_pear}",
-                  "${outputs.colors.yellow}",
+                  "${outputs.colors_opaque.orange_dim}",
+                  "${outputs.colors_opaque.beige}",
+                  "${outputs.colors_opaque.orange}",
+                  "${outputs.colors_opaque.blush}",
+                  "${outputs.colors_opaque.orange_bright}",
+                  "${outputs.colors_opaque.red}",
+                  "${outputs.colors_opaque.burgundy}",
+                  "${outputs.colors_opaque.cyan}",
+                  "${outputs.colors_opaque.green}",
+                  "${outputs.colors_opaque.vanilla_pear}",
+                  "${outputs.colors_opaque.yellow}",
               },
           })
         '';
@@ -458,9 +487,84 @@
       {
         plugin = pkgs.vimExtraPlugins.reactive-nvim;
         config = toLua ''
-          require('reactive').setup {
-            load = 'customCursor'
-          }
+          require('reactive').setup({
+            configs = {
+              name = "customCursorLine",
+              init = function()
+                  vim.opt.cursorline = true
+                end,
+              modes = {
+                no = {
+                  operators = {
+                    [{ "gu", "gU", "g~", "~" }] = {
+                      winhl = {
+                        CursorLine = { bg = "${outputs.colors_opaque.black}" },
+                        CursorLineNr = { fg = "#867462", bg = "${outputs.colors_opaque.black}" },
+                      },
+                    },
+                    c = {
+                      winhl = {
+                        CursorLine = { bg = "${outputs.colors_opaque.yellow}" },
+                        CursorLineNr = { fg = "${outputs.colors_opaque.yellow}", bg = "${outputs.colors_opaque.yellow}" },
+                      },
+                    },
+                    -- yank
+                    y = {
+                      winhl = {
+                        CursorLine = { bg = "${outputs.colors_opaque.burgundy}" },
+                        CursorLineNr = { fg = "${outputs.colors_opaque.burgundy}", bg = "${outputs.colors_opaque.burgundy}" },
+                      },
+                    },
+                  },
+                },
+                i = {
+                  winhl = {
+                    CursorLine = { bg = "${outputs.colors_opaque.green}" },
+                    CursorLineNr = { fg = "${outputs.colors_opaque.green}", bg = "${outputs.colors_opaque.green}" },
+                  },
+                  hl = {
+                    Cursor = { bg = "${outputs.colors_opaque.green}" },
+                  },
+                },
+                c = {
+                  winhl = {
+                    CursorLine = { bg = "${outputs.colors_opaque.orange}" },
+                    CursorLineNr = { fg = "${outputs.colors_opaque.orange}", bg = "${outputs.colors_opaque.orange}" },
+                  },
+                },
+                n = {
+                  winhl = {
+                    CursorLine = { bg = "${outputs.colors_opaque.beige}" },
+                    CursorLineNr = { fg = "${outputs.colors_opaque.beige}", bg = "${outputs.colors_opaque.beige}" },
+                  },
+                  hl = {
+                    Cursor = { bg = "${outputs.colors_opaque.beige}" },
+                  },
+                },
+                [{ "v", "V", "\x16" }] = {
+                  winhl = {
+                    CursorLineNr = { fg = "${outputs.colors_opaque.blue}" },
+                    Visual = { bg = "${outputs.colors_opaque.blue}" },
+                  },
+                  hl = {
+                    Cursor = { bg = "${outputs.colors_opaque.cyan}" },
+                  },
+                },
+                [{ "s", "S", "\x13" }] = {
+                  winhl = {
+                    CursorLineNr = { fg = "${outputs.colors_opaque.blue}" },
+                    Visual = { bg = "${outputs.colors_opaque.blue}" },
+                  },
+                },
+                R = {
+                  winhl = {
+                    CursorLine = { bg = "${outputs.colors_opaque.red}" },
+                    CursorLineNr = { fg = "${outputs.colors_opaque.red}", bg = "${outputs.colors_opaque.red}" },
+                  },
+                },
+              },
+            }
+          })
         '';
       }
 
@@ -507,16 +611,6 @@
 
       ${luaColors}
       ${luaColorsOpaque}
-      vim.g['darken_color'] = function(color, amount)
-          color = color:gsub("^#", "")
-          local r = tonumber(color:sub(1, 2), 16)
-          local g = tonumber(color:sub(3, 4), 16)
-          local b = tonumber(color:sub(5, 6), 16)
-          r = math.max(0, r - amount)
-          g = math.max(0, g - amount)
-          b = math.max(0, b - amount)
-          return string.format("#%02x%02x%02x", r, g, b)
-      end
       ${builtins.readFile ./modules/nvim/init.lua}
     '';
   };

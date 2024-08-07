@@ -22,8 +22,9 @@ in {
     (import ./kitty.nix {inherit outputs pkgs lib;})
     (import ./yazi.nix {inherit pkgs;})
     ./tofi.nix
-    (import ./nvim.nix {inherit config outputs pkgs;})
+    (import ./nvim.nix {inherit inputs outputs pkgs config;})
     (import ./modules/anti-sleep-neglector/service.nix {inherit config lib pkgs;})
+    (import ./modules/fastfetch/default.nix {inherit outputs;})
   ];
 
   services.anti-sleep-neglector = {
@@ -234,7 +235,9 @@ in {
       source = ./modules/oh-my-zsh/themes;
       recursive = true;
     };
-    ".config/neofetch".source = ./modules/neofetch;
+    ".config/fastfetch/logo.txt" = {
+      source = ./modules/fastfetch/logo.txt;
+    };
   };
 
   programs.home-manager.enable = true;

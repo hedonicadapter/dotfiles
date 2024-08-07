@@ -16,30 +16,23 @@ return {
 				-- change
 				c = {
 					winhl = {
-						CursorLine = { bg = vim.g.colors_yellow },
-						CursorLineNr = { fg = vim.g.colors_yellow, bg = vim.g.colors_yellow },
-					},
-				},
-				-- delete
-				d = {
-					winhl = {
-						CursorLine = { bg = "#34302C" },
-						CursorLineNr = { fg = "#34302C", bg = "#34302C" },
+						CursorLine = { bg = vim.g.colors_yellow_opaque },
+						CursorLineNr = { fg = vim.g.colors_yellow_opaque, bg = vim.g.colors_yellow_opaque },
 					},
 				},
 				-- yank
 				y = {
 					winhl = {
-						CursorLine = { bg = vim.g.colors_burgundy },
-						CursorLineNr = { fg = vim.g.colors_burgundy, bg = vim.g.colors_burgundy },
+						CursorLine = { bg = vim.g.colors_burgundy_opaque },
+						CursorLineNr = { fg = vim.g.colors_burgundy_opaque, bg = vim.g.colors_burgundy_opaque },
 					},
 				},
 			},
 		},
 		i = {
 			winhl = {
-				CursorLine = { bg = "#273C2C" },
-				CursorLineNr = { fg = "#273C2C", bg = "#273C2C" },
+				CursorLine = { bg = vim.g.colors_green_opaque },
+				CursorLineNr = { fg = vim.g.colors_green_opaque, bg = vim.g.colors_green_opaque },
 			},
 			hl = {
 				Cursor = { bg = vim.g.colors_green_opaque },
@@ -63,8 +56,8 @@ return {
 		-- visual
 		[{ "v", "V", "\x16" }] = {
 			winhl = {
-				CursorLineNr = { fg = "#2B2D42" },
-				Visual = { bg = "#2B2D42" },
+				CursorLineNr = { fg = vim.g.colors_blue_opaque },
+				Visual = { bg = vim.g.colors_blue_opaque },
 			},
 			hl = {
 				Cursor = { bg = vim.g.colors_cyan_opaque },
@@ -73,8 +66,8 @@ return {
 		-- select
 		[{ "s", "S", "\x13" }] = {
 			winhl = {
-				CursorLineNr = { fg = "#273142" },
-				Visual = { bg = "#422741" },
+				CursorLineNr = { fg = vim.g.colors_blue_opaque },
+				Visual = { bg = vim.g.colors_blue_opaque },
 			},
 		},
 		-- replace
