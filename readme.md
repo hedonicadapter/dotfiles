@@ -41,7 +41,7 @@ Misc
 + Aylur's GTK
 + Stylix
 + swww
-+ wlsunset
++ ~wlsunset~ hyprland blue light shaders
 + Spicetify
 
 # Todo

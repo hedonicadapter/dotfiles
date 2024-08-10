@@ -3,6 +3,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 with lib; let
@@ -124,7 +125,7 @@ in {
           Type = "oneshot";
           ExecStart = "${pkgs.writeShellScript "set_circadian_vars" ''
             #!/usr/bin/env bash
-            PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.jq pkgs.procps pkgs.curl pkgs.bc]}
+            PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.jq pkgs.procps pkgs.curlMinimal pkgs.bc]}
 
             set -x
             exec &> /tmp/anti-sleep-neglector.log
@@ -267,7 +268,7 @@ in {
 
         Timer = {
           OnCalendar = "daily";
-          OnBootSec = "5s";
+          OnBootSec = "1s";
           Persistent = true;
           Unit = "anti-sleep-neglector.service";
         };
@@ -282,6 +283,7 @@ in {
       systemd.user.services."anti-sleep-neglector-monitor" = {
         Unit = {
           Description = "Run anti sleep neglector automatic monitor brightness control";
+          Requires = ["anti-sleep-neglector.service"];
         };
 
         Service = {
@@ -344,21 +346,69 @@ in {
             if [ $current_minutes -lt $first_light_min ] || [ $current_minutes -ge $last_light_min ]; then
                 # Night time
                 desired_brightness=$((max_brightness * night_brightness / 100))
+
+                  ${
+              if config.services.anti-sleep-neglector-gamma.enable
+              then ''
+                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/night.glsl
+              ''
+              else ""
+            }
             elif [ $current_minutes -lt $dawn_min ]; then
                 # First light to dawn
                 desired_brightness=$(calculate_brightness $first_light_min $dawn_min $night_brightness $((night_brightness + 20)))
+
+                    ${
+              if config.services.anti-sleep-neglector-gamma.enable
+              then ''
+                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/first_light.glsl
+              ''
+              else ""
+            }
             elif [ $current_minutes -lt $sunrise_min ]; then
                 # Dawn to sunrise
                 desired_brightness=$(calculate_brightness $dawn_min $sunrise_min $((night_brightness + 20)) $((day_brightness - 20)))
+
+                    ${
+              if config.services.anti-sleep-neglector-gamma.enable
+              then ''
+                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/dawn.glsl
+              ''
+              else ""
+            }
             elif [ $current_minutes -lt $solar_noon_min ]; then
                 # Sunrise to solar noon
                 desired_brightness=$(calculate_brightness $sunrise_min $solar_noon_min $((day_brightness - 20)) $day_brightness)
+
+                    ${
+              if config.services.anti-sleep-neglector-gamma.enable
+              then ''
+                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunrise.glsl
+              ''
+              else ""
+            }
             elif [ $current_minutes -lt $sunset_min ]; then
                 # Solar noon to sunset
                 desired_brightness=$(calculate_brightness $solar_noon_min $sunset_min $day_brightness $((day_brightness - 20)))
+
+                    ${
+              if config.services.anti-sleep-neglector-gamma.enable
+              then ''
+                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/solar_noon.glsl
+              ''
+              else ""
+            }
             elif [ $current_minutes -lt $last_light_min ]; then
                 # Sunset to last light
                 desired_brightness=$(calculate_brightness $sunset_min $last_light_min $((day_brightness - 20)) $night_brightness)
+
+                    ${
+              if config.services.anti-sleep-neglector-gamma.enable
+              then ''
+                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunset.glsl
+              ''
+              else ""
+            }
             fi
 
             # Set the brightness
@@ -377,8 +427,8 @@ in {
         };
 
         Timer = {
-          OnBootSec = "1m";
-          OnUnitActiveSec = "1m";
+          OnBootSec = "1s";
+          OnUnitActiveSec = "1s";
           Unit = "anti-sleep-neglector-monitor.service";
         };
 
@@ -388,41 +438,37 @@ in {
       };
     })
 
-    (mkIf config.services.anti-sleep-neglector-gamma.enable {
-      systemd.user.services."anti-sleep-neglector-gamma" = {
-        Unit = {
-          Description = "Whether to enable anti-sleep-neglector starting wlsunset by your coordinates.";
-        };
-
-        Service = {
-          Type = "simple";
-          Restart = "on-failure";
-          RestartSec = "10s";
-          ExecStart = "${pkgs.writeShellScript "set_gamma" ''
-            #!/usr/bin/env bash
-            PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep pkgs.wlsunset]}
-
-            set -x
-            exec &> /tmp/anti-sleep-neglector-gamma.log
-
-            ${waitForWayland}
-
-            ${circadianVars}
-
-            wlsunset -l "''${LATITUDE:-${toString cfg.latitude}}" -L "''${LONGITUDE:-${toString cfg.longitude}}"
-          ''}";
-        };
-
-        Install = {
-          WantedBy = ["default.target"];
-        };
-      };
-    })
+    # (mkIf config.services.anti-sleep-neglector-gamma.enable {
+    #   systemd.user.services."anti-sleep-neglector-gamma" = {
+    #     Unit = {
+    #       Description = "anti-sleep-neglector setting wlsunset to your coordinates";
+    #     };
+    #     Service = {
+    #       Type = "simple";
+    #       Restart = "on-failure";
+    #       RestartSec = "5s";
+    #       ExecStart = "${pkgs.writeShellScript "set_gamma" ''
+    #         #!/usr/bin/env bash
+    #         PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep]}
+    #         set -x
+    #         exec &> /tmp/anti-sleep-neglector-gamma.log
+    #         ${waitForWayland}
+    #         ${circadianVars}
+    #
+    #         exec wlsunset -l "''${LATITUDE:-${toString cfg.latitude}}" -L "''${LONGITUDE:-${toString cfg.longitude}}"
+    #       ''}";
+    #     };
+    #     Install = {
+    #       WantedBy = ["default.target"];
+    #     };
+    #   };
+    # })
 
     (mkIf config.services.anti-sleep-neglector-wallpaper.enable {
       systemd.user.services."anti-sleep-neglector-wallpaper" = {
         Unit = {
           Description = "Whether to enable anti-sleep-neglector selecting wallpapers by brightness and circadian period.";
+          Requires = ["anti-sleep-neglector.service"];
         };
 
         Service = {
@@ -431,7 +477,21 @@ in {
           RestartSec = "30s";
           ExecStart = "${pkgs.writeShellScript "set-wallpaper" ''
             #!/usr/bin/env bash
-            PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep pkgs.findutils pkgs.bc pkgs.procps pkgs.imagemagick pkgs.swww]}
+            PATH=$PATH:${lib.makeBinPath [
+              pkgs.coreutils
+              pkgs.gnugrep
+              pkgs.findutils
+              pkgs.bc
+              pkgs.procps
+              (pkgs.imagemagick_light.override {
+                zlibSupport = true;
+                libjpegSupport = true;
+                libpngSupport = true;
+                libwebpSupport = true;
+                lcms2Support = true;
+              })
+              inputs.swww.packages.${pkgs.system}.swww
+            ]}
 
             set -x
             exec &> /tmp/anti-sleep-neglector-wallpaper.log
@@ -485,14 +545,19 @@ in {
                 for i in "''${!sorted_periods[@]}"; do
                     if [[ "''${sorted_periods[$i]}" == "$current_period" ]]; then
                         next_index=$(( (i + 1) % ''${#sorted_periods[@]} ))
-                        echo "''${sorted_periods[$next_index]}"
+                        next_period="''${sorted_periods[$next_index]}"
+                        echo "$(date -d "@''${periods[$next_period]}" +%T)"
                         return
                     fi
                 done
             }
 
+            declare -A brightness_cache
             get_brightness() {
-                magick "$1" -colorspace gray -format "%[fx:mean]" info:
+                if [[ -z "''${brightness_cache[$1]}" ]]; then
+                    brightness_cache[$1]=$(magick "$1" -colorspace gray -format "%[fx:mean]" info:)
+                fi
+                echo "''${brightness_cache[$1]}"
             }
 
             group_wallpapers() {
@@ -549,15 +614,12 @@ in {
                     swww img "$selected_wallpaper_trimmed" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144
                 fi
 
-                # Calculate time to next period
                 next_period=$(get_next_period "$current_period")
-                next_period_in_seconds=$(date -d "$next_period")
+                echo "Debug: next_period: $next_period"
+                current_date=$(date +%Y-%m-%d)
+                next_period_time=$(date -d "$next_period" +%T)
+                next_time=$(date -d "$current_date $next_period_time" +%s)
                 current_time=$(get_current_time_seconds)
-                # Get the start of the current day in Unix timestamp
-                start_of_day=$(date -d "today 00:00:00" +%s)
-
-                # Calculate next_time as Unix timestamp
-                next_time=$((start_of_day + next_period_in_seconds))
 
                 # If next_time is in the past, add 24 hours
                 if (( next_time <= current_time )); then
@@ -568,8 +630,7 @@ in {
 
                 # Safeguard against negative wait times
                 if (( wait_time < 0 )); then
-                    echo "Error: Negative wait time calculated. Using default of 60 seconds."
-                    wait_time= 30 * 60
+                    wait_time=1800  # 30 minutes
                 fi
 
                 echo "Debug: start_of_day = $start_of_day"

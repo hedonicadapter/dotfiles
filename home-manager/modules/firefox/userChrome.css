@@ -50,10 +50,10 @@ video {
 
 /* ❌ Hide Items ❌ */
 /* ❌ Tooltips ❌ */
-tooltip,
+/* tooltip, */
 
-          /* ❌ Empty Space */
-          spacer,.titlebar-spacer,
+/* ❌ Empty Space */
+spacer,.titlebar-spacer,
 
           /* ❌ Tab List */
           #alltabs-button,
@@ -65,7 +65,7 @@ tooltip,
           #PanelUI-menu-button,
 
           /* ❌ Titlebar Window Controls */
-          .titlebar-buttonbox-container,
+          /* .titlebar-buttonbox-container, */
 
           /* ❌ Navigation Buttons */
           #back-button, #forward-button, #reload-button, #stop-reload-button,
@@ -99,16 +99,16 @@ tooltip,
           .tab-icon-overlay:not([muted]):is([soundplaying]),
 
           /* ❌ Tab Close Btn */
-          .tab-close-button:not([selected]),
+          .tab-close-button
 
           /* ❌ Tab Pinned Text */
           .tab-label-container[pinned],
 
           /* ❌ New Tab logo */
-          .tabbrowser-tab[label="New Tab"] .tab-icon-image,
+          /* .tabbrowser-tab[label="New Tab"] .tab-icon-image, */
 
           /* ❌ Findbar Checkboxes */
-          .findbar-container > checkbox,
+          /* .findbar-container > checkbox, */
 
           /* ❌ Menu Icons */
           #contentAreaContextMenu > menuitem > .menu-iconic-left,
@@ -129,7 +129,7 @@ tooltip,
 
 /* 🔗 Status Panel [Url Popup] */
 #statuspanel #statuspanel-label {
-  font-weight: 600 !important;
+  font-weight: 500 !important;
   padding-inline: var(--6) !important;
   padding-block: 2px !important;
   border-radius: var(--6) !important;
@@ -570,8 +570,8 @@ tab:not([pinned]):hover .tab-close-button {
 }
 
 .tabbrowser-tab:not([pinned]) {
-  flex-basis: 10vw !important;
-  max-width: 10vw !important;
+  /* flex-basis: 10vw !important; */
+  max-width: 240px !important;
   width: auto !important;
   transition: all 0.25s !important;
   transition-timing-function: var(--easink) !important;

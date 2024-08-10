@@ -23,7 +23,7 @@ in {
     (import ./yazi.nix {inherit pkgs;})
     ./tofi.nix
     (import ./nvim.nix {inherit inputs outputs pkgs config;})
-    (import ./modules/anti-sleep-neglector/service.nix {inherit config lib pkgs;})
+    (import ./modules/anti-sleep-neglector/service.nix {inherit inputs config lib pkgs;})
     (import ./modules/fastfetch/default.nix {inherit outputs;})
   ];
 
@@ -198,19 +198,16 @@ in {
     package = inputs.hyprland.packages.${pkgs.system}.default;
     systemd.enable = true;
     systemd.variables = ["--all"];
-    extraConfig = "${builtins.readFile ./modules/hyprland/hyprland.conf}";
-    plugins = [
-      # inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
-      # inputs.hyprlock.packages.${pkgs.system}.default
-      inputs.split-monitor-workspaces.packages.${pkgs.system}.default
-    ];
+    extraConfig = "${builtins.readFile ./modules/hyprland/hyprlant.conf}";
+    plugins = [inputs.split-monitor-workspaces.packages.${pkgs.system}.default];
     xwayland.enable = true;
   };
 
   home.file = {
-    ".config/hypr/auto-start.sh".source = ./modules/hyprland/auto-start.sh;
-    ".config/hypr/auto-float-unfloat.sh".source = ./modules/hyprland/auto-float-unfloat.sh;
-    ".config/hypr/toggle-mic.sh".source = ./modules/hyprland/toggle-mic.sh;
+    ".config/hypr" = {
+      source = ./modules/hyprland;
+      recursive = true;
+    };
     ".config/nvim/lua" = {
       source = ./modules/nvim/lua;
       recursive = true;

@@ -19,7 +19,6 @@
 
   colorsRGB = builtins.mapAttrs (name: value: removeHash value) outputs.colors;
 in {
-  # You can import other NixOS modules here
   imports = [
     inputs.home-manager.nixosModules.home-manager
     inputs.stylix.nixosModules.stylix
@@ -91,7 +90,6 @@ in {
     dmidecode # for lenovo-legion
     lm_sensors # for lenovo-legion
     lenovo-legion
-    wev # event viewer
     atac
     zoxide
     ripgrep
@@ -110,18 +108,14 @@ in {
     betterdiscordctl
     acpi
 
-    inputs.swww.packages.${pkgs.system}.swww
     bc
-    wlsunset
     wl-clipboard
     cliphist
     wl-clip-persist
     teams-for-linux
     vscode
     obsidian
-
     font-manager
-
     fsearch
   ];
 
@@ -130,7 +124,6 @@ in {
     theme = spicePkgs.themes.text;
     colorScheme = "custom";
 
-    # color definition for custom color scheme. (rosepine)
     customColorScheme = {
       text = colorsRGB.blush;
       subtext = colorsRGB.white;
@@ -320,7 +313,7 @@ in {
   };
 
   boot = {
-    extraModulePackages = [config.boot.kernelPackages.lenovo-legion-module];
+    # extraModulePackages = [pkgs.linuxKernel.packages.linux_zen.phc-intel];
     kernelPackages = pkgs.linuxPackages_zen;
     # plymouth = {
     #   enable = true;
@@ -336,16 +329,16 @@ in {
     loader.grub.timeoutStyle = false;
     # consoleLogLevel = 0;
     # initrd.verbose = false;
-    # kernelParams = [
-    # "quiet"
-    # "splash"
-    # "boot.shell_on_fail"
-    # "i915.fastboot=1"
-    # "loglevel=3"
-    # "rd.systemd.show_status=false"
-    # "rd.udev.log_level=3"
-    # "udev.log_priority=3"
-    # ];
+    kernelParams = [
+      "i915.fastboot=1"
+      # "quiet"
+      # "splash"
+      # "boot.shell_on_fail"
+      # "loglevel=3"
+      # "rd.systemd.show_status=false"
+      # "rd.udev.log_level=3"
+      # "udev.log_priority=3"
+    ];
 
     loader = {
       efi.canTouchEfiVariables = true;
@@ -383,7 +376,7 @@ in {
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    # powerManagement.finegrained = true;
+    powerManagement.finegrained = true;
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
@@ -397,11 +390,11 @@ in {
     nvidiaSettings = true;
 
     prime = {
-      # offload = {
-      #   enable = true;
-      #   enableOffloadCmd = true;
-      # };
-      sync.enable = true;
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+      # sync.enable = true;
       intelBusId = "PCI:00:02:0";
       nvidiaBusId = "PCI:01:00:0";
     };
@@ -494,39 +487,103 @@ in {
   services.thermald.enable = true;
   services.fwupd.enable = true; # Firmware updator
   services.upower.enable = true; # battery
-
   services.system76-scheduler.enable = true;
 
-  services.undervolt = {
-    enable = true;
-    # useTimer = true;
-    verbose = true;
-    uncoreOffset = -75;
-    turbo = 0;
-    tempAc = 70;
-    tempBat = 65;
-    temp = 70;
-    p2.window = 0.002;
-    p2.limit = 90;
-    p1.window = 28;
-    p1.limit = 45;
-    gpuOffset = -50;
-    coreOffset = -50;
-    analogioOffset = -50;
-  };
+  # services.throttled = {
+  #   enable = true;
+  #   extraConfig = ''
+  #     [UNDERVOLT]
+  #     # CPU core voltage offset (mV)
+  #     CORE: -105
+  #     # Integrated GPU voltage offset (mV)
+  #     GPU: -85
+  #     # CPU cache voltage offset (mV)
+  #     CACHE: -105
+  #     # System Agent voltage offset (mV)
+  #     UNCORE: -85
+  #     # Analog I/O voltage offset (mV)
+  #     ANALOGIO: 0
+  #   '';
+  # };
+  # services.undervolt = {
+  #   enable = true;
+  #   # useTimer = true;
+  #   verbose = true;
+  #   uncoreOffset = -75;
+  #   turbo = 0;
+  #   tempAc = 70;
+  #   tempBat = 65;
+  #   temp = 70;
+  #   p2.window = 0.002;
+  #   p2.limit = 90;
+  #   p1.window = 28;
+  #   p1.limit = 45;
+  #   gpuOffset = -50;
+  #   coreOffset = -50;
+  #   analogioOffset = -50;
+  # };
+  # systemd.services.intel-undervolt = {
+  #   description = "Intel Undervolt";
+  #   after = ["multi-user.target"];
+  #   wantedBy = ["multi-user.target"];
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     ExecStart = "${pkgs.writeShellScript "undavolt" ''
+  #       #!/usr/bin/env bash
+  #       PATH=$PATH:${lib.makeBinPath [pkgs.undervolt]}
+  #       undervolt read & undervolt apply
+  #     ''}";
+  #   };
+  # };
   services.power-profiles-daemon.enable = false;
-  services.auto-cpufreq = {
+  # services.auto-cpufreq = {
+  #   enable = true;
+  #   settings = {
+  #     battery = {
+  #       governor = "powersave";
+  #       turbo = "never";
+  #       preference = "power";
+  #     };
+  #     charger = {
+  #       governor = "powersave";
+  #       turbo = "never";
+  #     };
+  #   };
+  # };
+  services.tlp = {
     enable = true;
     settings = {
-      battery = {
-        governor = "powersave";
-        turbo = "never";
-        preference = "power";
-      };
-      charger = {
-        governor = "performance";
-        turbo = "auto";
-      };
+      START_CHARGE_THRESH_BAT0 = 40;
+      STOP_CHARGE_THRESH_BAT0 = 80;
+
+      # tlp diskid
+      DISK_DEVICES = "nvme-CT1000P3SSD8_2321E6DAEA8C nvme-CT1000P3SSD8_2321E6DAEA8C_1 nvme-nvme.c0a9-323332314536444145413843-435431303030503353534438-00000001 ata-KINGSTON_SUV400S37240G_50026B776601F816";
+
+      # tlp-stat -g
+      INTEL_GPU_MIN_FREQ_ON_AC = 350000000;
+      INTEL_GPU_MIN_FREQ_ON_BAT = 350000000;
+      INTEL_GPU_MAX_FREQ_ON_AC = 1000000000;
+      INTEL_GPU_MAX_FREQ_ON_BAT = 800000000;
+      INTEL_GPU_BOOST_FREQ_ON_AC = 1100000000;
+      INTEL_GPU_BOOST_FREQ_ON_BAT = 900000000;
+
+      # tlp-stat -p
+      PLATFORM_PROFILE_ON_AC = "balanced";
+      PLATFORM_PROFILE_ON_BAT = "low-power";
+
+      # for intel-pstate
+      CPU_MIN_PERF_ON_AC = 0;
+      CPU_MAX_PERF_ON_AC = 80;
+      CPU_MIN_PERF_ON_BAT = 0;
+      CPU_MAX_PERF_ON_BAT = 70;
+
+      RUNTIME_PM_ON_AC = "auto";
+      RUNTIME_PM_ON_BAT = "auto";
+
+      CPU_SCALING_GOVERNOR_ON_AC = "powersave";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+      USB_AUTOSUSPEND = 0;
     };
   };
 
