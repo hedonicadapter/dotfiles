@@ -50,3 +50,6 @@ Misc
 - [ ] Change light/dark mode depending on time of day
 - [ ] Pick wallpaper based on hue and time of day
 - [ ] System-wide font selection
+
+# Credits
+ - (https://github.com/hyprwm/Hyprland/issues/1140#issuecomment-1335128437)[Blue light shaders from MahouShoujoMivutilde]

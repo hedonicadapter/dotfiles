@@ -29,6 +29,12 @@
         "media.ffmpeg.vaapi.enabled" = true;
         "media.rdd-vpx.enabled" = false;
         "media.navigator.mediadatadecoder_vpx_enabled" = true;
+        "findbar.modalHighlight" = true;
+        "browser.urlbar.autocomplete.enabled" = false;
+        "browser.search.context.loadInBackground" = true;
+        "browser.tabs.loadBookmarksInBackground" = true;
+        "layout.word_select.eat_space_to_next_word" = false;
+        "general.smoothScroll.mouseWheel.durationMaxMS" = 200;
       };
       search.engines = {
         "Nix Packages" = {

@@ -131,6 +131,8 @@ in {
       steamcmd
       bottles
       lutris
+      vlc
+      streamlink
 
       azure-functions-core-tools
       google-cloud-sdk
