@@ -7,7 +7,6 @@
   ...
 }:
 with lib; let
-  cfg = config.services.anti-sleep-neglector;
   circadianVars = ''
     function get_circadian_period() {
         if [ -z "$1" ]; then
@@ -283,7 +282,10 @@ in {
       systemd.user.services."anti-sleep-neglector-monitor" = {
         Unit = {
           Description = "Run anti sleep neglector automatic monitor brightness control";
-          Requires = ["anti-sleep-neglector.service"];
+          WantedBy = ["graphical-session.target"];
+          PartOf = ["graphical-session.target"];
+          After = ["graphical-session.target" "graphical-session-pre.target"];
+          Requires = ["anti-sleep-neglector.service" "graphical-session.target"];
         };
 
         Service = {
@@ -349,9 +351,7 @@ in {
 
                   ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then ''
-                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/night.glsl
-              ''
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/night.glsl"
               else ""
             }
             elif [ $current_minutes -lt $dawn_min ]; then
@@ -360,9 +360,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then ''
-                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/first_light.glsl
-              ''
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/first_light.glsl"
               else ""
             }
             elif [ $current_minutes -lt $sunrise_min ]; then
@@ -371,9 +369,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then ''
-                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/dawn.glsl
-              ''
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/dawn.glsl"
               else ""
             }
             elif [ $current_minutes -lt $solar_noon_min ]; then
@@ -382,9 +378,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then ''
-                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunrise.glsl
-              ''
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunrise.glsl"
               else ""
             }
             elif [ $current_minutes -lt $sunset_min ]; then
@@ -393,9 +387,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then ''
-                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/solar_noon.glsl
-              ''
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/solar_noon.glsl"
               else ""
             }
             elif [ $current_minutes -lt $last_light_min ]; then
@@ -404,9 +396,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then ''
-                hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunset.glsl
-              ''
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunset.glsl"
               else ""
             }
             fi
@@ -438,37 +428,14 @@ in {
       };
     })
 
-    # (mkIf config.services.anti-sleep-neglector-gamma.enable {
-    #   systemd.user.services."anti-sleep-neglector-gamma" = {
-    #     Unit = {
-    #       Description = "anti-sleep-neglector setting wlsunset to your coordinates";
-    #     };
-    #     Service = {
-    #       Type = "simple";
-    #       Restart = "on-failure";
-    #       RestartSec = "5s";
-    #       ExecStart = "${pkgs.writeShellScript "set_gamma" ''
-    #         #!/usr/bin/env bash
-    #         PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep]}
-    #         set -x
-    #         exec &> /tmp/anti-sleep-neglector-gamma.log
-    #         ${waitForWayland}
-    #         ${circadianVars}
-    #
-    #         exec wlsunset -l "''${LATITUDE:-${toString cfg.latitude}}" -L "''${LONGITUDE:-${toString cfg.longitude}}"
-    #       ''}";
-    #     };
-    #     Install = {
-    #       WantedBy = ["default.target"];
-    #     };
-    #   };
-    # })
-
     (mkIf config.services.anti-sleep-neglector-wallpaper.enable {
       systemd.user.services."anti-sleep-neglector-wallpaper" = {
         Unit = {
           Description = "Whether to enable anti-sleep-neglector selecting wallpapers by brightness and circadian period.";
-          Requires = ["anti-sleep-neglector.service"];
+          WantedBy = ["graphical-session.target"];
+          PartOf = ["graphical-session.target"];
+          After = ["graphical-session.target" "graphical-session-pre.target"];
+          Requires = ["anti-sleep-neglector.service" "graphical-session.target"];
         };
 
         Service = {
@@ -497,8 +464,6 @@ in {
             exec &> /tmp/anti-sleep-neglector-wallpaper.log
 
             export RUST_BACKTRACE=1
-
-            ${waitForWayland}
 
             if ! pgrep -x "swww-daemon" > /dev/null; then
               swww-daemon &

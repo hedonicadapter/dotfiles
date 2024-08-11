@@ -1,5 +1,10 @@
-{ config, ... }: {
-  stylix.targets.tofi.enable = false;
+{
+  config,
+  lib,
+  outputs,
+  ...
+}: {
+  # stylix.targets.tofi.enable = false;
   programs.tofi = {
     enable = true;
     settings = {
@@ -11,12 +16,10 @@
       padding-top = "35%";
       result-spacing = 18;
       num-results = 5;
-      font = "Public Sans";
-      font-size = 24;
-      background-color = "#000A";
-      prompt-color = "#bdae93";
-      selection-color = "#fbf1c7";
-      selection-match-color = "#a9b665";
+      font = lib.mkForce "Public Sans";
+      font-size = lib.mkForce 24;
+      background-color = lib.mkForce "#000A";
+      selection-match-color = lib.mkForce outputs.colors.blue;
 
       history-file = "${config.home.homeDirectory}/.config/tofi/history";
     };

@@ -21,7 +21,7 @@ in {
     # (import ./foot.nix {inherit outputs;})
     (import ./kitty.nix {inherit outputs pkgs lib;})
     (import ./yazi.nix {inherit pkgs;})
-    ./tofi.nix
+    (import ./tofi.nix {inherit config lib outputs;})
     (import ./nvim.nix {inherit inputs outputs pkgs config;})
     (import ./modules/anti-sleep-neglector/service.nix {inherit inputs config lib pkgs;})
     (import ./modules/fastfetch/default.nix {inherit outputs;})
@@ -128,11 +128,13 @@ in {
       transmission
       beeper
       hyprpicker
+      speedread
       steamcmd
       bottles
       lutris
-      vlc
+      mpv
       streamlink
+      twitch-tui
 
       azure-functions-core-tools
       google-cloud-sdk
@@ -237,6 +239,8 @@ in {
     ".config/fastfetch/logo.txt" = {
       source = ./modules/fastfetch/logo.txt;
     };
+
+    ".config/streamlink/config".source = ./modules/streamlink/config;
   };
 
   programs.home-manager.enable = true;

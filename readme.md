@@ -11,6 +11,7 @@ Performance and usability
 + Lots of neovim config
 + Automatic monitor brightness and tint depending on time of day (not for sleep neglectors)
 + Centralized color palette (change color table in flake -> change everywhere)
++ Speed read selection with keybind
 
 # Aesthetics
 Non-minimalist without being cluttered
