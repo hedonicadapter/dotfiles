@@ -69,7 +69,7 @@ async function setupHyprland() {
     sendBatch(
       App.windows.flatMap(({ name }) => [
         `layerrule unset, ${name}`,
-        `layerrule blur, ${name}`,
+        // `layerrule blur, ${name}`,
         `layerrule ignorealpha ${/* based on shadow color */ 0.29}, ${name}`,
       ]),
     );

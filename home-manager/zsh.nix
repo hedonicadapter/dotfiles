@@ -6,7 +6,6 @@
         sudo nixos-rebuild switch --flake /etc/nixos#default --show-trace --impure && tmux source ~/.config/tmux/tmux.conf
       '';
     };
-    initExtra = "fastfetch";
     autosuggestion = {enable = true;};
     syntaxHighlighting = {
       enable = true;

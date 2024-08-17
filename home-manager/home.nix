@@ -18,10 +18,11 @@ in {
     # ./tmux.nix
     # ./zellij.nix
     ./zsh.nix
+    ./bat.nix
     # (import ./foot.nix {inherit outputs;})
     (import ./kitty.nix {inherit outputs pkgs lib;})
     (import ./yazi.nix {inherit pkgs;})
-    (import ./tofi.nix {inherit config lib outputs;})
+    (import ./tofi.nix {inherit config lib outputs pkgs;})
     (import ./nvim.nix {inherit inputs outputs pkgs config;})
     (import ./modules/anti-sleep-neglector/service.nix {inherit inputs config lib pkgs;})
     (import ./modules/fastfetch/default.nix {inherit outputs;})
@@ -174,6 +175,7 @@ in {
       vscode-langservers-extracted
       yaml-language-server
       terraform-ls
+      terraform-lsp
       nil
       dockerfile-language-server-nodejs
       htmx-lsp
@@ -223,6 +225,9 @@ in {
     ".config/ags" = {
       source = ./modules/ags;
       recursive = true;
+    };
+    ".config/tofi/emoji-list.txt" = {
+      source = ./modules/emoji/list.txt;
     };
     ".config/ags/colors.json" = {
       text = builtins.toJSON outputs.colors;

@@ -80,10 +80,10 @@ HEADLINE_GIT_BRANCH_CMD='headline_git_branch'
 HEADLINE_GIT_STATUS_CMD='headline_git_status'
 
 # Info symbols (optional)
-HEADLINE_USER_PREFIX=' ' # consider " "
-HEADLINE_HOST_PREFIX=' ' # consider " "
-HEADLINE_PATH_PREFIX='' # consider " "
-HEADLINE_BRANCH_PREFIX=' ' # consider " "
+HEADLINE_USER_PREFIX='(~‾⌣‾)> '
+HEADLINE_HOST_PREFIX=''
+HEADLINE_PATH_PREFIX='󰝰 '
+HEADLINE_BRANCH_PREFIX=' '
 
 # Info joints
 HEADLINE_USER_BEGIN=''
@@ -104,7 +104,7 @@ HEADLINE_PAD_CHAR=' ' # repeated for space between <path> and <branch>
 HEADLINE_TRUNC_PREFIX='...' # shown where <path> or <branch> is truncated, consider "…"
 
 # Info styles
-HEADLINE_STYLE_DEFAULT='' # style applied to entire info line
+HEADLINE_STYLE_DEFAULT=$light_black # style applied to entire info line
 HEADLINE_STYLE_JOINT=$light_black
 HEADLINE_STYLE_USER=$bold$red
 HEADLINE_STYLE_HOST=$bold$yellow
@@ -121,7 +121,7 @@ HEADLINE_INFO_MODE=precmd # precmd|prompt (whether info line is in PROMPT or pri
 HEADLINE_LINE_MODE=on # on|auto|off (whether to print the line above the prompt)
 
 # Separator character
-HEADLINE_LINE_CHAR='჻' # repeated for line above information
+HEADLINE_LINE_CHAR='_' # repeated for line above information
 
 # Separator styles
 HEADLINE_STYLE_JOINT_LINE=$HEADLINE_STYLE_JOINT
@@ -151,7 +151,7 @@ HEADLINE_DO_GIT_STATUS_COUNTS=false # set "true" to show count of each status
 HEADLINE_DO_GIT_STATUS_OMIT_ONE=false # set "true" to omit the status number when it is 1
 
 # Prompt
-HEADLINE_PROMPT='%(#.#.%(!.!.$)) ' # consider "%#"
+HEADLINE_PROMPT='%(#.#.%(!.!.)) ' # consider "%#"
 HEADLINE_RPROMPT=''
 
 # Clock (prepends to RPROMPT)

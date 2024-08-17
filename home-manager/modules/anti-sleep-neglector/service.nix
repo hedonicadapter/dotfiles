@@ -46,16 +46,6 @@ with lib; let
     LATITUDE=$(systemctl --user show-environment | grep "^LATITUDE=" | cut -d= -f2-)
     LONGITUDE=$(systemctl --user show-environment | grep "^LONGITUDE=" | cut -d= -f2-)
   '';
-  waitForWayland = ''
-    timeout=180
-    counter=0
-    while [ -z "$WAYLAND_DISPLAY" ] && [ $counter -lt $timeout ]; do
-      sleep 1
-      counter=$((counter + 1))
-      # Try to get WAYLAND_DISPLAY from the user's session
-      export WAYLAND_DISPLAY=$(loginctl show-session $(loginctl | grep $(whoami) | cut -d' ' -f1) -p Type | grep -q wayland && echo wayland-0)
-    done
-  '';
 in {
   options = {
     services.anti-sleep-neglector = {
@@ -206,14 +196,13 @@ in {
                 echo "$time"
             }
 
-            loc_response=$(curl -s ipinfo.io/loc)
+            loc_response=$(curl -s http://ip-api.com/json/)
+            LATITUDE=$(echo $loc_response | jq -r '.lat')
+            LONGITUDE=$(echo $loc_response | jq -r '.lon')
 
-            LATITUDE=$(echo "$loc_response" | cut -d ',' -f1)
             systemctl --user set-environment LATITUDE="$LATITUDE"
-            echo "LATITUDE: $LATITUDE" >> /tmp/anti-sleep-neglector.log
-
-            LONGITUDE=$(echo "$loc_response" | cut -d ',' -f2)
             systemctl --user set-environment LONGITUDE="$LONGITUDE"
+            echo "LATITUDE: $LATITUDE" >> /tmp/anti-sleep-neglector.log
             echo "LONGITUDE: $LONGITUDE" >> /tmp/anti-sleep-neglector.log
 
             hemisphere=$(awk -v LATITUDE="$LATITUDE" 'BEGIN {print (LATITUDE >= 0 ? "north" : "south")}')
@@ -471,18 +460,15 @@ in {
 
             ${circadianVars}
 
-            # Function to get current time in seconds since midnight
             get_current_time_seconds() {
                 date +%s
             }
 
-            # Function to convert time string to seconds since midnight
             time_to_seconds() {
                 IFS=: read -r h m s <<< "$1"
                 echo $(( 10#$h * 3600 + 10#$m * 60 + 10#$s ))
             }
 
-            # Initialize daylight periods
             declare -A periods
             periods[FIRST_LIGHT]=$(time_to_seconds "$FIRST_LIGHT")
             periods[DAWN]=$(time_to_seconds "$DAWN")
@@ -491,7 +477,6 @@ in {
             periods[SUNSET]=$(time_to_seconds "$SUNSET")
             periods[LAST_LIGHT]=$(time_to_seconds "$LAST_LIGHT")
 
-            # Sort periods
             sorted_periods=($(for period in "''${!periods[@]}"; do echo "''${periods[$period]}:$period"; done | sort -n | cut -d: -f2))
 
             get_current_period() {
@@ -530,26 +515,23 @@ in {
                 local -a brightnesses
                 local min_brightness max_brightness
 
-                # First pass: get all brightnesses
                 for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
                     brightness=$(get_brightness "$wallpaper")
                     brightnesses+=("$brightness")
                 done
 
-                # Sort brightnesses and get min and max
                 IFS=$'\n' sorted=($(sort -g <<<"''${brightnesses[*]}"))
                 unset IFS
                 min_brightness=''${sorted[0]}
                 max_brightness=''${sorted[-1]}
 
-                # Calculate range
                 brightness_range=$(bc <<< "$max_brightness - $min_brightness")
 
                 # Define thresholds as percentages of the range
                 threshold1=$(bc <<< "$min_brightness + $brightness_range * 0.33")
                 threshold2=$(bc <<< "$min_brightness + $brightness_range * 0.66")
 
-                # Second pass: group wallpapers
+                # group wallpapers
                 for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
                     brightness=$(get_brightness "$wallpaper")
                     if (( $(echo "$brightness < $threshold1" | bc -l) )); then
@@ -593,7 +575,6 @@ in {
 
                 wait_time=$((next_time - current_time))
 
-                # Safeguard against negative wait times
                 if (( wait_time < 0 )); then
                     wait_time=1800  # 30 minutes
                 fi

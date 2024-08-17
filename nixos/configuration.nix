@@ -271,7 +271,7 @@ in {
     #   base0F = "#D57E85";
     # };
     targets = {
-      chromium.enable = true;
+      # chromium.enable = true;
       gnome.enable = true;
       gtk.enable = true;
     };

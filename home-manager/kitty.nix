@@ -18,7 +18,7 @@ in {
       map kitty_mod+H next_window
       map kitty_mod+L previous_window
 
-      modify_font cell_height 135%
+      modify_font cell_height 125%
       modify_font cell_width 95%
 
       modify_font underline_position 2px
@@ -26,7 +26,7 @@ in {
     '';
     settings = {
       scrollback_indicator_opacity = "0.7";
-      mouse_hide_wait = 0;
+      mouse_hide_wait = -1;
       show_hyperlink_targets = "yes";
       paste_actions = "quote-urls-at-prompt,filter,confirm-if-large";
       confirm_os_window_close = 0;

@@ -27,11 +27,11 @@ local on_attach = function(client, bufnr)
 		vim.lsp.buf.format()
 	end, {})
 
-	require "lsp_signature".on_attach({
+	require("lsp_signature").on_attach({
 		bind = true, -- This is mandatory, otherwise border config won't get registered.
-		      handler_opts = {
-			border = "rounded"
-		      }
+		handler_opts = {
+			border = "rounded",
+		},
 	}, bufnr)
 end
 
@@ -39,36 +39,34 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true
+	dynamicRegistration = false,
+	lineFoldingOnly = true,
 }
 
 local lspconfig = require("lspconfig")
 local coq = require("coq")
 
-vim.diagnostic.config(
-	{
-		underline = true,
-		update_in_insert = false,
-		virtual_text = {
-			spacing = 4,
-			source = "if_many",
-			prefix = "●",
+vim.diagnostic.config({
+	underline = true,
+	update_in_insert = false,
+	virtual_text = {
+		spacing = 4,
+		source = "if_many",
+		prefix = "●",
+	},
+	severity_sort = true,
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "",
+			[vim.diagnostic.severity.WARN] = "",
+			[vim.diagnostic.severity.HINT] = "󰧑",
+			[vim.diagnostic.severity.INFO] = "",
 		},
-		severity_sort = true,
-		signs = {
-			text = {
-				[vim.diagnostic.severity.ERROR] = ,
-				[vim.diagnostic.severity.WARN] = ,
-				[vim.diagnostic.severity.HINT] = 󰧑,
-				[vim.diagnostic.severity.INFO] = ,
-			},
-		},
-		inlay_hints = {
-			enabled = false,
-		},
-	}
-)
+	},
+	inlay_hints = {
+		enabled = false,
+	},
+})
 
 lspconfig.lua_ls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
@@ -177,10 +175,10 @@ vim.cmd([[ autocmd BufNewFile,BufRead *.bicep set filetype=bicep ]])
 -- 	    },
 -- 	}))
 require("roslyn").setup({
-    dotnet_cmd = "dotnet", -- this is the default
-    roslyn_version = "4.8.0-3.23475.7", -- this is the default
-    on_attach = on_attach,
-    capabilities = capabilities,
+	dotnet_cmd = "dotnet", -- this is the default
+	roslyn_version = "4.8.0-3.23475.7", -- this is the default
+	on_attach = on_attach,
+	capabilities = capabilities,
 })
 lspconfig.cssls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
@@ -207,93 +205,94 @@ lspconfig.jsonls.setup(coq.lsp_ensure_capabilities({
 	capabilities = capabilities,
 }))
 lspconfig.tsserver.setup(coq.lsp_ensure_capabilities({
-  capabilities = capabilities,
-  single_file_support = true,
-  root_dir = require('lspconfig.util').root_pattern('.git'),
-  completions = {
-    completeFunctionCalls = true,
-  },
-  settings = {
-    javascript = {
-      inlayHints = {
-        includeInlayEnumMemberValueHints = false,
-        includeInlayFunctionLikeReturnTypeHints = false,
-        includeInlayFunctionParameterTypeHints = false,
-        includeInlayParameterNameHints = "none", -- 'none' | 'literals' | 'all';
-        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-        includeInlayPropertyDeclarationTypeHints = false,
-        includeInlayVariableTypeHints = false,
-      },
-    },
+	capabilities = capabilities,
+	single_file_support = true,
+	root_dir = require("lspconfig.util").root_pattern(".git"),
+	completions = {
+		completeFunctionCalls = true,
+	},
+	settings = {
+		javascript = {
+			inlayHints = {
+				includeInlayEnumMemberValueHints = false,
+				includeInlayFunctionLikeReturnTypeHints = false,
+				includeInlayFunctionParameterTypeHints = false,
+				includeInlayParameterNameHints = "none", -- 'none' | 'literals' | 'all';
+				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+				includeInlayPropertyDeclarationTypeHints = false,
+				includeInlayVariableTypeHints = false,
+			},
+		},
 
-    typescript = {
-      inlayHints = {
-        includeInlayEnumMemberValueHints = false,
-        includeInlayFunctionLikeReturnTypeHints = false,
-        includeInlayFunctionParameterTypeHints = false,
-        includeInlayParameterNameHints = "none", -- 'none' | 'literals' | 'all';
-        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-        includeInlayPropertyDeclarationTypeHints = false,
-        includeInlayVariableTypeHints = false,
-      },
-    },
-  },
+		typescript = {
+			inlayHints = {
+				includeInlayEnumMemberValueHints = false,
+				includeInlayFunctionLikeReturnTypeHints = false,
+				includeInlayFunctionParameterTypeHints = false,
+				includeInlayParameterNameHints = "none", -- 'none' | 'literals' | 'all';
+				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+				includeInlayPropertyDeclarationTypeHints = false,
+				includeInlayVariableTypeHints = false,
+			},
+		},
+	},
 }))
 lspconfig.lua_ls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
 
 	on_init = function(client)
-	    local path = client.workspace_folders[1].name
-	    if vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc') then
-	      return
-	    end
+		local path = client.workspace_folders[1].name
+		if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
+			return
+		end
 
-	    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-	      runtime = {
-		-- Tell the language server which version of Lua you're using
-		-- (most likely LuaJIT in the case of Neovim)
-		version = 'LuaJIT'
-	      },
-	      -- Make the server aware of Neovim runtime files
-	      workspace = {
-		checkThirdParty = false,
-		library = {
-		  vim.env.VIMRUNTIME
-		  -- Depending on the usage, you might want to add additional paths here.
-		  -- "${3rd}/luv/library"
-		  -- "${3rd}/busted/library",
-		}
-		-- or pull in all of 'runtimepath'. NOTE: this is a lot slower
-		-- library = vim.api.nvim_get_runtime_file("", true)
-	      }
-	    })
+		client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+			runtime = {
+				-- Tell the language server which version of Lua you're using
+				-- (most likely LuaJIT in the case of Neovim)
+				version = "LuaJIT",
+			},
+			-- Make the server aware of Neovim runtime files
+			workspace = {
+				checkThirdParty = false,
+				library = {
+					vim.env.VIMRUNTIME,
+					-- Depending on the usage, you might want to add additional paths here.
+					-- "${3rd}/luv/library"
+					-- "${3rd}/busted/library",
+				},
+				-- or pull in all of 'runtimepath'. NOTE: this is a lot slower
+				-- library = vim.api.nvim_get_runtime_file("", true)
+			},
+		})
 	end,
 	settings = {
-		Lua = {}
-	}
+		Lua = {},
+	},
 }))
 lspconfig.sqls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
 }))
 lspconfig.tailwindcss.setup(coq.lsp_ensure_capabilities({
-  capabilities = capabilities,
-  completions = {
-    completeFunctionCalls = true,
-  },
-  root_dir = lspconfig.util.root_pattern(
-    "tailwind.config.js",
-    "tailwind.config.cjs",
-    "tailwind.config.ts",
-    "postcss.config.js",
-    "postcss.config.cjs",
-    "postcss.config.ts"
-  ),
+	capabilities = capabilities,
+	completions = {
+		completeFunctionCalls = true,
+	},
+	root_dir = lspconfig.util.root_pattern(
+		"tailwind.config.js",
+		"tailwind.config.cjs",
+		"tailwind.config.ts",
+		"postcss.config.js",
+		"postcss.config.cjs",
+		"postcss.config.ts"
+	),
 }))
-lspconfig.terraformls.setup(coq.lsp_ensure_capabilities({
+lspconfig.terraform_lsp.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
+	filetypes = { "tf", "terraform", "terraform-vars", "hcl" },
 }))
 lspconfig.vimls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
@@ -304,5 +303,4 @@ lspconfig.yamlls.setup(coq.lsp_ensure_capabilities({
 	capabilities = capabilities,
 }))
 
-require('ufo').setup()
-
+require("ufo").setup()
