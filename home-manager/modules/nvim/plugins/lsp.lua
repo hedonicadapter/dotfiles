@@ -302,5 +302,9 @@ lspconfig.yamlls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
 }))
+lspconfig.ansiblels.setup(coq.lsp_ensure_capabilities({
+	on_attach = on_attach,
+	capabilities = capabilities,
+}))
 
 require("ufo").setup()

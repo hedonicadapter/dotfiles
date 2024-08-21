@@ -50,8 +50,12 @@ Misc
 - [ ] Inject colors from flake into discord, and obsidian
 - [ ] Change light/dark mode depending on time of day
 - [ ] Pick wallpaper based on hue and time of day
+- [ ] Fix anti-sleep-neglector-wallpaper service not starting on boot
 - [ ] System-wide font selection
 - [ ] Add kaomoji to emoji picker
+- [ ] Make AGS workspace selector popup handle different monitors 
+- [ ] Brightness indicator on bar instead of a popup
+- [ ] Volume indicator with icons
 
 # Credits
  - (https://github.com/hyprwm/Hyprland/issues/1140#issuecomment-1335128437)[Blue light shaders from MahouShoujoMivutilde]

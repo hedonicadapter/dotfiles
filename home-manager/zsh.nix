@@ -1,4 +1,4 @@
-{
+{pkgs, ...}: {
   programs.zsh = {
     enable = true;
     shellAliases = {
@@ -16,6 +16,18 @@
       searchDownKey = "^n";
       searchUpKey = "^p";
     };
+    enableCompletion = true;
+    initExtra = ''
+      # Load fzf-tab after `compinit`, but before plugins that wrap widgets
+      source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.zsh
+    '';
+    plugins = with pkgs; [
+      {
+        name = "fzf-tab";
+        src = zsh-fzf-tab;
+        file = "fzf-tab.zsh";
+      }
+    ];
 
     oh-my-zsh = {
       enable = true;

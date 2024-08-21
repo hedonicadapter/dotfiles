@@ -1,5 +1,4 @@
 import { opt, mkOptions } from "lib/option";
-import { distro } from "lib/variables";
 import { icon } from "lib/utils";
 import icons from "lib/icons";
 

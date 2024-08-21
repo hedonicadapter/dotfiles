@@ -4,10 +4,13 @@
   pkgs,
   lib,
   config,
+  osConfig,
   ...
-}: let
-  unstable = import <nixos-unstable> {};
-in {
+}:
+# let
+#   unstable = import <nixos-unstable> {};
+# in
+{
   # You can import other home-manager modules here
   imports = [
     inputs.ags.homeManagerModules.default
@@ -17,7 +20,7 @@ in {
     ./firefox.nix
     # ./tmux.nix
     # ./zellij.nix
-    ./zsh.nix
+    (import ./zsh.nix {inherit pkgs;})
     ./bat.nix
     # (import ./foot.nix {inherit outputs;})
     (import ./kitty.nix {inherit outputs pkgs lib;})
@@ -143,6 +146,7 @@ in {
       docker-compose
       azure-cli
 
+      alsa-utils
       grim
       slurp
       jq
@@ -151,6 +155,7 @@ in {
       libGLU
       lazydocker
       socat # for listening to unix socket events
+      dotool # for speed-reader.sh
     ]
     # Languages
     ++ [
@@ -164,6 +169,7 @@ in {
       (with dotnetCorePackages; combinePackages [sdk_6_0 sdk_7_0 sdk_8_0])
       cargo
       rustc
+      ansible
     ]
     # Language servers
     ++ [
@@ -181,6 +187,7 @@ in {
       htmx-lsp
       sqls
       vim-language-server
+      ansible-language-server
     ]
     # Formatters
     ++ [
@@ -214,6 +221,21 @@ in {
       source = ./modules/hyprland;
       recursive = true;
     };
+    ".config/hypr/speed-read.sh".source = "${pkgs.writeShellScript "speed-reader" ''
+      #!/usr/bin/env bash
+
+      (
+        for i in {1..4}; do
+          sleep "0.$i"
+          echo key rightbrace | DOTOOL_XKB_LAYOUT=${osConfig.services.xserver.xkb.layout} dotool
+          echo key rightbrace | DOTOOL_XKB_LAYOUT=${osConfig.services.xserver.xkb.layout} dotool
+        done
+      ) &
+
+      wl-paste --no-newline --primary | speedread -w 150
+      read -p 'Press [Enter] to close...'
+    ''}";
+
     ".config/nvim/lua" = {
       source = ./modules/nvim/lua;
       recursive = true;

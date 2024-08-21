@@ -1,7 +1,9 @@
 import PanelButton from "../PanelButton";
 import icons from "lib/icons";
-import asusctl from "service/asusctl";
+import { zenable } from "lib/variables";
 
+import asusctl from "service/asusctl";
+import brightness from "service/brightness";
 const notifications = await Service.import("notifications");
 const bluetooth = await Service.import("bluetooth");
 const audio = await Service.import("audio");
@@ -24,6 +26,14 @@ const ProfileIndicator = () => {
   });
 };
 
+const ZenIndicator = () =>
+  Widget.Label({
+    label: zenable.bind().as((bool) => {
+      console.log("ZenIndicator update:", bool);
+      return bool ? "val-high" : "val-low";
+    }),
+  });
+
 const ModeIndicator = () => {
   if (!asusctl.available) {
     return Widget.Icon({
@@ -44,24 +54,17 @@ const ModeIndicator = () => {
 const MicrophoneIndicator = () =>
   Widget.Icon({
     class_name: "sys-icon",
-  })
-    .hook(
-      audio,
-      (self) =>
-        (self.visible =
-          audio.recorders.length > 0 || audio.microphone.is_muted || false),
-    )
-    .hook(audio.microphone, (self) => {
-      const vol = audio.microphone.is_muted ? 0 : audio.microphone.volume;
-      const { muted, low, medium, high } = icons.audio.mic;
-      const cons = [
-        [67, high],
-        [34, medium],
-        [1, low],
-        [0, muted],
-      ] as const;
-      self.icon = cons.find(([n]) => n <= vol * 100)?.[1] || "";
-    });
+  }).hook(audio.microphone, (self) => {
+    const vol = audio.microphone.is_muted ? 0 : audio.microphone.volume;
+    const { muted, low, medium, high } = icons.audio.mic;
+    const cons = [
+      [67, high],
+      [34, medium],
+      [1, low],
+      [0, muted],
+    ] as const;
+    self.icon = cons.find(([n]) => n <= vol * 100)?.[1] || "";
+  });
 
 const DNDIndicator = () =>
   Widget.Icon({
@@ -96,9 +99,19 @@ const NetworkIndicator = () =>
     self.visible = !!icon;
   });
 
-const AudioIndicator = () =>
+const VolumeIndicator = () =>
   Widget.Icon({
-    class_name: "sys-icon",
+    class_name: Utils.merge(
+      [audio["speaker"].bind("volume"), audio["speaker"].bind("is_muted")],
+      (vol, m) => {
+        let className = m ? "sys-icon muted " : "sys-icon ";
+        if (vol < 0.34) className += "val-low";
+        else if (vol < 0.67) className += "val-mid";
+        else className += "val-high";
+
+        return className;
+      },
+    ),
   }).hook(audio.speaker, (self) => {
     const vol = audio.speaker.is_muted ? 0 : audio.speaker.volume;
     const { muted, low, medium, high, overamplified } = icons.audio.volume;
@@ -112,27 +125,24 @@ const AudioIndicator = () =>
     self.icon = cons.find(([n]) => n <= vol * 100)?.[1] || "";
   });
 
-const VolumeIndicator = () =>
+const BrightnessIndicator = () =>
   Widget.CircularProgress({
-    class_name: Utils.merge(
-      [audio["speaker"].bind("volume"), audio["speaker"].bind("is_muted")],
-      (vol, m) => {
-        let className = m ? "muted " : " ";
-        if (vol < 0.34) className += "val-low";
-        else if (vol < 0.67) className += "val-mid";
-        else className += "val-high";
+    class_name: brightness.bind().as((screen, m) => {
+      let className = "sys-icon ";
+      if (screen < 0.34) className += "val-low";
+      else if (screen < 0.67) className += "val-mid";
+      else className += "val-high";
 
-        return className;
-      },
-    ),
+      return className;
+    }),
+
     css:
       "min-width: 9px;" + // its size is min(min-height, min-width)
       "min-height: 9px;" +
-      "font-size: 1.5px;", // to set its thickness set font-size on it
+      "font-size: 1px;", // to set its thickness set font-size on it
     rounded: false,
     inverted: false,
-    // startAt: 0.75,
-    value: audio["speaker"].bind("volume"),
+    value: brightness.bind("screen"),
   });
 
 export default () =>
@@ -146,11 +156,12 @@ export default () =>
         spacing: 4,
         children: [
           // ProfileIndicator(),
+          ZenIndicator(),
           ModeIndicator(),
           DNDIndicator(),
           BluetoothIndicator(),
           NetworkIndicator(),
-          // AudioIndicator(),
+          BrightnessIndicator(),
           VolumeIndicator(),
           MicrophoneIndicator(),
         ],

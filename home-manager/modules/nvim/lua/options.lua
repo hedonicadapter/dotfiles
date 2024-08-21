@@ -31,6 +31,8 @@ opt.fillchars:append(",eob: ")
 if g.neovide then
 	opt.linespace = 10
 
+	opt.guifont = "CartographCF Nerd Font:#h-none"
+
 	g.neovide_padding_top = 10
 	g.neovide_padding_bottom = 0
 	g.neovide_padding_right = 20

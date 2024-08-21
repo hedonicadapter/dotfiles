@@ -125,8 +125,7 @@
       {
         plugin = sniprun;
         config = toLua ''
-          require'sniprun'.setup({
-          })
+          require'sniprun'.setup({})
         '';
       }
 
@@ -172,7 +171,7 @@
           require('flash').setup({
               prompt = {
                   enabled = true,
-                  prefix = { { "   FLASH", "FlashPromptIcon" } },
+                  prefix = { { "   ", "FlashPromptIcon" } },
               },
               label = {
                 uppercase = false,
@@ -202,7 +201,7 @@
         config = toLua ''
           require('CopilotChat').setup({
             show_help = false,
-            separator = "჻჻჻",
+            separator = "_",
             context = "buffers",
             answer_header = "## (~‾⌣‾)> "
           })
@@ -252,8 +251,6 @@
           })
         '';
       }
-
-      ultimate-autopair-nvim
 
       diffview-nvim
 
@@ -446,13 +443,6 @@
       {
         plugin = twilight-nvim;
         config = toLuaFile ./modules/nvim/plugins/twilight.lua;
-      }
-
-      {
-        plugin = pkgs.awesomeNeovimPlugins.mellifluous-nvim;
-        config = toLua ''
-          require("mellifluous").setup({color_set = "alduin"})
-        '';
       }
 
       nvim-web-devicons

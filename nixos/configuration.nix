@@ -67,6 +67,7 @@ in {
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
+  environment.pathsToLink = ["/share/zsh"];
   environment.systemPackages = with pkgs; [
     bibata-cursors-translucent
     fluent-icon-theme
@@ -472,17 +473,20 @@ in {
   # bluetooth
   hardware.bluetooth.enable = true;
   # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["nvidia"];
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
   # Configure keymap in X11
   services.xserver = {
+    # Enable X11 windowing system
+    enable = true;
+
     xkb.layout = "se";
     xkb.variant = "";
+
+    videoDrivers = ["nvidia"];
+
+    displayManager.gdm.enable = true; # GNOME Desktop Environment
+    desktopManager.gnome.enable = true;
   };
+  # services.libinput.mouse.accelProfile = "adaptive"; configured in hyprland.conf
   services.printing.enable = true;
   services.thermald.enable = true;
   services.fwupd.enable = true; # Firmware updator

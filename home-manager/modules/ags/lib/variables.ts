@@ -1,12 +1,14 @@
 import GLib from "gi://GLib";
-import options from "options";
-//
-const intval = options.system.fetchInterval.value;
-// const tempPath = options.system.temperature.value;
+// import options from "options";
+
+// const intval = options.system.fetchInterval.value;
 
 export const clock = Variable(GLib.DateTime.new_now_local(), {
   poll: [1000, () => GLib.DateTime.new_now_local()],
 });
+
+export const zenable = Variable(false);
+export const toggleZenable = () => zenable.setValue(!zenable.value);
 
 export const uptime = Variable(0, {
   poll: [
@@ -16,30 +18,9 @@ export const uptime = Variable(0, {
   ],
 });
 
-export const distro = {
-  id: GLib.get_os_info("ID"),
-  logo: GLib.get_os_info("LOGO"),
-};
-
-// const divide = ([total, free]: string[]) => Number.parseInt(free) / Number.parseInt(total)
-//
-// export const cpu = Variable(0, {
-//     poll: [intval, "top -b -n 1", out => divide(["100", out.split("\n")
-//         .find(line => line.includes("Cpu(s)"))
-//         ?.split(/\s+/)[1]
-//         .replace(",", ".") || "0"])],
-// })
-//
-// export const ram = Variable(0, {
-//     poll: [intval, "free", out => divide(out.split("\n")
-//         .find(line => line.includes("Mem:"))
-//         ?.split(/\s+/)
-//         .splice(1, 2) || ["1", "1"])],
-// })
-//
 export const temperature = Variable(0, {
   poll: [
-    intval,
+    1000,
     `bash -c '
       max_temp=0
       for zone in /sys/class/thermal/thermal_zone*/temp; do
