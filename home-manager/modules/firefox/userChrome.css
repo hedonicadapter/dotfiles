@@ -343,119 +343,6 @@ tab:not([pinned]):hover .tab-close-button {
   height: var(--tab-min-height);
 }
 
-/* 🔗 URLBAR Inbut https: */
-.urlbar-input {
-  transition: transform 0.15s !important;
-  transition-timing-function: var(--easink) !important;
-  transform: none !important;
-  font-size: 1rem !important;
-  color: lightgrey !important;
-  padding-inline: 0px !important;
-}
-
-/* 📐 URLBAR in Tab */
-/* Source: https://github.com/MrOtherGuy/firefox-csshacks/.../selected_tab_as_urlbar.css */
-
-#main-window > body > box {
-  position: relative;
-  z-index: 1;
-}
-.urlbar-input-box {
-  z-index: -1 !important;
-}
-#alltabs-button,
-#unified-extensions-button,
-#PanelUI-button,
-#nav-bar-overflow-button {
-  z-index: 2;
-  position: relative;
-}
-.urlbar-input-container > :not(.urlbar-input-box) {
-  opacity: 0;
-}
-#urlbar-background {
-  background: none !important;
-}
-#urlbar-container {
-  position: static !important;
-}
-.urlbarView {
-  background: var(--item);
-  z-index: 1;
-  padding: var(--6);
-  border-radius: var(--6);
-  left: 50vw;
-  width: max(50vw, 320px) !important;
-  transform: translateX(-50%) !important;
-}
-#nav-bar {
-  height: var(--tab-min-height) !important;
-  background-color: transparent !important;
-}
-
-/* 📐 Click Tab to Focus Urlbar */
-/* Source: https://github.com/MrOtherGuy/firefox-csshacks/.../click_selected_tab_to_focus_urlbar.css*/
-
-/* Make selected tab unclickable => click > capture box */
-.tabbrowser-tab:not([pinned])[selected] {
-  pointer-events: none;
-}
-
-/* Retore pointer-events for usability */
-#TabsToolbar toolbarbutton,
-#TabsToolbar toolbaritem,
-.tabbrowser-tab,
-.tab-close-button,
-.tab-icon-stack {
-  pointer-events: auto;
-}
-
-/* Capture box: click to focus urlbar */
-:root:not([customizing]) .urlbar-input-container::before {
-  position: fixed;
-  display: flex;
-  flex: 1;
-  height: var(--tab-min-height);
-  width: 100%;
-  top: var(--8);
-  bottom: var(--8);
-  content: "";
-}
-.urlbar-input-container:focus-within::before {
-  display: none !important;
-}
-
-/* Tabs over the capture box */
-:root:not([customizing]) #TabsToolbar-customization-target {
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Tab Focus => Url Select */
-#navigator-toolbox:focus-within
-  .tabbrowser-tab:not([pinned])[selected]
-  .tab-content {
-  opacity: 0;
-}
-
-/* Tab URL */
-#navigator-toolbox:focus-within .tab-background:not([pinned])[selected] {
-  background-position: var(--6) !important;
-  background-color: var(--main) !important;
-  background-size: auto !important;
-  background-image: -moz-element(.urlbar-input) !important;
-}
-
-/* 🪟 Drag Window from urlbar */
-.urlbar-input-box,
-.urlbar-input,
-#urlbar-scheme,
-#urlbar-container {
-  -moz-window-dragging: drag;
-  cursor: default;
-}
-
 /* ⬇️ Downloads Indicator */
 #downloads-button {
   position: fixed !important;
@@ -586,4 +473,98 @@ tab:not([pinned]):hover .tab-close-button {
 }
 .tabbrowser-tab[selected] .tab-background {
   outline-color: #ffffff52 !important;
+}
+
+/* 📐 URLBAR in Tab */
+/* Source: https://github.com/MrOtherGuy/firefox-csshacks/.../selected_tab_as_urlbar.css */
+
+#main-window > body > box {
+  position: relative;
+  z-index: 1;
+}
+.urlbar-input-box {
+  z-index: -1 !important;
+}
+#alltabs-button,
+#unified-extensions-button,
+#PanelUI-button,
+#nav-bar-overflow-button {
+  z-index: 2;
+  position: relative;
+}
+.urlbar-input-container > :not(.urlbar-input-box) {
+  opacity: 0;
+}
+#urlbar-background {
+  background: none !important;
+}
+#urlbar-container {
+  position: static !important;
+}
+.urlbarView {
+  background: var(--item);
+  z-index: 1;
+  padding: var(--6);
+  border-radius: var(--6);
+  left: 50vw;
+  width: max(50vw, 320px) !important;
+  transform: translateX(-50%) !important;
+}
+#nav-bar {
+  height: var(--tab-min-height) !important;
+  background-color: transparent !important;
+}
+
+/* 📐 Click Tab to Focus Urlbar */
+/* Source: https://github.com/MrOtherGuy/firefox-csshacks/.../click_selected_tab_to_focus_urlbar.css*/
+
+/* Make selected tab unclickable => click > capture box */
+.tabbrowser-tab:not([pinned])[selected] {
+  pointer-events: none;
+}
+
+/* Retore pointer-events for usability */
+#TabsToolbar toolbarbutton,
+#TabsToolbar toolbaritem,
+.tabbrowser-tab,
+.tab-close-button,
+.tab-icon-stack {
+  pointer-events: auto;
+}
+
+/* Capture box: click to focus urlbar */
+:root:not([customizing]) .urlbar-input-container::before {
+  position: fixed;
+  display: flex;
+  flex: 1;
+  height: var(--tab-min-height);
+  width: 100%;
+  top: var(--8);
+  bottom: var(--8);
+  content: "";
+}
+.urlbar-input-container:focus-within::before {
+  display: none !important;
+}
+
+/* Tabs over the capture box */
+:root:not([customizing]) #TabsToolbar-customization-target {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Tab Focus => Url Select */
+#navigator-toolbox:focus-within
+  .tabbrowser-tab:not([pinned])[selected]
+  .tab-content {
+  opacity: 0;
+}
+
+/* Tab URL */
+#navigator-toolbox:focus-within .tab-background:not([pinned])[selected] {
+  background-position: var(--6) !important;
+  background-color: var(--main) !important;
+  background-size: auto !important;
+  background-image: -moz-element(#urlbar-input) !important;
 }

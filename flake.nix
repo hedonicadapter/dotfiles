@@ -37,7 +37,10 @@
 
     nixneovimplugins = {url = "github:jooooscha/nixpkgs-vim-extra-plugins";};
 
-    stylix = {url = "github:danth/stylix";};
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     swww = {url = "github:LGFae/swww";};
 

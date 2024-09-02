@@ -26,6 +26,7 @@ in {
     spicetify-nix.nixosModules.default
     inputs.xremap-flake.nixosModules.default
 
+    # (import ./minikube.nix {inherit pkgs;})
     ./maintenance.nix
     ./hardware-configuration.nix
   ];
@@ -65,6 +66,10 @@ in {
     # Opinionated: make flake registry and nix path match flake inputs
     registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+  };
+
+  services.k3s = {
+    enable = true;
   };
 
   environment.pathsToLink = ["/share/zsh"];

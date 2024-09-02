@@ -290,6 +290,7 @@
           p.tree-sitter-vimdoc
           p.tree-sitter-luadoc
           p.tree-sitter-markdown
+          p.tree-sitter-markdown-inline
           p.tree-sitter-bash
           p.tree-sitter-lua
           p.tree-sitter-json
@@ -593,6 +594,13 @@
           vim.keymap.set("v", "g<C-x>", function()
               require("dial.map").manipulate("decrement", "gvisual")
           end)
+        '';
+      }
+
+      {
+        plugin = pkgs.awesomeNeovimPlugins.render-markdown-nvim;
+        config = toLua ''
+          require('render-markdown').setup({})
         '';
       }
     ];

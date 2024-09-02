@@ -20,6 +20,17 @@
     initExtra = ''
       # Load fzf-tab after `compinit`, but before plugins that wrap widgets
       source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.zsh
+      function git() {
+          if [[ "$1" == "clone" ]]; then
+              command git "$@"
+              local repo_name="''${@: -1}"
+              repo_name="''${repo_name##*/}"
+              repo_name="''${repo_name%.git}"
+              cd "$repo_name"
+          else
+              command git "$@"
+          fi
+      }
     '';
     plugins = with pkgs; [
       {

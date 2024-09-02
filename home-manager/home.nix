@@ -63,7 +63,6 @@
     config = {
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
-          "beeper"
           "terraform"
           "steamcmd"
           "steam-original"
@@ -130,7 +129,6 @@
       webcord
       neovide
       transmission
-      beeper
       hyprpicker
       speedread
       steamcmd
@@ -188,6 +186,10 @@
       sqls
       vim-language-server
       ansible-language-server
+    ]
+    # Linters
+    ++ [
+      ansible-lint
     ]
     # Formatters
     ++ [
