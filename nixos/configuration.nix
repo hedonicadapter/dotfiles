@@ -166,6 +166,7 @@ in {
     enable = true;
     xwayland.enable = true;
     package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   };
 
   programs.zsh.enable = true;
@@ -185,15 +186,15 @@ in {
     TERM = "kitty";
   };
 
-  xdg.portal = {
-    enable = true;
-    xdgOpenUsePortal = true;
-    config = {
-      common.default = ["gtk"];
-      hyprland.default = ["gtk" "hyprland"];
-    };
-  };
-
+  # xdg.portal = {
+  #   enable = true;
+  #   xdgOpenUsePortal = true;
+  #   extraPortals = [inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland];
+  #   config = {
+  #     common.default = ["gtk" "hyprland"];
+  #     hyprland.default = ["hyprland" "gtk"];
+  #   };
+  # };
   stylix = {
     enable = true;
     image = pkgs.runCommand "dimmed-background.png" {} ''
@@ -451,7 +452,7 @@ in {
     hedonicadapter = {
       isNormalUser = true;
       openssh.authorizedKeys.keys = [];
-      extraGroups = ["networkmanager" "wheel" "docker"];
+      extraGroups = ["networkmanager" "wheel" "docker" "dialout"];
     };
   };
 

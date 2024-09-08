@@ -147,6 +147,22 @@
       # vanilla_pear = "#dfdfaf";
     };
 
+    transparentize = color: alpha: let
+      hexToRgb = hex: {
+        r = builtins.substring 1 2 hex;
+        g = builtins.substring 3 2 hex;
+        b = builtins.substring 5 2 hex;
+      };
+      rgbToHex = rgb: "#" + rgb.r + rgb.g + rgb.b;
+      addAlpha = rgb: alpha: let
+        alphaInt = builtins.floor (alpha * 255);
+        alphaHex = builtins.substring 0 2 (builtins.toString (100 + alphaInt));
+        rgbString = rgbToHex rgb;
+      in
+        rgbString + alphaHex;
+    in
+      addAlpha (hexToRgb color) alpha;
+
     isOpaque = color:
       builtins.stringLength color == 7 && builtins.substring 0 1 color == "#";
 
@@ -180,6 +196,7 @@
     homeManagerModules = import ./modules/home-manager;
 
     colors = colors;
+    transparentize = transparentize;
     colors_opaque = colors_opaque;
     darkenColor = darkenColor;
     cssColorVariables = cssColorVariables;

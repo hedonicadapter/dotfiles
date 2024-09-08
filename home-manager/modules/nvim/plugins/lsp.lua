@@ -95,6 +95,7 @@ lspconfig.azure_pipelines_ls.setup(coq.lsp_ensure_capabilities({
 	on_attach = on_attach,
 	capabilities = capabilities,
 
+	filetypes = { "yaml", "yml" },
 	settings = {
 		yaml = {
 			schemas = {

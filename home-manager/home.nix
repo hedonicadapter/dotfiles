@@ -63,6 +63,7 @@
     config = {
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
+          "google-chrome"
           "terraform"
           "steamcmd"
           "steam-original"
@@ -125,6 +126,7 @@
 
   home.packages = with pkgs;
     [
+      google-chrome
       gimp-with-plugins
       webcord
       neovide
@@ -144,6 +146,7 @@
       docker-compose
       azure-cli
 
+      wl-kbptr
       alsa-utils
       grim
       slurp
@@ -237,6 +240,7 @@
       wl-paste --no-newline --primary | speedread -w 150
       read -p 'Press [Enter] to close...'
     ''}";
+    ".config/wl-kbptr/config".text = import ./modules/wl-kbptr/config.nix {inherit outputs;};
 
     ".config/nvim/lua" = {
       source = ./modules/nvim/lua;

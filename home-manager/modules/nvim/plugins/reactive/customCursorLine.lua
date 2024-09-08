@@ -46,11 +46,11 @@ return {
 		},
 		n = {
 			winhl = {
-				CursorLine = { bg = vim.g.colors_beige_opaque },
-				CursorLineNr = { fg = vim.g.colors_beige_opaque, bg = vim.g.colors_beige_opaque },
+				CursorLine = { bg = vim.g.colors_white_dim_opaque },
+				CursorLineNr = { fg = vim.g.colors_white_dim_opaque, bg = vim.g.colors_white_dim_opaque },
 			},
 			hl = {
-				Cursor = { bg = vim.g.colors_beige_opaque },
+				Cursor = { bg = vim.g.colors_white_dim_opaque },
 			},
 		},
 		-- visual
