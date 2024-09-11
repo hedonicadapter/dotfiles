@@ -6,11 +6,10 @@
   config,
   osConfig,
   ...
-}:
-# let
-#   unstable = import <nixos-unstable> {};
-# in
-{
+}: let
+  #   unstable = import <nixos-unstable> {};
+  discord_css = import ./modules/discord/custom.css.nix {inherit outputs;};
+in {
   # You can import other home-manager modules here
   imports = [
     inputs.ags.homeManagerModules.default
@@ -260,11 +259,13 @@
     ".config/ags/colors.json" = {
       text = builtins.toJSON outputs.colors;
     };
-    "${config.home.homeDirectory}/Documents/notes/Braing/.obsidian/snippets/global.css".source = ./modules/obsidian/global.css;
+    "${config.home.homeDirectory}/Documents/notes/Braing/.obsidian/snippets/global.css".text = import ./modules/obsidian/global.css.nix {inherit outputs;};
     ".config/BetterDiscord" = {
       source = ./modules/discord;
       recursive = true;
     };
+    ".config/BetterDiscord/data/canary/custom.css".text = discord_css;
+    ".config/Vencord/settings/quickCss.css".text = discord_css;
     ".oh-my-zsh/custom/themes" = {
       source = ./modules/oh-my-zsh/themes;
       recursive = true;

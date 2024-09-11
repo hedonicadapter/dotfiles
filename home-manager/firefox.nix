@@ -65,13 +65,7 @@
       search.force = true;
 
       extraConfig = builtins.readFile ./modules/firefox/user.js;
-      userChrome =
-        ''
-          :root {
-            ${outputs.cssColorVariables}
-          }
-        ''
-        + builtins.readFile ./modules/firefox/userChrome.css;
+      userChrome = import ./modules/firefox/userChrome.css.nix {inherit outputs;};
 
       userContent = builtins.readFile ./modules/firefox/userContent.css;
     };

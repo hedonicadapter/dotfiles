@@ -9,6 +9,7 @@
     unselectable_bg_color=${outputs.transparentize outputs.colors_opaque.grey 0.4}
     selectable_bg_color=${outputs.transparentize outputs.colors_opaque.green 0.6}
     selectable_border_color=${outputs.transparentize outputs.colors_opaque.green 0.0}
+    label_font_family=Public Sans
 
     [mode_bisect]
     label_color=${outputs.colors_opaque.white}
@@ -16,6 +17,7 @@
     label_padding=12
     pointer_size=20
     pointer_color=${outputs.colors_opaque.black}
+    label_font_family=Public Sans
 
     unselectable_bg_color=${outputs.transparentize outputs.colors_opaque.grey 0.4}
     even_area_bg_color=${outputs.transparentize outputs.colors_opaque.green 0.6}

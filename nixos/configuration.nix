@@ -26,9 +26,10 @@ in {
     spicetify-nix.nixosModules.default
     inputs.xremap-flake.nixosModules.default
 
-    # (import ./minikube.nix {inherit pkgs;})
     ./maintenance.nix
     ./hardware-configuration.nix
+
+    (import ../modules/nixos/mousekeys/default.nix {inherit pkgs;})
   ];
 
   home-manager = {
@@ -127,7 +128,6 @@ in {
 
   programs.spicetify = {
     enable = true;
-    theme = spicePkgs.themes.text;
     colorScheme = "custom";
 
     customColorScheme = {
@@ -148,11 +148,9 @@ in {
       notification-error = colorsRGB.red;
       misc = colorsRGB.white_dim;
     };
-    injectCss = true;
 
-    enabledCustomApps = with spicePkgs.apps; [reddit marketplace];
+    enabledCustomApps = with spicePkgs.apps; [marketplace];
     enabledExtensions = with spicePkgs.extensions; [
-      fullAppDisplay
       keyboardShortcut
       powerBar
       shuffle # shuffle+
@@ -223,62 +221,7 @@ in {
       base0E = outputs.colors.vanilla_pear;
       base0F = outputs.colors.orange_bright;
     };
-    # base16Scheme = { gruvbox
-    #   base00 = "#292828";
-    #   base01 = "#32302f";
-    #   base02 = "#504945";
-    #   base03 = "#665c54";
-    #   base04 = "#bdae93";
-    #   base05 = "#ddc7a1";
-    #   base06 = "#ebdbb2";
-    #   base07 = "#fbf1c7";
-    #   base08 = "#ea6962";
-    #   base09 = "#e78a4e";
-    #   base0A = "#d8a657";
-    #   base0B = "#a9b665";
-    #   base0C = "#89b482";
-    #   base0D = "#7daea3";
-    #   base0E = "#d3869b";
-    #   base0F = "#bd6f3e";
-    # };
-    # base16Scheme = { melange
-    #   base00 = "#292522";
-    #   base01 = "#34302C";
-    #   base02 = "#403A36";
-    #   base03 = "#867462";
-    #   base04 = "#C1A78E";
-    #   base05 = "#ECE1D7";
-    #   base06 = "#D47766";
-    #   base07 = "#EBC06D";
-    #   base08 = "#85B695";
-    #   base09 = "#89B3B6";
-    #   base0A = "#A3A9CE";
-    #   base0B = "#CF9BC2";
-    #   base0C = "#BD8183";
-    #   base0D = "#E49B5D";
-    #   base0E = "#78997A";
-    #   base0F = "#7B9695";
-    # };
-    # base16Scheme = { cupcake
-    #   base00 = "#FBF1F2";
-    #   base01 = "#8B8198";
-    #   base02 = "#BFB9C6";
-    #   base03 = "#585062";
-    #   base04 = "#DCB16C";
-    #   base05 = "#8B8198";
-    #   base06 = "#7297B9";
-    #   base07 = "#FBF1F2";
-    #   base08 = "#D57E85";
-    #   base09 = "#DCB16C";
-    #   base0A = "#A3B367";
-    #   base0B = "#69A9A7";
-    #   base0C = "#69A9A7";
-    #   base0D = "#7297B9";
-    #   base0E = "#BB99B4";
-    #   base0F = "#D57E85";
-    # };
     targets = {
-      # chromium.enable = true;
       gnome.enable = true;
       gtk.enable = true;
     };

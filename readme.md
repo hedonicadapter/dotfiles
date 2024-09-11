@@ -46,11 +46,11 @@ Misc
 + Spicetify
 
 # Todo
-- [ ] Pick wallpaper based on hue and time of day
+- [x] Pick wallpaper based on hue and time of day
 - [ ] Fix anti-sleep-neglector-wallpaper service not starting on boot
 - [ ] System-wide font selection
 - [ ] Hyprland workspace session manager(?)
-- [ ] Inject colors from flake into discord, and obsidian
+- [x] Inject colors from flake into discord, ~spotify~, firefox, and obsidian
 - [ ] Change light/dark mode depending on time of day
 - [ ] Fix emoji picker
 - [ ] Add kaomoji to emoji picker

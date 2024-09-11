@@ -54,18 +54,17 @@
         '';
       }
 
-      # nvim-navbuddy
-      {
-        plugin = symbols-outline-nvim;
-        config = toLua ''
-          require("symbols-outline").setup()
-        '';
-      }
-
       {
         plugin = git-conflict-nvim;
         config = toLua ''
           require('git-conflict').setup()
+        '';
+      }
+
+      {
+        plugin = pkgs.awesomeNeovimPlugins.ts-error-translator-nvim;
+        config = toLua ''
+          require("ts-error-translator").setup()
         '';
       }
 
