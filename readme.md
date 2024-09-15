@@ -54,7 +54,7 @@ Misc
 - [ ] Change light/dark mode depending on time of day
 - [ ] Fix emoji picker
 - [ ] Add kaomoji to emoji picker
-- [ ] Reactive-nvim broken
+- [x] Reactive-nvim broken
 
 # Credits
  - (https://github.com/hyprwm/Hyprland/issues/1140#issuecomment-1335128437)[Blue light shaders from MahouShoujoMivutilde]

@@ -207,6 +207,13 @@
         '';
       }
 
+      {
+        plugin = pkgs.awesomeNeovimPlugins.render-markdown-nvim;
+        config = toLua ''
+          require('render-markdown').setup({})
+        '';
+      }
+
       cmp-cmdline
       cmp-nvim-lsp
       cmp-async-path
@@ -370,35 +377,7 @@
 
       {
         plugin = staline-nvim;
-        # config = toLuaFile ./modules/nvim/plugins/staline.lua;
-        config = toLua ''
-          require("staline").setup({
-            sections = {
-              left = { "mode" },
-              mid = {},
-              right = { "", "cwd", "branch" },
-            },
-            mode_colors = {
-              i = "${outputs.colors_opaque.green}",
-              n = "${outputs.colors_opaque.beige}",
-              c = "${outputs.colors_opaque.orange}",
-              v = "${outputs.colors_opaque.blue}",
-              V = "${outputs.colors_opaque.blue}",
-            },
-            mode_icons = {
-              n = " ",
-              i = " ",
-              c = " ",
-              v = " ",
-              V = " ",
-            },
-            defaults = {
-              true_colors = true,
-              branch_symbol = " ",
-            },
-          })
-
-        '';
+        config = toLua (import ./modules/nvim/plugins/staline.lua.nix {inherit outputs;});
       }
 
       {
@@ -478,82 +457,7 @@
         plugin = pkgs.vimExtraPlugins.reactive-nvim;
         config = toLua ''
           require('reactive').setup({
-            configs = {
-              name = "customCursorLine",
-              init = function()
-                  vim.opt.cursorline = true
-                end,
-              modes = {
-                no = {
-                  operators = {
-                    [{ "gu", "gU", "g~", "~" }] = {
-                      winhl = {
-                        CursorLine = { bg = "${outputs.colors_opaque.black}" },
-                        CursorLineNr = { fg = "#867462", bg = "${outputs.colors_opaque.black}" },
-                      },
-                    },
-                    c = {
-                      winhl = {
-                        CursorLine = { bg = "${outputs.colors_opaque.yellow}" },
-                        CursorLineNr = { fg = "${outputs.colors_opaque.yellow}", bg = "${outputs.colors_opaque.yellow}" },
-                      },
-                    },
-                    -- yank
-                    y = {
-                      winhl = {
-                        CursorLine = { bg = "${outputs.colors_opaque.burgundy}" },
-                        CursorLineNr = { fg = "${outputs.colors_opaque.burgundy}", bg = "${outputs.colors_opaque.burgundy}" },
-                      },
-                    },
-                  },
-                },
-                i = {
-                  winhl = {
-                    CursorLine = { bg = "${outputs.colors_opaque.green}" },
-                    CursorLineNr = { fg = "${outputs.colors_opaque.green}", bg = "${outputs.colors_opaque.green}" },
-                  },
-                  hl = {
-                    Cursor = { bg = "${outputs.colors_opaque.green}" },
-                  },
-                },
-                c = {
-                  winhl = {
-                    CursorLine = { bg = "${outputs.colors_opaque.orange}" },
-                    CursorLineNr = { fg = "${outputs.colors_opaque.orange}", bg = "${outputs.colors_opaque.orange}" },
-                  },
-                },
-                n = {
-                  winhl = {
-                    CursorLine = { bg = "${outputs.colors_opaque.beige}" },
-                    CursorLineNr = { fg = "${outputs.colors_opaque.beige}", bg = "${outputs.colors_opaque.beige}" },
-                  },
-                  hl = {
-                    Cursor = { bg = "${outputs.colors_opaque.beige}" },
-                  },
-                },
-                [{ "v", "V", "\x16" }] = {
-                  winhl = {
-                    CursorLineNr = { fg = "${outputs.colors_opaque.blue}" },
-                    Visual = { bg = "${outputs.colors_opaque.blue}" },
-                  },
-                  hl = {
-                    Cursor = { bg = "${outputs.colors_opaque.cyan}" },
-                  },
-                },
-                [{ "s", "S", "\x13" }] = {
-                  winhl = {
-                    CursorLineNr = { fg = "${outputs.colors_opaque.blue}" },
-                    Visual = { bg = "${outputs.colors_opaque.blue}" },
-                  },
-                },
-                R = {
-                  winhl = {
-                    CursorLine = { bg = "${outputs.colors_opaque.red}" },
-                    CursorLineNr = { fg = "${outputs.colors_opaque.red}", bg = "${outputs.colors_opaque.red}" },
-                  },
-                },
-              },
-            }
+            load = { 'customCursorLine' }
           })
         '';
       }
@@ -593,13 +497,6 @@
           vim.keymap.set("v", "g<C-x>", function()
               require("dial.map").manipulate("decrement", "gvisual")
           end)
-        '';
-      }
-
-      {
-        plugin = pkgs.awesomeNeovimPlugins.render-markdown-nvim;
-        config = toLua ''
-          require('render-markdown').setup({})
         '';
       }
     ];

@@ -245,10 +245,9 @@ in {
       source = ./modules/nvim/lua;
       recursive = true;
     };
-    ".config/nvim/lua/reactive/presets" = {
-      source = ./modules/nvim/plugins/reactive;
-      recursive = true;
-    };
+    ".config/nvim/lua/reactive/presets/customCursorLine.lua".text = import ./modules/nvim/plugins/reactive/customCursorLine.lua.nix {inherit outputs;};
+    ".config/nvim/lua/options.lua".text = import ./modules/nvim/lua/options.lua.nix {inherit outputs;};
+
     ".config/ags" = {
       source = ./modules/ags;
       recursive = true;

@@ -12,7 +12,7 @@
   inputImage = /home/hedonicadapter/Pictures/wallpapers/Frame21.png;
   brightness = 0;
   contrast = 0;
-  fillColor = "black";
+  fillColor = outputs.colors.black;
   saturation = 100;
 
   removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
@@ -90,6 +90,7 @@ in {
     git
     nix-output-monitor
 
+    bluetuith
     fastfetch
     polkit_gnome
     gnumake # for lenovo-legion
@@ -184,23 +185,14 @@ in {
     TERM = "kitty";
   };
 
-  # xdg.portal = {
-  #   enable = true;
-  #   xdgOpenUsePortal = true;
-  #   extraPortals = [inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland];
-  #   config = {
-  #     common.default = ["gtk" "hyprland"];
-  #     hyprland.default = ["hyprland" "gtk"];
-  #   };
-  # };
   stylix = {
     enable = true;
     image = pkgs.runCommand "dimmed-background.png" {} ''
-      ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${
+      ${pkgs.imagemagick}/bin/magick "${inputImage}" -brightness-contrast ${
         toString brightness
       },${toString contrast} -modulate 100,${
         toString saturation
-      } -fill ${fillColor} $out
+      } -fill "${fillColor}" $out
     '';
     polarity = "dark";
     base16Scheme = {
@@ -263,28 +255,11 @@ in {
   };
 
   boot = {
-    # extraModulePackages = [pkgs.linuxKernel.packages.linux_zen.phc-intel];
     kernelPackages = pkgs.linuxPackages_zen;
-    # plymouth = {
-    #   enable = true;
-    #   theme = "abstract_ring";
-    #   themePackages = [
-    #     (pkgs.adi1090x-plymouth-themes.override {
-    #       selected_themes = [ "abstract_ring" ];
-    #     })
-    #   ];
-    # };
-
-    # silent boot options below
     loader.grub.timeoutStyle = false;
-    # consoleLogLevel = 0;
-    # initrd.verbose = false;
     kernelParams = [
       "i915.fastboot=1"
-      # "quiet"
-      # "splash"
       # "boot.shell_on_fail"
-      # "loglevel=3"
       # "rd.systemd.show_status=false"
       # "rd.udev.log_level=3"
       # "udev.log_priority=3"
@@ -406,7 +381,6 @@ in {
     AllowSuspendThenHibernate=no
   '';
 
-  # List services that you want to enable:
   services.xremap = {
     config = {
       modmap = [
@@ -418,9 +392,18 @@ in {
       ];
     };
   };
+
   services.logind = {lidSwitch = "ignore";};
-  # bluetooth
-  hardware.bluetooth.enable = true;
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Experimental = true;
+      };
+    };
+  };
   # Load nvidia driver for Xorg and Wayland
   # Configure keymap in X11
   services.xserver = {
@@ -537,6 +520,7 @@ in {
       CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
 
       USB_AUTOSUSPEND = 0;
+      RESTORE_DEVICE_STATE_ON_STARTUP = true;
     };
   };
 

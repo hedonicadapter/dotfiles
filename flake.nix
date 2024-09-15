@@ -42,6 +42,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # color utils
+    nix-colors = {url = "github:misterio77/nix-colors";};
+
     swww = {url = "github:LGFae/swww";};
 
     nur = {url = "github:nix-community/NUR";};
@@ -65,19 +68,13 @@
     nixpkgs,
     home-manager,
     nixos-hardware,
+    nix-colors,
     ...
   } @ inputs: let
     inherit (self) outputs;
     systems = ["x86_64-linux"];
-    forAllSystems = nixpkgs.lib.genAttrs systems;
-
-    darkenColor = color: amount: let
-      inherit (nixpkgs.lib) stringToCharacters toHexString;
-      chars = stringToCharacters color;
-      r = toHexString (builtins.sub (builtins.fromTOML "0x${builtins.substring 1 2 color}") amount);
-      g = toHexString (builtins.sub (builtins.fromTOML "0x${builtins.substring 3 2 color}") amount);
-      b = toHexString (builtins.sub (builtins.fromTOML "0x${builtins.substring 5 2 color}") amount);
-    in "#${r}${g}${b}";
+    lib = nixpkgs.lib;
+    forAllSystems = lib.genAttrs systems;
 
     colors = {
       black = "#2b3339"; # base00
@@ -101,90 +98,53 @@
       white_dim = "#fff9e8"; # base07
       beige = "#fff9e8"; # base07
       vanilla_pear = "#d3c6aa"; # base05
-
-      # black = "#0F1F1F";
-      # grey = "#292828";
-      # red = "#E8786D";
-      # red_dim = "#af7070";
-      # burgundy = "#835353";
-      # yellow = "#FFE4B3";
-      # yellow_dim = "#E8A86D";
-      # orange = "#E8A86D";
-      # orange_dim = "#9c705e";
-      # orange_bright = "#ff78a7";
-      # green = "#D4D4D4";
-      # green_dim = "#A6A6A6";
-      # blue = "#cfcfcf";
-      # blue_dim = "#8f5b56";
-      # blush = "#ff78a7";
-      # cyan = "#706767";
-      # cyan_dim = "#4b4b4b";
-      # white = "#f5f5f5";
-      # white_dim = "#D4D4D4";
-      # beige = "#FFE4B3";
-      # vanilla_pear = "#ffa885";
-
-      # black = "#261C1E";
-      # grey = "#3A2624";
-      # red = "#E94554";
-      # red_dim = "#A45A49";
-      # burgundy = "#8E646B";
-      # yellow = "#EFC764";
-      # yellow_dim = "#FEECCB";
-      # orange = "#E68E7B";
-      # orange_dim = "#A45A49";
-      # orange_bright = "#E68E7B";
-      # green = "#67E480";
-      # green_dim = "#B3DFD3";
-      # blue = "#97D4D9";
-      # blue_dim = "#55EDC4";
-      # blush = "#feafbe";
-      # cyan = "#55EDC4";
-      # cyan_dim = "#97D4D9";
-      # white = "#FFF2E7";
-      # white_dim = "#FEECCB";
-      # beige = "#FEECCB";
-      # vanilla_pear = "#FFF2E7";
-
-      # melliflluous alduin
-      # black = "#292828";
-      # grey = "#2A2828";
-      # red = "#af5f5f";
-      # red_dim = "#713E3E";
-      # burgundy = "#875f5f";
-      # yellow = "#ffdf87";
-      # yellow_dim = "#A38E56";
-      # orange = "#af5f00";
-      # orange_dim = "#af875f";
-      # orange_bright = "#ff8000";
-      # green = "#87875f";
-      # green_dim = "#56563D";
-      # blue = "#569cd6";
-      # blue_dim = "#39658A";
-      # blush = "#af8787";
-      # cyan = "#87afaf";
-      # cyan_dim = "#567070";
-      # white = "#FFEFC2";
-      # white_dim = "#877F68";
-      # beige = "#dfaf87";
-      # vanilla_pear = "#dfdfaf";
     };
 
-    transparentize = color: alpha: let
-      hexToRgb = hex: {
-        r = builtins.substring 1 2 hex;
-        g = builtins.substring 3 2 hex;
-        b = builtins.substring 5 2 hex;
-      };
-      rgbToHex = rgb: "#" + rgb.r + rgb.g + rgb.b;
-      addAlpha = rgb: alpha: let
+    sanitizeColor = color:
+      if builtins.substring 0 1 color == "#"
+      then builtins.substring 1 (builtins.stringLength color - 1) color
+      else color;
+
+    rgbToHex = r: g: b: let
+      toHex = x: let
+        hex = nixpkgs.lib.toHexString (builtins.floor x);
+      in
+        if builtins.stringLength hex == 1
+        then "0${hex}"
+        else hex;
+    in "#${toHex r}${toHex g}${toHex b}";
+
+    darken = let
+      darkenColor = color: percentage: let
+        cleanColor = sanitizeColor color;
+        rgb = nix-colors.lib.conversions.hexToRGB cleanColor;
+
+        darken = c: let
+          darkenedValue = c - (c * percentage);
+        in
+          builtins.floor darkenedValue;
+
+        darkenedRgb = {
+          r = darken (builtins.elemAt rgb 0);
+          g = darken (builtins.elemAt rgb 1);
+          b = darken (builtins.elemAt rgb 2);
+        };
+      in
+        rgbToHex darkenedRgb.r darkenedRgb.g darkenedRgb.b;
+    in
+      darkenColor;
+
+    transparentize = let
+      addAlpha = color: alpha: let
         alphaInt = builtins.floor (alpha * 255);
         alphaHex = builtins.substring 0 2 (builtins.toString (100 + alphaInt));
-        rgbString = rgbToHex rgb;
+
+        cleanColor = sanitizeColor color;
+        rgb = nix-colors.lib.conversions.hexToRGB cleanColor;
       in
-        rgbString + alphaHex;
+        (rgbToHex (builtins.elemAt rgb 0) (builtins.elemAt rgb 1) (builtins.elemAt rgb 2)) + alphaHex;
     in
-      addAlpha (hexToRgb color) alpha;
+      addAlpha;
 
     isOpaque = color:
       builtins.stringLength color == 7 && builtins.substring 0 1 color == "#";
@@ -220,8 +180,8 @@
 
     colors = colors;
     transparentize = transparentize;
+    darken = darken;
     colors_opaque = colors_opaque;
-    darkenColor = darkenColor;
     cssColorVariables = cssColorVariables;
 
     nixosConfigurations = {
