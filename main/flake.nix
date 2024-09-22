@@ -31,7 +31,7 @@
       url = "github:hedonicadapter/colors-flake";
     };
 
-    neovimConfig = {
+    neovim-config = {
       url = "github:hedonicadapter/neovim-config-flake";
     };
 

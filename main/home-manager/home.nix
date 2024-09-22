@@ -79,9 +79,9 @@ in {
 
   programs.neovim = {
     enable = true;
-    package = outputs.neovimConfig.package;
-    extraLuaConfig = outputs.neovimConfig.extraLuaConfig;
-    plugins = outputs.neovimConfig.plugins;
+    package = inputs.neovim-config.neovimConfig.package;
+    extraLuaConfig = inputs.neovim-config.neovimConfig.extraLuaConfig;
+    plugins = inputs.neovim-config.neovimConfig.plugins;
   };
 
   programs.matugen = {enable = true;};
