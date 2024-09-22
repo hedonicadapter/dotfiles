@@ -1104,11 +1104,11 @@
         "nur": "nur"
       },
       "locked": {
-        "lastModified": 1727002386,
-        "narHash": "sha256-cuRKgqB7TtjHcnL/ObRYorcJQ94pYY6+v4NDPui5HR0=",
+        "lastModified": 1727019586,
+        "narHash": "sha256-JApKEX2eVRr9Z7wzgfXUAfNabn+vAihnM1hEjX+imlE=",
         "owner": "hedonicadapter",
         "repo": "neovim-config-flake",
-        "rev": "087523ce3664e557d702f95c6bd5d5fa5472e1d4",
+        "rev": "2d6c497f4ca2dfe7871be3fbf610e0f9ae6e65a0",
         "type": "github"
       },
       "original": {
@@ -1593,11 +1593,11 @@
     },
     "nur_2": {
       "locked": {
-        "lastModified": 1727004098,
-        "narHash": "sha256-bHkYU6rzqNDQy1dl3I/wE2615ANwHQwZLQhUwUfxEFg=",
+        "lastModified": 1727017850,
+        "narHash": "sha256-C361iPL0hyKNbCRpkU4MbaoGCN2Z1Tc3dqfO/0sbnKk=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "b3e188097ef5c0ae92532c42075a6dd4faa899ab",
+        "rev": "d65b8378613424be887a23730febc25a7a06c337",
         "type": "github"
       },
       "original": {

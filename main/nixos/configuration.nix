@@ -256,6 +256,7 @@ in {
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
+    tmp.cleanOnBoot = true;
     loader.grub.timeoutStyle = false;
     kernelParams = [
       "i915.fastboot=1"

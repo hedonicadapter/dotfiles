@@ -13,7 +13,7 @@
     profiles.hedonicadapter = {
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
         vimium
-        ublock-origin-lite
+        ublock-origin
         h264ify # pick codecs to block to mitigate youtube resource usage
         seventv
         betterttv
