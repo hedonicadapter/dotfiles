@@ -35,7 +35,7 @@
   };
 
   services.xserver = {
-    xkbOptions = "custom_mousekeys";
+    xkb.options = "custom_mousekeys";
     displayManager.sessionCommands = ''
       ${pkgs.xorg.xkbcomp}/bin/xkbcomp -I${pkgs.xorg.xkeyboardconfig}/share/X11/xkb ~/.config/custom_keymap $DISPLAY
       ${pkgs.xbindkeys}/bin/xbindkeys

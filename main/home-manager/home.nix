@@ -9,12 +9,16 @@
 }: let
   #   unstable = import <nixos-unstable> {};
   discord_css = import ./modules/discord/custom.css.nix {inherit outputs;};
+
+  removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
+  colorsRGB = builtins.mapAttrs (name: value: removeHash value) outputs.colors;
 in {
   # You can import other home-manager modules here
   imports = [
     inputs.ags.homeManagerModules.default
     # ../cachix.nix
     inputs.matugen.nixosModules.default
+    inputs.spicetify-nix.homeManagerModules.default
 
     ./firefox.nix
     # ./tmux.nix
@@ -58,6 +62,7 @@ in {
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
           "google-chrome"
+          "spotify"
           "terraform"
           "steamcmd"
           "steam-original"
@@ -125,6 +130,73 @@ in {
     extraPackages = with pkgs; [gtksourceview webkitgtk accountsservice];
   };
 
+  # programs.spicetify = {
+  #   enable = true;
+  #   colorScheme = "custom";
+  #
+  #   customColorScheme = {
+  #     text = colorsRGB.blush;
+  #     subtext = colorsRGB.white;
+  #     sidebar-text = colorsRGB.vanilla_pear;
+  #     main = "#00000005";
+  #     sidebar = colorsRGB.grey;
+  #     player = colorsRGB.black;
+  #     card = colorsRGB.orange;
+  #     shadow = colorsRGB.burgundy;
+  #     selected-row = colorsRGB.blue;
+  #     button = colorsRGB.cyan;
+  #     button-active = colorsRGB.blue;
+  #     button-disabled = colorsRGB.grey;
+  #     tab-active = colorsRGB.blush;
+  #     notification = colorsRGB.green;
+  #     notification-error = colorsRGB.red;
+  #     misc = colorsRGB.white_dim;
+  #   };
+  #
+  #   enabledCustomApps = with spicePkgs.apps; [marketplace];
+  #   enabledExtensions = with spicePkgs.extensions; [
+  #   ];
+  # };
+  programs.spicetify = let
+    spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+  in {
+    enable = true;
+    enabledExtensions = with spicePkgs.extensions; [
+      keyboardShortcut
+      groupSession
+      powerBar
+      #     shuffle # shuffle+
+      beautifulLyrics
+      skipStats
+      songStats
+      autoVolume
+      adblock
+      autoSkipVideo
+    ];
+    enabledCustomApps = with spicePkgs.apps; [marketplace];
+    theme = spicePkgs.themes.orchis;
+    colorScheme = "custom";
+
+    customColorScheme = {
+      text = colorsRGB.blush;
+      subtext = colorsRGB.white;
+      sidebar-text = colorsRGB.vanilla_pear;
+      main = "#00000005";
+      sidebar = colorsRGB.grey;
+      player = colorsRGB.black;
+      card = colorsRGB.orange;
+      shadow = colorsRGB.burgundy;
+      selected-row = colorsRGB.blue;
+      button = colorsRGB.cyan;
+      button-active = colorsRGB.blue;
+      button-disabled = colorsRGB.grey;
+      tab-active = colorsRGB.blush;
+      notification = colorsRGB.green;
+      notification-error = colorsRGB.red;
+      misc = colorsRGB.white_dim;
+    };
+  };
+
   home.packages = with pkgs;
     [
       google-chrome
@@ -147,6 +219,7 @@ in {
       docker-compose
       azure-cli
 
+      ncdu
       wl-kbptr
       alsa-utils
       grim

@@ -6,23 +6,16 @@
   pkgs,
   ...
 }: let
-  spicetify-nix = inputs.spicetify-nix;
-  spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
-
   brightness = 0;
   contrast = 0;
   fillColor = outputs.colors.black;
   saturation = 100;
-
-  removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
-
-  colorsRGB = builtins.mapAttrs (name: value: removeHash value) outputs.colors;
 in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
     inputs.stylix.nixosModules.stylix
     inputs.nur.nixosModules.nur
-    spicetify-nix.nixosModules.default
+
     inputs.xremap-flake.nixosModules.default
 
     ./maintenance.nix
@@ -89,6 +82,7 @@ in {
     git
     nix-output-monitor
 
+    lsd
     bluetuith
     fastfetch
     polkit_gnome
@@ -125,40 +119,6 @@ in {
     font-manager
     fsearch
   ];
-
-  programs.spicetify = {
-    enable = true;
-    colorScheme = "custom";
-
-    customColorScheme = {
-      text = colorsRGB.blush;
-      subtext = colorsRGB.white;
-      sidebar-text = colorsRGB.vanilla_pear;
-      main = "#00000005";
-      sidebar = colorsRGB.grey;
-      player = colorsRGB.black;
-      card = colorsRGB.orange;
-      shadow = colorsRGB.burgundy;
-      selected-row = colorsRGB.blue;
-      button = colorsRGB.cyan;
-      button-active = colorsRGB.blue;
-      button-disabled = colorsRGB.grey;
-      tab-active = colorsRGB.blush;
-      notification = colorsRGB.green;
-      notification-error = colorsRGB.red;
-      misc = colorsRGB.white_dim;
-    };
-
-    enabledCustomApps = with spicePkgs.apps; [marketplace];
-    enabledExtensions = with spicePkgs.extensions; [
-      keyboardShortcut
-      powerBar
-      shuffle # shuffle+
-      skipStats
-      autoVolume
-      adblock
-    ];
-  };
 
   programs.hyprland = {
     enable = true;
@@ -253,6 +213,8 @@ in {
     enable = true;
     enable32Bit = true;
   };
+  hardware.logitech.wireless.enable = true;
+  hardware.logitech.wireless.enableGraphical = true;
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
@@ -333,7 +295,10 @@ in {
 
   time.timeZone = "Europe/Stockholm";
   i18n.defaultLocale = "en_US.UTF-8";
-  i18n.inputMethod.enabled = "ibus"; # for emoji input
+  i18n.inputMethod = {
+    type = "ibus";
+    enable = true;
+  };
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "sv_SE.UTF-8";
     LC_IDENTIFICATION = "sv_SE.UTF-8";
