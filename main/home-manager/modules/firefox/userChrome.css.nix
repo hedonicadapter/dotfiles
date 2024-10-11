@@ -6,10 +6,12 @@
     /* Firefox Alpha v 1.1.0 */
     /* Source: https://github.com/Tagggar/Firefox-Alpha/ */
     html > * {
-      background-color: ${outputs.transparentize outputs.colors.black 0.4};
+      background-color: ${outputs.transparentize outputs.colors.black 0.6};
+      color: ${outputs.colors.white};
     }
     html {
       background: rgba(0, 0, 0, 0);
+      color: ${outputs.colors.white};
     }
     #browser > #appcontent {
       margin: 6px;
@@ -29,7 +31,7 @@
       --toolbarbutton-hover-background: transparent !important;
       --toolbarbutton-active-background: transparent !important;
       --tabpanel-background-color: rgba(0, 0, 0, 0) !important;
-      --tab-selected-bgcolor: ${outputs.transparentize outputs.colors.grey 0.4} !important;
+      --tab-selected-bgcolor: ${outputs.transparentize outputs.colors.grey 0.6} !important;
       background: rgba(0, 0, 0, 0) !important;
     }
 
@@ -57,74 +59,74 @@
     /* ❌ Empty Space */
     spacer,.titlebar-spacer,
 
-              /* ❌ Tab List */
-              #alltabs-button,
+    /* ❌ Tab List */
+    #alltabs-button,
 
-              /* ❌ Extensions Menu */
-              #unified-extensions-button,
+    /* ❌ Extensions Menu */
+    #unified-extensions-button,
 
-              /* ❌ #PanelUI-button */
-              #PanelUI-menu-button,
+    /* ❌ #PanelUI-button */
+    #PanelUI-menu-button,
 
-              /* ❌ Titlebar Window Controls */
-              /* .titlebar-buttonbox-container, */
+    /* ❌ Titlebar Window Controls */
+    /* .titlebar-buttonbox-container, */
 
-              /* ❌ Navigation Buttons */
-              #back-button, #forward-button, #reload-button, #stop-reload-button,
+    /* ❌ Navigation Buttons */
+    #back-button, #forward-button, #reload-button, #stop-reload-button,
 
-              /* ❌ Menu Icons __ menuitem > .menu-iconic-left, */
-               menu > .menu-iconic-left, .menu-right,
+    /* ❌ Menu Icons __ menuitem > .menu-iconic-left, */
+     menu > .menu-iconic-left, .menu-right,
 
-              /* ❌ Menu Separator */
-              menuseparator, toolbarseparator,
+    /* ❌ Menu Separator */
+    menuseparator, toolbarseparator,
 
-              /* ❌ Menu Disabled */
-              menuitem[disabled], menu[disabled],
+    /* ❌ Menu Disabled */
+    menuitem[disabled], menu[disabled],
 
-              /* ❌ Overflow Icon */
-              #nav-bar-overflow-button,
+    /* ❌ Overflow Icon */
+    #nav-bar-overflow-button,
 
-              /* ❌ url-bar Icons */
-              #urlbar-zoom-button,#tracking-protection-icon-container,.identity-box,
+    /* ❌ url-bar Icons */
+    #urlbar-zoom-button,#tracking-protection-icon-container,.identity-box,
 
-              /* ❌ Bookmark Folder Icons */
-              #PlacesToolbar .bookmark-item:not([label=""]) > .toolbarbutton-icon,
+    /* ❌ Bookmark Folder Icons */
+    #PlacesToolbar .bookmark-item:not([label=""]) > .toolbarbutton-icon,
 
-              /* ❌ Bookmarks [>] Button */
-              #PlacesChevron,
+    /* ❌ Bookmarks [>] Button */
+    #PlacesChevron,
 
-              /* ❌ Tab Icon Overlay */
-              .tab-icon-overlay,
+    /* ❌ Tab Icon Overlay */
+    .tab-icon-overlay,
 
-              /* ❌ Tab Mute Icon */
-              .tab-icon-sound-label,
-              .tab-icon-overlay:not([muted]):is([soundplaying]),
+    /* ❌ Tab Mute Icon */
+    .tab-icon-sound-label,
+    .tab-icon-overlay:not([muted]):is([soundplaying]),
 
-              /* ❌ Tab Close Btn */
-              .tab-close-button
+    /* ❌ Tab Close Btn */
+    .tab-close-button
 
-              /* ❌ Tab Pinned Text */
-              .tab-label-container[pinned],
+    /* ❌ Tab Pinned Text */
+    .tab-label-container[pinned],
 
-              /* ❌ New Tab logo */
-              /* .tabbrowser-tab[label="New Tab"] .tab-icon-image, */
+    /* ❌ New Tab logo */
+    /* .tabbrowser-tab[label="New Tab"] .tab-icon-image, */
 
-              /* ❌ Findbar Checkboxes */
-              /* .findbar-container > checkbox, */
+    /* ❌ Findbar Checkboxes */
+    /* .findbar-container > checkbox, */
 
-              /* ❌ Menu Icons */
-              #contentAreaContextMenu > menuitem > .menu-iconic-left,
-              #context-navigation > menuitem > .menu-iconic-left,
+    /* ❌ Menu Icons */
+    #contentAreaContextMenu > menuitem > .menu-iconic-left,
+    #context-navigation > menuitem > .menu-iconic-left,
 
-              /* ❌ Downloads Icons */
-              .downloadTypeIcon,
-              #downloads-button > .toolbarbutton-badge-stack > .toolbarbutton-badge,
-              :root:not([customizing]) #downloads-indicator-icon,
-              #downloads-indicator-start-box, #downloads-indicator-start-image > *,
-              #downloads-indicator-finish-box, #downloads-indicator-finish-image > *,
+    /* ❌ Downloads Icons */
+    .downloadTypeIcon,
+    #downloads-button > .toolbarbutton-badge-stack > .toolbarbutton-badge,
+    :root:not([customizing]) #downloads-indicator-icon,
+    #downloads-indicator-start-box, #downloads-indicator-start-image > *,
+    #downloads-indicator-finish-box, #downloads-indicator-finish-image > *,
 
-              /* ❌ Private Indicator */
-              .private-browsing-indicator {
+    /* ❌ Private Indicator */
+    .private-browsing-indicator {
       display: none !important;
       -moz-user-focus: none;
     }
@@ -464,7 +466,7 @@
       width: auto !important;
       transition: all 0.25s !important;
       transition-timing-function: var(--easink) !important;
-      opacity: 0.4;
+      opacity: 0.6;
     }
 
     .tabbrowser-tab[selected] {

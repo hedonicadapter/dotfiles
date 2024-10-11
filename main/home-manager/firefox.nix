@@ -67,7 +67,7 @@
       extraConfig = builtins.readFile ./modules/firefox/user.js;
       userChrome = import ./modules/firefox/userChrome.css.nix {inherit outputs;};
 
-      userContent = builtins.readFile ./modules/firefox/userContent.css;
+      userContent = import ./modules/firefox/userContent.css.nix {inherit outputs;};
     };
   };
 }
