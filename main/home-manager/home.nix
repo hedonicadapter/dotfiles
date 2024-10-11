@@ -157,6 +157,7 @@ in {
   #   enabledExtensions = with spicePkgs.extensions; [
   #   ];
   # };
+  stylix.targets.spicetify.enable = false;
   programs.spicetify = let
     spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
   in {
@@ -206,7 +207,6 @@ in {
       transmission
       hyprpicker
       speedread
-      steamcmd
       bottles
       lutris
       mpv

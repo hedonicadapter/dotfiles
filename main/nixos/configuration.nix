@@ -370,6 +370,8 @@ in {
       };
     };
   };
+  services.blueman.enable = true;
+
   # Load nvidia driver for Xorg and Wayland
   # Configure keymap in X11
   services.xserver = {

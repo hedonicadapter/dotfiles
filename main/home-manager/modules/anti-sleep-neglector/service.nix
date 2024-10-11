@@ -558,7 +558,7 @@ in {
                 if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
                     selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
                     selected_wallpaper_trimmed=$(echo $selected_wallpaper | xargs)
-                    swww img "$selected_wallpaper_trimmed" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144
+                    nohup swww img "$selected_wallpaper_trimmed" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144 </dev/null >command.log 2>&1 &
                 fi
 
                 next_period=$(get_next_period "$current_period")
