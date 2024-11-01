@@ -61,17 +61,12 @@ in {
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
-  services.k3s = {
-    enable = true;
-  };
-
   environment.pathsToLink = ["/share/zsh"];
   environment.systemPackages = with pkgs; [
     bibata-cursors-translucent
     fluent-icon-theme
 
     onlyoffice-bin
-    jetbrains.rider
     wine
     winetricks
     gcc
@@ -487,6 +482,8 @@ in {
       CPU_SCALING_GOVERNOR_ON_AC = "powersave";
       CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
 
+      USB_DENYLIST = "8087:0aaa";
+      USB_EXCLUDE_BTUSB = 1;
       USB_AUTOSUSPEND = 0;
       RESTORE_DEVICE_STATE_ON_STARTUP = true;
     };

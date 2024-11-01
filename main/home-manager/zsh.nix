@@ -2,9 +2,8 @@
   programs.zsh = {
     enable = true;
     shellAliases = {
-      "refresh" = ''
-        sudo nixos-rebuild switch --flake /etc/nixos#default --show-trace --impure && tmux source ~/.config/tmux/tmux.conf
-      '';
+      "ls" = "lsd";
+      "cat" = "bat";
     };
     autosuggestion = {enable = true;};
     syntaxHighlighting = {
@@ -30,6 +29,10 @@
           else
               command git "$@"
           fi
+      }
+
+      nix-refresh() {
+        sudo nixos-rebuild switch --flake "$@" --show-trace --impure && nvd diff /run/current-system result
       }
     '';
     plugins = with pkgs; [

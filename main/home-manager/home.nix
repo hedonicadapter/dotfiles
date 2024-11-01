@@ -64,11 +64,10 @@ in {
           "google-chrome"
           "spotify"
           "terraform"
-          "steamcmd"
+          "steam-unwrapped"
           "steam-original"
           "steam-run"
           "steam"
-          "rider"
           "sf-pro"
           "warp-terminal-0.2024.02.20.08.01.stable_01"
           "warp-terminal"
@@ -216,8 +215,6 @@ in {
       azure-functions-core-tools
       google-cloud-sdk
       firebase-tools
-      docker-compose
-      azure-cli
 
       ncdu
       wl-kbptr
@@ -225,9 +222,9 @@ in {
       grim
       slurp
       jq
-      bicep
       gh
       libGLU
+      docker-compose
       lazydocker
       socat # for listening to unix socket events
       dotool # for speed-reader.sh
@@ -235,16 +232,12 @@ in {
     # Languages
     ++ [
       go
-      terraform
       dart-sass
       sassc
       typescript
       bun
-      mono # for sniprun c#
-      (with dotnetCorePackages; combinePackages [sdk_6_0 sdk_7_0 sdk_8_0])
       cargo
       rustc
-      ansible
     ]
     # Language servers
     ++ [
@@ -255,24 +248,19 @@ in {
       nodePackages."@astrojs/language-server"
       vscode-langservers-extracted
       yaml-language-server
-      terraform-ls
-      terraform-lsp
       nil
       dockerfile-language-server-nodejs
       htmx-lsp
       sqls
       vim-language-server
-      ansible-language-server
     ]
     # Linters
     ++ [
-      ansible-lint
     ]
     # Formatters
     ++ [
       nodePackages.prettier
       prettierd
-      csharpier
       alejandra
       stylua
       sqlfluff
