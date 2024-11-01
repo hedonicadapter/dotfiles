@@ -1,11 +1,12 @@
 {pkgs, ...}: {
-  environment.systemPackages = with pkgs; [
+  home.packages = with pkgs; [
     lsd
     bat
   ];
 
   programs.zsh = {
     enable = true;
+    dotDir = ".config/zsh";
     shellAliases = {
       "ls" = "lsd";
       "cat" = "bat";
