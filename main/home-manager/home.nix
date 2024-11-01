@@ -24,7 +24,6 @@ in {
     # ./tmux.nix
     # ./zellij.nix
     (import ./zsh.nix {inherit pkgs;})
-    ./bat.nix
     # (import ./foot.nix {inherit outputs;})
     (import ./kitty.nix {inherit outputs pkgs lib;})
     (import ./yazi.nix {inherit pkgs;})
@@ -63,14 +62,11 @@ in {
         builtins.elem (lib.getName pkg) [
           "google-chrome"
           "spotify"
-          "terraform"
           "steam-unwrapped"
           "steam-original"
           "steam-run"
           "steam"
           "sf-pro"
-          "warp-terminal-0.2024.02.20.08.01.stable_01"
-          "warp-terminal"
           "copilot.vim"
           "ticktick"
           "betterttv"
@@ -254,10 +250,7 @@ in {
       sqls
       vim-language-server
     ]
-    # Linters
-    ++ [
-    ]
-    # Formatters
+    # Formatters & linters
     ++ [
       nodePackages.prettier
       prettierd

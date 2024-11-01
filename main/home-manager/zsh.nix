@@ -1,4 +1,9 @@
 {pkgs, ...}: {
+  environment.systemPackages = with pkgs; [
+    lsd
+    bat
+  ];
+
   programs.zsh = {
     enable = true;
     shellAliases = {

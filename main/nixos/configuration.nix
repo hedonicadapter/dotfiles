@@ -77,7 +77,6 @@ in {
     git
     nix-output-monitor
 
-    lsd
     bluetuith
     fastfetch
     polkit_gnome
