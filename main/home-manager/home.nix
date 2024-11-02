@@ -28,7 +28,6 @@ in {
     (import ./kitty.nix {inherit outputs pkgs lib;})
     (import ./yazi.nix {inherit pkgs;})
     (import ./tofi.nix {inherit config lib outputs pkgs;})
-    # (import ./nvim.nix {inherit inputs outputs pkgs config;})
     (import ./modules/anti-sleep-neglector/service.nix {inherit inputs config lib pkgs;})
     (import ./modules/fastfetch/default.nix {inherit outputs;})
   ];

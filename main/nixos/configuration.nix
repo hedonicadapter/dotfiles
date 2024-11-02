@@ -366,6 +366,24 @@ in {
   };
   services.blueman.enable = true;
 
+  systemd.services.bluetooth-init = {
+    description = "rfkill bluetooth persistence bug";
+    after = ["bluetooth.service" "sys-subsystem-bluetooth-devices-hci0.device"];
+    requires = ["bluetooth.service"];
+    wantedBy = ["multi-user.target"];
+    path = [pkgs.coreutils pkgs.util-linux];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = "yes";
+      ExecStart = "${
+        pkgs.writeShellScript "unblock-bluetooth" ''
+          #!/usr/bin/env bash
+          sleep 1; rfkill unblock bluetooth
+        ''
+      }";
+    };
+  };
+
   # Load nvidia driver for Xorg and Wayland
   # Configure keymap in X11
   services.xserver = {
