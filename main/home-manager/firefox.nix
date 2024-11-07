@@ -9,7 +9,6 @@
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-beta;
-    # package = pkgs.floorp;
     profiles.hedonicadapter = {
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
         vimium
