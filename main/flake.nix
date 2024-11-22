@@ -35,7 +35,10 @@
       url = "github:hedonicadapter/neovim-config-flake";
     };
 
-    ags = {url = "github:Aylur/ags";};
+    ags = {
+      url = "github:aylur/ags?ref=v1.8.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
@@ -44,7 +47,6 @@
 
     stylix = {
       url = "github:danth/stylix/ed91a20c84a80a525780dcb5ea3387dddf6cd2de";
-      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     swww = {url = "github:LGFae/swww";};
@@ -74,19 +76,14 @@
     lib = nixpkgs.lib;
     forAllSystems = lib.genAttrs systems;
   in {
-    # Accessible through 'nix build', 'nix shell', etc
     packages =
       forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
-    # Formatter for your nix files, available through 'nix fmt'
     formatter =
       forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
-    # Your custom packages and modifications, exported as overlays
-    overlays = import ./overlays {inherit inputs;};
-    # Reusable nixos modules you might want to export
-    # These are usually stuff you would upstream into nixpkgs
-    nixosModules = import ./modules/nixos;
 
-    # These are usually stuff you would upstream into home-manager
+    overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
+
+    nixosModules = import ./modules/nixos;
     homeManagerModules = import ./modules/home-manager;
 
     colors = colors.outputs.colors;
@@ -104,7 +101,6 @@
           nixos-hardware.nixosModules.common-pc-laptop
           nixos-hardware.nixosModules.common-pc-laptop-ssd
           nixos-hardware.nixosModules.common-pc-laptop-hdd
-          # > Our main nixos configuration file <
           ./nixos/configuration.nix
         ];
       };

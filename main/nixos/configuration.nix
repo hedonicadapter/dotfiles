@@ -72,10 +72,12 @@ in {
     gcc
     python311Packages.cmake
     nodejs_22
-    microsoft-edge-dev
+    microsoft-edge
     xorg.xmodmap
     git
     nix-output-monitor
+    kicad
+    openscad
 
     bluetuith
     fastfetch
