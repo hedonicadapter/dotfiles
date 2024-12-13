@@ -84,7 +84,7 @@
       display: inline-block;
       margin: 0px 0px;
       cursor: pointer;
-      border-radius: 14px;
+      border-radius: 1px;
     }
     .tag:not(.token):hover {
       color: ${outputs.colors.white};

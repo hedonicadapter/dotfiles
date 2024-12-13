@@ -17,7 +17,6 @@
         seventv
         betterttv
         # adaptive-tab-bar-colour
-        refined-github
       ];
       settings = {
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;

@@ -20,7 +20,7 @@
       font = "--font ${pkgs.public-sans}/share/fonts/opentype/PublicSans-Regular.otf";
       font-features = "liga 0";
       hint-font = false;
-      text-cursor-corner-radius = 4;
+      text-cursor-corner-radius = 1;
       font-size = 22;
       background-color = "#000A";
 
@@ -30,7 +30,7 @@
 
       selection-color = outputs.colors.grey;
       selection-background = outputs.colors.yellow;
-      selection-background-corner-radius = 4;
+      selection-background-corner-radius = 1;
       selection-background-padding = 4;
 
       selection-match-color = outputs.colors.vanilla_pear;

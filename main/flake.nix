@@ -36,8 +36,7 @@
     };
 
     ags = {
-      url = "github:aylur/ags?ref=v1.8.2";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:aylur/ags";
     };
 
     spicetify-nix = {

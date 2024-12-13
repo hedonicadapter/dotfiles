@@ -121,7 +121,24 @@ in {
 
   programs.ags = {
     enable = true;
-    extraPackages = with pkgs; [gtksourceview webkitgtk accountsservice];
+    extraPackages = with inputs.ags.packages.${pkgs.system}; [
+      io
+      apps
+      battery
+      hyprland
+      wireplumber
+      bluetooth
+      network
+      notifd
+      tray
+      mpris
+      powerprofiles
+
+      pkgs.gtksourceview
+      pkgs.webkitgtk
+      pkgs.accountsservice
+    ];
+    configDir = ./modules/ags;
   };
 
   # programs.spicetify = {
@@ -206,8 +223,8 @@ in {
       mpv
       streamlink
       twitch-tui
+      resources
 
-      azure-functions-core-tools
       google-cloud-sdk
       firebase-tools
 
@@ -223,6 +240,7 @@ in {
       lazydocker
       socat # for listening to unix socket events
       dotool # for speed-reader.sh
+      inputs.ags.packages.${pkgs.system}.io # expose ags cli
     ]
     # Languages
     ++ [
@@ -259,10 +277,20 @@ in {
     ]
     # Fonts
     ++ [
-      nerdfonts
+      nerd-fonts.symbols-only
       maple-mono-NF
       cartograph-cf
+      courier-prime
       material-symbols
+    ]
+    # AGS
+    ++ [
+      inputs.ags.packages.${pkgs.system}.notifd
+      meson
+      vala
+      gdk-pixbuf
+      json-glib
+      gobject-introspection
     ];
 
   wayland.windowManager.hyprland = {
@@ -302,16 +330,8 @@ in {
     # };
     # ".config/nvim/lua/reactive/presets/customCursorLine.lua".text = import ./modules/nvim/plugins/reactive/customCursorLine.lua.nix {inherit outputs;};
     # ".config/nvim/lua/options.lua".text = import ./modules/nvim/lua/options.lua.nix {inherit outputs;};
-
-    ".config/ags" = {
-      source = ./modules/ags;
-      recursive = true;
-    };
     ".config/tofi/emoji-list.txt" = {
       source = ./modules/emoji/list.txt;
-    };
-    ".config/ags/colors.json" = {
-      text = builtins.toJSON outputs.colors;
     };
     "${config.home.homeDirectory}/Documents/notes/Braing/.obsidian/snippets/global.css".text = import ./modules/obsidian/global.css.nix {inherit outputs;};
     ".config/BetterDiscord" = {

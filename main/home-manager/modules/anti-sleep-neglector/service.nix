@@ -340,7 +340,7 @@ in {
 
                   ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/night.glsl"
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/night.frag"
               else ""
             }
             elif [ $current_minutes -lt $dawn_min ]; then
@@ -349,7 +349,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/first_light.glsl"
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/first_light.frag"
               else ""
             }
             elif [ $current_minutes -lt $sunrise_min ]; then
@@ -358,7 +358,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/dawn.glsl"
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/dawn.frag"
               else ""
             }
             elif [ $current_minutes -lt $solar_noon_min ]; then
@@ -367,7 +367,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunrise.glsl"
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunrise.frag"
               else ""
             }
             elif [ $current_minutes -lt $sunset_min ]; then
@@ -376,7 +376,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/solar_noon.glsl"
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/solar_noon.frag"
               else ""
             }
             elif [ $current_minutes -lt $last_light_min ]; then
@@ -385,7 +385,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunset.glsl"
+              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunset.frag"
               else ""
             }
             fi

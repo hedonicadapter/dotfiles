@@ -9,6 +9,7 @@ pkgs.mkShellNoCC {
       bicep
       terraform
       ansible
+      azure-functions-core-tools
     ]
     # Language servers
     ++ [

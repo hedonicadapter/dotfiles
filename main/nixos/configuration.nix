@@ -40,6 +40,7 @@ in {
     config = {
       permittedInsecurePackages = [
         "electron-25.9.0" # ONLY for obsidian at the moment
+        "dotnet-sdk-wrapped-6.0.428"
       ];
       allowUnfree = true;
     };
@@ -97,11 +98,11 @@ in {
     pulseaudio
     playerctl
     spotify
-    (pkgs.discord-canary.override {
-      withOpenASAR = true;
-      withVencord = true;
-    })
-    # discord-canary # run once as vanilla if openasar error
+    # (pkgs.discord-canary.override {
+    #   withOpenASAR = true;
+    #   withVencord = true;
+    # })
+    discord-canary # run once as vanilla if openasar error
     betterdiscordctl
     acpi
 
@@ -347,7 +348,10 @@ in {
     config = {
       modmap = [
         {
-          name = "Global";
+          name = "Laptop Keyboard";
+          device = {
+            only = ["AT Translated Set 2 keyboard" "ITE Tech. Inc. ITE Device(8910) Keyboard"];
+          };
           remap = {"CapsLock" = "Esc";};
           remap = {"Esc" = "CapsLock";};
         }

@@ -15,15 +15,15 @@
     }
     #browser > #appcontent {
       margin: 6px;
-      border-radius: 7px;
+      border-radius: 1px;
     }
     :root {
       --6: 4px;
       --8: 8px;
       --tab-min-height: 25px !important;
       --tab-min-width: 25px !important;
-      --toolbarbutton-border-radius: var(--6) !important;
-      --tab-border-radius: var(--6) !important;
+      --toolbarbutton-border-radius: 1px !important;
+      --tab-border-radius: 1px !important;
       --main: rgba(255, 255, 255, 0.1);
       --item: #7c797930;
       --easink: cubic-bezier(0, 0, 0.58, 1);
@@ -136,7 +136,7 @@
       font-weight: 500 !important;
       padding-inline: var(--6) !important;
       padding-block: 2px !important;
-      border-radius: var(--6) !important;
+      border-radius: 1px !important;
       margin: var(--8) !important;
       background-color: ${outputs.colors.black} !important;
       color: ${outputs.colors.white} !important;
@@ -146,7 +146,7 @@
     findbar {
       padding: 0 !important;
       margin: 0 8px !important;
-      border-radius: var(--6) !important;
+      border-radius: 1px !important;
       width: 240px;
       background: ${outputs.colors.grey} !important;
       order: -1;
@@ -182,7 +182,7 @@
 
     #toolbar-menubar {
       height: 25px !important;
-      border-radius: var(--6);
+      border-radius: 1px;
       background-color: transparent;
       position: relative;
       margin: var(--6) var(--6) 0 var(--6);
@@ -193,7 +193,7 @@
     menu[_moz-menuactive="true"]:not([disabled="true"]),
     menucaption[_moz-menuactive="true"]:not([disabled="true"]) {
       background-color: var(--main) !important;
-      border-radius: 4px;
+      border-radius: 1px;
     }
     #main-menubar {
       margin: 4px;
@@ -204,7 +204,7 @@
 
     /* *️⃣ Menu Popup Box */
     .menupopup-arrowscrollbox {
-      border-radius: var(--8) !important;
+      border-radius: 1px !important;
       padding: var(--6) !important;
       background-color: ${outputs.colors.grey} !important;
       color: ${outputs.colors.white} !important;
@@ -228,7 +228,7 @@
       appearance: none !important;
       max-height: 20px !important;
       min-height: 20px !important;
-      border-radius: var(--6) !important;
+      border-radius: 1px !important;
       padding-inline: var(--6) !important;
       margin: 0 !important;
       color: ${outputs.colors.white_dim} !important;
@@ -252,7 +252,7 @@
     }
     #context-navigation > menuitem {
       justify-content: start !important;
-      border-radius: var(--6) !important;
+      border-radius: 1px !important;
       padding-inline: var(--6) !important;
       height: 20px !important;
       width: 100% !important;
@@ -363,7 +363,7 @@
       left: auto !important;
       width: var(--6) !important;
       height: var(--tab-min-height) !important;
-      border-radius: var(--6) !important;
+      border-radius: 1px !important;
       background: var(--item);
       visibility: visible !important;
     }
@@ -371,7 +371,7 @@
       background: url("data:image/svg+xml;charset=UTF-8,%3csvg width='6' height='25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='6' height='25' fill='${outputs.colors.blue}'/%3e%3c/svg%3e")
         bottom no-repeat !important;
       height: var(--download-progress-pcent) !important;
-      border-radius: var(--6) !important;
+      border-radius: 1px !important;
     }
     #downloads-button[attention="success"] #downloads-indicator-progress-outer {
       background: ${outputs.colors.blue} !important;
@@ -397,13 +397,13 @@
       min-height: var(--tab-min-height) !important;
       padding: 0 0 0 var(--6) !important;
       margin: 0 !important;
-      border-radius: var(--6) !important;
+      border-radius: 1px !important;
     }
     #downloadsListBox > richlistitem * {
       padding: 0 !important;
       margin: 0 !important;
       padding-block: 0 !important;
-      border-radius: var(--6) !important;
+      border-radius: 1px !important;
     }
     #downloadsListBox > richlistitem > .downloadMainArea {
       margin-inline-end: var(--8) !important;
@@ -436,7 +436,7 @@
       transition-delay: 0.1s;
       margin-block: 1px !important;
       outline-offset: 0 !important;
-      border-radius: var(--tab-border-radius);
+      border-radius: 1px;
     }
     .tabbrowser-tab:hover .tab-background {
       background-color: ${outputs.colors.black} !important;
@@ -509,7 +509,7 @@
       background: var(--item);
       z-index: 1;
       padding: var(--6);
-      border-radius: var(--6);
+      border-radius: 1px;
       left: 50vw;
       width: max(50vw, 320px) !important;
       transform: translateX(-50%) !important;
