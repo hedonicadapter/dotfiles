@@ -8,13 +8,13 @@
 }: let
   brightness = 0;
   contrast = 0;
-  fillColor = outputs.colors.black;
+  fillColor = outputs.colors.base00;
   saturation = 100;
 in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
     inputs.stylix.nixosModules.stylix
-    inputs.nur.nixosModules.nur
+    inputs.nur.modules.nixos.default
 
     inputs.xremap-flake.nixosModules.default
 
@@ -151,25 +151,8 @@ in {
     #     toString saturation
     #   } -fill "${fillColor}" $out
     # '';
-    polarity = "dark";
-    base16Scheme = {
-      base00 = outputs.colors.black;
-      base01 = outputs.colors.grey;
-      base02 = outputs.colors.orange_dim;
-      base03 = outputs.colors.white_dim;
-      base04 = outputs.colors.beige;
-      base05 = outputs.colors.white;
-      base06 = outputs.colors.cyan;
-      base07 = outputs.colors.red;
-      base08 = outputs.colors.blush;
-      base09 = outputs.colors.burgundy;
-      base0A = outputs.colors.cyan;
-      base0B = outputs.colors.green;
-      base0C = outputs.colors.yellow;
-      base0D = outputs.colors.beige;
-      base0E = outputs.colors.vanilla_pear;
-      base0F = outputs.colors.orange_bright;
-    };
+    polarity = "light";
+    # base16Scheme = outputs.colors;
     targets = {
       gnome.enable = true;
       gtk.enable = true;
@@ -182,13 +165,13 @@ in {
       };
 
       sansSerif = {
-        package = pkgs.public-sans;
-        name = "Public Sans";
+        package = pkgs.vt323;
+        name = "vt323";
       };
 
       monospace = {
-        package = pkgs.cartograph-cf;
-        name = "CartographCF Nerd Font";
+        package = pkgs.vt323;
+        name = "vt323";
       };
 
       emoji = {

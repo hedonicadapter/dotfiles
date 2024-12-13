@@ -16,7 +16,7 @@
         h264ify # pick codecs to block to mitigate youtube resource usage
         seventv
         betterttv
-        # adaptive-tab-bar-colour
+        adaptive-tab-bar-colour
       ];
       settings = {
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;

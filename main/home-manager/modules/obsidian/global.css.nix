@@ -7,12 +7,12 @@
     /* background-color:  */
     /* } */
     * {
-      --background-primary: ${outputs.colors.black} !important;
-      --background-secondary: ${outputs.colors.grey} !important;
-      --ribbon-background: ${outputs.colors.black} !important;
+      --background-primary: ${outputs.colors.base00} !important;
+      --background-secondary: ${outputs.colors.base01} !important;
+      --ribbon-background: ${outputs.colors.base00} !important;
 
-      --titlebar-background: ${outputs.colors.grey} !important;
-      --titlebar-background-focused: ${outputs.colors.black} !important;
+      --titlebar-background: ${outputs.colors.base01} !important;
+      --titlebar-background-focused: ${outputs.colors.base00} !important;
     }
     .mod-fade:not(.mod-at-end):after {
       background: linear-gradient(
@@ -76,7 +76,7 @@
     .tag:not(.token) {
       background-color: var(--text-accent);
       border: none;
-      color: ${outputs.colors.white};
+      color: ${outputs.colors.base00};
       font-size: 11px;
       padding: 1px 8px;
       text-align: center;
@@ -87,27 +87,27 @@
       border-radius: 1px;
     }
     .tag:not(.token):hover {
-      color: ${outputs.colors.white};
+      color: ${outputs.colors.base00};
       background-color: var(--text-accent-hover);
     }
     .tag[href^="#obsidian"] {
       background-color: #4d3ca6;
     }
     .tag[href^="#important"] {
-      background-color: ${outputs.colors.red};
+      background-color: ${outputs.colors.base08};
     }
     .tag[href^="#complete"] {
-      background-color: ${outputs.colors.green};
+      background-color: ${outputs.colors.base0B};
     }
     .tag[href^="#inprogress"] {
-      background-color: ${outputs.colors.orange}
+      background-color: ${outputs.colors.base09}
     }
 
     /* Custom icons for specific folders or files */
 
     :root {
-      --active-file-bg-color: ${outputs.colors.green};
-      --active-file-fg-color: ${outputs.colors.white};
+      --active-file-bg-color: ${outputs.colors.base0B};
+      --active-file-fg-color: ${outputs.colors.base00};
     }
 
     /* folder begin */
@@ -258,22 +258,22 @@
     }
 
     :root {
-      --base00: ${outputs.colors.black};
-      --base01: ${outputs.colors.grey};
-      --base02: ${outputs.colors.burgundy};
-      --base03: ${outputs.colors.orange_bright};
-      --base04: ${outputs.colors.cyan};
-      --base05: ${outputs.colors.white};
-      --base06: ${outputs.colors.green_dim};
-      --base07: ${outputs.colors.beige};
-      --base08: ${outputs.colors.red};
-      --base09: ${outputs.colors.orange};
-      --base0A: ${outputs.colors.yellow};
-      --base0B: ${outputs.colors.green};
-      --base0C: ${outputs.colors.green_dim};
-      --base0D: ${outputs.colors.blue};
-      --base0E: ${outputs.colors.red_dim};
-      --base0F: ${outputs.colors.orange_dim};
+      --base00: ${outputs.colors.base00};
+      --base01: ${outputs.colors.base01};
+      --base02: ${outputs.colors.base02};
+      --base03: ${outputs.colors.base03};
+      --base04: ${outputs.colors.base04};
+      --base05: ${outputs.colors.base05};
+      --base06: ${outputs.colors.base06};
+      --base07: ${outputs.colors.base07};
+      --base08: ${outputs.colors.base08};
+      --base09: ${outputs.colors.base09};
+      --base0A: ${outputs.colors.base0A};
+      --base0B: ${outputs.colors.base0B};
+      --base0C: ${outputs.colors.base0C};
+      --base0D: ${outputs.colors.base0D};
+      --base0E: ${outputs.colors.base0E};
+      --base0F: ${outputs.colors.base0F};
     }
 
     /*************************

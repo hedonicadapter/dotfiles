@@ -10,7 +10,7 @@ in {
   # stylix.targets.kitty.enable = false;
   programs.kitty = {
     enable = true;
-    font.size = lib.mkForce 10;
+    font.size = lib.mkForce 9;
     shellIntegration.enableZshIntegration = true;
     extraConfig = ''
       map kitty_mod+w
@@ -22,7 +22,7 @@ in {
       modify_font cell_width 95%
 
       modify_font underline_position 2px
-      modify_font underline_thickness 150%
+      modify_font underline_thickness 125%
     '';
     settings = {
       scrollback_indicator_opacity = "0.7";
@@ -43,7 +43,7 @@ in {
       # tab_bar_edge = "top";
       tab_title_template = "{fmt.fg.red}{bell_symbol}{fmt.fg.tab}{index}{title}{activity_symbol}";
       tab_activity_symbol = "";
-      background_opacity = lib.mkForce "0.7";
+      # background_opacity = lib.mkForce "0.7";
 
       # modify_font cell_height -2px
       # modify_font baseline 3

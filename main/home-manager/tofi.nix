@@ -24,16 +24,16 @@
       font-size = 22;
       background-color = "#000A";
 
-      prompt-color = outputs.colors.grey;
-      input-color = outputs.colors.white;
+      prompt-color = outputs.colors.base01;
+      input-color = outputs.colors.base00;
       input-background = "#0000";
 
-      selection-color = outputs.colors.grey;
-      selection-background = outputs.colors.yellow;
+      selection-color = outputs.colors.base01;
+      selection-background = outputs.colors.base09;
       selection-background-corner-radius = 1;
       selection-background-padding = 4;
 
-      selection-match-color = outputs.colors.vanilla_pear;
+      selection-match-color = outputs.colors.base0A;
 
       history-file = "${config.home.homeDirectory}/.config/tofi/history";
     };

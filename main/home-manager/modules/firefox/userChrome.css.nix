@@ -1,17 +1,15 @@
 {outputs, ...}: let
   css = ''
     #navigator-toolbox {
-      background: rgba(0, 0, 0, 0) !important;
     }
     /* Firefox Alpha v 1.1.0 */
     /* Source: https://github.com/Tagggar/Firefox-Alpha/ */
     html > * {
-      background-color: ${outputs.transparentize outputs.colors.black 0.6};
-      color: ${outputs.colors.white};
+      background-color: ${outputs.colors.base00};
+      color: ${outputs.colors.base07};
     }
     html {
-      background: rgba(0, 0, 0, 0);
-      color: ${outputs.colors.white};
+      color: ${outputs.colors.base07};
     }
     #browser > #appcontent {
       margin: 6px;
@@ -28,11 +26,6 @@
       --item: #7c797930;
       --easink: cubic-bezier(0, 0, 0.58, 1);
 
-      --toolbarbutton-hover-background: transparent !important;
-      --toolbarbutton-active-background: transparent !important;
-      --tabpanel-background-color: rgba(0, 0, 0, 0) !important;
-      --tab-selected-bgcolor: ${outputs.transparentize outputs.colors.grey 0.6} !important;
-      background: rgba(0, 0, 0, 0) !important;
     }
 
     /* Clean UI */
@@ -138,8 +131,8 @@
       padding-block: 2px !important;
       border-radius: 1px !important;
       margin: var(--8) !important;
-      background-color: ${outputs.colors.black} !important;
-      color: ${outputs.colors.white} !important;
+      background-color: ${outputs.colors.base00} !important;
+      color: ${outputs.colors.base07} !important;
     }
 
     /* ℹ️ Findbar Ctrl+F */
@@ -148,7 +141,7 @@
       margin: 0 8px !important;
       border-radius: 1px !important;
       width: 240px;
-      background: ${outputs.colors.grey} !important;
+      background: ${outputs.colors.base01} !important;
       order: -1;
       position: absolute;
     }
@@ -161,7 +154,7 @@
       width: 168px !important;
       padding-inline: var(--6) !important;
       height: var(--tab-min-height) !important;
-      color: ${outputs.colors.white} !important;
+      color: ${outputs.colors.base07} !important;
       background: none !important;
     }
     findbar toolbarbutton {
@@ -169,7 +162,7 @@
       padding: 4px !important;
       margin: 0 !important;
       background: none !important;
-      fill: ${outputs.colors.white} !important;
+      fill: ${outputs.colors.base07} !important;
       scale: 0.7;
     }
 
@@ -198,7 +191,7 @@
     #main-menubar {
       margin: 4px;
       background-color: none;
-      color: ${outputs.colors.black};
+      color: ${outputs.colors.base00};
       height: 16px !important;
     }
 
@@ -206,8 +199,8 @@
     .menupopup-arrowscrollbox {
       border-radius: 1px !important;
       padding: var(--6) !important;
-      background-color: ${outputs.colors.grey} !important;
-      color: ${outputs.colors.white} !important;
+      background-color: ${outputs.colors.base01} !important;
+      color: ${outputs.colors.base07} !important;
     }
     #scrollbutton-down,
     #scrollbutton-up {
@@ -231,7 +224,7 @@
       border-radius: 1px !important;
       padding-inline: var(--6) !important;
       margin: 0 !important;
-      color: ${outputs.colors.white_dim} !important;
+      color: ${outputs.colors.base01} !important;
     }
     .menu-accel {
       margin-inline: var(--6) 0 !important;
@@ -242,7 +235,7 @@
     menupopup > menuitem[_moz-menuactive],
     menupopup > menu[_moz-menuactive] {
       background-color: var(--main) !important;
-      color: ${outputs.colors.white} !important;
+      color: ${outputs.colors.base07} !important;
     }
     #context-navigation {
       flex-direction: column !important;
@@ -281,7 +274,7 @@
     }
     .tab-content {
       padding-inline: var(--6) !important;
-      color: ${outputs.colors.white} !important;
+      color: ${outputs.colors.base07} !important;
     }
 
     .tabbrowser-tab .tab-background[selected="true"] {
@@ -295,7 +288,7 @@
 
     /* Tabs Audio */
     #tabbrowser-tabs .tabbrowser-tab:is([soundplaying]) .tab-background {
-      background-color: ${outputs.colors.red_dim} !important;
+      background-color: ${outputs.colors.base08} !important;
       transition: background-color 0.15s !important;
       transition-timing-function: var(--easink) !important;
     }
@@ -343,7 +336,7 @@
       margin: 0 var(--8) var(--8) 0 !important;
       padding: 0 var(--6) !important;
       background: var(--item) !important;
-      color: ${outputs.colors.grey} !important;
+      color: ${outputs.colors.base01} !important;
       height: var(--tab-min-height);
     }
 
@@ -368,17 +361,17 @@
       visibility: visible !important;
     }
     #downloads-indicator-progress-inner {
-      background: url("data:image/svg+xml;charset=UTF-8,%3csvg width='6' height='25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='6' height='25' fill='${outputs.colors.blue}'/%3e%3c/svg%3e")
+      background: url("data:image/svg+xml;charset=UTF-8,%3csvg width='6' height='25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='6' height='25' fill='${outputs.colors.base0D}'/%3e%3c/svg%3e")
         bottom no-repeat !important;
       height: var(--download-progress-pcent) !important;
       border-radius: 1px !important;
     }
     #downloads-button[attention="success"] #downloads-indicator-progress-outer {
-      background: ${outputs.colors.blue} !important;
+      background: ${outputs.colors.base0D} !important;
     }
     #downloads-button:is([attention="warning"], [attention="severe"])
       #downloads-indicator-progress-inner {
-      background: ${outputs.colors.orange} !important;
+      background: ${outputs.colors.base09} !important;
       height: var(--8) !important;
     }
 
@@ -388,8 +381,8 @@
       margin: 4px var(--6) !important;
     }
     #downloadsPanel-mainView {
-      background-color: ${outputs.colors.grey} !important;
-      color: ${outputs.colors.black};
+      background-color: ${outputs.colors.base01} !important;
+      color: ${outputs.colors.base00};
       padding: var(--6) !important;
     }
     #downloadsFooterButtons > button,
@@ -428,7 +421,7 @@
     }
     .tab-background {
       outline: 1px solid;
-      outline-color: ${outputs.transparentize outputs.colors.white 0.6} !important;
+      outline-color: ${outputs.colors.base07} !important;
       transition:
         background-color 150ms,
         outline-color 150ms !important;
@@ -439,7 +432,7 @@
       border-radius: 1px;
     }
     .tabbrowser-tab:hover .tab-background {
-      background-color: ${outputs.colors.black} !important;
+      background-color: ${outputs.colors.base00} !important;
       overflow: visible !important;
     }
 
@@ -476,7 +469,7 @@
       opacity: 1 !important;
     }
     .tabbrowser-tab[selected] .tab-background {
-      outline-color: ${outputs.colors.white} !important;
+      outline-color: ${outputs.colors.base07} !important;
     }
 
     /* 📐 URLBAR in Tab */
@@ -516,7 +509,6 @@
     }
     #nav-bar {
       height: var(--tab-min-height) !important;
-      background-color: transparent !important;
     }
 
     /* 📐 Click Tab to Focus Urlbar */

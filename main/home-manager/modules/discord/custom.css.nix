@@ -6,22 +6,22 @@
   # base16 structure from deathbeam/base16-discord
   css = ''
     :root {
-        --base00: ${outputs.transparentize outputs.colors.black 0.4};
-        --base01: ${outputs.transparentize outputs.colors.grey 0.6};
-        --base02: ${outputs.colors.burgundy};
-        --base03: ${outputs.colors.orange_bright};
-        --base04: ${outputs.colors.cyan};
-        --base05: ${outputs.colors.white};
-        --base06: ${outputs.colors.green_dim};
-        --base07: ${outputs.colors.beige};
-        --base08: ${outputs.colors.red};
-        --base09: ${outputs.colors.orange};
-        --base0A: ${outputs.colors.yellow};
-        --base0B: ${outputs.colors.green};
-        --base0C: ${outputs.colors.green_dim};
-        --base0D: ${outputs.colors.blue};
-        --base0E: ${outputs.colors.red_dim};
-        --base0F: ${outputs.colors.orange_dim};
+        --base00: ${outputs.colors.base00};
+        --base01: ${outputs.colors.base01};
+        --base02: ${outputs.colors.base02};
+        --base03: ${outputs.colors.base03};
+        --base04: ${outputs.colors.base04};
+        --base05: ${outputs.colors.base05};
+        --base06: ${outputs.colors.base06};
+        --base07: ${outputs.colors.base07};
+        --base08: ${outputs.colors.base08};
+        --base09: ${outputs.colors.base09};
+        --base0A: ${outputs.colors.base0A};
+        --base0B: ${outputs.colors.base0B};
+        --base0C: ${outputs.colors.base0C};
+        --base0D: ${outputs.colors.base0D};
+        --base0E: ${outputs.colors.base0E};
+        --base0F: ${outputs.colors.base0F};
 
         --primary-630: var(--base00); /* Autocomplete background */
         --primary-660: var(--base00); /* Search input background */

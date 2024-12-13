@@ -15,7 +15,7 @@ Performance and usability
 
 # Aesthetics
 Non-minimalist without being cluttered
-+ Transparent, blurry, and grainy everything (firefox, discord, obsidian, kitty)
++ ~~Transparent, blurry, and grainy~~ retro everything (firefox, discord, obsidian, kitty)
 + Extremely minimal space saving firefox theme forked from Firefox Alpha
 + Auto-picks wallpapers from a folder based on its brightness and time of day (not for sleep neglectors)
 + Neovim kaomoji active tab indicator

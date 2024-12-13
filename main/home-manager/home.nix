@@ -280,7 +280,7 @@ in {
       nerd-fonts.symbols-only
       maple-mono-NF
       cartograph-cf
-      courier-prime
+      vt323
       material-symbols
     ]
     # AGS
@@ -298,7 +298,7 @@ in {
     package = inputs.hyprland.packages.${pkgs.system}.default;
     systemd.enable = true;
     systemd.variables = ["--all"];
-    extraConfig = "${builtins.readFile ./modules/hyprland/hyprlant.conf}";
+    extraConfig = import ./modules/hyprland.conf.nix {inherit outputs;};
     plugins = [inputs.split-monitor-workspaces.packages.${pkgs.system}.default];
     xwayland.enable = true;
   };
