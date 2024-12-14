@@ -39,7 +39,7 @@ CLI
 + Zoxide
 
 Misc
-+ Aylur's GTK
++ Aylur's AGS/Astal
 + Stylix
 + swww
 + ~wlsunset~ hyprland blue light shaders

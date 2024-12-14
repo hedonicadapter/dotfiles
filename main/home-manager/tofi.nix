@@ -28,12 +28,12 @@
       input-color = outputs.colors.base00;
       input-background = "#0000";
 
-      selection-color = outputs.colors.base01;
-      selection-background = outputs.colors.base09;
+      selection-color = outputs.colors.base00;
+      selection-match-color = outputs.colors.base07;
+
+      selection-background = outputs.colors.base0D;
       selection-background-corner-radius = 1;
       selection-background-padding = 4;
-
-      selection-match-color = outputs.colors.base0A;
 
       history-file = "${config.home.homeDirectory}/.config/tofi/history";
     };

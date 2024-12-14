@@ -11,9 +11,7 @@ in {
         term = "xterm-256color";
 
         shell = "zsh";
-        # font = "Iosevka Term:size=8";
-        # font = "JetBrainsMono Nerd Font:size=13";
-        font = "vt323:size=7.5";
+        font = "vt323:size=11";
         dpi-aware = "yes";
         pad = "24x1";
         line-height = 16;

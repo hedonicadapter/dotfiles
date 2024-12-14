@@ -9,6 +9,10 @@ const float temperatureStrength = 1.0;
 #define WithQuickAndDirtyLuminancePreservation
 const float LuminancePreservationFactor = 1.0;
 
+// CRT Glow Effect Parameters
+const float glowStrength = 0.12;
+const float glowRadius = 0.005;
+
 // Color Temperature to RGB conversion function
 vec3 colorTemperatureToRGB(const in float temperature){
     mat3 m = (temperature <= 6500.0) ? mat3(vec3(0.0, -2902.1955373783176, -8257.7997278925690),
@@ -59,6 +63,16 @@ void main() {
     
     // Apply color temperature
     color = mix(color, color * colorTemperatureToRGB(temperature), temperatureStrength);
+    
+    // Add glow effect
+    vec3 glow = vec3(0.0);
+    for (float x = -glowRadius; x <= glowRadius; x += glowRadius / 2.0) {
+        for (float y = -glowRadius; y <= glowRadius; y += glowRadius / 2.0) {
+            glow += texture2D(tex, tc + vec2(x, y)).rgb;
+        }
+    }
+    glow = glow / 25.0; // Normalize glow intensity
+    color += glow * glowStrength;
     
     // Add scanline effect
     color.rgb += sin(tc.y * 1600.0) * 0.03;

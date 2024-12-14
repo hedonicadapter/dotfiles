@@ -1,5 +1,15 @@
-{outputs, ...}: let
-  config = ''
+{
+  outputs,
+  lib,
+  ...
+}: let
+  config = let
+    processColor = color: let
+      # Remove the first character and convert to lowercase
+      processedColor = lib.toLower (builtins.substring 1 6 (builtins.toString color));
+    in
+      processedColor;
+  in ''
     exec-once = bash ~/.config/hypr/auto-start.sh
     # exec-once = bash ~/.config/hypr/auto-float-unfloat.sh
 
@@ -9,8 +19,10 @@
     exec-once=[split-workspace 1 silent] obsidian
 
     $terminal = kitty
-    $fileManager = $terminal -e yazi
+    $fileManager = nautilus
     $menu = tofi-run
+    $browser = firefox-beta
+    $music = spotify
 
     # env = AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1
     env = XCURSOR_SIZE,24
@@ -55,9 +67,7 @@
     general {
         gaps_in = 3
         gaps_out = 6
-        border_size = 2
-        col.active_border = ${outputs.colors.base00} ${outputs.colors.base01} 40deg
-        col.inactive_border = ${outputs.colors.base02} ${outputs.colors.base03} 30deg
+        border_size = 0
 
         layout = dwindle
 
@@ -160,9 +170,8 @@
     # bind = $mainMod, O&D, exec, DiscordCanary # Open Discord
     # bind = $mainMod, O&O, exec, obsidian # Open Obsidian
 
-
     bind = $mainMod, T, exec, $terminal
-    bind = $mainMod, N, exec, $terminal -e nvim
+    bind = $mainMod, N, exec, neovide
     bind = $mainMod, E, exec, $fileManager
     bind = $mainMod, R, exec, tofi-run | xargs hyprctl dispatch exec --
     bind = $mainMod SHIFT, S, exec, $terminal bash ~/.config/hypr/speed-read.sh
@@ -174,7 +183,10 @@
     bind = $mainMod, F, togglefloating,
     bind = $mainMod, M, fullscreen,1
 
-    bind = $mainMod, P, pseudo, # dwindle
+    bind = $mainMod, P, exec, nautilus ~/Documents/temp
+    bind = $mainMod, D, exec, nautilus ~/Downloads
+    bind = $mainMod, B, exec, $browser
+    bind = $mainMod, S, exec, $music
 
     bind = $mainMod, H, movefocus, l
     bind = $mainMod, L, movefocus, r
@@ -240,7 +252,6 @@
 
 
     bind=$mainMod,Backspace,exec,hyprctl keyword cursor:inactive_timeout 0; hyprctl keyword cursor:hide_on_key_press false; hyprctl dispatch submap cursor
-    bind=$mainMod,plus,exec,wl-kbptr && (hyprctl keyword cursor:inactive_timeout 0; hyprctl keyword cursor:hide_on_key_press false; hyprctl dispatch submap cursor)
 
     submap=cursor
 

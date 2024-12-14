@@ -26,7 +26,7 @@ in {
     (import ./zsh.nix {inherit pkgs;})
     # (import ./foot.nix {inherit outputs;})
     (import ./kitty.nix {inherit outputs pkgs lib;})
-    (import ./yazi.nix {inherit pkgs;})
+    # (import ./yazi.nix {inherit pkgs;})
     (import ./tofi.nix {inherit config lib outputs pkgs;})
     (import ./modules/anti-sleep-neglector/service.nix {inherit inputs config lib pkgs;})
     (import ./modules/fastfetch/default.nix {inherit outputs;})
@@ -190,22 +190,22 @@ in {
     colorScheme = "custom";
 
     customColorScheme = {
-      text = colorsRGB.blush;
-      subtext = colorsRGB.white;
-      sidebar-text = colorsRGB.vanilla_pear;
+      text = colorsRGB.base08;
+      subtext = colorsRGB.base00;
+      sidebar-text = colorsRGB.base0F;
       main = "#00000005";
-      sidebar = colorsRGB.grey;
-      player = colorsRGB.black;
-      card = colorsRGB.orange;
-      shadow = colorsRGB.burgundy;
-      selected-row = colorsRGB.blue;
-      button = colorsRGB.cyan;
-      button-active = colorsRGB.blue;
-      button-disabled = colorsRGB.grey;
-      tab-active = colorsRGB.blush;
-      notification = colorsRGB.green;
-      notification-error = colorsRGB.red;
-      misc = colorsRGB.white_dim;
+      sidebar = colorsRGB.base01;
+      player = colorsRGB.base00;
+      card = colorsRGB.base09;
+      shadow = colorsRGB.base08;
+      selected-row = colorsRGB.base0D;
+      button = colorsRGB.base0C;
+      button-active = colorsRGB.base0D;
+      button-disabled = colorsRGB.base01;
+      tab-active = colorsRGB.base08;
+      notification = colorsRGB.base0B;
+      notification-error = colorsRGB.base08;
+      misc = colorsRGB.base00;
     };
   };
 
@@ -229,7 +229,6 @@ in {
       firebase-tools
 
       ncdu
-      wl-kbptr
       alsa-utils
       grim
       slurp
@@ -298,7 +297,7 @@ in {
     package = inputs.hyprland.packages.${pkgs.system}.default;
     systemd.enable = true;
     systemd.variables = ["--all"];
-    extraConfig = import ./modules/hyprland.conf.nix {inherit outputs;};
+    extraConfig = import ./modules/hyprland/hyprland.conf.nix {inherit outputs lib;};
     plugins = [inputs.split-monitor-workspaces.packages.${pkgs.system}.default];
     xwayland.enable = true;
   };
@@ -322,7 +321,6 @@ in {
       wl-paste --no-newline --primary | speedread -w 150
       read -p 'Press [Enter] to close...'
     ''}";
-    ".config/wl-kbptr/config".text = import ./modules/wl-kbptr/config.nix {inherit outputs;};
 
     # ".config/nvim/lua" = {
     #   source = ./modules/nvim/lua;

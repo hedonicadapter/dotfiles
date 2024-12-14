@@ -152,7 +152,7 @@ in {
     #   } -fill "${fillColor}" $out
     # '';
     polarity = "light";
-    # base16Scheme = outputs.colors;
+    base16Scheme = outputs.colors;
     targets = {
       gnome.enable = true;
       gtk.enable = true;
@@ -179,10 +179,10 @@ in {
         name = "Noto Color Emoji";
       };
 
-      sizes.applications = 9;
-      sizes.desktop = 9;
-      sizes.popups = 9;
-      sizes.terminal = 9;
+      sizes.applications = 12;
+      sizes.desktop = 12;
+      sizes.popups = 12;
+      sizes.terminal = 12;
     };
   };
 

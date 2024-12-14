@@ -10,7 +10,7 @@ in {
   # stylix.targets.kitty.enable = false;
   programs.kitty = {
     enable = true;
-    font.size = lib.mkForce 9;
+    font.size = lib.mkForce 14;
     shellIntegration.enableZshIntegration = true;
     extraConfig = ''
       map kitty_mod+w
