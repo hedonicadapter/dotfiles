@@ -6,7 +6,7 @@ export default function TitleComponent() {
   const focused = bind(hypr, "focusedClient");
 
   return (
-    <box className="Focused" visible={focused.as(Boolean)}>
+    <box className="bar-item " visible={focused.as(Boolean)}>
       {focused.as(
         (client) =>
           client && (

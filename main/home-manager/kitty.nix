@@ -34,7 +34,7 @@ in {
       input_delay = 0;
       sync_to_monitor = "yes";
       inactive_text_alpha = "0.4";
-      window_padding_width = "6 12";
+      window_padding_width = "4 10";
       hide_window_decorations = "yes";
       remember_window_size = "no";
       window_border_width = "0.8pt";

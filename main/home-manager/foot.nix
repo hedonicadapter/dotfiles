@@ -11,7 +11,7 @@ in {
         term = "xterm-256color";
 
         shell = "zsh";
-        font = "vt323:size=11";
+        font = "Mx437 DOS/V re. JPN30:size=11";
         dpi-aware = "yes";
         pad = "24x1";
         line-height = 16;

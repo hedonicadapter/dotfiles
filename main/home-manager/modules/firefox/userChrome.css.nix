@@ -1,5 +1,8 @@
 {outputs, ...}: let
   css = ''
+        url(about:newtab) > *, url(about:home) > * {
+          display:none !important;
+        }
         #navigator-toolbox {
         }
         /* Firefox Alpha v 1.1.0 */
@@ -26,7 +29,6 @@
           --item: #7c797930;
           --easink: cubic-bezier(0, 0, 0.58, 1);
           --urlbarView-icon-margin-start: 4px!important;
-          --urlbarView-icon-margin-end: 5px!important;
           --urlbar-container-height: 0!important;
 
         }
@@ -445,6 +447,7 @@
           overflow: hidden !important;
           width:20vw;
           max-width:70px!important;
+          font-weight: bold !important;
         }
 
         .tab-label-container {
@@ -504,12 +507,16 @@
             top: auto !important;
           }
 
+          #urlbar[breakout] {
+            bottom:0!important;
+          }
+
           .urlbarView-body-inner{ border-top-style: none !important; }
     }
     .browser-toolbar{
       background:transparent!important;
     }
-    #identity-permission-box, #star-button{
+    #identity-permission-box {
       display: none!important;
     }
 
@@ -570,8 +577,28 @@
     #urlbar {
       flex-direction:column-reverse !important;
     }
+    #urlbar-results {
+      padding-block: 0 !important;
+    }
     .urlbarView-row[type="search"]{
       display:none!important;
+    }
+    #urlbar[breakout][breakout-extend] {
+      & > .urlbar-input-container {
+        padding-block: 0 !important;
+      }
+    }
+    .urlbarView-row[label] {
+      margin-block-start: 0 !important;
+    }
+    .urlbarView-favicon {
+      margin-inline-end: 5px !important;
+    }
+    @media (-moz-bool-pref: "browser.urlbar.richSuggestions.featureGate") {
+      #identity-box[pageproxystate="invalid"] > .identity-box-button, #identity-icon-box {
+        padding-left: 6px !important;
+        padding-right: 0px !important;
+      }
     }
   '';
 in

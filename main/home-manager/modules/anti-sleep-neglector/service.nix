@@ -85,6 +85,82 @@ in {
           Whether to enable anti-sleep-neglector monitor automatic gamma control.
         '';
       };
+
+      periods = mkOption {
+        type = types.submodule {
+          options = {
+            dawn = mkOption {
+              type = types.float;
+              default = 4000.0;
+              description = "Brightness setting for dawn period";
+            };
+            first_light = mkOption {
+              type = types.float;
+              default = 4000.0;
+              description = "Brightness setting for first light period";
+            };
+            night = mkOption {
+              type = types.float;
+              default = 2500.0;
+              description = "Brightness setting for night period";
+            };
+            solar_noon = mkOption {
+              type = types.float;
+              default = 7000.0;
+              description = "Brightness setting for solar noon period";
+            };
+            sunrise = mkOption {
+              type = types.float;
+              default = 5500.0;
+              description = "Brightness setting for sunrise period";
+            };
+            sunset = mkOption {
+              type = types.float;
+              default = 3500.0;
+              description = "Brightness setting for sunset period";
+            };
+          };
+        };
+        default = {
+          dawn = 4000.0;
+          first_light = 4000.0;
+          night = 2500.0;
+          solar_noon = 7000.0;
+          sunrise = 5500.0;
+          sunset = 3500.0;
+        };
+        description = "Brightness periods configuration";
+      };
+
+      crt-effect = mkOption {
+        type = types.submodule {
+          options = {
+            glowStrength = mkOption {
+              type = types.float;
+              default = 0.12;
+              description = "The CRT effect glow strength.";
+            };
+            glowRadius = mkOption {
+              type = types.float;
+              default = 0.0005;
+            };
+            scanlineFrequency = mkOption {
+              type = types.float;
+              default = 1600.0;
+            };
+            scanlineIntensity = mkOption {
+              type = types.float;
+              default = 0.03;
+            };
+            curvatureStrength = mkOption {
+              type = types.float;
+              default = 0.1;
+            };
+          };
+        };
+        default = {};
+        description = "Brightness periods configuration";
+      };
     };
 
     services.anti-sleep-neglector-wallpaper = {
@@ -340,7 +416,7 @@ in {
 
                   ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/night.frag"
+              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/night.frag"
               else ""
             }
             elif [ $current_minutes -lt $dawn_min ]; then
@@ -349,7 +425,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/first_light.frag"
+              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/first_light.frag"
               else ""
             }
             elif [ $current_minutes -lt $sunrise_min ]; then
@@ -358,7 +434,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/dawn.frag"
+              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/dawn.frag"
               else ""
             }
             elif [ $current_minutes -lt $solar_noon_min ]; then
@@ -367,7 +443,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunrise.frag"
+              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/sunrise.frag"
               else ""
             }
             elif [ $current_minutes -lt $sunset_min ]; then
@@ -376,7 +452,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/solar_noon.frag"
+              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/solar_noon.frag"
               else ""
             }
             elif [ $current_minutes -lt $last_light_min ]; then
@@ -385,7 +461,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/sunset.frag"
+              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/sunset.frag"
               else ""
             }
             fi
@@ -415,6 +491,23 @@ in {
           WantedBy = ["timers.target"];
         };
       };
+
+      home.file = builtins.listToAttrs (
+        builtins.map (periodName: {
+          name = ".config/anti-sleep-neglector/shaders/${periodName}.frag";
+          value = {
+            text = import ./template.frag.nix {
+              temp = toString (config.services.anti-sleep-neglector-gamma.periods.${periodName});
+              glowStrength = config.services.anti-sleep-neglector-gamma.crt-effect.glowStrength;
+              glowRadius = config.services.anti-sleep-neglector-gamma.crt-effect.glowRadius;
+              scanlineFrequency = config.services.anti-sleep-neglector-gamma.crt-effect.scanlineFrequency;
+              scanlineIntensity = config.services.anti-sleep-neglector-gamma.crt-effect.scanlineIntensity;
+              curvatureStrength = config.services.anti-sleep-neglector-gamma.crt-effect.curvatureStrength;
+            };
+          };
+        })
+        (builtins.attrNames config.services.anti-sleep-neglector-gamma.periods)
+      );
     })
 
     (mkIf config.services.anti-sleep-neglector-wallpaper.enable {

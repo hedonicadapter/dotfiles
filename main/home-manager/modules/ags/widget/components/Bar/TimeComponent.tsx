@@ -1,3 +1,4 @@
+import { Gtk } from "astal/gtk3";
 import { GLib, Variable } from "astal";
 
 const time = Variable<string>("").poll(
@@ -6,5 +7,7 @@ const time = Variable<string>("").poll(
 );
 
 export default function TimeComponent() {
-  return <label onDestroy={() => time.drop()} label={time()} />;
+  return (
+    <label className="bar-item " onDestroy={() => time.drop()} label={time()} />
+  );
 }

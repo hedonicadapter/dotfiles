@@ -1,14 +1,19 @@
+import { Variable, bind } from "astal";
 import { App, Astal, Gtk, Gdk } from "astal/gtk3";
-import TimeComponent from "./components/TimeComponent";
-import SysTrayComponent from "./components/SysTrayComponent";
-import WifiComponent from "./components/WifiComponent";
-import WorkspaceComponent from "./components/WorkspaceComponent";
-import TitleComponent from "./components/TitleComponent";
+import TimeComponent from "./components/Bar/TimeComponent";
+import SysTrayComponent from "./components/Bar/SysTrayComponent";
+import WifiComponent from "./components/Bar/WifiComponent";
+import WorkspaceComponent from "./components/Bar/WorkspaceComponent";
+import TitleComponent from "./components/Bar/TitleComponent";
+import NotificationsComponent from "./components/Bar/NotificationsComponent";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
+  const hovered = Variable(false);
+  const { START, END, CENTER } = Gtk.Align;
+
   return (
     <window
-      className="Bar"
+      className={bind(hovered).as((h) => (h ? "Bar hovered" : "Bar"))}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       anchor={
@@ -18,20 +23,42 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       }
       application={App}
     >
-      <centerbox valign={Gtk.Align.START}>
-        <box hexpand halign={Gtk.Align.START}>
-          <WorkspaceComponent />
-          <SysTrayComponent />
-        </box>
-        <box halign={Gtk.Align.CENTER}>
-          <TitleComponent />
-        </box>
-        <box className="main-menu" hexpand halign={Gtk.Align.END}>
-          <WifiComponent />
+      <eventbox
+        className={bind(hovered).as((h) => (h ? "hovered" : ""))}
+        onHover={() => hovered.set(true)}
+        onHoverLost={() => hovered.set(false)}
+      >
+        <centerbox className="bar-items" valign={START}>
+          <box hexpand halign={START}>
+            <box valign={START}>
+              <WorkspaceComponent />
+            </box>
 
-          <TimeComponent />
-        </box>
-      </centerbox>
+            <box valign={START}>
+              <SysTrayComponent />
+            </box>
+          </box>
+
+          <box halign={CENTER}>
+            <box valign={START}>
+              <TitleComponent />
+            </box>
+          </box>
+
+          <box className="main-menu" hexpand halign={END}>
+            <box valign={START}>
+              <NotificationsComponent />
+            </box>
+            <box valign={START}>
+              <WifiComponent />
+            </box>
+
+            <box valign={START}>
+              <TimeComponent />
+            </box>
+          </box>
+        </centerbox>
+      </eventbox>
     </window>
   );
 }

@@ -40,6 +40,22 @@ in {
   };
   services.anti-sleep-neglector-gamma = {
     enable = true;
+
+    periods = {
+      dawn = 4000.0;
+      first_light = 4000.0;
+      night = 2500.0;
+      solar_noon = 7000.0;
+      sunrise = 5500.0;
+      sunset = 3500.0;
+    };
+    crt-effect = {
+      glowStrength = 0.25;
+      glowRadius = 0.0016;
+      scanlineFrequency = 1700.0;
+      scanlineIntensity = 0.04;
+      curvatureStrength = 0.04;
+    };
   };
   services.anti-sleep-neglector-wallpaper = {
     enable = true;
@@ -138,7 +154,7 @@ in {
       pkgs.webkitgtk
       pkgs.accountsservice
     ];
-    configDir = ./modules/ags;
+    # configDir = ./modules/ags;
   };
 
   # programs.spicetify = {
@@ -207,6 +223,10 @@ in {
       notification-error = colorsRGB.base08;
       misc = colorsRGB.base00;
     };
+  };
+
+  programs.spotify-player = {
+    enable = true;
   };
 
   home.packages = with pkgs;
@@ -279,7 +299,8 @@ in {
       nerd-fonts.symbols-only
       maple-mono-NF
       cartograph-cf
-      vt323
+      ultimate-oldschool-pc-font-pack
+      glasstty-ttf
       material-symbols
     ]
     # AGS
@@ -302,7 +323,16 @@ in {
     xwayland.enable = true;
   };
 
+  # null wallpaper workaround stylix #200
+  services.hyprpaper.enable = lib.mkForce false;
+  stylix.targets.hyprpaper.enable = lib.mkForce false;
+
   home.file = {
+    ".config/ags" = {
+      source = ./modules/ags;
+      recursive = true;
+    };
+    ".config/ags/style.scss".text = import ./modules/ags/style.scss.nix {inherit outputs;};
     ".config/hypr" = {
       source = ./modules/hyprland;
       recursive = true;
@@ -321,13 +351,6 @@ in {
       wl-paste --no-newline --primary | speedread -w 150
       read -p 'Press [Enter] to close...'
     ''}";
-
-    # ".config/nvim/lua" = {
-    #   source = ./modules/nvim/lua;
-    #   recursive = true;
-    # };
-    # ".config/nvim/lua/reactive/presets/customCursorLine.lua".text = import ./modules/nvim/plugins/reactive/customCursorLine.lua.nix {inherit outputs;};
-    # ".config/nvim/lua/options.lua".text = import ./modules/nvim/lua/options.lua.nix {inherit outputs;};
     ".config/tofi/emoji-list.txt" = {
       source = ./modules/emoji/list.txt;
     };

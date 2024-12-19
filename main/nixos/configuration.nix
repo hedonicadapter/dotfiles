@@ -136,7 +136,6 @@ in {
   programs.gamemode.enable = true;
 
   environment.sessionVariables = {
-    WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
     TERM = "kitty";
   };
@@ -165,13 +164,13 @@ in {
       };
 
       sansSerif = {
-        package = pkgs.vt323;
-        name = "vt323";
+        package = pkgs.ultimate-oldschool-pc-font-pack;
+        name = "Mx437 DOS/V re. JPN30";
       };
 
       monospace = {
-        package = pkgs.vt323;
-        name = "vt323";
+        package = pkgs.ultimate-oldschool-pc-font-pack;
+        name = "Mx437 DOS/V re. JPN30";
       };
 
       emoji = {
@@ -179,10 +178,10 @@ in {
         name = "Noto Color Emoji";
       };
 
-      sizes.applications = 12;
-      sizes.desktop = 12;
-      sizes.popups = 12;
-      sizes.terminal = 12;
+      sizes.applications = 11;
+      sizes.desktop = 11;
+      sizes.popups = 11;
+      sizes.terminal = 11;
     };
   };
 
