@@ -1,12 +1,11 @@
 {outputs, ...}: let
   scss = ''
     * {
-      font-family: "Mx437 DOS/V re. JPN30";
+      background-color: transparent;
     }
 
     window.Bar {
       color: ${outputs.colors.base07};
-      transition: all 0.15s ease-out;
 
       .bar-items {
         margin-left: 14px;
@@ -15,12 +14,7 @@
         margin-bottom: -2px;
 
         .bar-item {
-          background: ${outputs.colors.base00};
         }
-      }
-
-      label {
-        color: ${outputs.colors.base07};
       }
 
       .indicator {
@@ -32,6 +26,9 @@
       .tray {
         margin-left: 4px;
         margin-right: 4px;
+        > * {
+          padding: 3px 0;
+        }
       }
 
       .dash {
@@ -43,7 +40,8 @@
       }
     }
 
-    button {
+    button, box {
+      all:unset;
       padding: 0;
       background: transparent;
     }
@@ -53,15 +51,39 @@
     }
 
     .notifications {
+      background-color: ${outputs.colors.base00};
+      color: ${outputs.colors.base07};
+      margin-right: 3px;
+      margin-top: -4px;
+      padding-bottom: 1px;
+
       :not(.latest) {
         min-height: 0;
       }
       .header {
+        border: 1px solid transparent;
+        font-size: 21px;
+
         .app-name {
+          padding-left: 1px;
+          padding-bottom: 1px;
+          font-weight: 600;
         }
         .summary {
         }
         .time {
+          font-size: 16px;
+        }
+        .close-button {
+          margin-left: -4px;
+          padding-right:1px;
+        }
+      }
+      .body {}
+      .actions {
+        padding-bottom: 4px;
+        button {
+
         }
       }
       .hovered {
@@ -69,16 +91,37 @@
     }
 
     .low {
-        background-color: ${outputs.colors.base07};
-        color: ${outputs.colors.base02};
+      .header {
+        border-color: ${outputs.colors.base07};
+        color: ${outputs.colors.base07};
+
+        .app-name {
+          background-color: ${outputs.colors.base07};
+          color: ${outputs.colors.base00};
+        }
+      }
     }
     .mid {
-        background-color: ${outputs.colors.base0C};
-        color: ${outputs.colors.base00};
+      .header {
+        border-color: ${outputs.colors.base0C};
+        color: ${outputs.colors.base07};
+
+        .app-name {
+            background-color: ${outputs.colors.base0C};
+            color: ${outputs.colors.base00};
+        }
+      }
     }
     .high {
-        background-color: ${outputs.colors.base08};
+      .header {
+        border-color: ${outputs.colors.base08};
         color: ${outputs.colors.base07};
+
+        .app-name{
+            background-color: ${outputs.colors.base08};
+            color: ${outputs.colors.base07};
+        }
+      }
     }
   '';
 in

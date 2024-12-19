@@ -17,10 +17,8 @@ class NotificationMap implements Subscribable {
   // reactivity implementation instead of keeping track of subscribers ourselves
   private var: Variable<Array<Gtk.Widget>> = Variable([]);
 
-  latestNotification: Variable<[Notification | null, number]> = Variable([
-    null,
-    0,
-  ]);
+  private latestNotification: Variable<[Notification | null, number]> =
+    Variable([null, 0]);
 
   // notify subscribers to rerender when state changes
   private notifiy() {

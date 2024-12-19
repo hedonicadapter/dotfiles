@@ -42,14 +42,14 @@ export default function NotificationComponent(props: Props) {
             halign={START}
             valign={CENTER}
             truncate
-            label={(n.appName || "Unknown") + ": "}
+            label={(n.appName || "Unknown").toUpperCase() + ":"}
           />
           <label
             className="summary"
             halign={START}
             valign={CENTER}
             xalign={0}
-            label={n.summary + " "}
+            label={" " + n.summary + " "}
             truncate
           />
           <label
@@ -57,9 +57,14 @@ export default function NotificationComponent(props: Props) {
             hexpand
             halign={END}
             valign={CENTER}
+            visible={bind(hovered)}
             label={time(n.time)}
           />
-          <button valign={CENTER} onClicked={() => n.dismiss()}>
+          <button
+            className="close-button"
+            valign={CENTER}
+            onClicked={() => n.dismiss()}
+          >
             <icon icon="window-close-symbolic" />
           </button>
         </box>
@@ -90,16 +95,15 @@ export default function NotificationComponent(props: Props) {
                 label={n.body}
               />
             )}
-          </box>
-          {n.get_actions().length > 0 && (
             <box className="actions">
-              {n.get_actions().map(({ label, id }) => (
-                <button hexpand onClicked={() => n.invoke(id)}>
-                  <label label={label} halign={CENTER} hexpand />
-                </button>
-              ))}
+              {n.get_actions().length > 0 &&
+                n.get_actions().map(({ label, id }) => (
+                  <button onClicked={() => n.invoke(id)}>
+                    <label label={label} />
+                  </button>
+                ))}
             </box>
-          )}
+          </box>
         </box>
       </box>
     </eventbox>
