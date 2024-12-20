@@ -28,9 +28,9 @@
       .media-player {
         min-height: 20px;
 
-        margin-top: -2px;
-        padding-left:8px;
-        padding-right:8px;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-bottom: 1px;
 
         background-color: ${outputs.colors.base0B};
         color: ${outputs.colors.base00};
@@ -95,7 +95,7 @@
       }
       .header {
         border: 2px solid transparent;
-        font-size: 21px;
+        font-size: 18px;
 
         .app-name {
           padding-left: 1px;
@@ -112,7 +112,9 @@
           padding-right:1px;
         }
       }
-      .body {}
+      .body {
+        padding-top: 4px;
+      }
       .actions {
         padding-bottom: 4px;
         button {

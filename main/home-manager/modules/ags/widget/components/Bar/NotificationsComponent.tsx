@@ -5,6 +5,7 @@ import { type Subscribable } from "astal/binding";
 import { Variable, Binding, bind, timeout } from "astal";
 
 const TIMEOUT_DELAY = 5000;
+const BLACKLIST = ["Spotify"];
 
 // The purpose if this class is to replace Variable<Array<Widget>>
 // with a Map<number, Widget> type in order to track notification widgets
@@ -28,6 +29,9 @@ class NotificationMap implements Subscribable {
   constructor(hovered: Variable<boolean>) {
     const notifd = Notifd.get_default();
     notifd.connect("notified", (_, id) => {
+      const notification = notifd.get_notification(id)!;
+      const name = notification.appName;
+      if (BLACKLIST.includes(name)) return;
       const all = notifd.get_notifications();
 
       all.forEach((n: Notification) => {
@@ -46,7 +50,7 @@ class NotificationMap implements Subscribable {
       this.set(
         id,
         NotificationComponent({
-          notification: notifd.get_notification(id)!,
+          notification,
           hovered,
           visible,
         }),
