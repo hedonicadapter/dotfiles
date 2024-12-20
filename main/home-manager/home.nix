@@ -202,7 +202,7 @@ in {
       autoSkipVideo
     ];
     enabledCustomApps = with spicePkgs.apps; [marketplace];
-    theme = spicePkgs.themes.orchis;
+    theme = spicePkgs.themes.text;
     colorScheme = "custom";
 
     customColorScheme = {

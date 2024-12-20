@@ -6,10 +6,11 @@
 
     window.Bar {
       color: ${outputs.colors.base07};
+      min-height: 23px;
 
       .bar-items {
-        margin-left: 14px;
-        margin-right: 14px;
+        margin-left: 6px;
+        margin-right: 6px;
         margin-top: 4px;
         margin-bottom: -2px;
 
@@ -26,11 +27,7 @@
       }
 
       .media-player {
-        min-height: 20px;
-
-        padding-left: 8px;
-        padding-right: 8px;
-        padding-bottom: 1px;
+        min-height: 21px;
 
         background-color: ${outputs.colors.base0B};
         color: ${outputs.colors.base00};
@@ -40,19 +37,46 @@
           font-weight: 600;
         }
 
-        .position-bar {
-          border: 2px solid ${outputs.colors.base00};
-          min-height: 10px;
-          margin: 0 8px;
+        .main {
+          padding-left: 8px;
+          padding-right: 8px;
+          padding-bottom: 1px;
 
-          .current-position {
-            border: 1px solid ${outputs.colors.base0B};
-            background-color: ${outputs.colors.base00};
-            min-height: 8px;
+          .media-controls {
+            font-size: 14px;
+          }
+
+          .position-bar {
+            border: 2px solid ${outputs.colors.base00};
+            min-height: 10px;
+            margin: 0 8px;
+
+            .current-position {
+              border: 1px solid ${outputs.colors.base0B};
+              background-color: ${outputs.colors.base00};
+              min-height: 8px;
+            }
+          }
+          .position-and-length{
+            padding: 0 8px;
           }
         }
-        .position-and-length{
-          padding: 0 8px;
+        .track-info {
+          padding: 2px 0;
+          font-size: 14px;
+
+          padding-right: 8px;
+          padding-bottom: 1px;
+          padding-top: 2px;
+
+          .cover-art-container {
+            margin-left: 2px;
+            margin-bottom: 2px;
+            margin-right: 4px;
+          }
+          .album-title {}
+          .artist-names {}
+          .project-name {}
         }
       }
 
@@ -60,7 +84,7 @@
         margin-left: 4px;
         margin-right: 4px;
         > * {
-          padding: 3px 0;
+          padding: 0 3px;
         }
       }
 

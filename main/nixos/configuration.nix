@@ -150,7 +150,7 @@ in {
     #     toString saturation
     #   } -fill "${fillColor}" $out
     # '';
-    polarity = "light";
+    polarity = "dark";
     base16Scheme = outputs.colors;
     targets = {
       gnome.enable = true;
