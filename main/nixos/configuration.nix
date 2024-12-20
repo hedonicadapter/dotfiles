@@ -299,6 +299,7 @@ in {
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+  services.gvfs.enable = true; # AGS docs: "In order for network cover art urls to be cached (spotify for example) make sure gvfs is enabled."
 
   virtualisation.docker.enable = true;
   virtualisation.docker.rootless = {

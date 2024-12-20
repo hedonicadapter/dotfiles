@@ -50,9 +50,9 @@ in {
       sunset = 3500.0;
     };
     crt-effect = {
-      glowStrength = 0.25;
-      glowRadius = 0.0016;
-      scanlineFrequency = 1700.0;
+      glowStrength = 0.3;
+      glowRadius = 0.0018;
+      scanlineFrequency = 1800.0;
       scanlineIntensity = 0.04;
       curvatureStrength = 0.04;
     };

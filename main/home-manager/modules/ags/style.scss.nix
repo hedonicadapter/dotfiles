@@ -14,6 +14,8 @@
         margin-bottom: -2px;
 
         .bar-item {
+          margin-left: 6px;
+          margin-right: 6px;
         }
       }
 
@@ -21,6 +23,37 @@
         color: ${outputs.colors.base07};
         margin-left: 4px;
         margin-right: 4px;
+      }
+
+      .media-player {
+        min-height: 20px;
+
+        margin-top: -2px;
+        padding-left:8px;
+        padding-right:8px;
+
+        background-color: ${outputs.colors.base0B};
+        color: ${outputs.colors.base00};
+
+        > * {
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .position-bar {
+          border: 2px solid ${outputs.colors.base00};
+          min-height: 10px;
+          margin: 0 8px;
+
+          .current-position {
+            border: 1px solid ${outputs.colors.base0B};
+            background-color: ${outputs.colors.base00};
+            min-height: 8px;
+          }
+        }
+        .position-and-length{
+          padding: 0 8px;
+        }
       }
 
       .tray {
@@ -61,7 +94,7 @@
         min-height: 0;
       }
       .header {
-        border: 1px solid transparent;
+        border: 2px solid transparent;
         font-size: 21px;
 
         .app-name {
@@ -83,7 +116,6 @@
       .actions {
         padding-bottom: 4px;
         button {
-
         }
       }
       .hovered {

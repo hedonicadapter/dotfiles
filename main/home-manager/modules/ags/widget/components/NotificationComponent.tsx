@@ -58,12 +58,13 @@ export default function NotificationComponent(props: Props) {
             halign={END}
             valign={CENTER}
             visible={bind(hovered)}
-            label={time(n.time)}
+            label={time(n.time) + " "}
           />
           <button
             className="close-button"
             valign={CENTER}
             onClicked={() => n.dismiss()}
+            visible={bind(hovered)}
           >
             <icon icon="window-close-symbolic" />
           </button>

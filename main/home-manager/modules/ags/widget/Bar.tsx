@@ -6,6 +6,8 @@ import WifiComponent from "./components/Bar/WifiComponent";
 import WorkspaceComponent from "./components/Bar/WorkspaceComponent";
 import TitleComponent from "./components/Bar/TitleComponent";
 import NotificationsComponent from "./components/Bar/NotificationsComponent";
+import AudioComponent from "./components/Bar/AudioComponent";
+import MediaComponent from "./components/Bar/MediaComponent";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   const hovered = Variable(false);
@@ -37,6 +39,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             <box valign={START}>
               <SysTrayComponent />
             </box>
+
+            <box valign={START}>
+              <MediaComponent />
+            </box>
           </box>
 
           <box halign={CENTER}>
@@ -50,9 +56,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
               <NotificationsComponent />
             </box>
             <box valign={START}>
+              <AudioComponent />
+            </box>
+            <box valign={START}>
               <WifiComponent />
             </box>
-
             <box valign={START}>
               <TimeComponent />
             </box>
