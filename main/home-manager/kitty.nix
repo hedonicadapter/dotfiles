@@ -64,6 +64,9 @@ in {
       # inactive_tab_foreground #444
       # inactive_tab_background #999
       # inactive_tab_font_style normal
+
+      cursor_trail = 1;
+      cursor_trail_decay = "0.1 0.4";
     };
   };
 }

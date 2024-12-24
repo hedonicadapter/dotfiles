@@ -9,31 +9,30 @@
   programs.tofi = {
     enable = true;
     settings = {
-      width = "100%";
-      height = "100%";
+      width = "25%";
+      height = "20%";
       border-width = 0;
       outline-width = 0;
-      padding-left = "45%";
-      padding-top = "35%";
-      result-spacing = 10;
+      padding-left = "0%";
+      padding-top = "0%";
       num-results = 5;
-      font = "--font ${pkgs.public-sans}/share/fonts/opentype/PublicSans-Regular.otf";
+      font = "--font ${pkgs.ultimate-oldschool-pc-font-pack}/share/fonts/truetype/Mx437_DOS-V_re_JPN30.ttf";
       font-features = "liga 0";
       hint-font = false;
       text-cursor-corner-radius = 1;
-      font-size = 22;
-      background-color = "#000A";
+      font-size = 16;
+      background-color = outputs.colors.base00;
 
-      prompt-color = outputs.colors.base01;
-      input-color = outputs.colors.base00;
-      input-background = "#0000";
+      prompt-color = outputs.colors.base04;
+      input-color = outputs.colors.base07;
+      input-background = outputs.colors.base00;
 
       selection-color = outputs.colors.base00;
       selection-match-color = outputs.colors.base07;
 
       selection-background = outputs.colors.base0D;
       selection-background-corner-radius = 1;
-      selection-background-padding = 4;
+      selection-background-padding = 1;
 
       history-file = "${config.home.homeDirectory}/.config/tofi/history";
     };

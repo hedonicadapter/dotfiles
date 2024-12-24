@@ -10,10 +10,7 @@ export default function TitleComponent() {
       {focused.as(
         (client) =>
           client && (
-            <label
-              ellipsize={3}
-              label={">" + bind(client, "title").as(String)}
-            />
+            <label ellipsize={3} label={bind(client, "title").as(String)} />
           ),
       )}
     </box>

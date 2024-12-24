@@ -576,6 +576,15 @@
     }
     #urlbar {
       flex-direction:column-reverse !important;
+      transform: translateY(var(--urlbar-height));
+    }
+    #urlbar:not([focused]) {
+      transform: translateY(var(--urlbar-height)) !important;
+    }
+    #urlbar {
+      transform: translateY(0);
+      transition: transform 0.15s;
+      transition-timing-function: var(--easink) !important;
     }
     #urlbar-results {
       padding-block: 0 !important;

@@ -63,7 +63,7 @@
         }
         .track-info {
           padding: 2px 0;
-          font-size: 14px;
+          font-size: 16px;
 
           padding-right: 8px;
           padding-bottom: 1px;

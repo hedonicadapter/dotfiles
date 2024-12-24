@@ -95,10 +95,12 @@
         bezier = myBezier, 0, 0, 0.58, 1
         bezier = easeOutBack, 0.34, 1.56, 0.64, 1
 
-        animation = windows, 1, 7, myBezier, popin
-        animation = windowsOut, 1, 5.5, myBezier
+        animation = windows, 1, 7, myBezier, slide
+        animation = windowsOut, 1, 5.5, myBezier, slide
+
         animation = border, 1, 4.5, myBezier
         animation = borderangle, 1, 12.5, easeOutBack
+
         animation = fade, 1, 2.5, myBezier
         animation = workspaces, 1, 6, myBezier
     }
