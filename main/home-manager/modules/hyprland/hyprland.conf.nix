@@ -13,16 +13,17 @@
     exec-once = bash ~/.config/hypr/auto-start.sh
     # exec-once = bash ~/.config/hypr/auto-float-unfloat.sh
 
-    exec-once=[split-workspace 2 silent] firefox-beta
-    exec-once=[split-workspace 1 silent] DiscordCanary
-    exec-once=[split-workspace 1 silent] spotify
-    exec-once=[split-workspace 1 silent] obsidian
-
     $terminal = kitty
+    $editor = neovide
     $fileManager = nautilus
     $menu = tofi-run
     $browser = firefox-beta
     $music = spotify
+
+    exec-once=[split-workspace 5 silent] $browser && $editor
+    exec-once=[split-workspace 6 silent] obsidian
+    exec-once=[split-workspace 1 silent] DiscordCanary
+    exec-once=[split-workspace 1 silent] $music
 
     # env = AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1
     env = XCURSOR_SIZE,24
@@ -173,11 +174,11 @@
     # bind = $mainMod, O&O, exec, obsidian # Open Obsidian
 
     bind = $mainMod, T, exec, $terminal
-    bind = $mainMod, N, exec, neovide
+    bind = $mainMod, N, exec, $editor
     bind = $mainMod, E, exec, $fileManager
     bind = $mainMod, R, exec, tofi-run | xargs hyprctl dispatch exec --
     bind = $mainMod SHIFT, S, exec, $terminal bash ~/.config/hypr/speed-read.sh
-    bind = $mainMod, period, exec, cat ~/.config/tofi/emoji-list.txt | grep -v "^##" | tofi | cut -d ' ' -f1 | wl-copy --paste-once --trim-newline
+    bind = $mainMod, period, exec, rofimoji --selector tofi
 
     bind = $mainMod, Q, killactive,
     bind = $mainMod, Z, exec, ags -r "zenable = !zenable" # toggle zen mode

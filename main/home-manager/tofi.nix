@@ -16,7 +16,7 @@
       padding-left = "0%";
       padding-top = "0%";
       num-results = 5;
-      font = "--font ${pkgs.ultimate-oldschool-pc-font-pack}/share/fonts/truetype/Mx437_DOS-V_re_JPN30.ttf";
+      font = "${pkgs.ultimate-oldschool-pc-font-pack.outPath}/share/fonts/truetype/Mx437_DOS-V_re_JPN30.ttf";
       font-features = "liga 0";
       hint-font = false;
       text-cursor-corner-radius = 1;

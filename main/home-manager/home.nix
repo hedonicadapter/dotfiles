@@ -260,6 +260,7 @@ in {
       socat # for listening to unix socket events
       dotool # for speed-reader.sh
       inputs.ags.packages.${pkgs.system}.io # expose ags cli
+      rofimoji
     ]
     # Languages
     ++ [

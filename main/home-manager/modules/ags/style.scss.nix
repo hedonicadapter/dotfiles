@@ -97,6 +97,10 @@
       }
     }
 
+    .menu {
+      background-color: ${outputs.colors.base00};
+    }
+
     button, box {
       all:unset;
       padding: 0;
@@ -149,6 +153,7 @@
     }
 
     .low {
+      color: ${outputs.colors.base05};
       .header {
         border-color: ${outputs.colors.base07};
         color: ${outputs.colors.base07};
@@ -160,6 +165,7 @@
       }
     }
     .mid {
+      color: ${outputs.colors.base07};
       .header {
         border-color: ${outputs.colors.base0C};
         color: ${outputs.colors.base07};
@@ -171,6 +177,7 @@
       }
     }
     .high {
+      color: ${outputs.colors.base08};
       .header {
         border-color: ${outputs.colors.base08};
         color: ${outputs.colors.base07};
