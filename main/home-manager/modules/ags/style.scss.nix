@@ -2,6 +2,7 @@
   scss = ''
     * {
       background-color: transparent;
+      border-radius: 1px;
     }
 
     window.Bar {
@@ -97,8 +98,20 @@
       }
     }
 
-    .menu {
+    menu {
       background-color: ${outputs.colors.base00};
+      padding: 1px;
+      margin: 0px;
+
+      > menuitem {
+        padding: 1px;
+        margin: 0px;
+      }
+
+      > menuitem:hover {
+          background-color: ${outputs.colors.base07};
+          color: ${outputs.colors.base00};
+      }
     }
 
     button, box {

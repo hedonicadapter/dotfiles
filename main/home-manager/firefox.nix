@@ -17,6 +17,7 @@
         seventv
         betterttv
         adaptive-tab-bar-colour
+        user-agent-string-switcher
       ];
       settings = {
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
@@ -38,7 +39,7 @@
         "browser.tabs.loadBookmarksInBackground" = true;
         "layout.word_select.eat_space_to_next_word" = false;
         "general.smoothScroll.mouseWheel.durationMaxMS" = 200;
-        "general.useragent.override" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.60/61 Safari/537.36";
+        "browser.startup.homepage" = "about:blank";
       };
       search.engines = {
         "Nix Packages" = {

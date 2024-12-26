@@ -11,7 +11,7 @@
       processedColor;
   in ''
     exec-once = bash ~/.config/hypr/auto-start.sh
-    # exec-once = bash ~/.config/hypr/auto-float-unfloat.sh
+    exec-once = bash ~/.config/hypr/auto-float-unfloat.sh
 
     $terminal = kitty
     $editor = neovide
