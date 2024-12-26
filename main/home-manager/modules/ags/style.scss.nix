@@ -5,9 +5,20 @@
       border-radius: 1px;
     }
 
+    @keyframes spin-low {
+        to { -gtk-icon-transform: rotate(1turn); }
+    }
+    @keyframes spin-mid {
+        to { -gtk-icon-transform: rotate(1turn); }
+    }
+    @keyframes spin-high {
+        to { -gtk-icon-transform: rotate(1turn); }
+    }
+
     window.Bar {
       color: ${outputs.colors.base07};
       min-height: 23px;
+      font-size: 19px;
 
       .bar-items {
         margin-left: 6px;
@@ -16,8 +27,8 @@
         margin-bottom: -2px;
 
         .bar-item {
-          margin-left: 6px;
-          margin-right: 6px;
+          margin-left: 8px;
+          margin-right: 8px;
         }
       }
 
@@ -79,6 +90,25 @@
           .artist-names {}
           .project-name {}
         }
+      }
+
+      .audio {
+        .default-io {
+          > * {
+            margin-left: 6px;
+            margin-right: 6px;
+          }
+          .bar-label {
+            padding-right: 1px;
+          }
+          .bar {
+            margin-top: -3px;
+          }
+        }
+      }
+      .audio.hovered {
+        background-color: ${outputs.colors.base07};
+        color: ${outputs.colors.base00};
       }
 
       .tray {
@@ -200,6 +230,16 @@
             color: ${outputs.colors.base07};
         }
       }
+    }
+
+    .fan .low {
+      animation: spin-low .5s linear infinite;
+    }
+    .fan .mid {
+      animation: spin-mid 1s linear infinite;
+    }
+    .fan .high {
+      animation: spin-high 2s linear infinite;
     }
   '';
 in

@@ -189,7 +189,6 @@
     bind = $mainMod, P, exec, nautilus ~/Documents/temp
     bind = $mainMod, D, exec, nautilus ~/Downloads
     bind = $mainMod, B, exec, $browser
-    bind = $mainMod, S, exec, $music
 
     bind = $mainMod, H, movefocus, l
     bind = $mainMod, L, movefocus, r
@@ -240,12 +239,11 @@
     bindl=, XF86AudioNext, exec, playerctl next
     bindl=, XF86AudioPrev, exec, playerctl previous
 
-    bindle=, F1, exec, pactl list short sinks | awk '{print $1}' | xargs -I{} pactl set-sink-mute {} toggle
-    bindle=, F2, exec, pactl list short sinks | awk '{print $1}' | xargs -I{} pactl set-sink-volume {} -10%
-    bindle=, F3, exec, pactl list short sinks | awk '{print $1}' | xargs -I{} pactl set-sink-volume {} +10%
+    bindle=, F1, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+    bindle=, F2, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-
+    bindle=, F3, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+
 
-    bind = $mainMod, s, exec, bash ~/.config/hypr/toggle-mic.sh
-    # bindr = $mainMod, s, exec, amixer set Capture nocap doesnt work well
+    bind = $mainMod, s, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
 
     bind = $mainMod, A, exec, easyeffects
 

@@ -40,6 +40,7 @@
         "layout.word_select.eat_space_to_next_word" = false;
         "general.smoothScroll.mouseWheel.durationMaxMS" = 200;
         "browser.startup.homepage" = "about:blank";
+        "gfx.webrender.all" = true;
       };
       search.engines = {
         "Nix Packages" = {

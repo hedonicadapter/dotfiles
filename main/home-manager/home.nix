@@ -299,7 +299,7 @@ in {
     ++ [
       nerd-fonts.symbols-only
       maple-mono-NF
-      cartograph-cf
+      # cartograph-cf DMCA'd
       ultimate-oldschool-pc-font-pack
       glasstty-ttf
       material-symbols
