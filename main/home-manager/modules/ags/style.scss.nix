@@ -18,7 +18,7 @@
     window.Bar {
       color: ${outputs.colors.base07};
       min-height: 23px;
-      font-size: 19px;
+      font-size: 20px;
 
       .bar-items {
         margin-left: 6px;
@@ -36,6 +36,20 @@
         color: ${outputs.colors.base07};
         margin-left: 4px;
         margin-right: 4px;
+      }
+
+      .workspaces {
+        font-size: 16px;
+      }
+
+      .tray {
+        margin-left: 4px;
+        margin-right: 4px;
+        font-size: 16px;
+
+        > * {
+          padding: 0 3px;
+        }
       }
 
       .media-player {
@@ -103,6 +117,7 @@
           }
           .bar {
             margin-top: -3px;
+            font-size: 19px;
           }
         }
       }
@@ -111,20 +126,8 @@
         color: ${outputs.colors.base00};
       }
 
-      .tray {
-        margin-left: 4px;
-        margin-right: 4px;
-        > * {
-          padding: 0 3px;
-        }
-      }
-
-      .dash {
-        .hovered {
-        }
-      }
-
-      .hovered {
+      .time {
+        font-size: 18px;
       }
     }
 
@@ -195,8 +198,14 @@
       }
     }
 
+    .fan {
+      margin-left: 4px;
+      font-size: 16px;
+    }
+
     .low {
       color: ${outputs.colors.base05};
+
       .header {
         border-color: ${outputs.colors.base07};
         color: ${outputs.colors.base07};
@@ -206,9 +215,15 @@
           color: ${outputs.colors.base00};
         }
       }
+
+      .fan {
+        color: ${outputs.colors.base05};
+        animation: spin-low 1.5s linear infinite;
+      }
     }
     .mid {
       color: ${outputs.colors.base07};
+
       .header {
         border-color: ${outputs.colors.base0C};
         color: ${outputs.colors.base07};
@@ -218,9 +233,15 @@
             color: ${outputs.colors.base00};
         }
       }
+
+      .fan {
+        color: ${outputs.colors.base07};
+        animation: spin-mid 1s linear infinite;
+      }
     }
     .high {
       color: ${outputs.colors.base08};
+
       .header {
         border-color: ${outputs.colors.base08};
         color: ${outputs.colors.base07};
@@ -230,17 +251,13 @@
             color: ${outputs.colors.base07};
         }
       }
+
+      .fan {
+        color: ${outputs.colors.base08};
+        animation: spin-high 0.25s linear infinite;
+      }
     }
 
-    .fan .low {
-      animation: spin-low .5s linear infinite;
-    }
-    .fan .mid {
-      animation: spin-mid 1s linear infinite;
-    }
-    .fan .high {
-      animation: spin-high 2s linear infinite;
-    }
   '';
 in
   scss

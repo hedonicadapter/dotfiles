@@ -12,6 +12,7 @@ const convertedToCss = await execAsync(
 
 App.start({
   css: convertedToCss,
+  icons: `${SRC}/icons`,
   main() {
     monitors.map(Bar);
   },

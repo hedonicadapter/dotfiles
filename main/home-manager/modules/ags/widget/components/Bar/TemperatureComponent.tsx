@@ -17,39 +17,31 @@ const temperature = Variable(0).poll(
 
 export default function TemperatureComponent() {
   return (
-    <box valign={Gtk.Align.CENTER} onDestroy={() => temperature.drop()}>
+    <box
+      valign={Gtk.Align.CENTER}
+      onDestroy={() => temperature.drop()}
+      className={bind(temperature).as((t: number) => {
+        switch (true) {
+          case t < 40:
+            return "low";
+          case t < 70:
+            return "mid";
+          case t >= 70:
+            return "high";
+        }
+      })}
+    >
       <label
         valign={Gtk.Align.CENTER}
-        className={bind(temperature).as((t: number) => {
-          let className = "temperature ";
-          switch (true) {
-            case t < 40:
-              className += "low";
-            case t < 70:
-              className += "mid";
-            case t >= 70:
-              className += "high";
-          }
-          return className;
-        })}
         label={bind(temperature).as((t) => t.toString() + "°")}
+        className="temperature"
       />
-      <box className="fan">
-        <label
-          valign={Gtk.Align.CENTER}
-          className={bind(temperature).as((t: number) => {
-            switch (true) {
-              case t < 40:
-                return "low";
-              case t < 70:
-                return "mid";
-              case t >= 70:
-                return "high";
-            }
-          })}
-          label="⊛"
-        />
-      </box>
+      <icon
+        className="fan"
+        icon="fan-symbolic"
+        valign={Gtk.Align.CENTER}
+        halign={Gtk.Align.CENTER}
+      />
     </box>
   );
 }

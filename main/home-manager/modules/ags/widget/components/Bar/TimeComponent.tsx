@@ -8,6 +8,10 @@ const time = Variable<string>("").poll(
 
 export default function TimeComponent() {
   return (
-    <label className="bar-item " onDestroy={() => time.drop()} label={time()} />
+    <label
+      className="bar-item time"
+      onDestroy={() => time.drop()}
+      label={time()}
+    />
   );
 }

@@ -84,8 +84,9 @@ export default function () {
                     <label halign={START} label={stream.name || ""} />
 
                     <label
+                      halign={START}
                       className={stream.mute ? "" : "bar"}
-                      label={bars(stream.volume, stream.mute)}
+                      label={stream.mute ? "MUTED" : bars(stream.volume)}
                     />
                   </box>
                 );

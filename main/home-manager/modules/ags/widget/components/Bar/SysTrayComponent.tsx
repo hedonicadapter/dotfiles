@@ -1,4 +1,4 @@
-import { App, Gdk } from "astal/gtk3";
+import { App, Gdk, Gtk } from "astal/gtk3";
 import { bind } from "astal";
 import Tray from "gi://AstalTray";
 
@@ -6,7 +6,11 @@ export default function SysTrayComponent() {
   const tray = Tray.get_default();
 
   return (
-    <box className="bar-item tray">
+    <box
+      className="bar-item tray"
+      valign={Gtk.Align.CENTER}
+      halign={Gtk.Align.CENTER}
+    >
       {bind(tray, "items").as((items) =>
         items.map((item) => {
           if (item.iconThemePath) App.add_icons(item.iconThemePath);
@@ -26,8 +30,14 @@ export default function SysTrayComponent() {
                   null,
                 );
               }}
+              valign={Gtk.Align.CENTER}
+              halign={Gtk.Align.CENTER}
             >
-              <icon gIcon={bind(item, "gicon")} />
+              <icon
+                gIcon={bind(item, "gicon")}
+                valign={Gtk.Align.CENTER}
+                halign={Gtk.Align.CENTER}
+              />
             </button>
           );
         }),

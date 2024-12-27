@@ -5,7 +5,7 @@ export default function WorkspaceComponent() {
   const hypr = Hyprland.get_default();
 
   return (
-    <box className="bar-item Workspaces">
+    <box className="bar-item workspaces">
       {bind(hypr, "workspaces").as((wss) =>
         wss
           .sort((a, b) => a.id - b.id)
