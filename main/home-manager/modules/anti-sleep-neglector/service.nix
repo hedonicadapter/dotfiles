@@ -138,7 +138,6 @@ in {
             glowStrength = mkOption {
               type = types.float;
               default = 0.12;
-              description = "The CRT effect glow strength.";
             };
             glowRadius = mkOption {
               type = types.float;
@@ -156,10 +155,17 @@ in {
               type = types.float;
               default = 0.1;
             };
+            brightness = mkOption {
+              type = types.float;
+              default = 0.0;
+            };
+            contrast = mkOption {
+              type = types.float;
+              default = 1.0;
+            };
           };
         };
         default = {};
-        description = "Brightness periods configuration";
       };
     };
 
@@ -503,6 +509,8 @@ in {
               scanlineFrequency = config.services.anti-sleep-neglector-gamma.crt-effect.scanlineFrequency;
               scanlineIntensity = config.services.anti-sleep-neglector-gamma.crt-effect.scanlineIntensity;
               curvatureStrength = config.services.anti-sleep-neglector-gamma.crt-effect.curvatureStrength;
+              brightness = config.services.anti-sleep-neglector-gamma.crt-effect.brightness;
+              contrast = config.services.anti-sleep-neglector-gamma.crt-effect.contrast;
             };
           };
         })

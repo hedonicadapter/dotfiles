@@ -30,14 +30,8 @@ export default function SysTrayComponent() {
                   null,
                 );
               }}
-              valign={Gtk.Align.CENTER}
-              halign={Gtk.Align.CENTER}
             >
-              <icon
-                gIcon={bind(item, "gicon")}
-                valign={Gtk.Align.CENTER}
-                halign={Gtk.Align.CENTER}
-              />
+              <icon gIcon={bind(item, "gicon")} />
             </button>
           );
         }),

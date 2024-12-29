@@ -5,6 +5,8 @@
   scanlineFrequency,
   scanlineIntensity,
   curvatureStrength,
+  brightness,
+  contrast,
   ...
 }: let
   frag = ''
@@ -26,6 +28,9 @@
     const float SCANLINE_INTENSITY = ${builtins.toString scanlineIntensity};
 
     const float CURVATURE_STRENGTH = ${builtins.toString curvatureStrength};
+
+    const float BRIGHTNESS = ${builtins.toString brightness};
+    const float CONTRAST = ${builtins.toString contrast};
 
     // Color Temperature to RGB conversion function
     vec3 colorTemperatureToRGB(const in float temperature) {
@@ -67,6 +72,12 @@
 
         // RGB extraction
         vec3 color = vec3(pixColor[0], pixColor[1], pixColor[2]);
+
+        // Apply contrast
+        color = (color - 0.5) * CONTRAST + 0.5;
+
+        // Apply brightness
+        color += vec3(BRIGHTNESS);
 
         // Luminance preservation (optional)
         #ifdef WITH_QUICK_AND_DIRTY_LUMINANCE_PRESERVATION

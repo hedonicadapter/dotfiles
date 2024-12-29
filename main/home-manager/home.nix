@@ -55,6 +55,8 @@ in {
       scanlineFrequency = 1800.0;
       scanlineIntensity = 0.04;
       curvatureStrength = 0.04;
+      brightness = 0.0;
+      contrast = 1.0;
     };
   };
   services.anti-sleep-neglector-wallpaper = {

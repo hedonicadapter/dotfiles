@@ -45,6 +45,7 @@
       .tray {
         margin-left: 4px;
         margin-right: 4px;
+        margin-top: 1px;
         font-size: 16px;
 
         > * {
@@ -111,13 +112,11 @@
           > * {
             margin-left: 6px;
             margin-right: 6px;
+            margin-top: -2px;
           }
           .bar-label {
-            padding-right: 1px;
           }
           .bar {
-            margin-top: -3px;
-            font-size: 19px;
           }
         }
       }
@@ -161,7 +160,7 @@
       background-color: ${outputs.colors.base00};
       color: ${outputs.colors.base07};
       margin-right: 3px;
-      margin-top: -4px;
+      margin-top: -2px;
       padding-bottom: 1px;
 
       :not(.latest) {
