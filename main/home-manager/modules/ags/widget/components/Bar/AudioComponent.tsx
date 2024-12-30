@@ -10,20 +10,24 @@ const audio = Wp.get_default()?.audio;
 const speaker = audio.defaultSpeaker!;
 const mic = audio.defaultMicrophone!;
 
-const VolumeButton = ({ stream, index }: { stream: any; index: number }) => {
-  const tenths = parseInt((stream.volume, 10).toFixed(0), 10);
-
+const VolumeButton = ({
+  stream,
+  index,
+  fill,
+}: {
+  stream: any;
+  index: number;
+  fill: boolean;
+}) => {
   return (
     <button
       onClicked={async () => {
         const newVolume = index * 0.1;
 
-        await execAsync(
-          `bash -c "wpctl set-volume  ${stream.id} ${newVolume}"`,
-        );
+        stream.volume = newVolume;
       }}
     >
-      <label halign={START} label={index <= tenths ? "▮" : "▯"} />
+      <label halign={START} label={fill ? "▮" : "▯"} />
     </button>
   );
 };
@@ -48,9 +52,7 @@ const UnmuteButton = ({ stream }: { stream: any }) => {
 export default function () {
   const hovered = Variable(false);
 
-  const output: Binding<number> = bind(speaker, "volume");
   const outputMuted: Binding<boolean> = bind(speaker, "mute");
-  const input: Binding<number> = bind(mic, "volume");
   const inputMuted: Binding<boolean> = bind(mic, "mute");
 
   // const outputVolOrMuted = volOrMuted(output, outputMuted);
@@ -64,50 +66,46 @@ export default function () {
       onHover={() => hovered.set(true)}
       onHoverLost={() => hovered.set(false)}
       onDestroy={() => {
-        // outputVolOrMuted.drop();
-        // inputVolOrMuted.drop();
         hovered.drop();
       }}
       valign={CENTER}
     >
       <box valign={CENTER} vertical>
         <box className="default-io" valign={CENTER}>
-          {bind(audio, "defaultMicrophone").as((s) => (
-            <box valign={CENTER}>
-              <button onClicked={() => (s.mute = !s.mute)}>
-                <label className="bar-label" label="IN:" />
-              </button>
-              <box>
-                {bind(outputMuted).as((b) =>
-                  b ? (
-                    <UnmuteButton stream={s} />
-                  ) : (
-                    Array.from({ length: 10 }).map((_, i) => (
-                      <VolumeButton stream={s} index={i} />
-                    ))
-                  ),
-                )}
-              </box>
-            </box>
-          ))}
-          {bind(audio, "defaultSpeaker").as((s) => (
-            <box valign={CENTER}>
-              <button onClicked={() => (s.mute = !s.mute)}>
-                <label className="bar-label" label="OUT:" />
-              </button>
-              <box>
-                {bind(outputMuted).as((b) =>
-                  b ? (
-                    <UnmuteButton stream={s} />
-                  ) : (
-                    Array.from({ length: 10 }).map((_, i) => (
-                      <VolumeButton stream={s} index={i} />
-                    ))
-                  ),
-                )}
-              </box>
-            </box>
-          ))}
+          <box valign={CENTER}>
+            <button onClicked={() => (mic.mute = !mic.mute)}>
+              <label className="bar-label" label="IN:" />
+            </button>
+
+            {bind(mic, "muted").as((m) =>
+              m ? (
+                <button onClicked={() => (mic.mute = false)}>
+                  <label label="MUTED" />
+                </button>
+              ) : (
+                <box />
+              ),
+            )}
+
+            {bind(mic, "volume").as((volume) =>
+              Array.from({ length: 10 }).map((_, i) => {
+                const tenths = Math.floor(parseFloat(volume) * 10);
+                const fill = i <= tenths;
+
+                return (
+                  <button
+                    onClicked={() => {
+                      const newVolume = i * 0.1;
+
+                      mic.volume = newVolume;
+                    }}
+                  >
+                    <label halign={START} label={fill ? "▮" : "▯"} />
+                  </button>
+                );
+              }),
+            )}
+          </box>
         </box>
         <box className="panel" visible={bind(hovered)} vertical>
           {bind(audio, "streams").as(
@@ -117,16 +115,6 @@ export default function () {
                 return (
                   <box vertical>
                     <label halign={START} label={stream.name || ""} />
-
-                    <box>
-                      {stream.mute ? (
-                        <UnmuteButton stream={stream} />
-                      ) : (
-                        Array.from({ length: 10 }).map((_, i) => (
-                          <VolumeButton stream={stream} index={i} />
-                        ))
-                      )}
-                    </box>
                   </box>
                 );
               }),
