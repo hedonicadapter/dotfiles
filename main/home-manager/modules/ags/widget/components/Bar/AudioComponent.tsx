@@ -10,28 +10,6 @@ const audio = Wp.get_default()?.audio;
 const speaker = audio.defaultSpeaker!;
 const mic = audio.defaultMicrophone!;
 
-const VolumeButton = ({
-  stream,
-  index,
-  fill,
-}: {
-  stream: any;
-  index: number;
-  fill: boolean;
-}) => {
-  return (
-    <button
-      onClicked={async () => {
-        const newVolume = index * 0.1;
-
-        stream.volume = newVolume;
-      }}
-    >
-      <label halign={START} label={fill ? "▮" : "▯"} />
-    </button>
-  );
-};
-
 const UnmuteButton = ({ stream }: { stream: any }) => {
   return (
     <button onClicked={() => (stream.mute = false)}>
@@ -48,6 +26,31 @@ const UnmuteButton = ({ stream }: { stream: any }) => {
 //     if (b) return "MUTED ";
 //     return bars(n);
 //   });
+
+const Bar = ({ stream }: { stream: any }) => {
+  return (
+    <box>
+      {bind(stream, "volume").as((volume) =>
+        Array.from({ length: 10 }).map((_, i) => {
+          const tenths = Math.round(parseFloat(volume) * 10);
+          const fill = i <= tenths;
+
+          return (
+            <button
+              onClicked={() => {
+                const newVolume = i * 0.1;
+
+                stream.volume = newVolume;
+              }}
+            >
+              <label halign={START} label={fill ? "▮" : "▯"} />
+            </button>
+          );
+        }),
+      )}
+    </box>
+  );
+};
 
 export default function () {
   const hovered = Variable(false);
@@ -86,38 +89,43 @@ export default function () {
                 <box />
               ),
             )}
+            <Bar stream={mic} />
+          </box>
 
-            {bind(mic, "volume").as((volume) =>
-              Array.from({ length: 10 }).map((_, i) => {
-                const tenths = Math.floor(parseFloat(volume) * 10);
-                const fill = i <= tenths;
+          <box valign={CENTER}>
+            <button onClicked={() => (speaker.mute = !speaker.mute)}>
+              <label className="bar-label" label="OUT:" />
+            </button>
 
-                return (
-                  <button
-                    onClicked={() => {
-                      const newVolume = i * 0.1;
-
-                      mic.volume = newVolume;
-                    }}
-                  >
-                    <label halign={START} label={fill ? "▮" : "▯"} />
-                  </button>
-                );
-              }),
+            {bind(speaker, "muted").as((m) =>
+              m ? (
+                <button onClicked={() => (speaker.mute = false)}>
+                  <label label="MUTED" />
+                </button>
+              ) : (
+                <box />
+              ),
             )}
+            <Bar stream={speaker} />
           </box>
         </box>
         <box className="panel" visible={bind(hovered)} vertical>
-          {bind(audio, "streams").as(
-            (streams) =>
-              streams.length > 0 &&
+          {bind(audio, "streams").as((streams) =>
+            streams.length > 0 ? (
               streams.map((stream: any) => {
                 return (
                   <box vertical>
-                    <label halign={START} label={stream.name || ""} />
+                    <button onClicked={() => (stream.mute = !stream.mute)}>
+                      <label className="bar-label" label={stream.name || ""} />
+                    </button>
+
+                    <Bar stream={stream} />
                   </box>
                 );
-              }),
+              })
+            ) : (
+              <box />
+            ),
           )}
         </box>
       </box>
