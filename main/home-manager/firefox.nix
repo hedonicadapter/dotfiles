@@ -17,7 +17,6 @@
         seventv
         betterttv
         adaptive-tab-bar-colour
-        user-agent-string-switcher
       ];
       settings = {
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;

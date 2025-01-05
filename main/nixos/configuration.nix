@@ -64,9 +64,6 @@ in {
 
   environment.pathsToLink = ["/share/zsh"];
   environment.systemPackages = with pkgs; [
-    bibata-cursors-translucent
-    fluent-icon-theme
-
     onlyoffice-bin
     wine
     winetricks
@@ -98,11 +95,7 @@ in {
     pulseaudio
     playerctl
     spotify
-    # (pkgs.discord-canary.override {
-    #   withOpenASAR = true;
-    #   withVencord = true;
-    # })
-    discord-canary # run once as vanilla if openasar error
+
     betterdiscordctl
     acpi
 

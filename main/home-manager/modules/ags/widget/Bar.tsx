@@ -10,6 +10,7 @@ import AudioComponent from "./components/Bar/AudioComponent";
 import MediaComponent from "./components/Bar/MediaComponent";
 import TemperatureComponent from "./components/Bar/TemperatureComponent";
 import BluetoothComponent from "./components/Bar/BluetoothComponent";
+import ModeComponent from "./components/Bar/ModeComponent";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   const hovered = Variable(false);
@@ -36,6 +37,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           <box hexpand halign={START}>
             <box valign={START}>
               <WorkspaceComponent />
+            </box>
+            <box valign={START}>
+              <ModeComponent />
             </box>
 
             <box valign={START}>

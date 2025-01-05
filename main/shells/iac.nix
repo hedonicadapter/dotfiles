@@ -10,6 +10,8 @@ pkgs.mkShellNoCC {
       terraform
       ansible
       azure-functions-core-tools
+      google-cloud-sdk
+      firebase-tools
     ]
     # Language servers
     ++ [

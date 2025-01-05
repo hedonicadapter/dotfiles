@@ -1,6 +1,7 @@
 import { bind, Variable } from "astal";
 import { Gtk } from "astal/gtk3";
 import Mpris from "gi://AstalMpris";
+import { exec } from "astal/process";
 import { fmtMSS } from "../../../util";
 
 const { START, CENTER, END } = Gtk.Align;
@@ -41,7 +42,11 @@ export default function () {
 
   return (
     <eventbox
-      onClick={() => spotify.raise()}
+      onClick={() =>
+        spotify.get_available() && spotify.get_can_raise()
+          ? spotify.raise()
+          : exec("bash -c 'spotify'")
+      }
       onHover={() => hovered.set(true)}
       onHoverLost={() => hovered.set(false)}
     >

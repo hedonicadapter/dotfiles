@@ -609,6 +609,32 @@
         padding-right: 0px !important;
       }
     }
+    #context-navigation, menugroup {
+      flex-direction: row !important;
+    }
+    menuitem > *, menuitem {
+      margin: 0 !important;
+      color: ${outputs.colors.base07};
+      font-size: 23px !important;
+    }
+    menu, menuitem {
+      &:where([_moz-menuactive]:not([disabled="true"])) {
+        color: ${outputs.colors.base00};
+        background-color: ${outputs.colors.base07};
+      }
+    }
+    menuitem[_moz-menuactive]:not([disabled="true"]) > * {
+        text-transform: uppercase !important;
+    }
+    menuitem[_moz-menuactive="true"]:not([disabled]), menuitem[_moz-menuactive="true"]:not([disabled]) > *, menupopup > menuitem[_moz-menuactive], menupopup > menu[_moz-menuactive] {
+      background-color: ${outputs.colors.base07} !important;
+      color: ${outputs.colors.base00} !important;
+    }
+    menu, menuitem, menucaption {
+      @media (-moz-platform: linux) {
+        padding: 0 !important;
+      }
+    }
   '';
 in
   css

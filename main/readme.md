@@ -28,14 +28,11 @@ Non-minimalist without being cluttered
 + Hyprland
 + Tofi
 
-Terminal
+Terminal/CLI
 + Kitty
 + Tmux
 + Neovim
-
-CLI
 + Atuin
-+ Yazi
 + Zoxide
 
 Misc
@@ -46,15 +43,13 @@ Misc
 + Spicetify
 
 # Todo
-- [x] Pick wallpaper based on hue and time of day
-- [ ] Fix anti-sleep-neglector-wallpaper service not starting on boot
+- [ ] nix search, google, protondb, nixos options, and home manager options tofi
+- [ ] neovim wrap selection in code block markdown
+- [ ] neovim hop between variables
+- [ ] icons and cursor
 - [ ] System-wide font selection
 - [ ] Hyprland workspace session manager(?)
-- [x] Inject colors from flake into discord, ~spotify~, firefox, and obsidian
 - [ ] Change light/dark mode depending on time of day
-- [ ] Fix emoji picker
-- [ ] Add kaomoji to emoji picker
-- [x] Reactive-nvim broken
 
 # Credits
  - (https://github.com/hyprwm/Hyprland/issues/1140#issuecomment-1335128437)[Blue light shaders from MahouShoujoMivutilde]

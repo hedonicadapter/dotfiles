@@ -41,6 +41,9 @@
       .workspaces {
         font-size: 16px;
       }
+      .mode {
+        margin-left: 4px;
+      }
 
       .tray {
         margin-left: 4px;
@@ -135,12 +138,12 @@
       padding: 1px;
       margin: 0px;
 
-      > menuitem {
-        padding: 1px;
+      > * {
+        padding: 0px;
         margin: 0px;
       }
 
-      > menuitem:hover {
+      > *:hover {
           background-color: ${outputs.colors.base07};
           color: ${outputs.colors.base00};
       }

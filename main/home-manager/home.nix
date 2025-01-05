@@ -8,8 +8,6 @@
   ...
 }: let
   #   unstable = import <nixos-unstable> {};
-  discord_css = import ./modules/discord/custom.css.nix {inherit outputs;};
-
   removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
   colorsRGB = builtins.mapAttrs (name: value: removeHash value) outputs.colors;
 in {
@@ -19,6 +17,8 @@ in {
     # ../cachix.nix
     inputs.matugen.nixosModules.default
     inputs.spicetify-nix.homeManagerModules.default
+
+    inputs.nixcord.homeManagerModules.nixcord
 
     ./firefox.nix
     # ./tmux.nix
@@ -87,6 +87,7 @@ in {
           "copilot.vim"
           "ticktick"
           "betterttv"
+          "discord-canary"
         ];
     };
   };
@@ -208,10 +209,10 @@ in {
     colorScheme = "custom";
 
     customColorScheme = {
-      text = colorsRGB.base08;
-      subtext = colorsRGB.base00;
-      sidebar-text = colorsRGB.base0F;
-      main = "#00000005";
+      text = colorsRGB.base0A;
+      subtext = colorsRGB.base04;
+      sidebar-text = colorsRGB.base05;
+      main = colorsRGB.base00;
       sidebar = colorsRGB.base01;
       player = colorsRGB.base00;
       card = colorsRGB.base09;
@@ -227,28 +228,149 @@ in {
     };
   };
 
-  programs.spotify-player = {
+  programs.nixcord = {
     enable = true;
+    discord = {
+      package = pkgs.discord-canary;
+      vencord.enable = true;
+      openASAR.enable = true;
+    };
+    vesktop.enable = true;
+    # programs.nixcord.userPlugins
+    #     # enable custom user plugins from github
+    #     # type: attrsOf (coercedTo (strMatching regex))
+    # disable the minimum size for the discord window   #     # regex matches the form "github:user/repo/commitHash"
+    quickCss =
+      ''
+        :root {
+          --txt-pad: 5px;
+          --bg-0: ${outputs.colors.base00}; /* main background color */
+          --bg-1: ${outputs.colors.base01}; /* background color for secondary elements */
+          --bg-2: ${outputs.colors.base02}; /* color of neutral buttons */
+          --bg-3: ${outputs.colors.base03}; /* color of neutral buttons when hovered */
+
+          --hover: hsla(0, 0%, 40%, 0.1); /* keeping original as it's an opacity value */
+          --active: hsla(0, 0%, 40%, 0.2); /* keeping original as it's an opacity value */
+          --selected: var(--active);
+
+          --txt-dark: ${outputs.colors.base00};
+          --txt-link: ${outputs.colors.base0C};
+          --txt-0: ${outputs.colors.base07};
+          --txt-1: ${outputs.colors.base05};
+          --txt-2: ${outputs.colors.base04};
+          --txt-3: ${outputs.colors.base03};
+
+          --acc-0: ${outputs.colors.base0A};
+          --acc-1: color-mix(in oklch, ${outputs.colors.base0A}, white 10%);
+          --acc-2: color-mix(in oklch, ${outputs.colors.base0A}, black 10%);
+
+          --border-width: 1px;
+          --border-color: ${outputs.colors.base03};
+          --border-hover-color: ${outputs.colors.base0A};
+          --border-transition: 0.2s ease;
+
+          --online-dot: ${outputs.colors.base0B};
+          --dnd-dot: ${outputs.colors.base08};
+          --idle-dot: ${outputs.colors.base0A};
+          --streaming-dot: ${outputs.colors.base0E};
+
+          --mention-txt: ${outputs.colors.base0C};
+          --mention-bg: color-mix(in oklch, ${outputs.colors.base0C}, transparent 90%);
+          --mention-overlay: color-mix(in oklch, ${outputs.colors.base0C}, transparent 90%);
+          --mention-hover-overlay: color-mix(in oklch, ${outputs.colors.base0C}, transparent 95%);
+          --reply-overlay: var(--active);
+          --reply-hover-overlay: var(--hover);
+
+          --pink: ${outputs.colors.base08};
+          --pink-1: color-mix(in oklch, ${outputs.colors.base08}, black 10%);
+          --pink-2: color-mix(in oklch, ${outputs.colors.base08}, black 20%);
+          --purple: ${outputs.colors.base0E};
+          --purple-1: color-mix(in oklch, ${outputs.colors.base0E}, black 10%);
+          --purple-2: color-mix(in oklch, ${outputs.colors.base0E}, black 20%);
+          --cyan: ${outputs.colors.base0C};
+          --yellow: ${outputs.colors.base0A};
+          --green: ${outputs.colors.base0B};
+          --green-1: color-mix(in oklch, ${outputs.colors.base0B}, black 10%);
+          --green-2: color-mix(in oklch, ${outputs.colors.base0B}, black 20%);
+        }
+
+        * {
+            font-family: 'Mx437 DOS/V re. JPN30'!important;
+        }
+      ''
+      + import ./modules/discord/custom.css.nix {inherit outputs;};
+    config = {
+      useQuickCss = true;
+      themeLinks = [
+        "https://refact0r.github.io/system24/theme/system24.theme.css"
+      ];
+      frameless = true;
+
+      plugins = {
+        alwaysAnimate.enable = true;
+        alwaysTrust.enable = true;
+        betterSettings = {
+          enable = true;
+          eagerLoad = false;
+        };
+        betterGifPicker.enable = true;
+        betterUploadButton.enable = true;
+        clearURLs.enable = true;
+        consoleJanitor.enable = true;
+        copyFileContents.enable = true;
+        experiments.enable = true;
+        fakeNitro.enable = true;
+        favoriteEmojiFirst.enable = true;
+        favoriteGifSearch.enable = true;
+        fixSpotifyEmbeds.enable = true;
+        fixYoutubeEmbeds.enable = true;
+        forceOwnerCrown.enable = true;
+        friendsSince.enable = true;
+        messageLogger.enable = true;
+        moreKaomoji.enable = true;
+        noOnboardingDelay.enable = true;
+        noRPC.enable = true;
+        relationshipNotifier.enable = true;
+        reverseImageSearch.enable = true;
+        reviewDB.enable = true;
+        secretRingToneEnabler.enable = true;
+        showHiddenThings.enable = true;
+        showMeYourName.enable = true;
+        silentTyping.enable = true;
+        silentMessageToggle.enable = true;
+        spotifyShareCommands.enable = true;
+        streamerModeOnStream.enable = true;
+        unindent.enable = true;
+        voiceChatDoubleClick.enable = true;
+        vcNarrator .enable = true;
+        volumeBooster.enable = true;
+        whoReacted.enable = true;
+        youtubeAdblock.enable = true;
+        webScreenShareFixes.enable = true;
+        imageZoom = {
+          enable = true;
+          saveZoomValues = false;
+        };
+      };
+
+      disableMinSize = true;
+    };
+    extraConfig = {};
   };
 
   home.packages = with pkgs;
     [
       google-chrome
-      gimp-with-plugins
       webcord
       neovide
       transmission
       hyprpicker
       speedread
-      bottles
       lutris
       mpv
       streamlink
       twitch-tui
       resources
-
-      google-cloud-sdk
-      firebase-tools
 
       ncdu
       alsa-utils
@@ -362,8 +484,6 @@ in {
       source = ./modules/discord;
       recursive = true;
     };
-    ".config/BetterDiscord/data/canary/custom.css".text = discord_css;
-    ".config/Vencord/settings/quickCss.css".text = discord_css;
     ".oh-my-zsh/custom/themes" = {
       source = ./modules/oh-my-zsh/themes;
       recursive = true;
@@ -384,8 +504,8 @@ in {
     enable = true;
     iconTheme.package = pkgs.fluent-icon-theme;
     iconTheme.name = "Fluent";
-    cursorTheme.package = pkgs.bibata-cursors-translucent;
-    cursorTheme.name = "Bibata_Ghost";
+    cursorTheme.package = pkgs.callPackage ./oxygen-neon-cursors.nix {};
+    cursorTheme.name = "Oxygen-Neon";
   };
 
   xdg.mimeApps.defaultApplications = {

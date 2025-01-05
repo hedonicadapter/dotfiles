@@ -22,12 +22,12 @@
 
     exec-once=[split-workspace 5 silent] $browser && $editor
     exec-once=[split-workspace 6 silent] obsidian
-    exec-once=[split-workspace 1 silent] DiscordCanary
+    exec-once=[split-workspace 1 silent] vesktop
     exec-once=[split-workspace 1 silent] $music
 
     # env = AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1
     env = XCURSOR_SIZE,24
-    env = XCURSOR_THEME,Bibata_Ghost
+    env = XCURSOR_THEME,Oxygen-Neon
     env = QT_QPA_PLATFORMTHEME,qt6ct # change to qt6ct if you have that
     env = ELECTRON_OZONE_PLATFORM_HINT=auto
     env = GSK_RENDERER,ngl # error 71 gtk
@@ -155,40 +155,104 @@
     animation=windows, 1, 3.5, easeOutQuart, popin
     animation=workspaces, 1, 3.5, easeOutQuart, slide
 
-    # layerrule=ignorealpha[0.75],bar-0
-
     $mainMod = SUPER
+    $resetSubmap = hyprctl dispatch submap reset
+    $timeoutSubmap = sleep 1 && hyprctl dispatch submap reset
 
-    bind=$mainMod, Print, exec, grim -g "$(slurp)" - | swappy -f - | wl-copy
+    $appQuery = tofi-run | xargs hyprctl dispatch exec --
+    $nixQuery = PATH= tofi-run | xargs -I {} xdg-open "https://search.nixos.org/packages?query={}"
+    $googleQuery = PATH= tofi-run | xargs -I {} xdg-open "https://www.google.com/search?q={}"
+    $protonDbQuery = PATH= tofi-run | xargs -I {} xdg-open "https://www.protondb.com/search?q={}"
+    $nixOptionsQuery = PATH= tofi-run | xargs -I {} xdg-open "https://search.nixos.org/options?query={}"
+    $homeManagerQuery = PATH= tofi-run | xargs -I {} xdg-open "https://home-manager-options.extranix.com/?query={}"
+    $clipboardHistoryQuery = cliphist list | tofi | cliphist decode | wl-copy
 
-    bind=CTRL SHIFT, R,  exec, ags quit; ags run
+    # Run
+    bind = $mainMod, R, submap, run
+    bind = $mainMod, R, exec, $timeoutSubmap
+    submap = run
+    bind = , T, exec, $terminal & $resetSubmap
+    bind = , E, exec, $editor & $resetSubmap
+    bind = , M, exec, $music & $resetSubmap
+    bind = , D, exec, vesktop & $resetSubmap
+    bind = , S, exec, streamlink twitch.tv/m0xyy 720p60 --player mpv --twitch-low-latency & TERM=xterm-kitty twt & $resetSubmap
+    submap = reset
 
-    bind = $mainMod SHIFT, C, exec, hyprpicker -a
-    bind = $mainMod, C, exec, cliphist list | tofi | cliphist decode | wl-copy
+    # Browser submap
+    bind = $mainMod, B, submap, browser & $resetSubmap
+    bind = $mainMod, B, exec, $timeoutSubmap
+    submap = browser & $resetSubmap
+    bind = , B, exec, $browser & $resetSubmap
+    bind = , F, exec, firefox-beta & $resetSubmap
+    bind = , E, exec, microsoft-edge & $resetSubmap
+    bind = , escape, submap, reset
+    submap = reset
 
-    # launcher
-    # bind = $mainMod, O&B, exec, xdg-open about:blank # Open Browser
-    # bind = $mainMod, O&S, exec, spotify # Open Spotify
-    # bind = $mainMod, O&L, exec, lutris # Open Lutris
-    # bind = $mainMod, O&D, exec, DiscordCanary # Open Discord
-    # bind = $mainMod, O&O, exec, obsidian # Open Obsidian
+    # Files submap
+    bind = $mainMod, F, submap, files
+    bind = $mainMod, F, exec, $timeoutSubmap
+    submap = files
+    bind = , F, exec, $fileManager & $resetSubmap
+    bind = , T, exec, $fileManager ~/Documents/temp & $resetSubmap
+    bind = , D, exec, $fileManager ~/Downloads & $resetSubmap
+    bind = , escape, submap, reset
+    submap = reset
 
-    bind = $mainMod, T, exec, $terminal
-    bind = $mainMod, N, exec, $editor
-    bind = $mainMod, E, exec, $fileManager
-    bind = $mainMod, R, exec, tofi-run | xargs hyprctl dispatch exec --
-    bind = $mainMod SHIFT, S, exec, $terminal bash ~/.config/hypr/speed-read.sh
-    bind = $mainMod, period, exec, rofimoji --selector tofi
+    # Query submap
+    bind = $mainMod, Q, submap, query
+    bind = $mainMod, Q, exec, $timeoutSubmap
+    submap = query
+    bind = , A, exec, $appQuery & $resetSubmap
+    bind = , N, exec, $nixQuery & $resetSubmap
+    bind = , G, exec, $googleQuery & $resetSubmap
+    bind = , P, exec, $protonDbQuery & $resetSubmap
+    bind = , O, exec, $nixOptionsQuery & $resetSubmap
+    bind = , H, exec, $homeManagerQuery & $resetSubmap
+    bind = , C, exec, $clipboardHistoryQuery & $resetSubmap
+    bind = , escape, submap, reset
+    submap = reset
 
-    bind = $mainMod, Q, killactive,
-    bind = $mainMod, Z, exec, ags -r "zenable = !zenable" # toggle zen mode
-    bind = $mainMod, escape, exec, ags -r "App.toggleWindow('powermenu')"
+    # Utility submap
+    bind = $mainMod, U, submap, util
+    bind = $mainMod, U, exec, $timeoutSubmap
+    submap = util
+    bind = , P, exec, grim -g "$(slurp)" - | swappy -f - | wl-copy & $resetSubmap
+    bind = , C, exec, hyprpicker -a & $resetSubmap
+    bind = , R, exec, $terminal bash ~/.config/hypr/speed-read.sh & $resetSubmap
+    bind = , E, exec, rofimoji --selector tofi & $resetSubmap
+    bind = , escape, submap, reset
+    submap = reset
+
+    # System submap
+    bind = $mainMod, S, submap, system
+    bind = $mainMod, S, exec, $timeoutSubmap
+    submap = system
+    bind = , R, exec, ags quit; ags run & $resetSubmap
+    bind = , Z, exec, ags -r "zenable = !zenable" & $resetSubmap # toggle zen mode
+    bind = , P, exec, ags -r "App.toggleWindow('powermenu')" & $resetSubmap
+
+    # Audio
+    bindl = , AP, exec, playerctl play-pause & $resetSubmap
+    bindl = , AL, exec, playerctl next & $resetSubmap
+    bindl = , AH, exec, playerctl previous & $resetSubmap
+
+    bindle = , AK, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+ & $resetSubmap
+    bindle = , AJ, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- & $resetSubmap
+
+    bindle = , ASM, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle & $resetSubmap
+    bind = , AMM, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle & $resetSubmap
+
+    bind = , AS, exec, easyeffects & $resetSubmap # TODO: replace wiwth AGS later
+
+    # Display
+    bindle = , DK, exec, brightnessctl set +10% & $resetSubmap
+    bindle = , DJ, exec, brightnessctl set 10%- & $resetSubmap
+    bind = , escape, submap, reset
+    submap = reset
+
+    bind = $mainMod, W, killactive,
     bind = $mainMod, F, togglefloating,
     bind = $mainMod, M, fullscreen,1
-
-    bind = $mainMod, P, exec, nautilus ~/Documents/temp
-    bind = $mainMod, D, exec, nautilus ~/Downloads
-    bind = $mainMod, B, exec, $browser
 
     bind = $mainMod, H, movefocus, l
     bind = $mainMod, L, movefocus, r
@@ -223,57 +287,9 @@
     bind = $mainMod SHIFT, 9, split-movetoworkspace, 9
     bind = $mainMod SHIFT, 0, split-movetoworkspace, 10
 
-    # Example special workspace (scratchpad)
-    # bind = $mainMod SHIFT, S, movetoworkspace, special:magic
-
     # Move/resize windows with mainMod + LMB/RMB and dragging
     bindm = $mainMod, mouse:272, movewindow
     bindm = $mainMod, mouse:273, resizewindow
-
-    # l -> do stuff even when locked
-    # e -> repeats when key is held
-    bindle=, XF86Search, exec, launchpad
-
-    # Audio
-    bindl=, XF86AudioPlay, exec, playerctl play-pause # the stupid key is called play , but it toggles
-    bindl=, XF86AudioNext, exec, playerctl next
-    bindl=, XF86AudioPrev, exec, playerctl previous
-
-    bindle=, F1, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-    bindle=, F2, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-
-    bindle=, F3, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+
-
-    bind = $mainMod, s, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
-
-    bind = $mainMod, A, exec, easyeffects
-
-    # Brightness
-    bindle = , F6, exec, brightnessctl set +10%
-    bindle = , F5, exec, brightnessctl set 10%-
-
-
-    bind=$mainMod,Backspace,exec,hyprctl keyword cursor:inactive_timeout 0; hyprctl keyword cursor:hide_on_key_press false; hyprctl dispatch submap cursor
-
-    submap=cursor
-
-    binde=,j,exec,wlrctl pointer move 0 10
-    binde=,k,exec,wlrctl pointer move 0 -10
-    binde=,l,exec,wlrctl pointer move 10 0
-    binde=,h,exec,wlrctl pointer move -10 0
-
-    bind=,m,exec,wlrctl pointer click left
-    bind=,comma,exec,wlrctl pointer click middle
-    bind=,period,exec,wlrctl pointer click right
-
-    binde=,e,exec,wlrctl pointer scroll 10 0
-    binde=,r,exec,wlrctl pointer scroll -10 0
-    binde=,d,exec,wlrctl pointer scroll 0 -10
-    binde=,f,exec,wlrctl pointer scroll 0 10
-
-    bind=,escape,exec,hyprctl keyword cursor:inactive_timeout 3; hyprctl keyword cursor:hide_on_key_press true; hyprctl dispatch submap reset
-
-    submap = reset
-
   '';
 in
   config

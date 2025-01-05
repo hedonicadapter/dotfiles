@@ -54,11 +54,14 @@
 
     matugen = {
       url = "github:/InioX/Matugen";
-      # ref = "refs/tags/matugen-v0.10.0";
     };
 
     xremap-flake = {
       url = "github:xremap/nix-flake";
+    };
+
+    nixcord = {
+      url = "github:kaylorben/nixcord";
     };
   };
 
