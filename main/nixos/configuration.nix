@@ -176,6 +176,12 @@ in {
       sizes.popups = 11;
       sizes.terminal = 11;
     };
+
+    cursor = {
+      package = pkgs.callPackage ../home-manager/oxygen-neon-cursors.nix {};
+      name = "Oxygen-Neon";
+      size = 16;
+    };
   };
 
   security.polkit.enable = true;
@@ -284,7 +290,6 @@ in {
   };
   console.keyMap = "sv-latin1";
 
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -487,6 +492,8 @@ in {
       RESTORE_DEVICE_STATE_ON_STARTUP = true;
     };
   };
+
+  services.intune.enable = true;
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;

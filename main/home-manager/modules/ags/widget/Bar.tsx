@@ -34,7 +34,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         onHoverLost={() => hovered.set(false)}
       >
         <centerbox className="bar-items" valign={START}>
-          <box hexpand halign={START}>
+          <box className="left" hexpand halign={START}>
             <box valign={START}>
               <WorkspaceComponent />
             </box>
@@ -51,13 +51,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             </box>
           </box>
 
-          <box halign={CENTER}>
+          <box className="center" halign={CENTER}>
             <box valign={START}>
               <TitleComponent />
             </box>
           </box>
 
-          <box className="main-menu" hexpand halign={END}>
+          <box className="right" hexpand halign={END}>
             <box valign={START}>
               <NotificationsComponent />
             </box>

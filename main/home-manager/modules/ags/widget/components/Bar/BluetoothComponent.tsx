@@ -1,11 +1,11 @@
 import Bluetooth from "gi://AstalBluetooth";
 import { bind, Variable } from "astal";
 import { Gtk } from "astal/gtk3";
+import Hoverable from "../Hoverable";
 
 const bluetooth = Bluetooth.get_default();
 
 export default function () {
-  const hovered = Variable(false);
   const powered = bind(bluetooth, "is-powered");
   const connected = bind(bluetooth, "is-connected");
   const devices = bind(bluetooth, "devices");
@@ -30,27 +30,28 @@ export default function () {
   );
 
   return (
-    <eventbox
-      className={bind(hovered).as((h) => (h ? "hovered" : ""))}
-      onHover={() => hovered.set(true)}
-      onHoverLost={() => hovered.set(false)}
-      onDestroy={() => {
-        connectedPoweredIcon.drop();
-        connectedPoweredLabel.drop();
-      }}
-    >
-      <box className="bar-item bluetooth" vertical>
-        <box>
+    <Hoverable
+      className="bluetooth"
+      main={
+        <box
+          className="main"
+          onDestroy={() => {
+            connectedPoweredIcon.drop();
+            connectedPoweredLabel.drop();
+          }}
+          halign={Gtk.Align.START}
+        >
           <icon
             className={bind(powered).as((b) =>
               b ? "bluetooth" : "bluetooth low",
             )}
             icon={bind(connectedPoweredIcon)}
           />
-          <label visible={bind(hovered)} label={bind(connectedPoweredLabel)} />
+          <label label={bind(connectedPoweredLabel)} halign={Gtk.Align.START} />
         </box>
-
-        <box className="panel" visible={bind(hovered)} vertical>
+      }
+      hoveredElement={
+        <box className="panel" vertical>
           {bind(bluetooth, "devices").as(
             (devices) =>
               devices.length > 0 &&
@@ -63,7 +64,7 @@ export default function () {
               }),
           )}
         </box>
-      </box>
-    </eventbox>
+      }
+    />
   );
 }

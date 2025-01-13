@@ -71,7 +71,7 @@ in {
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
 
-      inputs.nur.overlay
+      inputs.nur.overlays.default
     ];
 
     config = {
@@ -88,6 +88,7 @@ in {
           "ticktick"
           "betterttv"
           "discord-canary"
+          "discord"
         ];
     };
   };
@@ -231,8 +232,8 @@ in {
   programs.nixcord = {
     enable = true;
     discord = {
-      package = pkgs.discord-canary;
-      vencord.enable = true;
+      package = pkgs.discord;
+      vencord.unstable = true;
       openASAR.enable = true;
     };
     vesktop.enable = true;
@@ -370,6 +371,7 @@ in {
       mpv
       streamlink
       twitch-tui
+      pipe-viewer # youtube cli
       resources
 
       ncdu

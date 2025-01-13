@@ -9,7 +9,8 @@
     dotDir = ".config/zsh";
     shellAliases = {
       "ls" = "lsd";
-      "cat" = "bat";
+      "lst" = "lsd --tree";
+      "cat" = "bat"; # c*ts are terrible people, this config  doesn't condone c*t use
     };
     autosuggestion = {enable = true;};
     syntaxHighlighting = {

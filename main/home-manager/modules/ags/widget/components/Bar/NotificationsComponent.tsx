@@ -89,10 +89,11 @@ export default function NotificationsComponent() {
 
   return (
     <eventbox
+      className="bar-item notifications"
       onHover={() => hovered.set(true)}
       onHoverLost={() => hovered.set(false)}
     >
-      <box vertical className="bar-item notifications">
+      <box vertical className="panel ">
         {bind(notifs)}
       </box>
     </eventbox>

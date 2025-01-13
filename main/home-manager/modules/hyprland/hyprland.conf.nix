@@ -171,20 +171,22 @@
     bind = $mainMod, R, submap, run
     bind = $mainMod, R, exec, $timeoutSubmap
     submap = run
-    bind = , T, exec, $terminal & $resetSubmap
-    bind = , E, exec, $editor & $resetSubmap
-    bind = , M, exec, $music & $resetSubmap
-    bind = , D, exec, vesktop & $resetSubmap
-    bind = , S, exec, streamlink twitch.tv/m0xyy 720p60 --player mpv --twitch-low-latency & TERM=xterm-kitty twt & $resetSubmap
+    bindd = , T, TERMINAL, exec, $terminal & $resetSubmap
+    bindd = , E, NEOVIM, exec, $editor & $resetSubmap
+    bindd = , M, MUSIC, exec, $music & $resetSubmap
+    bindd = , D, DISCORD, exec, vesktop & $resetSubmap
+    bindd = , S, M0XYY, exec, $terminal 'streamlink twitch.tv/m0xyy 720p60 --player mpv --twitch-low-latency & TERM=xterm-kitty twt' & $resetSubmap
+    bindd = , Y, YOUTUBE, exec, $terminal pipe-viewer & $resetSubmap
+    bind = , escape, submap, reset
     submap = reset
 
     # Browser submap
-    bind = $mainMod, B, submap, browser & $resetSubmap
+    bind = $mainMod, B, submap, browser
     bind = $mainMod, B, exec, $timeoutSubmap
-    submap = browser & $resetSubmap
-    bind = , B, exec, $browser & $resetSubmap
-    bind = , F, exec, firefox-beta & $resetSubmap
-    bind = , E, exec, microsoft-edge & $resetSubmap
+    submap = browser
+    bindd = , B, DEFAULT, exec, $browser & $resetSubmap
+    bindd = , F, FIREFOX, exec, firefox-beta & $resetSubmap
+    bindd = , E, EDGE, exec, microsoft-edge & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -192,9 +194,9 @@
     bind = $mainMod, F, submap, files
     bind = $mainMod, F, exec, $timeoutSubmap
     submap = files
-    bind = , F, exec, $fileManager & $resetSubmap
-    bind = , T, exec, $fileManager ~/Documents/temp & $resetSubmap
-    bind = , D, exec, $fileManager ~/Downloads & $resetSubmap
+    bindd = , F, DEFAULT, exec, $fileManager & $resetSubmap
+    bindd = , T, TEMP, exec, $fileManager ~/Documents/temp & $resetSubmap
+    bindd = , D, DOWNLOADS, exec, $fileManager ~/Downloads & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -202,13 +204,13 @@
     bind = $mainMod, Q, submap, query
     bind = $mainMod, Q, exec, $timeoutSubmap
     submap = query
-    bind = , A, exec, $appQuery & $resetSubmap
-    bind = , N, exec, $nixQuery & $resetSubmap
-    bind = , G, exec, $googleQuery & $resetSubmap
-    bind = , P, exec, $protonDbQuery & $resetSubmap
-    bind = , O, exec, $nixOptionsQuery & $resetSubmap
-    bind = , H, exec, $homeManagerQuery & $resetSubmap
-    bind = , C, exec, $clipboardHistoryQuery & $resetSubmap
+    bindd = , A, APPS, exec, $appQuery & $resetSubmap
+    bindd = , N, NIXPKGS, exec, $nixQuery & $resetSubmap
+    bindd = , G, GOOGLE, exec, $googleQuery & $resetSubmap
+    bindd = , P, PROTONDB, exec, $protonDbQuery & $resetSubmap
+    bindd = , O, NIX OPTIONS, exec, $nixOptionsQuery & $resetSubmap
+    bindd = , H, HOME MANAGER OPTIONS, exec, $homeManagerQuery & $resetSubmap
+    bindd = , C, CLIPBOARD, exec, $clipboardHistoryQuery & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -216,10 +218,10 @@
     bind = $mainMod, U, submap, util
     bind = $mainMod, U, exec, $timeoutSubmap
     submap = util
-    bind = , P, exec, grim -g "$(slurp)" - | swappy -f - | wl-copy & $resetSubmap
-    bind = , C, exec, hyprpicker -a & $resetSubmap
-    bind = , R, exec, $terminal bash ~/.config/hypr/speed-read.sh & $resetSubmap
-    bind = , E, exec, rofimoji --selector tofi & $resetSubmap
+    bindd = , P, PRINT-SCREEN, exec, grim -g "$(slurp)" - | swappy -f - | wl-copy & $resetSubmap
+    bindd = , C, COLOR PICKER, exec, hyprpicker -a & $resetSubmap
+    bindd = , R, SPEED READER, exec, $terminal bash ~/.config/hypr/speed-read.sh & $resetSubmap
+    bindd = , E, EMOJI PICKER, exec, rofimoji --selector tofi & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -227,31 +229,31 @@
     bind = $mainMod, S, submap, system
     bind = $mainMod, S, exec, $timeoutSubmap
     submap = system
-    bind = , R, exec, ags quit; ags run & $resetSubmap
-    bind = , Z, exec, ags -r "zenable = !zenable" & $resetSubmap # toggle zen mode
-    bind = , P, exec, ags -r "App.toggleWindow('powermenu')" & $resetSubmap
+    bindd = , R, RELOAD SHELL, exec, ags quit; ags run & $resetSubmap
+    bindd = , Z, TOGGLE ZEN MODE, exec, ags -r "zenable = !zenable" & $resetSubmap # toggle zen mode
+    bindd = , P, POWER MENU, exec, ags -r "App.toggleWindow('powermenu')" & $resetSubmap
 
     # Audio
-    bindl = , AP, exec, playerctl play-pause & $resetSubmap
-    bindl = , AL, exec, playerctl next & $resetSubmap
-    bindl = , AH, exec, playerctl previous & $resetSubmap
+    binddl = , AP, PLAY/PAUSE, exec, playerctl play-pause & $resetSubmap
+    binddl = , AL, NEXT, exec, playerctl next & $resetSubmap
+    binddl = , AH, PREVIOUS, exec, playerctl previous & $resetSubmap
 
-    bindle = , AK, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+ & $resetSubmap
-    bindle = , AJ, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- & $resetSubmap
+    binddle = , AK, VOL UP, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+ & $resetSubmap
+    binddle = , AJ, VOL DOWN, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- & $resetSubmap
 
-    bindle = , ASM, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle & $resetSubmap
-    bind = , AMM, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle & $resetSubmap
+    binddle = , ASM, MUTE/UNMUTE OUT, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle & $resetSubmap
+    bindd = , AMM, MUTE/UNMUTE IN, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle & $resetSubmap
 
-    bind = , AS, exec, easyeffects & $resetSubmap # TODO: replace wiwth AGS later
+    bindd = , AS, AUDIO SETTINGS, exec, easyeffects & $resetSubmap # TODO: replace wiwth AGS later
 
     # Display
-    bindle = , DK, exec, brightnessctl set +10% & $resetSubmap
-    bindle = , DJ, exec, brightnessctl set 10%- & $resetSubmap
+    binddle = , DK, BRIGHTNESS UP, exec, brightnessctl set +10% & $resetSubmap
+    binddle = , DJ, BRIGHTNESS DOWN, exec, brightnessctl set 10%- & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
     bind = $mainMod, W, killactive,
-    bind = $mainMod, F, togglefloating,
+    bind = $mainMod SHIFT, F, togglefloating,
     bind = $mainMod, M, fullscreen,1
 
     bind = $mainMod, H, movefocus, l

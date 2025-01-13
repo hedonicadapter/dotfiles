@@ -43,6 +43,7 @@ Misc
 + Spicetify
 
 # Todo
+- [ ] color bar ModeComponent based on mode selected
 - [ ] nix search, google, protondb, nixos options, and home manager options tofi
 - [ ] neovim wrap selection in code block markdown
 - [ ] neovim hop between variables

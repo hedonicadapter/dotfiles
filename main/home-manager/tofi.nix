@@ -12,7 +12,7 @@
       require-match = false;
 
       width = "25%";
-      height = "20";
+      height = "20%";
       border-width = 0;
       outline-width = 0;
       padding-left = "0%";

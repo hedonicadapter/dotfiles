@@ -22,6 +22,15 @@ const urgency = (n: Notifd.Notification) => {
   }
 };
 
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 type Props = {
   notification: Notifd.Notification;
   hovered: Variable<boolean>;
@@ -93,7 +102,7 @@ export default function NotificationComponent(props: Props) {
                 halign={START}
                 xalign={0}
                 justifyFill
-                label={n.body}
+                label={escapeHtml(n.body)}
               />
             )}
             <box className="actions">
