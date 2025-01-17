@@ -19,6 +19,7 @@ export default function TemperatureComponent() {
   return (
     <box
       valign={Gtk.Align.CENTER}
+      halign={Gtk.Align.CENTER}
       onDestroy={() => temperature.drop()}
       className={bind(temperature).as((t: number) => {
         switch (true) {

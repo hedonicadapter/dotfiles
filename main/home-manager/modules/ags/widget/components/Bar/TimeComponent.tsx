@@ -12,6 +12,8 @@ export default function TimeComponent() {
       className="bar-item time"
       onDestroy={() => time.drop()}
       label={time()}
+      halign={Gtk.Align.CENTER}
+      valign={Gtk.Align.CENTER}
     />
   );
 }

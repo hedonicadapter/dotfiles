@@ -178,9 +178,9 @@ in {
     };
 
     cursor = {
-      package = pkgs.callPackage ../home-manager/oxygen-neon-cursors.nix {};
-      name = "Oxygen-Neon";
-      size = 16;
+      # package = pkgs.callPackage ../home-manager/oxygen-neon-cursors.nix {};
+      name = "rah";
+      size = 200;
     };
   };
 
@@ -495,6 +495,29 @@ in {
 
   services.intune.enable = true;
 
+  security.sudo = {
+    enable = true;
+    extraRules = [
+      {
+        commands = [
+          {
+            command = "${pkgs.systemd}/bin/reboot";
+            options = ["NOPASSWD"];
+          }
+          {
+            command = "${pkgs.systemd}/bin/poweroff";
+            options = ["NOPASSWD"];
+          }
+        ];
+        groups = ["wheel"];
+      }
+    ];
+    extraConfig = with pkgs; ''
+      Defaults:picloud secure_path="${lib.makeBinPath [
+        systemd
+      ]}:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin"
+    '';
+  };
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 

@@ -3,6 +3,10 @@
     * {
       background-color: transparent;
       border-radius: 1px;
+
+      * .hover {
+        border-color: ${outputs.colors.base07};
+      }
     }
 
     button, box {
@@ -21,17 +25,19 @@
         to { -gtk-icon-transform: rotate(1turn); }
     }
 
+    window.Screen {
+      border: 1.5px solid ${outputs.colors.base03};
+    }
+    window.Screen.active-monitor {
+      border: 1.5px solid ${outputs.colors.base04};
+    }
+
     window.Bar {
-      color: ${outputs.colors.base07};
-      background-color: ${outputs.colors.base00};
+      color: ${outputs.colors.base05};
       font-size: 20px;
 
       .bar-items {
-        min-height: 24px;
-        margin-left: 6px;
-        margin-right: 6px;
-        margin-top: 3px;
-        margin-bottom: -2px;
+        min-height:28px;
 
         .bar-item {
           margin-left: 8px;
@@ -40,15 +46,23 @@
           .main {
             padding-left: 8px;
             padding-right: 8px;
-            padding-bottom: 1px;
+            padding-bottom: 2px;
           }
           .panel {}
         }
 
         .indicator {
-          color: ${outputs.colors.base07};
+          color: ${outputs.colors.base05};
           margin-left: 4px;
           margin-right: 4px;
+        }
+
+        > * {
+          padding-left: 8px;
+          padding-right: 8px;
+          padding-top: 3px;
+          margin-top: -1px;
+          border: 1.5px solid ${outputs.colors.base03};
         }
 
         .left {
@@ -85,6 +99,18 @@
               background-color: ${outputs.colors.base0F};
               color: ${outputs.colors.base01};
             }
+            .POWER {
+              background-color: ${outputs.colors.base08};
+              color: ${outputs.colors.base05};
+            }
+            .DISPLAY {
+              background-color: ${outputs.colors.base0D};
+              color: ${outputs.colors.base06};
+            }
+            .AUDIO {
+              background-color: ${outputs.colors.base0E};
+              color: ${outputs.colors.base06};
+            }
           }
 
           .tray {
@@ -99,8 +125,8 @@
           }
 
           .media-player {
-            margin-top: 1px;
-            background-color: ${outputs.colors.base0B};
+            margin-top: 2px;
+            background-color: ${outputs.colors.base0E};
             color: ${outputs.colors.base00};
 
             .main {
@@ -116,7 +142,7 @@
                 margin: 0 8px;
 
                 .current-position {
-                  border: 1px solid ${outputs.colors.base0B};
+                  border: 1px solid ${outputs.colors.base0E};
                   background-color: ${outputs.colors.base00};
                   min-height: 8px;
                 }
@@ -154,7 +180,7 @@
         .right {
           .notifications {
             background-color: ${outputs.colors.base00};
-            color: ${outputs.colors.base07};
+            color: ${outputs.colors.base05};
             margin-right: 3px;
             margin-top: -2px;
             padding-bottom: 1px;
@@ -213,7 +239,7 @@
               margin-top: -2px;
 
               .low {
-                color: ${outputs.colors.base07};
+                color: ${outputs.colors.base05};
               }
               .mid {
                 color: ${outputs.colors.base09};
@@ -230,18 +256,39 @@
             }
           }
           .audio.hovered {
-            background-color: ${outputs.colors.base07};
+            background-color: ${outputs.colors.base05};
             color: ${outputs.colors.base00};
           }
 
           .fan {
             margin-left: 4px;
+            font-size: 14px;
+          }
+
+          .bluetooth {
+            font-size: 20px;
+          }
+
+          .network {
             font-size: 16px;
           }
 
           .time {
             font-size: 18px;
           }
+        }
+      }
+    }
+    window.Bar.active-monitor {
+      .bar-items {
+        .left {
+            border-color: ${outputs.colors.base04};
+        }
+        .center {
+            border-color: ${outputs.colors.base04};
+        }
+        .right {
+            border-color: ${outputs.colors.base04};
         }
       }
     }
@@ -257,7 +304,7 @@
       }
 
       > *:hover {
-          background-color: ${outputs.colors.base07};
+          background-color: ${outputs.colors.base04};
           color: ${outputs.colors.base00};
       }
     }
@@ -267,11 +314,11 @@
       color: ${outputs.colors.base05};
 
       .header {
-        border-color: ${outputs.colors.base07};
-        color: ${outputs.colors.base07};
+        border-color: ${outputs.colors.base05};
+        color: ${outputs.colors.base05};
 
         .app-name {
-          background-color: ${outputs.colors.base07};
+          background-color: ${outputs.colors.base05};
           color: ${outputs.colors.base00};
         }
       }
@@ -282,11 +329,11 @@
       }
     }
     .mid {
-      color: ${outputs.colors.base07};
+      color: ${outputs.colors.base05};
 
       .header {
         border-color: ${outputs.colors.base0C};
-        color: ${outputs.colors.base07};
+        color: ${outputs.colors.base05};
 
         .app-name {
             background-color: ${outputs.colors.base0C};
@@ -295,7 +342,7 @@
       }
 
       .fan {
-        color: ${outputs.colors.base07};
+        color: ${outputs.colors.base05};
         animation: spin-mid 1s linear infinite;
       }
     }
@@ -304,11 +351,11 @@
 
       .header {
         border-color: ${outputs.colors.base08};
-        color: ${outputs.colors.base07};
+        color: ${outputs.colors.base05};
 
         .app-name{
             background-color: ${outputs.colors.base08};
-            color: ${outputs.colors.base07};
+            color: ${outputs.colors.base05};
         }
       }
 

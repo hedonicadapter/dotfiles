@@ -12,15 +12,16 @@ export default function TitleComponent() {
       visible={focused.as(Boolean)}
       valign={Gtk.Align.CENTER}
     >
-      {focused.as(
-        (client) =>
-          client && (
-            <label
-              valign={Gtk.Align.CENTER}
-              ellipsize={3}
-              label={bind(client, "title").as(String)}
-            />
-          ),
+      {focused.as((client) =>
+        client ? (
+          <label
+            valign={Gtk.Align.CENTER}
+            ellipsize={3}
+            label={bind(client, "title").as((s) => (s.length > 0 ? s : "♥︎"))}
+          />
+        ) : (
+          <label valign={Gtk.Align.CENTER} ellipsize={3} label="♥︎" />
+        ),
       )}
     </box>
   );

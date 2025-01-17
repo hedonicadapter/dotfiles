@@ -40,6 +40,7 @@ export default function () {
             connectedPoweredLabel.drop();
           }}
           halign={Gtk.Align.START}
+          valign={Gtk.Align.CENTER}
         >
           <icon
             className={bind(powered).as((b) =>

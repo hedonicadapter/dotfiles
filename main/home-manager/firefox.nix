@@ -38,8 +38,14 @@
         "browser.tabs.loadBookmarksInBackground" = true;
         "layout.word_select.eat_space_to_next_word" = false;
         "general.smoothScroll.mouseWheel.durationMaxMS" = 200;
-        "browser.startup.homepage" = "about:blank";
         "gfx.webrender.all" = true;
+        "browser.startup.page" = 2;
+        "browser.newtabpage.pinned" = [
+          {
+            title = "World Wide Web";
+            url = "about:blank";
+          }
+        ];
       };
       search.engines = {
         "Nix Packages" = {
@@ -60,7 +66,55 @@
           ];
 
           icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-          definedAliases = ["@np"];
+          definedAliases = [",np"];
+        };
+
+        "Nix Options" = {
+          urls = [
+            {
+              template = "https://search.nixos.org/options";
+              params = [
+                {
+                  name = "query";
+                  value = "{searchTerms}";
+                }
+              ];
+            }
+          ];
+
+          definedAliases = [",no"];
+        };
+
+        "Home Manager options" = {
+          urls = [
+            {
+              template = "https://home-manager-options.extranix.com";
+              params = [
+                {
+                  name = "query";
+                  value = "{searchTerms}";
+                }
+              ];
+            }
+          ];
+
+          definedAliases = [",hm"];
+        };
+
+        "ProtonDB" = {
+          urls = [
+            {
+              template = "https://www.protondb.com/search";
+              params = [
+                {
+                  name = "q";
+                  value = "{searchTerms}";
+                }
+              ];
+            }
+          ];
+
+          definedAliases = [",pdb"];
         };
       };
       search.force = true;

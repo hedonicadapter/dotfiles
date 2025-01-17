@@ -5,11 +5,15 @@ pkgs.mkShellNoCC {
   packages = with pkgs;
     [
       vscode
+
       azure-cli
+      azure-cli-extensions.azure-devops
+      azure-functions-core-tools
       bicep
+
       terraform
       ansible
-      azure-functions-core-tools
+
       google-cloud-sdk
       firebase-tools
     ]

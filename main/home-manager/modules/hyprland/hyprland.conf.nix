@@ -26,8 +26,12 @@
     exec-once=[split-workspace 1 silent] $music
 
     # env = AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1
-    env = XCURSOR_SIZE,24
-    env = XCURSOR_THEME,Oxygen-Neon
+
+    env = XCURSOR_SIZE,100
+    env = XCURSOR_THEME,rah
+    env = HYPRCURSOR_THEME,rah
+    env = HYPRCURSOR_SIZE,100
+
     env = QT_QPA_PLATFORMTHEME,qt6ct # change to qt6ct if you have that
     env = ELECTRON_OZONE_PLATFORM_HINT=auto
     env = GSK_RENDERER,ngl # error 71 gtk
@@ -38,7 +42,6 @@
       force_zero_scaling = true
       use_nearest_neighbor = false
     }
-
 
     plugin {
         split-monitor-workspaces {
@@ -68,7 +71,9 @@
     general {
         gaps_in = 3
         gaps_out = 6
-        border_size = 0
+        border_size = 2
+        col.active_border = rgb(${processColor outputs.colors.base04})
+        col.inactive_border = rgb(${processColor outputs.colors.base03})
 
         layout = dwindle
 
@@ -80,7 +85,7 @@
         dim_inactive = true
         dim_strength = 0.35
 
-        rounding = 1
+        rounding = 0
 
         blur {
             enabled = false
@@ -134,19 +139,10 @@
         workspace_center_on = 1
     }
 
-    workspace = w[tv1], gapsout:0, gapsin:0
-    workspace = f[1], gapsout:0, gapsin:0
     windowrulev2 = bordersize 0, floating:0, onworkspace:w[tv1]
     windowrulev2 = rounding 0, floating:0, onworkspace:w[tv1]
     windowrulev2 = bordersize 0, floating:0, onworkspace:f[1]
     windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
-
-    # windowrulev2 = suppressevent maximize, class:.* # You'll probably like this.
-    windowrulev2 = bordercolor rgba(FFFFFF80) rgba(FFFFFF26) 50deg,fullscreen:1
-    windowrulev2 = size 70% 80%, onworkspace:w[1]
-    windowrulev2 = center, onworkspace:w[1]
-    windowrulev2 = float, onworkspace:w[1]
-    windowrulev2 = tile, onworkspace:w[2-8]
 
     windowrule = float, ^(.*popup.*)$
     windowrule = stayfocused, ^(.*popup.*)$
@@ -160,23 +156,23 @@
     $timeoutSubmap = sleep 1 && hyprctl dispatch submap reset
 
     $appQuery = tofi-run | xargs hyprctl dispatch exec --
-    $nixQuery = PATH= tofi-run | xargs -I {} xdg-open "https://search.nixos.org/packages?query={}"
-    $googleQuery = PATH= tofi-run | xargs -I {} xdg-open "https://www.google.com/search?q={}"
-    $protonDbQuery = PATH= tofi-run | xargs -I {} xdg-open "https://www.protondb.com/search?q={}"
-    $nixOptionsQuery = PATH= tofi-run | xargs -I {} xdg-open "https://search.nixos.org/options?query={}"
-    $homeManagerQuery = PATH= tofi-run | xargs -I {} xdg-open "https://home-manager-options.extranix.com/?query={}"
+    # $nixQuery = PATH= tofi-run | xargs -I {} xdg-open "https://search.nixos.org/packages?query={}"
+    # $googleQuery = PATH= tofi-run | xargs -I {} xdg-open "https://www.google.com/search?q={}"
+    # $protonDbQuery = PATH= tofi-run | xargs -I {} xdg-open "https://www.protondb.com/search?q={}"
+    # $nixOptionsQuery = PATH= tofi-run | xargs -I {} xdg-open "https://search.nixos.org/options?query={}"
+    # $homeManagerQuery = PATH= tofi-run | xargs -I {} xdg-open "https://home-manager-options.extranix.com/?query={}"
     $clipboardHistoryQuery = cliphist list | tofi | cliphist decode | wl-copy
 
     # Run
     bind = $mainMod, R, submap, run
     bind = $mainMod, R, exec, $timeoutSubmap
     submap = run
-    bindd = , T, TERMINAL, exec, $terminal & $resetSubmap
-    bindd = , E, NEOVIM, exec, $editor & $resetSubmap
-    bindd = , M, MUSIC, exec, $music & $resetSubmap
-    bindd = , D, DISCORD, exec, vesktop & $resetSubmap
-    bindd = , S, M0XYY, exec, $terminal 'streamlink twitch.tv/m0xyy 720p60 --player mpv --twitch-low-latency & TERM=xterm-kitty twt' & $resetSubmap
-    bindd = , Y, YOUTUBE, exec, $terminal pipe-viewer & $resetSubmap
+      bindd = , T, TERMINAL, exec, $terminal & $resetSubmap
+      bindd = , E, NEOVIM, exec, $editor & $resetSubmap
+      bindd = , M, MUSIC, exec, $music & $resetSubmap
+      bindd = , D, DISCORD, exec, vesktop & $resetSubmap
+      bindd = , S, M0XYY, exec, $terminal 'streamlink twitch.tv/m0xyy 720p60 --player mpv --twitch-low-latency & TERM=xterm-kitty twt' & $resetSubmap
+      bindd = , Y, YOUTUBE, exec, $terminal pipe-viewer & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -184,9 +180,9 @@
     bind = $mainMod, B, submap, browser
     bind = $mainMod, B, exec, $timeoutSubmap
     submap = browser
-    bindd = , B, DEFAULT, exec, $browser & $resetSubmap
-    bindd = , F, FIREFOX, exec, firefox-beta & $resetSubmap
-    bindd = , E, EDGE, exec, microsoft-edge & $resetSubmap
+      bindd = , B, DEFAULT, exec, $browser & $resetSubmap
+      bindd = , F, FIREFOX, exec, firefox-beta & $resetSubmap
+      bindd = , E, EDGE, exec, microsoft-edge & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -194,9 +190,9 @@
     bind = $mainMod, F, submap, files
     bind = $mainMod, F, exec, $timeoutSubmap
     submap = files
-    bindd = , F, DEFAULT, exec, $fileManager & $resetSubmap
-    bindd = , T, TEMP, exec, $fileManager ~/Documents/temp & $resetSubmap
-    bindd = , D, DOWNLOADS, exec, $fileManager ~/Downloads & $resetSubmap
+      bindd = , F, DEFAULT, exec, $fileManager & $resetSubmap
+      bindd = , T, TEMP, exec, $fileManager ~/Documents/temp & $resetSubmap
+      bindd = , D, DOWNLOADS, exec, $fileManager ~/Downloads & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -204,13 +200,9 @@
     bind = $mainMod, Q, submap, query
     bind = $mainMod, Q, exec, $timeoutSubmap
     submap = query
-    bindd = , A, APPS, exec, $appQuery & $resetSubmap
-    bindd = , N, NIXPKGS, exec, $nixQuery & $resetSubmap
-    bindd = , G, GOOGLE, exec, $googleQuery & $resetSubmap
-    bindd = , P, PROTONDB, exec, $protonDbQuery & $resetSubmap
-    bindd = , O, NIX OPTIONS, exec, $nixOptionsQuery & $resetSubmap
-    bindd = , H, HOME MANAGER OPTIONS, exec, $homeManagerQuery & $resetSubmap
-    bindd = , C, CLIPBOARD, exec, $clipboardHistoryQuery & $resetSubmap
+      bindd = , A, APPS, exec, $appQuery & $resetSubmap
+      bindd = , H, HOME MANAGER OPTIONS, exec, $homeManagerQuery & $resetSubmap
+      bindd = , C, CLIPBOARD, exec, $clipboardHistoryQuery & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -218,10 +210,10 @@
     bind = $mainMod, U, submap, util
     bind = $mainMod, U, exec, $timeoutSubmap
     submap = util
-    bindd = , P, PRINT-SCREEN, exec, grim -g "$(slurp)" - | swappy -f - | wl-copy & $resetSubmap
-    bindd = , C, COLOR PICKER, exec, hyprpicker -a & $resetSubmap
-    bindd = , R, SPEED READER, exec, $terminal bash ~/.config/hypr/speed-read.sh & $resetSubmap
-    bindd = , E, EMOJI PICKER, exec, rofimoji --selector tofi & $resetSubmap
+      bindd = , P, PRINT-SCREEN, exec, grim -g "$(slurp)" - | swappy -f - | wl-copy & $resetSubmap
+      bindd = , C, COLOR PICKER, exec, hyprpicker -a & $resetSubmap
+      bindd = , R, SPEED READER, exec, $terminal bash ~/.config/hypr/speed-read.sh & $resetSubmap
+      bindd = , E, EMOJI PICKER, exec, rofimoji --selector tofi & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -229,26 +221,38 @@
     bind = $mainMod, S, submap, system
     bind = $mainMod, S, exec, $timeoutSubmap
     submap = system
-    bindd = , R, RELOAD SHELL, exec, ags quit; ags run & $resetSubmap
-    bindd = , Z, TOGGLE ZEN MODE, exec, ags -r "zenable = !zenable" & $resetSubmap # toggle zen mode
-    bindd = , P, POWER MENU, exec, ags -r "App.toggleWindow('powermenu')" & $resetSubmap
+      bindd = , R, RELOAD SHELL, exec, ags quit; ags run & $resetSubmap
+      bindd = , Z, TOGGLE ZEN MODE, exec, ags -r "zenable = !zenable" & $resetSubmap # toggle zen mode
 
-    # Audio
-    binddl = , AP, PLAY/PAUSE, exec, playerctl play-pause & $resetSubmap
-    binddl = , AL, NEXT, exec, playerctl next & $resetSubmap
-    binddl = , AH, PREVIOUS, exec, playerctl previous & $resetSubmap
+      # Power menu
+      bindd = , P, POWER, submap, power
+      submap = power
+        bindd = , Q, SHUT DOWN, exec, sudo shutdown -h now
+        bindd = , R, SHUT DOWN, exec, sudo shutdown -r now
+      bind = , escape, submap, system
 
-    binddle = , AK, VOL UP, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+ & $resetSubmap
-    binddle = , AJ, VOL DOWN, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- & $resetSubmap
+      # Audio
+      bindd = , A, AUDIO, submap, audio
+      submap = audio
+        binddl = , P, PLAY/PAUSE, exec, playerctl play-pause & $resetSubmap
+        binddl = , L, NEXT, exec, playerctl next & $resetSubmap
+        binddl = , H, PREVIOUS, exec, playerctl previous & $resetSubmap
 
-    binddle = , ASM, MUTE/UNMUTE OUT, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle & $resetSubmap
-    bindd = , AMM, MUTE/UNMUTE IN, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle & $resetSubmap
+        binddle = , K, VOL UP, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+ & $resetSubmap
+        binddle = , J, VOL DOWN, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- & $resetSubmap
 
-    bindd = , AS, AUDIO SETTINGS, exec, easyeffects & $resetSubmap # TODO: replace wiwth AGS later
+        binddle = , SM, MUTE/UNMUTE OUT, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle & $resetSubmap
+        bindd = , MM, MUTE/UNMUTE IN, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle & $resetSubmap
 
-    # Display
-    binddle = , DK, BRIGHTNESS UP, exec, brightnessctl set +10% & $resetSubmap
-    binddle = , DJ, BRIGHTNESS DOWN, exec, brightnessctl set 10%- & $resetSubmap
+        bindd = , S, AUDIO SETTINGS, exec, easyeffects & $resetSubmap # TODO: replace wiwth AGS later
+      bind = , escape, submap, system
+
+      # Display
+      bindd = , D, DISPLAY, submap, display
+      submap = display
+        binddle = , K, BRIGHTNESS UP, exec, brightnessctl set +10% & $resetSubmap
+        binddle = , J, BRIGHTNESS DOWN, exec, brightnessctl set 10%- & $resetSubmap
+      bind = , escape, submap, system
     bind = , escape, submap, reset
     submap = reset
 

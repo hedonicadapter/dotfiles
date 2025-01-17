@@ -1,5 +1,6 @@
 import { App } from "astal/gtk3";
 import Bar from "./widget/Bar";
+import Outline from "./widget/Outline";
 import { readFile, readFileAsync } from "astal/file";
 import { execAsync } from "astal/process";
 
@@ -15,5 +16,6 @@ App.start({
   icons: `${SRC}/icons`,
   main() {
     monitors.map(Bar);
+    monitors.map(Outline);
   },
 });

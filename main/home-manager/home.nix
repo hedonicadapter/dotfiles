@@ -506,8 +506,8 @@ in {
     enable = true;
     iconTheme.package = pkgs.fluent-icon-theme;
     iconTheme.name = "Fluent";
-    cursorTheme.package = pkgs.callPackage ./oxygen-neon-cursors.nix {};
-    cursorTheme.name = "Oxygen-Neon";
+    # cursorTheme.package = pkgs.callPackage ./oxygen-neon-cursors.nix {};
+    # cursorTheme.name = "Oxygen-Neon";
   };
 
   xdg.mimeApps.defaultApplications = {

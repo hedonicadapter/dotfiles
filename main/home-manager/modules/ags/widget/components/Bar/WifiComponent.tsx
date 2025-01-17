@@ -6,9 +6,14 @@ export default function WifiComponent() {
   const network = Network.get_default();
 
   return (
-    <box className="bar-item indicator">
+    <box
+      className="bar-item indicator network"
+      valign={Gtk.Align.CENTER}
+      halign={Gtk.Align.CENTER}
+    >
       <icon
-        className="network "
+        valign={Gtk.Align.CENTER}
+        halign={Gtk.Align.CENTER}
         icon={bind(network, "wired").as((w) => {
           if (w.internet === 0) return "wired-connected-symbolic";
           else if (w.internet === 1) return "wired-connecting-symbolic";
