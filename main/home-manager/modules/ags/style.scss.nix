@@ -34,10 +34,10 @@
 
     window.Bar {
       color: ${outputs.colors.base05};
-      font-size: 20px;
+      font-size: 19px;
 
       .bar-items {
-        min-height:28px;
+        min-height:26px;
 
         .bar-item {
           margin-left: 8px;
@@ -58,11 +58,14 @@
         }
 
         > * {
-          padding-left: 8px;
-          padding-right: 8px;
-          padding-top: 3px;
+          padding-left: 18px;
+          padding-right: 18px;
+          padding-top: 2px;
           margin-top: -1px;
           border: 1.5px solid ${outputs.colors.base03};
+        }
+        .center {
+          border: none;
         }
 
         .left {
@@ -174,7 +177,11 @@
         }
 
         .center {
-          .title {}
+          .title {
+            label {
+              min-height:24px;
+            }
+          }
         }
 
         .right {
@@ -285,7 +292,6 @@
             border-color: ${outputs.colors.base04};
         }
         .center {
-            border-color: ${outputs.colors.base04};
         }
         .right {
             border-color: ${outputs.colors.base04};

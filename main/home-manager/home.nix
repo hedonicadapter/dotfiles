@@ -28,7 +28,7 @@ in {
     (import ./kitty.nix {inherit outputs pkgs lib;})
     # (import ./yazi.nix {inherit pkgs;})
     (import ./tofi.nix {inherit config lib outputs pkgs;})
-    (import ./modules/anti-sleep-neglector/service.nix {inherit inputs config lib pkgs;})
+    (import ./modules/anti-sleep-neglector/service.nix {inherit outputs inputs config lib pkgs;})
     (import ./modules/fastfetch/default.nix {inherit outputs;})
   ];
 
@@ -47,16 +47,16 @@ in {
       night = 2500.0;
       solar_noon = 7000.0;
       sunrise = 5500.0;
-      sunset = 3500.0;
+      sunset = 4500.0;
     };
     crt-effect = {
-      glowStrength = 0.3;
-      glowRadius = 0.0018;
-      scanlineFrequency = 1800.0;
-      scanlineIntensity = 0.04;
+      glowStrength = 0.40;
+      glowRadius = 0.0010;
+      scanlineFrequency = 1000.0;
+      scanlineIntensity = 0.1;
       curvatureStrength = 0.04;
-      brightness = 0.0;
-      contrast = 1.0;
+      brightness = 0.2;
+      contrast = 1.05;
     };
   };
   services.anti-sleep-neglector-wallpaper = {

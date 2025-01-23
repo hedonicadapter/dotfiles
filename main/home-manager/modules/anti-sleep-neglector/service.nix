@@ -4,9 +4,12 @@
   lib,
   pkgs,
   inputs,
+  outputs,
   ...
 }:
 with lib; let
+  removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
+
   circadianVars = ''
     function get_circadian_period() {
         if [ -z "$1" ]; then
@@ -532,7 +535,39 @@ in {
           Type = "simple";
           Restart = "always";
           RestartSec = "30s";
-          ExecStart = "${pkgs.writeShellScript "set-wallpaper" ''
+          ExecStart = let
+            displayUtils = pkgs.writeShellScript "display-utils" ''
+              get_main_monitor_resolution() {
+                # Try Wayland first
+                if command -v swaymsg >/dev/null; then
+                  swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .current_mode.width, .current_mode.height'
+                # Fallback to X11
+                elif command -v xrandr >/dev/null; then
+                  xrandr --query | grep ' connected primary' | grep -oP '\d+x\d+\+\d+\+\d+' | head -1 | tr 'x' '\n'
+                else
+                  echo "Unable to detect display resolution" >&2
+                  exit 1
+                fi
+              }
+
+              should_no_resize() {
+                local image_w=$1
+                local image_h=$2
+
+                # Get main monitor dimensions
+                read -r monitor_w monitor_h < <(get_main_monitor_resolution)
+
+                # Calculate 80% thresholds
+                threshold_w=$(bc <<< "$monitor_w * 0.8")
+                threshold_h=$(bc <<< "$monitor_h * 0.8")
+
+                # Compare dimensions
+                if (( $(bc <<< "$image_w < $threshold_w") )) || (( $(bc <<< "$image_h < $threshold_h") )); then
+                  echo "--no-resize"
+                fi
+              }
+            '';
+          in "${pkgs.writeShellScript "set-wallpaper" ''
             #!/usr/bin/env bash
             PATH=$PATH:${lib.makeBinPath [
               pkgs.coreutils
@@ -549,6 +584,8 @@ in {
               })
               inputs.swww.packages.${pkgs.system}.swww
             ]}
+
+            source ${displayUtils}
 
             set -x
             exec &> /tmp/anti-sleep-neglector-wallpaper.log
@@ -605,10 +642,13 @@ in {
 
             declare -A brightness_cache
             get_brightness() {
-                if [[ -z "''${brightness_cache[$1]}" ]]; then
-                    brightness_cache[$1]=$(magick "$1" -colorspace gray -format "%[fx:mean]" info:)
-                fi
-                echo "''${brightness_cache[$1]}"
+              local file="$1"
+              if [[ "$file" == *.gif ]]; then
+                  brightness=$(magick "$file[0]" -colorspace gray -format "%[fx:mean]" info:)
+              else
+                  brightness=$(magick "$file" -colorspace gray -format "%[fx:mean]" info:)
+              fi
+              echo "$brightness"
             }
 
             group_wallpapers() {
@@ -629,8 +669,8 @@ in {
                 brightness_range=$(bc <<< "$max_brightness - $min_brightness")
 
                 # Define thresholds as percentages of the range
-                threshold1=$(bc <<< "$min_brightness + $brightness_range * 0.33")
-                threshold2=$(bc <<< "$min_brightness + $brightness_range * 0.66")
+                threshold1=$(bc <<< "$min_brightness + ($brightness_range * 0.33)")
+                threshold2=$(bc <<< "$min_brightness + ($brightness_range * 0.66)")
 
                 # group wallpapers
                 for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
@@ -657,9 +697,28 @@ in {
                 wallpapers_for_period=("''${grouped_wallpapers[$current_period]}")
                 wallpapers_for_period=($wallpapers_for_period)
                 if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
-                    selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
-                    selected_wallpaper_trimmed=$(echo $selected_wallpaper | xargs)
-                    nohup swww img "$selected_wallpaper_trimmed" --transition-type wipe --transition-angle 30 --transition-step 20 --transition-fps 144 </dev/null >command.log 2>&1 &
+                  selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
+                  selected_wallpaper_trimmed=$(echo "$selected_wallpaper" | xargs)
+
+                  # Get image dimensions
+                  read -r img_w img_h < <(magick identify -format "%w %h" "$selected_wallpaper_trimmed")
+
+                  swww_cmd=(
+                    swww img "$selected_wallpaper_trimmed"
+                    --transition-type wipe
+                    --transition-angle 30
+                    --transition-step 20
+                    --transition-fps 144
+                    --fill-color ${removeHash outputs.colors.base00}
+                  )
+
+                  resize_flag=$(should_no_resize "$img_w" "$img_h")
+                  if [[ -n "$resize_flag" ]]; then
+                    swww_cmd+=("$resize_flag")
+                    echo "Using --no-resize for image ($img_w x $img_h)"
+                  fi
+
+                  nohup "''${swww_cmd[@]}" </dev/null >command.log 2>&1 &
                 fi
 
                 next_period=$(get_next_period "$current_period")

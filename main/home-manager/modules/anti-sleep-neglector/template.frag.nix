@@ -19,7 +19,7 @@
     const float TEMPERATURE_STRENGTH = 1.0;
 
     #define WITH_QUICK_AND_DIRTY_LUMINANCE_PRESERVATION
-    const float LUMINANCE_PRESERVATION_FACTOR = 1.0;  // 0.0 to 1.0
+    const float LUMINANCE_PRESERVATION_FACTOR = 0.0;
 
     const float GLOW_STRENGTH = ${builtins.toString glowStrength};
     const float GLOW_RADIUS = ${builtins.toString glowRadius};
@@ -48,64 +48,60 @@
     }
 
     void main() {
-        // CRT-style distortion
-        vec2 tc = vec2(v_texcoord.x, v_texcoord.y);
-
-        // Distance from the center
+        // CRT curvature distortion
+        vec2 tc = v_texcoord;
         float dx = abs(0.5 - tc.x);
         float dy = abs(0.5 - tc.y);
-
-        // Square it to smooth the edges
         dx *= dx;
         dy *= dy;
+        tc.x = (tc.x - 0.5) * (1.0 + dy * CURVATURE_STRENGTH) + 0.5;
+        tc.y = (tc.y - 0.5) * (1.0 + dx * CURVATURE_STRENGTH) + 0.5;
 
-        tc.x -= 0.5;
-        tc.x *= 1.0 + (dy * CURVATURE_STRENGTH);
-        tc.x += 0.5;
-
-        tc.y -= 0.5;
-        tc.y *= 1.0 + (dx * CURVATURE_STRENGTH);
-        tc.y += 0.5;
-
-        // Sample texture with distorted coordinates
-        vec4 pixColor = texture2D(tex, vec2(tc.x, tc.y));
-
-        // RGB extraction
-        vec3 color = vec3(pixColor[0], pixColor[1], pixColor[2]);
-
-        // Apply contrast
-        color = (color - 0.5) * CONTRAST + 0.5;
-
-        // Apply brightness
-        color += vec3(BRIGHTNESS);
-
-        // Luminance preservation (optional)
-        #ifdef WITH_QUICK_AND_DIRTY_LUMINANCE_PRESERVATION
-        color *= mix(1.0,
-                     dot(color, vec3(0.2126, 0.7152, 0.0722)) / max(dot(color, vec3(0.2126, 0.7152, 0.0722)), 1e-5),
-                     LUMINANCE_PRESERVATION_FACTOR);
-        #endif
+        // Sample base color with distortion
+        vec4 baseColor = texture2D(tex, tc);
+        vec3 color = baseColor.rgb;
 
         // Apply color temperature
-        color = mix(color, color * colorTemperatureToRGB(COLOR_TEMPERATURE), TEMPERATURE_STRENGTH);
+        color *= colorTemperatureToRGB(COLOR_TEMPERATURE);
 
-        // Add glow effect
+        // Calculate glow from surrounding pixels
+        // Calculate glow with better sampling
         vec3 glow = vec3(0.0);
-        for (float x = -GLOW_RADIUS; x <= GLOW_RADIUS; x += GLOW_RADIUS / 2.0) {
-            for (float y = -GLOW_RADIUS; y <= GLOW_RADIUS; y += GLOW_RADIUS / 2.0) {
-                glow += texture2D(tex, tc + vec2(x, y)).rgb;
+        float samples = 0.0;
+        for (float x = -2.0; x <= 2.0; x += 1.0) {
+            for (float y = -2.0; y <= 2.0; y += 1.0) {
+                vec2 offset = vec2(x, y) * GLOW_RADIUS;
+                glow += texture2D(tex, tc + offset).rgb;
+                samples += 1.0;
             }
         }
-        glow = glow / 25.0; // Normalize glow intensity
-        color += glow * GLOW_STRENGTH;
+        glow /= samples;
 
-        // Add scanline effect
-        color.rgb += sin(tc.y * SCANLINE_FREQUENCY) * SCANLINE_INTENSITY;
+        // Enhanced glow blending (additive + screen)
+        vec3 blendedGlow = mix(color, max(color, glow * 1.5), GLOW_STRENGTH);
+        color = mix(color, blendedGlow, 0.8);
 
-        // Cutoff for out-of-bounds coordinates
-        vec4 outCol = (tc.y > 1.0 || tc.x < 0.0 || tc.x > 1.0 || tc.y < 0.0)
+        // Apply color temperature after glow
+        color *= colorTemperatureToRGB(COLOR_TEMPERATURE);
+
+        // Scanlines with gamma correction
+        float scanline = 1.0 - abs(sin(tc.y * SCANLINE_FREQUENCY * 3.1415 * 2.0)) * SCANLINE_INTENSITY;
+        color = pow(color * scanline, vec3(1.0/1.1));
+
+        // Contrast/brightness with better range control
+        color = (color - 0.5) * CONTRAST * 1.1 + 0.5 + BRIGHTNESS * 0.3;
+
+        // Luminance preservation
+        #ifdef WITH_QUICK_AND_DIRTY_LUMINANCE_PRESERVATION
+        vec3 luminance = vec3(dot(color, vec3(0.2126, 0.7152, 0.0722)));
+        color = mix(color, luminance, LUMINANCE_PRESERVATION_FACTOR);
+        #endif
+
+        // Clamp and output
+        color = clamp(color, 0.0, 2.0); // Allow overbright for glow
+        vec4 outCol = (any(greaterThan(tc, vec2(1.0))) || any(lessThan(tc, vec2(0.0))))
             ? vec4(0.0)
-            : vec4(color, pixColor[3]);
+            : vec4(color, baseColor.a);
 
         gl_FragColor = outCol;
     }

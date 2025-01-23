@@ -37,7 +37,11 @@
     env = GSK_RENDERER,ngl # error 71 gtk
 
     monitor=eDP-1, 2150x1440,auto,1
-    monitor=HDMI-A-1, preferred,2160x0,1
+    monitor=HDMI-A-1, preferred,2160x0,0.75
+
+    monitor=DP-3, preferred,2560x-1440,1
+    monitor=DP-4, preferred,5120x-1440,1
+
     xwayland {
       force_zero_scaling = true
       use_nearest_neighbor = false
@@ -69,11 +73,11 @@
     }
 
     general {
-        gaps_in = 3
+        gaps_in = 2
         gaps_out = 6
         border_size = 2
         col.active_border = rgb(${processColor outputs.colors.base04})
-        col.inactive_border = rgb(${processColor outputs.colors.base03})
+        col.inactive_border = rgb(${processColor outputs.colors.base04})
 
         layout = dwindle
 
@@ -83,7 +87,7 @@
 
     decoration {
         dim_inactive = true
-        dim_strength = 0.35
+        dim_strength = 0.40
 
         rounding = 0
 
