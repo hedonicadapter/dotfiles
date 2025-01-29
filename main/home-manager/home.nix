@@ -47,7 +47,7 @@ in {
       night = 2500.0;
       solar_noon = 7000.0;
       sunrise = 5500.0;
-      sunset = 4500.0;
+      sunset = 5000.0;
     };
     crt-effect = {
       glowStrength = 0.40;
@@ -96,12 +96,11 @@ in {
   home.username = "hedonicadapter";
   home.homeDirectory = "/home/hedonicadapter";
 
-  programs.neovim = {
-    enable = true;
-    package = inputs.neovim-config.neovimConfig.package;
-    extraLuaConfig = inputs.neovim-config.neovimConfig.extraLuaConfig;
-    plugins = inputs.neovim-config.neovimConfig.plugins;
-  };
+  programs.neovim =
+    {
+      enable = true;
+    }
+    // inputs.neovim-config.neovimConfig;
 
   programs.matugen = {enable = true;};
 
@@ -361,6 +360,7 @@ in {
 
   home.packages = with pkgs;
     [
+      (callPackage ./hints-derivation.nix {})
       google-chrome
       webcord
       neovide

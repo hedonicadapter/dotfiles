@@ -394,7 +394,7 @@ in {
             max_brightness=$(brightnessctl max | awk '{print $1}')
 
             # Define brightness levels (percentages)
-            night_brightness=10
+            night_brightness=20
             day_brightness=100
 
             # Function to calculate brightness based on current time

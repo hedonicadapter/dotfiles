@@ -171,10 +171,10 @@ in {
         name = "Noto Color Emoji";
       };
 
-      sizes.applications = 11;
-      sizes.desktop = 11;
-      sizes.popups = 11;
-      sizes.terminal = 11;
+      sizes.applications = 12;
+      sizes.desktop = 12;
+      sizes.popups = 12;
+      sizes.terminal = 12;
     };
 
     cursor = {
