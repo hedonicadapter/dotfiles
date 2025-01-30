@@ -5,18 +5,18 @@
   gobject-introspection,
   wrapGAppsHook3,
   at-spi2-core,
-  libwnck,
+  ydotool,
 }:
 python3.pkgs.buildPythonApplication {
   pname = "hints";
-  version = "0.0.3-unstable-2025-01-25";
+  version = "latest";
   pyproject = true;
 
   src = fetchFromGitHub {
-    owner = "AlfredoSequeida";
+    owner = "hedonicadapter";
     repo = "hints";
-    rev = "28bdbc1ef6d4df654a20a481a6429da07dccecc9";
-    hash = "sha256-rbYfRlH8Sgz7g1IV6duaMym06mxHBHaySNjs6bLs1so=";
+    rev = "main";
+    hash = "sha256-0Ee3BzwWNEyW0WpF+ZKWCdzKcQ58O3HYdnomTMn8pUU=";
   };
 
   disabled = python3.pkgs.pythonOlder "3.10";
@@ -29,6 +29,9 @@ python3.pkgs.buildPythonApplication {
     pyscreenshot
     opencv-python
     pyatspi
+
+    pkgs.ydotool
+    pkgs.gtk-layer-shell
   ];
 
   nativeBuildInputs = [
@@ -38,7 +41,6 @@ python3.pkgs.buildPythonApplication {
 
   buildInputs = [
     at-spi2-core
-    libwnck # for X11
   ];
 
   makeWrapperArgs = ["\${gappsWrapperArgs[@]}"];

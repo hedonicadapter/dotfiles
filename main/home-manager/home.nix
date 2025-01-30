@@ -360,7 +360,7 @@ in {
 
   home.packages = with pkgs;
     [
-      (callPackage ./hints-derivation.nix {})
+      (callPackage ./modules/hints/hints-derivation.nix {})
       google-chrome
       webcord
       neovide
@@ -495,6 +495,8 @@ in {
     };
 
     ".config/streamlink/config".source = ./modules/streamlink/config;
+
+    ".config/hints/config.json".text = import ./modules/hints/config.json.nix {inherit outputs;};
   };
 
   programs.home-manager.enable = true;

@@ -42,6 +42,12 @@
     monitor=DP-3, preferred,2560x-1440,1
     monitor=DP-4, preferred,5120x-1440,1
 
+    # for AlfredoSequeida/hints
+    device {
+      name = ydotoold-virtual-device-1
+      accel_profile = flat
+    }
+
     xwayland {
       force_zero_scaling = true
       use_nearest_neighbor = false
@@ -190,11 +196,10 @@
     bind = , escape, submap, reset
     submap = reset
 
-    # Files submap
-    bind = $mainMod, F, submap, files
-    bind = $mainMod, F, exec, $timeoutSubmap
-    submap = files
-      bindd = , F, DEFAULT, exec, $fileManager & $resetSubmap
+    # Directories submap
+    bind = $mainMod, D, submap, directories
+    bind = $mainMod, D, exec, $timeoutSubmap
+    submap = directories
       bindd = , T, TEMP, exec, $fileManager ~/Documents/temp & $resetSubmap
       bindd = , D, DOWNLOADS, exec, $fileManager ~/Downloads & $resetSubmap
     bind = , escape, submap, reset
@@ -259,6 +264,9 @@
       bind = , escape, submap, system
     bind = , escape, submap, reset
     submap = reset
+
+    bind = SUPER, V, exec, hints
+    # bind = SUPER, Y, exec, hints --mode scroll
 
     bind = $mainMod, W, killactive,
     bind = $mainMod SHIFT, F, togglefloating,

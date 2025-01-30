@@ -128,6 +128,8 @@ in {
   };
   programs.gamemode.enable = true;
 
+  programs.ydotool.enable = true; # for AlfredoSequeida/hints
+
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     TERM = "kitty";
@@ -314,7 +316,7 @@ in {
     hedonicadapter = {
       isNormalUser = true;
       openssh.authorizedKeys.keys = [];
-      extraGroups = ["networkmanager" "wheel" "docker" "dialout"];
+      extraGroups = ["networkmanager" "wheel" "docker" "dialout" "ydotool"];
     };
   };
 
