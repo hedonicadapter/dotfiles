@@ -111,14 +111,13 @@
         bezier = myBezier, 0, 0, 0.58, 1
         bezier = easeOutBack, 0.34, 1.56, 0.64, 1
 
-        animation = windows, 1, 7, myBezier, slide
-        animation = windowsOut, 1, 5.5, myBezier, slide
+        animation = fade, 1, 1, myBezier
+        animation = windows, 1, 1, myBezier, slide
+        animation = windowsOut, 1, 2, myBezier, slide
+        animation = workspaces, 1, 2, myBezier
 
-        animation = border, 1, 4.5, myBezier
-        animation = borderangle, 1, 12.5, easeOutBack
-
-        animation = fade, 1, 2.5, myBezier
-        animation = workspaces, 1, 6, myBezier
+        # animation = border, 1, 3.5, myBezier
+        # animation = borderangle, 1, 11.5, easeOutBack
     }
 
     dwindle {

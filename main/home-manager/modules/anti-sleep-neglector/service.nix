@@ -538,31 +538,31 @@ in {
           ExecStart = let
             displayUtils = pkgs.writeShellScript "display-utils" ''
               get_main_monitor_resolution() {
-                # Try Wayland first
-                if command -v swaymsg >/dev/null; then
-                  swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .current_mode.width, .current_mode.height'
+                # Try Hyprland first
+                if command -v hyprctl >/dev/null; then
+                  hyprctl -j monitors | jq -r '.[0] | "\(.width) \(.height)"'
                 # Fallback to X11
                 elif command -v xrandr >/dev/null; then
-                  xrandr --query | grep ' connected primary' | grep -oP '\d+x\d+\+\d+\+\d+' | head -1 | tr 'x' '\n'
+                  xrandr --query | awk '/ connected.*primary/{gsub("[x+]", " "); print $3, $4}' | head -n1
                 else
                   echo "Unable to detect display resolution" >&2
                   exit 1
                 fi
-              }
+              } 2>> /tmp/anti-sleep-neglector-wallpaper.log
 
               should_no_resize() {
                 local image_w=$1
                 local image_h=$2
 
-                # Get main monitor dimensions
-                read -r monitor_w monitor_h < <(get_main_monitor_resolution)
+                # Get monitor resolution with error handling
+                read -r monitor_w monitor_h < <(get_main_monitor_resolution 2>/dev/null || echo "1920 1080")
 
-                # Calculate 80% thresholds
-                threshold_w=$(bc <<< "$monitor_w * 0.8")
-                threshold_h=$(bc <<< "$monitor_h * 0.8")
+                # Calculate thresholds (80% of resolution)
+                threshold_w=$(bc <<< "scale=0; $monitor_w * 0.8 / 1" 2>/dev/null || echo 1536)
+                threshold_h=$(bc <<< "scale=0; $monitor_h * 0.8 / 1" 2>/dev/null || echo 864)
 
-                # Compare dimensions
-                if (( $(bc <<< "$image_w < $threshold_w") )) || (( $(bc <<< "$image_h < $threshold_h") )); then
+                # Native bash comparison
+                if (( image_w < threshold_w || image_h < threshold_h )); then
                   echo "--no-resize"
                 fi
               }

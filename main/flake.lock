@@ -1413,11 +1413,11 @@
         "nur": "nur"
       },
       "locked": {
-        "lastModified": 1737833323,
-        "narHash": "sha256-xxuIv1lsyjYi5NXLlW0bcPr0K9yJ9M6VFcbS2T/kskQ=",
+        "lastModified": 1738327831,
+        "narHash": "sha256-6kLMyThyk5T/T+tVWsSJ9qQOXeQGY5/kQiq1RuDqjl4=",
         "owner": "hedonicadapter",
         "repo": "neovim-config-flake",
-        "rev": "45eebbcdf2e22e1933d2088b9780772d0447ee73",
+        "rev": "08bbf53ba2146a6d4491e9bec3af335340ed32bd",
         "type": "github"
       },
       "original": {
