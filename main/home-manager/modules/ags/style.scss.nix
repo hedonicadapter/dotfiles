@@ -34,10 +34,11 @@
 
     window.Bar {
       color: ${outputs.colors.base05};
-      font-size: 19px;
+      font-size: 18px;
 
       .bar-items {
-        min-height:26px;
+        margin-top: 1px;
+        min-height: 26px;
 
         .bar-item {
           margin-left: 8px;
@@ -70,49 +71,62 @@
 
         .left {
           .workspaces {
-            font-size: 16px;
-          }
+            .workspace-indicator {
+              font-size: 15px;
+            }
 
-          .mode {
-            margin-left: 4px;
+            .focused-workspace {
+              font-size: 16px;
+              margin-left: 8px;
 
-            .NORMAL {
+              .main {
+              }
+              .misc {
+              }
             }
-            .RUN {
-              background-color: ${outputs.colors.base0D};
-              color: ${outputs.colors.base01};
-            }
-            .BROWSER {
-              background-color: ${outputs.colors.base0D};
-              color: ${outputs.colors.base01};
-            }
-            .FILES {
-              background-color: ${outputs.colors.base06};
-              color: ${outputs.colors.base02};
-            }
-            .QUERY {
-              background-color: ${outputs.colors.base0C};
-              color: ${outputs.colors.base01};
-            }
-            .UTIL {
-              background-color: ${outputs.colors.base0E};
-              color: ${outputs.colors.base01};
-            }
-            .SYSTEM {
-              background-color: ${outputs.colors.base0F};
-              color: ${outputs.colors.base01};
-            }
-            .POWER {
-              background-color: ${outputs.colors.base08};
-              color: ${outputs.colors.base05};
-            }
-            .DISPLAY {
-              background-color: ${outputs.colors.base0D};
-              color: ${outputs.colors.base06};
-            }
-            .AUDIO {
-              background-color: ${outputs.colors.base0E};
-              color: ${outputs.colors.base06};
+
+            .mode {
+              margin-top: 1px;
+              margin-left: -10px;
+
+              .NORMAL {
+              }
+              .RUN {
+                background-color: ${outputs.colors.base0D};
+                color: ${outputs.colors.base01};
+              }
+              .BROWSER {
+                background-color: ${outputs.colors.base0D};
+                color: ${outputs.colors.base01};
+              }
+              .FILES {
+                background-color: ${outputs.colors.base06};
+                color: ${outputs.colors.base02};
+              }
+              .QUERY {
+                background-color: ${outputs.colors.base0C};
+                color: ${outputs.colors.base01};
+              }
+              .UTIL {
+                background-color: ${outputs.colors.base0E};
+                color: ${outputs.colors.base01};
+              }
+              .SYSTEM {
+                background-color: ${outputs.colors.base0F};
+                color: ${outputs.colors.base01};
+              }
+              .POWER {
+                background-color: ${outputs.colors.base08};
+                color: ${outputs.colors.base05};
+              }
+              .DISPLAY {
+                background-color: ${outputs.colors.base0D};
+                color: ${outputs.colors.base06};
+              }
+              .AUDIO {
+                background-color: ${outputs.colors.base0E};
+                color: ${outputs.colors.base06};
+              }
             }
           }
 
@@ -120,7 +134,7 @@
             margin-left: 4px;
             margin-right: 4px;
             margin-top: 1px;
-            font-size: 16px;
+            font-size: 15px;
 
             > * {
               padding: 0 3px;
@@ -134,26 +148,27 @@
 
             .main {
               .media-controls {
-                font-size: 14px;
+                font-size: 15px;
                 margin-left: 6px;
                 margin-top:-1px;
               }
 
               .position-bar {
                 border: 2px solid ${outputs.colors.base00};
-                min-height: 10px;
-                margin: 0 8px;
+                min-height: 8px;
+                margin-top: 2px;
+                margin-left: 3px;
 
                 .current-position {
                   border: 1px solid ${outputs.colors.base0E};
                   background-color: ${outputs.colors.base00};
-                  min-height: 8px;
+                  min-height: 6px;
                 }
               }
 
               .position-and-length{
                 padding: 0 6px;
-                font-size: 16px;
+                font-size: 15px;
                 font-weight: 600;
               }
             }
@@ -164,7 +179,7 @@
                 margin-right: 4px;
               }
               .track-info {
-                font-size: 16px;
+                font-size: 15px;
                 padding-bottom: 1px;
                 padding-top: 2px;
 
@@ -197,7 +212,7 @@
             }
             .header {
               border: 2px solid transparent;
-              font-size: 18px;
+              font-size: 17px;
 
               .app-name {
                 padding-left: 1px;
@@ -207,7 +222,7 @@
               .summary {
               }
               .time {
-                font-size: 16px;
+                font-size: 15px;
               }
               .close-button {
                 margin-left: -4px;
@@ -237,12 +252,12 @@
             }
 
             .bar-label {
-              font-size: 19px;
+              font-size: 18px;
               padding-top: 1px;
             }
 
             .bar {
-              font-size: 19px;
+              font-size: 18px;
               margin-top: -2px;
 
               .low {

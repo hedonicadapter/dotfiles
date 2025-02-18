@@ -44,7 +44,7 @@ in {
     periods = {
       dawn = 4000.0;
       first_light = 4000.0;
-      night = 2500.0;
+      night = 3500.0;
       solar_noon = 7000.0;
       sunrise = 5500.0;
       sunset = 5000.0;
@@ -84,7 +84,6 @@ in {
           "steam-run"
           "steam"
           "sf-pro"
-          "copilot.vim"
           "ticktick"
           "betterttv"
           "discord-canary"
@@ -228,12 +227,18 @@ in {
     };
   };
 
+  programs.gh-dash.enable = true;
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   programs.nixcord = {
     enable = true;
     discord = {
       package = pkgs.discord;
       vencord.unstable = true;
-      openASAR.enable = true;
     };
     vesktop.enable = true;
     # programs.nixcord.userPlugins
@@ -360,7 +365,7 @@ in {
 
   home.packages = with pkgs;
     [
-      (callPackage ./modules/hints/hints-derivation.nix {})
+      # (callPackage ./modules/hints/hints-derivation.nix {})
       google-chrome
       webcord
       neovide
@@ -387,6 +392,7 @@ in {
       dotool # for speed-reader.sh
       inputs.ags.packages.${pkgs.system}.io # expose ags cli
       rofimoji
+      blender
     ]
     # Languages
     ++ [
@@ -524,6 +530,7 @@ in {
     EDITOR = "neovide";
     NIXOS_OZONE_WL = "1";
     ZSH_CUSTOM = "${config.home.homeDirectory}/.oh-my-zsh/custom";
+    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
 
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
     XDG_RUNTIME_DIR = "/run/user/$UID";

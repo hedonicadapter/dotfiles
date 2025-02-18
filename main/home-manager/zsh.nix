@@ -8,9 +8,10 @@
     enable = true;
     dotDir = ".config/zsh";
     shellAliases = {
-      "ls" = "lsd";
+      "ls" = "lsd -lat";
       "lst" = "lsd --tree";
-      "cat" = "bat"; # c*ts are terrible people, this config  doesn't condone c*t use
+      "cat" = "bat"; # c*ts are terrible people, this config doesn't condone c*t use
+      "grep" = "grep --color=auto";
     };
     autosuggestion = {enable = true;};
     syntaxHighlighting = {
@@ -41,6 +42,10 @@
       nix-refresh() {
         sudo nixos-rebuild switch --flake "$@" --show-trace --impure && nvd diff /run/current-system result
       }
+
+      cheat() {
+          curl "cheat.sh/$*"
+      }
     '';
     plugins = with pkgs; [
       {
@@ -54,6 +59,8 @@
       enable = true;
       extraConfig = ''
         eval "$(zoxide init zsh)"
+        eval "$(direnv hook zsh)"
+
         export XDG_RUNTIME_DIR=/run/user/$(id -u)
         setopt HIST_EXPIRE_DUPS_FIRST
         setopt HIST_IGNORE_DUPS

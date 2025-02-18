@@ -14,16 +14,16 @@
     exec-once = bash ~/.config/hypr/auto-float-unfloat.sh
 
     $terminal = kitty
-    $editor = neovide
+    # $editor = neovide
     $fileManager = nautilus
     $menu = tofi-run
+    $mail = xdg-open https://mail.google.com
     $browser = firefox-beta
     $music = spotify
 
-    exec-once=[split-workspace 5 silent] $browser && $editor
-    exec-once=[split-workspace 6 silent] obsidian
-    exec-once=[split-workspace 1 silent] vesktop
-    exec-once=[split-workspace 1 silent] $music
+    exec-once=[workspace 1 silent] $terminal
+    exec-once=[workspace 1 silent] $browser
+    exec-once=[workspace 5 silent] obsidian
 
     # env = AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1
 
@@ -132,10 +132,10 @@
         force_default_wallpaper = -1 # Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo = true
         disable_splash_rendering = true
-        focus_on_activate = true
+        focus_on_activate = false
         animate_manual_resizes = true
         new_window_takes_over_fullscreen = 2
-        initial_workspace_tracking = 2
+        initial_workspace_tracking = 0
         vfr = true
         # vrr = 2
     }
@@ -147,6 +147,17 @@
     binds {
         workspace_center_on = 1
     }
+
+    workspace=1,defaultName:main
+    workspace=2,defaultName:misc
+    workspace=3,defaultName:misc
+    workspace=4,defaultName:misc
+    workspace=5,defaultName:misc
+    workspace=6,defaultName:misc
+    workspace=7,defaultName:misc
+    workspace=8,defaultName:misc
+    workspace=9,defaultName:misc
+    workspace=10,defaultName:misc
 
     windowrulev2 = bordersize 0, floating:0, onworkspace:w[tv1]
     windowrulev2 = rounding 0, floating:0, onworkspace:w[tv1]
@@ -177,8 +188,8 @@
     bind = $mainMod, R, exec, $timeoutSubmap
     submap = run
       bindd = , T, TERMINAL, exec, $terminal & $resetSubmap
-      bindd = , E, NEOVIM, exec, $editor & $resetSubmap
       bindd = , M, MUSIC, exec, $music & $resetSubmap
+      bindd = , E, MAIL, exec, $mail & $resetSubmap
       bindd = , D, DISCORD, exec, vesktop & $resetSubmap
       bindd = , S, M0XYY, exec, $terminal 'streamlink twitch.tv/m0xyy 720p60 --player mpv --twitch-low-latency & TERM=xterm-kitty twt' & $resetSubmap
       bindd = , Y, YOUTUBE, exec, $terminal pipe-viewer & $resetSubmap
@@ -229,7 +240,7 @@
     bind = $mainMod, S, submap, system
     bind = $mainMod, S, exec, $timeoutSubmap
     submap = system
-      bindd = , R, RELOAD SHELL, exec, ags quit; ags run & $resetSubmap
+      bindd = , R, RELOAD SHELL, exec, ags quit; ags run & hyprctl reload & $resetSubmap
       bindd = , Z, TOGGLE ZEN MODE, exec, ags -r "zenable = !zenable" & $resetSubmap # toggle zen mode
 
       # Power menu

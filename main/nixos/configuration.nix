@@ -130,6 +130,14 @@ in {
 
   programs.ydotool.enable = true; # for AlfredoSequeida/hints
 
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    # Certain features, including CLI integration and system authentication support,
+    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
+    polkitPolicyOwners = ["hedonicadapter"];
+  };
+
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     TERM = "kitty";
@@ -311,6 +319,12 @@ in {
   };
 
   networking.hostName = "nixos";
+  networking.extraHosts = ''
+    127.0.0.1 localhost
+    ::1 localhost
+    127.0.0.2 nixos
+  '';
+  networking.nameservers = ["8.8.8.8" "8.8.4.4"];
 
   users.users = {
     hedonicadapter = {
