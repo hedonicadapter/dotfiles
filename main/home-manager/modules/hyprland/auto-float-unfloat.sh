@@ -48,6 +48,8 @@ float() {
     if [ "$window_count" -le 1 ]; then
         pid=$(hyprctl clients -j | jq -r --arg ws "$active_workspace" '.[] | select(.workspace.id == ($ws | tonumber)) | .pid')
         hyprctl dispatch setfloating pid:"$pid"
+        hyprctl dispatch centerwindow pid:"$pid"
+        hyprctl dispatch resizeactive exact 90% 80% pid:"$pid"
         return
     fi
 }

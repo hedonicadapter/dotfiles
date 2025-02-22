@@ -166,6 +166,7 @@
     windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
 
     windowrule = float, ^(.*popup.*)$
+    windowrule = center, ^(.*popup.*)$
     windowrule = stayfocused, ^(.*popup.*)$
 
     bezier=easeOutQuart, 0.25,1,0.5,1
