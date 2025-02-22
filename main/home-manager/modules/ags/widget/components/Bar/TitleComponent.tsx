@@ -33,7 +33,7 @@ export default function TitleComponent() {
             <label
               valign={Gtk.Align.CENTER}
               ellipsize={3}
-              label={bind(currentTitle)}
+              label={bind(currentTitle).as((s) => s || "NULL")}
             />
           </eventbox>
         );

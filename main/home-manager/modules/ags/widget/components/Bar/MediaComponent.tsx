@@ -166,19 +166,19 @@ export default function () {
             <label
               className="album-title"
               truncate
-              label={bind(spotify, "album") || ""}
+              label={bind(spotify, "album").as((s) => s || "")}
               halign={START}
             />
             <label
               className="artist-names"
               truncate
-              label={bind(spotify, "artist") || ""}
+              label={bind(spotify, "artist").as((s) => s || "")}
               halign={START}
             />
             <label
               className="project-name"
               truncate
-              label={bind(spotify, "title") || ""}
+              label={bind(spotify, "title").as((s) => s || "")}
               halign={START}
             />
           </box>

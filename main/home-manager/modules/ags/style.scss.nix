@@ -26,10 +26,10 @@
     }
 
     window.Screen {
-      border: 1.5px solid ${outputs.colors.base03};
+      border: 0.5px solid ${outputs.colors.base03};
     }
     window.Screen.active-monitor {
-      border: 1.5px solid ${outputs.colors.base04};
+      border: 0.5px solid ${outputs.colors.base04};
     }
 
     window.Bar {
@@ -63,10 +63,7 @@
           padding-right: 18px;
           padding-top: 2px;
           margin-top: -1px;
-          border: 1.5px solid ${outputs.colors.base03};
-        }
-        .center {
-          border: none;
+          border: 0.5px solid ${outputs.colors.base03};
         }
 
         .left {
@@ -192,6 +189,8 @@
         }
 
         .center {
+          border: none;
+
           .title {
             label {
               min-height:24px;
@@ -298,6 +297,47 @@
           .time {
             font-size: 18px;
           }
+        }
+
+      }
+
+      .HAL {
+         border: 0.5px solid ${outputs.colors.base03};
+
+        .responses {
+          min-width: 360px;
+          padding: 6px;
+
+          .response {
+            margin-bottom: 6px;
+          }
+
+          .response.user {
+            margin-right: 14px;
+
+            .label {
+              color: ${outputs.colors.base06};
+            }
+            .text {
+              background-color: ${outputs.colors.base03};
+              color: ${outputs.colors.base00};
+            }
+          }
+
+          .response.puter {
+            margin-left: 14px;
+
+            .label {
+              color: ${outputs.colors.base07};
+            }
+            .text {
+              background-color: ${outputs.colors.base04};
+              color: ${outputs.colors.base00};
+            }
+          }
+        }
+        .textarea {
+          margin-left: 4px;
         }
       }
     }

@@ -54,7 +54,7 @@ in {
       glowRadius = 0.0010;
       scanlineFrequency = 1000.0;
       scanlineIntensity = 0.1;
-      curvatureStrength = 0.04;
+      curvatureStrength = 0.06;
       brightness = 0.2;
       contrast = 1.05;
     };
@@ -365,7 +365,7 @@ in {
 
   home.packages = with pkgs;
     [
-      # (callPackage ./modules/hints/hints-derivation.nix {})
+      (callPackage ./modules/hints/hints-derivation.nix {})
       google-chrome
       webcord
       neovide
@@ -512,8 +512,8 @@ in {
 
   gtk = {
     enable = true;
-    iconTheme.package = pkgs.fluent-icon-theme;
-    iconTheme.name = "Fluent";
+    # iconTheme.package = pkgs.fluent-icon-theme;
+    # iconTheme.name = "Fluent";
     # cursorTheme.package = pkgs.callPackage ./oxygen-neon-cursors.nix {};
     # cursorTheme.name = "Oxygen-Neon";
   };

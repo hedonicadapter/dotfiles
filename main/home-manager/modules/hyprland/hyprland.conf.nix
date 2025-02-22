@@ -81,7 +81,7 @@
     general {
         gaps_in = 2
         gaps_out = 6
-        border_size = 2
+        border_size = 1
         col.active_border = rgb(${processColor outputs.colors.base04})
         col.inactive_border = rgb(${processColor outputs.colors.base04})
 
@@ -111,10 +111,11 @@
         bezier = myBezier, 0, 0, 0.58, 1
         bezier = easeOutBack, 0.34, 1.56, 0.64, 1
 
-        animation = fade, 1, 1, myBezier
-        animation = windows, 1, 1, myBezier, slide
-        animation = windowsOut, 1, 2, myBezier, slide
-        animation = workspaces, 1, 2, myBezier
+        animation = layers, 1, 0.5, myBezier
+        animation = fade, 1, 0.5, myBezier
+        animation = windows, 1, 0.5, myBezier, slide
+        animation = windowsOut, 1, 0.5, myBezier, slide
+        animation = workspaces, 1, 0.5, myBezier
 
         # animation = border, 1, 3.5, myBezier
         # animation = borderangle, 1, 11.5, easeOutBack
@@ -233,6 +234,7 @@
       bindd = , C, COLOR PICKER, exec, hyprpicker -a & $resetSubmap
       bindd = , R, SPEED READER, exec, $terminal bash ~/.config/hypr/speed-read.sh & $resetSubmap
       bindd = , E, EMOJI PICKER, exec, rofimoji --selector tofi & $resetSubmap
+      bindd = , Y, AI YAP SESH, exec, astal toggleHAL & $resetSubmap
     bind = , escape, submap, reset
     submap = reset
 
@@ -240,7 +242,7 @@
     bind = $mainMod, S, submap, system
     bind = $mainMod, S, exec, $timeoutSubmap
     submap = system
-      bindd = , R, RELOAD SHELL, exec, ags quit; ags run & hyprctl reload & $resetSubmap
+      bindd = , R, RELOAD SHELL, exec, ags quit; ags run & hyprctl reload & $resetSubmap & sleep 3 && hyprctl seterror disable
       bindd = , Z, TOGGLE ZEN MODE, exec, ags -r "zenable = !zenable" & $resetSubmap # toggle zen mode
 
       # Power menu

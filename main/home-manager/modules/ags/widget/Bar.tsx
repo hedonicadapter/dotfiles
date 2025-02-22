@@ -1,4 +1,4 @@
-import { Variable, bind } from "astal";
+import { bind } from "astal";
 import { App, Astal, Gtk, Gdk } from "astal/gtk3";
 import Hyprland from "gi://AstalHyprland";
 import TimeComponent from "./components/Bar/TimeComponent";
@@ -11,6 +11,7 @@ import AudioComponent from "./components/Bar/AudioComponent";
 import MediaComponent from "./components/Bar/MediaComponent";
 import TemperatureComponent from "./components/Bar/TemperatureComponent";
 import BluetoothComponent from "./components/Bar/BluetoothComponent";
+import HALComponent from "./components/Bar/Dash/HALComponent";
 import { getGdkMonitorFromName } from "../util";
 
 const hypr = Hyprland.get_default();
@@ -31,6 +32,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       })}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
+      keymode={Astal.Keymode.ON_DEMAND}
       anchor={
         Astal.WindowAnchor.TOP |
         Astal.WindowAnchor.LEFT |
@@ -38,48 +40,52 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       }
       application={App}
     >
-      <centerbox className="bar-items" valign={START}>
-        <box className="left" hexpand halign={START}>
-          <box valign={START}>
-            <WorkspaceComponent />
+      <box vertical>
+        <centerbox className="bar-items" valign={START}>
+          <box className="left" hexpand halign={START}>
+            <box valign={START}>
+              <WorkspaceComponent />
+            </box>
+
+            <box valign={START}>
+              <SysTrayComponent />
+            </box>
+
+            <box valign={START}>
+              <MediaComponent />
+            </box>
           </box>
 
-          <box valign={START}>
-            <SysTrayComponent />
+          <box className="center" halign={CENTER}>
+            <box valign={START}>
+              <TitleComponent />
+            </box>
           </box>
 
-          <box valign={START}>
-            <MediaComponent />
+          <box className="right" hexpand halign={END}>
+            <box valign={START}>
+              <NotificationsComponent />
+            </box>
+            <box valign={START}>
+              <AudioComponent />
+            </box>
+            <box valign={START}>
+              <TemperatureComponent />
+            </box>
+            <box valign={START}>
+              <BluetoothComponent />
+            </box>
+            <box valign={START}>
+              <WifiComponent />
+            </box>
+            <box valign={START}>
+              <TimeComponent />
+            </box>
           </box>
-        </box>
+        </centerbox>
 
-        <box className="center" halign={CENTER}>
-          <box valign={START}>
-            <TitleComponent />
-          </box>
-        </box>
-
-        <box className="right" hexpand halign={END}>
-          <box valign={START}>
-            <NotificationsComponent />
-          </box>
-          <box valign={START}>
-            <AudioComponent />
-          </box>
-          <box valign={START}>
-            <TemperatureComponent />
-          </box>
-          <box valign={START}>
-            <BluetoothComponent />
-          </box>
-          <box valign={START}>
-            <WifiComponent />
-          </box>
-          <box valign={START}>
-            <TimeComponent />
-          </box>
-        </box>
-      </centerbox>
+        <HALComponent />
+      </box>
     </window>
   );
 }
