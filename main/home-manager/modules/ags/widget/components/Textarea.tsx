@@ -8,6 +8,8 @@ const ignoreKeys = [
   Gdk.KEY_Shift_R,
   Gdk.KEY_Meta_L,
   Gdk.KEY_Meta_R,
+  Gdk.KEY_Control_L,
+  Gdk.KEY_Control_R,
 ];
 
 export default function ({
