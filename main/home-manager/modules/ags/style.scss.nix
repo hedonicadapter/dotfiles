@@ -319,7 +319,7 @@
               color: ${outputs.colors.base06};
             }
             .text {
-              background-color: ${outputs.colors.base03};
+              background-color: ${outputs.colors.base04};
               color: ${outputs.colors.base00};
             }
           }
@@ -331,7 +331,7 @@
               color: ${outputs.colors.base07};
             }
             .text {
-              background-color: ${outputs.colors.base04};
+              background-color: ${outputs.colors.base05};
               color: ${outputs.colors.base00};
             }
           }

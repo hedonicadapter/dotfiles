@@ -712,6 +712,11 @@ in {
                     --fill-color ${removeHash outputs.colors.base00}
                   )
 
+                  monitor_names=$(hyprctl monitors all -j | jq -r '.[] | .name')
+                  for monitor in $monitor_names; do
+                    swww_cmd+=(-o "$monitor")
+                  done
+
                   resize_flag=$(should_no_resize "$img_w" "$img_h")
                   if [[ -n "$resize_flag" ]]; then
                     swww_cmd+=("$resize_flag")

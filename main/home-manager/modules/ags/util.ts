@@ -18,3 +18,6 @@ export function getGdkMonitorFromName(name: string) {
   }
   return undefined;
 }
+export function escapeShellString(str: string) {
+  return str.replace(/'/g, `'\\''`);
+}

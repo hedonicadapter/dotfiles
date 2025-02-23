@@ -2,6 +2,7 @@ import Hyprland from "gi://AstalHyprland";
 import { Gtk } from "astal/gtk3";
 import { bind, Variable } from "astal";
 import { execAsync } from "astal/process";
+import { escapeShellString } from "../../../util";
 
 export default function TitleComponent() {
   const hypr = Hyprland.get_default();
@@ -10,10 +11,15 @@ export default function TitleComponent() {
   let timeout: ReturnType<typeof setTimeout>;
 
   const copyToClipboardAndNotify = async (title: string) => {
-    await execAsync(`bash -c 'wl-copy ${title}'`);
-    currentTitle.set("COPIED.");
-    clearTimeout(timeout);
-    timeout = setTimeout(() => currentTitle.set(title), 1000);
+    try {
+      const escapedString = escapeShellString(title);
+      await execAsync(`bash -c "wl-copy '${escapedString}'"`);
+      currentTitle.set("COPIED.");
+      clearTimeout(timeout);
+      timeout = setTimeout(() => currentTitle.set(title), 1000);
+    } catch (e) {
+      console.log("Error copying title: ", e);
+    }
   };
 
   return (
