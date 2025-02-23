@@ -40,7 +40,7 @@ const PauseButton = () => (
   </button>
 );
 
-export default function () {
+const component = (enabled: boolean) => {
   return (
     <Hoverable
       className="media-player"
@@ -152,6 +152,7 @@ export default function () {
           ))}
         </eventbox>
       }
+      enable={enabled}
       hoveredElement={
         <box className="panel ">
           <box
@@ -186,4 +187,7 @@ export default function () {
       }
     />
   );
+};
+export default function () {
+  return bind(spotify, "available").as(component);
 }

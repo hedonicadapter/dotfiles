@@ -5,17 +5,19 @@ export default function ({
   main,
   hoveredElement,
   className,
+  enable = true,
 }: {
   main: JSX.Element;
   hoveredElement: JSX.Element;
   className?: string;
+  enable?: boolean;
 }) {
   const hovered = Variable(false);
 
   return (
     <eventbox
-      onHover={() => hovered.set(true)}
-      onHoverLost={() => hovered.set(false)}
+      onHover={() => enable && hovered.set(true)}
+      onHoverLost={() => enable && hovered.set(false)}
       onDestroy={() => hovered.drop()}
       valign={Gtk.Align.CENTER}
     >
