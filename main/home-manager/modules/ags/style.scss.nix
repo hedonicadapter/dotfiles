@@ -305,7 +305,7 @@
          border: 0.5px solid ${outputs.colors.base03};
 
         .responses {
-          min-width: 360px;
+          min-width: 380px;
           padding: 6px;
 
           .response {
@@ -313,7 +313,7 @@
           }
 
           .response.user {
-            margin-right: 14px;
+            margin-right: 18px;
 
             .label {
               color: ${outputs.colors.base06};
@@ -325,7 +325,7 @@
           }
 
           .response.puter {
-            margin-left: 14px;
+            margin-left: 18px;
 
             .label {
               color: ${outputs.colors.base07};
