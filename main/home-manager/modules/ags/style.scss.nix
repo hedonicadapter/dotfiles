@@ -306,14 +306,14 @@
 
         .responses {
           min-width: 380px;
-          padding: 6px;
+          padding: 6px 8px;
 
           .response {
             margin-bottom: 6px;
           }
 
           .response.user {
-            margin-right: 18px;
+            margin-right: 16px;
 
             .label {
               color: ${outputs.colors.base06};
@@ -325,7 +325,8 @@
           }
 
           .response.puter {
-            margin-left: 18px;
+            margin-left: 16px;
+            margin-bottom: 10px;
 
             .label {
               color: ${outputs.colors.base07};

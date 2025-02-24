@@ -39,8 +39,10 @@
     monitor=eDP-1, 2150x1440,auto,1
     monitor=HDMI-A-1, preferred,2160x0,0.75
 
+    # Xenit
     monitor=DP-3, preferred,2560x-1440,1
     monitor=DP-4, preferred,5120x-1440,1
+    monitor=DP-1, preferred,auto,1
 
     # for AlfredoSequeida/hints
     device {

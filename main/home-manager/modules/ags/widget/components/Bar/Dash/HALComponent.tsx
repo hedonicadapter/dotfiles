@@ -5,29 +5,27 @@ import { subprocess } from "astal/process";
 
 export const toggleHAL = Variable(false);
 
-const getCompletion = (msg: string) => `
-    bash -c '
+const getCompletionScript = (msg: string) => {
+  const payload = JSON.stringify({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: "You are a helpful assistant." },
+      { role: "user", content: msg },
+    ],
+    stream: true,
+  });
+
+  const escapedPayload = payload.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+
+  return `
         export $(grep -v "^#" .env | xargs)
 
         curl --no-buffer "https://api.openai.com/v1/chat/completions" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $HAL_OPENAI" \
-            -d "{
-                \\"model\\": \\"gpt-4o-mini\\",
-                \\"messages\\": [
-                    {
-                        \\"role\\": \\"system\\",
-                        \\"content\\": \\"You are a helpful assistant.\\"
-                    },
-                    {
-                        \\"role\\": \\"user\\",
-                        \\"content\\": \\"${msg}\\"
-                    }
-                ],
-                \\"stream\\": true
-            }"
-    '
-`;
+            -d "${escapedPayload}"
+    `;
+};
 
 const HALResponses = Variable<string[]>([]);
 let accumulatedResponse = " :PUTER";
@@ -110,7 +108,7 @@ export default function () {
           copy.push("USER: " + str);
           HALResponses.set(copy);
 
-          subprocess(getCompletion(str), processStdout);
+          subprocess(["bash", "-c", getCompletionScript(str)], processStdout);
         }}
       />
     </box>

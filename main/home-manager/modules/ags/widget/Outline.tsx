@@ -3,23 +3,29 @@ import { Variable, bind } from "astal";
 import { App, Astal, Gtk, Gdk } from "astal/gtk3";
 import { getGdkMonitorFromName } from "../util";
 
-const hypr = Hyprland.get_default();
+// const hypr = Hyprland.get_default();
+//
+// className={bind(hypr, "focused-monitor").as((fm) => {
+//   const gdkName = gdkmonitor.display.get_name();
+//   const waylandName = getGdkMonitorFromName(fm.name)
+//     ?.get_display()
+//     .get_name();
+//   const currentMonitorIsFocusedMonitor = gdkName === waylandName;
+//
+//   // console.log(fm.name);
+//   // console.log(gdkName);
+//   // console.log(waylandName);
+//   // console.log(currentMonitorIsFocusedMonitor);
+//   return currentMonitorIsFocusedMonitor
+//     ? "Screen active-monitor"
+//     : "Screen";
+// })}
 
 export default function Outline(gdkmonitor: Gdk.Monitor) {
+  const hovered = Variable(false);
   return (
     <window
-      // className={bind(hovered).as((h) => (h ? "Screen hovered" : "Screen"))}
-      className={bind(hypr, "focused-monitor").as((fm) => {
-        const gdkName = gdkmonitor.display.get_name();
-        const waylandName = getGdkMonitorFromName(fm.name)
-          ?.get_display()
-          .get_name();
-        const currentMonitorIsFocusedMonitor = gdkName === waylandName;
-
-        return currentMonitorIsFocusedMonitor
-          ? "Screen active-monitor"
-          : "Screen";
-      })}
+      className={bind(hovered).as((h) => (h ? "Screen hovered" : "Screen"))}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.IGNORE}
       clickThrough={true}
@@ -31,6 +37,16 @@ export default function Outline(gdkmonitor: Gdk.Monitor) {
         Astal.WindowAnchor.BOTTOM
       }
       application={App}
-    ></window>
+    >
+      <eventbox
+        hexpand
+        vexpand
+        onHover={() => {
+          console.log("chungus");
+          hovered.set(true);
+        }}
+        onHoverLost={() => hovered.set(false)}
+      ></eventbox>
+    </window>
   );
 }
