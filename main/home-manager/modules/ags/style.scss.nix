@@ -298,11 +298,12 @@
             font-size: 18px;
           }
         }
-
       }
-
+    }
+    window.Dash {
       .HAL {
          border: 0.5px solid ${outputs.colors.base03};
+         font-size: 20px;
 
         .responses {
           min-width: 380px;
@@ -339,9 +340,11 @@
         }
         .textarea {
           margin-left: 4px;
+          min-height: 200px;
         }
       }
     }
+
     window.Bar.active-monitor {
       .bar-items {
         .left {

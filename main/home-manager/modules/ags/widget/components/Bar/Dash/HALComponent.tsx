@@ -60,8 +60,8 @@ const processStdout = (stdout: string) => {
 
 export default function () {
   return (
-    <box className="HAL" visible={bind(toggleHAL)}>
-      <scrollable heightRequest={200} hscroll={Gtk.PolicyType.NEVER}>
+    <box vertical className="HAL" visible={bind(toggleHAL)}>
+      <scrollable heightRequest={800} hscroll={Gtk.PolicyType.NEVER}>
         <box className="responses" orientation={1} vertical={true}>
           {bind(HALResponses).as((responses) =>
             responses.map((response) =>
@@ -103,6 +103,8 @@ export default function () {
       </scrollable>
       <Textarea
         className="textarea"
+        vexpand
+        hexpand
         onEnter={(str: string) => {
           const copy = JSON.parse(JSON.stringify(HALResponses.get()));
           copy.push("USER: " + str);

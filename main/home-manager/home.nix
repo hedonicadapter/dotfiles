@@ -377,6 +377,7 @@ in {
       streamlink
       twitch-tui
       pipe-viewer # youtube cli
+      yt-dlp # youtube to mp3
       resources
 
       ncdu

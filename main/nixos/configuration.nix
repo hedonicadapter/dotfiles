@@ -510,6 +510,7 @@ in {
   };
 
   services.intune.enable = true;
+  services.envfs.enable = true;
 
   security.sudo = {
     enable = true;

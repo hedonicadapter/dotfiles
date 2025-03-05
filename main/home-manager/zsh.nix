@@ -8,7 +8,7 @@
     enable = true;
     dotDir = ".config/zsh";
     shellAliases = {
-      "ls" = "lsd -lat";
+      "ls" = "lsd -latr";
       "lst" = "lsd --tree";
       "cat" = "bat"; # c*ts are terrible people, this config doesn't condone c*t use
       "grep" = "grep --color=auto";

@@ -11,8 +11,8 @@ import AudioComponent from "./components/Bar/AudioComponent";
 import MediaComponent from "./components/Bar/MediaComponent";
 import TemperatureComponent from "./components/Bar/TemperatureComponent";
 import BluetoothComponent from "./components/Bar/BluetoothComponent";
-import HALComponent from "./components/Bar/Dash/HALComponent";
 import { getGdkMonitorFromName } from "../util";
+import NoiseComponent from "./components/Bar/NoiseComponent";
 
 const hypr = Hyprland.get_default();
 
@@ -40,52 +40,52 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       }
       application={App}
     >
-      <box vertical>
-        <centerbox className="bar-items" valign={START}>
-          <box className="left" hexpand halign={START}>
-            <box valign={START}>
-              <WorkspaceComponent />
-            </box>
-
-            <box valign={START}>
-              <SysTrayComponent />
-            </box>
-
-            <box valign={START}>
-              <MediaComponent />
-            </box>
+      <centerbox className="bar-items" valign={START}>
+        <box className="left" hexpand halign={START}>
+          <box valign={START}>
+            <WorkspaceComponent />
           </box>
 
-          <box className="center" halign={CENTER}>
-            <box valign={START}>
-              <TitleComponent />
-            </box>
+          <box valign={START}>
+            <SysTrayComponent />
           </box>
 
-          <box className="right" hexpand halign={END}>
-            <box valign={START}>
-              <NotificationsComponent />
-            </box>
-            <box valign={START}>
-              <AudioComponent />
-            </box>
-            <box valign={START}>
-              <TemperatureComponent />
-            </box>
-            <box valign={START}>
-              <BluetoothComponent />
-            </box>
-            <box valign={START}>
-              <WifiComponent />
-            </box>
-            <box valign={START}>
-              <TimeComponent />
-            </box>
+          <box valign={START}>
+            <MediaComponent />
           </box>
-        </centerbox>
 
-        <HALComponent />
-      </box>
+          <box valign={START}>
+            <NoiseComponent />
+          </box>
+        </box>
+
+        <box className="center" halign={CENTER}>
+          <box valign={START}>
+            <TitleComponent />
+          </box>
+        </box>
+
+        <box className="right" hexpand halign={END}>
+          <box valign={START}>
+            <NotificationsComponent />
+          </box>
+          <box valign={START}>
+            <AudioComponent />
+          </box>
+          <box valign={START}>
+            <TemperatureComponent />
+          </box>
+          <box valign={START}>
+            <BluetoothComponent />
+          </box>
+          <box valign={START}>
+            <WifiComponent />
+          </box>
+          <box valign={START}>
+            <TimeComponent />
+          </box>
+        </box>
+      </centerbox>
     </window>
   );
 }

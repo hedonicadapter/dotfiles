@@ -15,9 +15,13 @@ const ignoreKeys = [
 export default function ({
   onEnter,
   className,
+  hexpand,
+  vexpand,
 }: {
   onEnter: (currentText: string) => void;
   className?: string;
+  hexpand?: boolean;
+  vexpand?: boolean;
 }) {
   const textBuffer = new Gtk.TextBuffer();
   const textView = new Gtk.TextView({ buffer: textBuffer });
@@ -40,7 +44,9 @@ export default function ({
         textBuffer.set_text("", 0);
       }}
     >
-      <box className={className}>{textView}</box>
+      <box className={className} hexpand={hexpand} vexpand={vexpand}>
+        {textView}
+      </box>
     </eventbox>
   );
 }

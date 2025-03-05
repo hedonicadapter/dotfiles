@@ -9,9 +9,10 @@ pkgs.mkShellNoCC {
       azure-cli
       azure-cli-extensions.azure-devops
       azure-functions-core-tools
-      bicep
 
+      bicep
       terraform
+      go
       ansible
 
       google-cloud-sdk
@@ -22,6 +23,7 @@ pkgs.mkShellNoCC {
       nodePackages.bash-language-server
       terraform-ls
       terraform-lsp
+      gopls
       dockerfile-language-server-nodejs
       ansible-language-server
     ]

@@ -188,7 +188,7 @@
     $clipboardHistoryQuery = cliphist list | tofi | cliphist decode | wl-copy
 
     # Run
-    bind = $mainMod, R, submap, run
+    bindd = $mainMod, R, RUN, submap, run
     bind = $mainMod, R, exec, $timeoutSubmap
     submap = run
       bindd = , T, TERMINAL, exec, $terminal & $resetSubmap
@@ -200,8 +200,8 @@
     bind = , escape, submap, reset
     submap = reset
 
-    # Browser submap
-    bind = $mainMod, B, submap, browser
+    # Browser
+    bindd = $mainMod, B, BROWSER, submap, browser
     bind = $mainMod, B, exec, $timeoutSubmap
     submap = browser
       bindd = , B, DEFAULT, exec, $browser & $resetSubmap
@@ -210,8 +210,8 @@
     bind = , escape, submap, reset
     submap = reset
 
-    # Directories submap
-    bind = $mainMod, D, submap, directories
+    # Directories
+    bindd = $mainMod, D, DIRECTORIES, submap, directories
     bind = $mainMod, D, exec, $timeoutSubmap
     submap = directories
       bindd = , T, TEMP, exec, $fileManager ~/Documents/temp & $resetSubmap
@@ -219,8 +219,8 @@
     bind = , escape, submap, reset
     submap = reset
 
-    # Query submap
-    bind = $mainMod, Q, submap, query
+    # Query
+    bindd = $mainMod, Q, QUERY, submap, query
     bind = $mainMod, Q, exec, $timeoutSubmap
     submap = query
       bindd = , A, APPS, exec, $appQuery & $resetSubmap
@@ -229,8 +229,8 @@
     bind = , escape, submap, reset
     submap = reset
 
-    # Utility submap
-    bind = $mainMod, U, submap, util
+    # Utility
+    bindd = $mainMod, U, UTILITY, submap, util
     bind = $mainMod, U, exec, $timeoutSubmap
     submap = util
       bindd = , P, PRINT-SCREEN, exec, grim -g "$(slurp)" - | swappy -f - | wl-copy & $resetSubmap
@@ -241,12 +241,12 @@
     bind = , escape, submap, reset
     submap = reset
 
-    # System submap
-    bind = $mainMod, S, submap, system
+    # System
+    bindd = $mainMod, S, SYSTEM, submap, system
     bind = $mainMod, S, exec, $timeoutSubmap
     submap = system
       bindd = , R, RELOAD SHELL, exec, ags quit; ags run & hyprctl reload & $resetSubmap & sleep 3 && hyprctl seterror disable
-      bindd = , Z, TOGGLE ZEN MODE, exec, ags -r "zenable = !zenable" & $resetSubmap # toggle zen mode
+      bindd = , Z, TOGGLE ZEN MODE, exec, astal zenable & $resetSubmap # toggle zen mode
 
       # Power menu
       bindd = , P, POWER, submap, power

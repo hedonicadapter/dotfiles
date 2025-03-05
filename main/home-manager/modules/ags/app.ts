@@ -2,6 +2,7 @@ import { App } from "astal/gtk3";
 import { Variable } from "astal";
 import Bar from "./widget/Bar";
 import Outline from "./widget/Outline";
+import Dash from "./widget/Dash";
 import { readFile, readFileAsync } from "astal/file";
 import { execAsync } from "astal/process";
 import { toggleHAL } from "./widget/components/Bar/Dash/HALComponent";
@@ -19,6 +20,7 @@ App.start({
   // env: ".env",
   main() {
     monitors.map(Bar);
+    monitors.map(Dash);
     monitors.map(Outline);
   },
   requestHandler(request: string, res: (response: any) => void) {
