@@ -373,7 +373,7 @@ in {
       hyprpicker
       speedread
       lutris
-      mpv
+      (mpv.override {scripts = [mpvScripts.mpris];})
       streamlink
       twitch-tui
       pipe-viewer # youtube cli

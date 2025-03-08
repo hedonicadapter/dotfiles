@@ -14,16 +14,15 @@ const playNoise = () => {
   const noiseToPlay = noiseTypes[noiseTypeSelectedIndex.get()];
   if (noiseToPlay === "off") return;
 
-  const noisePlayer = subprocess([
-    "bash -c",
-    `mpv --no-audio-display --loop ~/.config/ags/noise/${noiseTypes[noiseTypeSelectedIndex.get()]}.flac`,
-  ]);
+  const noisePlayer = subprocess(
+    `bash -c 'mpv --no-audio-display --loop ~/.config/ags/noise/${noiseTypes[noiseTypeSelectedIndex.get()]}.flac'`,
+  );
   currentSubproc.set(noisePlayer);
 };
 
+const max = noiseTypes.length;
 const cycleNoise = () => {
   const currentIndex = noiseTypeSelectedIndex.get();
-  const max = noiseTypes.length;
 
   if (currentIndex + 1 > max) noiseTypeSelectedIndex.set(0);
   else noiseTypeSelectedIndex.set(currentIndex + 1);

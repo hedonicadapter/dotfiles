@@ -8,7 +8,7 @@ const bluetooth = Bluetooth.get_default();
 export default function () {
   const powered = bind(bluetooth, "is-powered");
   const connected = bind(bluetooth, "is-connected");
-  const devices = bind(bluetooth, "devices");
+
   const connectedPoweredIcon = Variable.derive(
     [connected, powered],
     (c: boolean, p: boolean) => {
@@ -17,6 +17,7 @@ export default function () {
       return "bt-powered-symbolic";
     },
   );
+
   const connectedPoweredLabel = Variable.derive(
     [connected, powered],
     (c: boolean, p: boolean) => {

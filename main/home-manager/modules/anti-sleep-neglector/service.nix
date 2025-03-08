@@ -58,18 +58,6 @@ in {
           Whether to enable anti-sleep-neglector protocols.
         '';
       };
-      longitude = mkOption {
-        default = 0;
-        description = ''
-          Your longitudinal position.
-        '';
-      };
-      latitude = mkOption {
-        default = 0;
-        description = ''
-          Your latitudinal position.
-        '';
-      };
     };
 
     services.anti-sleep-neglector-monitor = {
@@ -238,8 +226,6 @@ in {
 
                 local lat_abs=$(echo $latitude | awk '{print sqrt($1*$1)}')
 
-                echo "Latitude: $latitude, Absolute latitude: $lat_abs, Season: $season" >> /tmp/anti-sleep-neglector.log
-
                 if (( $(echo "$lat_abs < 23" | bc -l) )); then
                     echo "05:30:00 06:00:00 06:30:00 12:00:00 18:00:00 18:30:00"
                 elif (( $(echo "$lat_abs < 45" | bc -l) )); then
@@ -287,45 +273,33 @@ in {
 
             systemctl --user set-environment LATITUDE="$LATITUDE"
             systemctl --user set-environment LONGITUDE="$LONGITUDE"
-            echo "LATITUDE: $LATITUDE" >> /tmp/anti-sleep-neglector.log
-            echo "LONGITUDE: $LONGITUDE" >> /tmp/anti-sleep-neglector.log
 
             hemisphere=$(awk -v LATITUDE="$LATITUDE" 'BEGIN {print (LATITUDE >= 0 ? "north" : "south")}')
             season=$(get_season $hemisphere)
 
-            echo "Hemisphere: $hemisphere" >> /tmp/anti-sleep-neglector.log
-            echo "Season: $season" >> /tmp/anti-sleep-neglector.log
-
             default_times=($(get_default_times $LATITUDE $season))
 
             response=$(curl -s "https://api.sunrisesunset.io/json?lat=$LATITUDE&lng=$LONGITUDE")
-            echo "Response: $response" >> /tmp/anti-sleep-neglector.log
 
             DAWN=$(get_time "dawn" "''${default_times[1]}")
             systemctl --user set-environment DAWN="$DAWN"
-            echo "DAWN: $DAWN" >> /tmp/anti-sleep-neglector.log
 
             SUNRISE=$(get_time "sunrise" "''${default_times[2]}")
             systemctl --user set-environment SUNRISE="$SUNRISE"
-            echo "SUNRISE: $SUNRISE" >> /tmp/anti-sleep-neglector.log
 
             SOLAR_NOON=$(get_time "solar_noon" "''${default_times[3]}")
             systemctl --user set-environment SOLAR_NOON="$SOLAR_NOON"
-            echo "SOLAR_NOON: $SOLAR_NOON" >> /tmp/anti-sleep-neglector.log
 
             SUNSET=$(get_time "sunset" "''${default_times[4]}")
             systemctl --user set-environment SUNSET="$SUNSET"
-            echo "SUNSET: $SUNSET" >> /tmp/anti-sleep-neglector.log
 
             # Calculate FIRST_LIGHT as 45 minutes before DAWN
             FIRST_LIGHT=$(date -d "$DAWN 45 minutes ago" +%T)
             systemctl --user set-environment FIRST_LIGHT="$FIRST_LIGHT"
-            echo "Calculated FIRST_LIGHT: $FIRST_LIGHT" >> /tmp/anti-sleep-neglector.log
 
             # Calculate LAST_LIGHT as 45 minutes after SUNSET
             LAST_LIGHT=$(date -d "$SUNSET 45 minutes" +%T)
             systemctl --user set-environment LAST_LIGHT="$LAST_LIGHT"
-            echo "Calculated LAST_LIGHT: $LAST_LIGHT" >> /tmp/anti-sleep-neglector.log
           ''}";
         };
 
@@ -378,11 +352,9 @@ in {
                 echo $(( 10#$h * 60 + 10#$m ))
             }
 
-            # Get current time in minutes
             current_time=$(date +%H:%M:%S)
             current_minutes=$(time_to_minutes "$current_time")
 
-            # Convert environment variables to minutes
             first_light_min=$(time_to_minutes "$FIRST_LIGHT")
             dawn_min=$(time_to_minutes "$DAWN")
             sunrise_min=$(time_to_minutes "$SUNRISE")
@@ -390,14 +362,12 @@ in {
             sunset_min=$(time_to_minutes "$SUNSET")
             last_light_min=$(time_to_minutes "$LAST_LIGHT")
 
-            # Get max brightness
             max_brightness=$(brightnessctl max | awk '{print $1}')
 
-            # Define brightness levels (percentages)
             night_brightness=20
             day_brightness=100
 
-            # Function to calculate brightness based on current time
+            # Brightness based on current time
             calculate_brightness() {
                 local start_time=$1
                 local end_time=$2
@@ -418,14 +388,18 @@ in {
                 echo $(( max_brightness * brightness_percent / 100 ))
             }
 
-            # Determine the appropriate brightness based on current time
+            set_shader() {
+              hyprctl keyword decoration:screen_shader "$1"
+            }
+
+            # Determine appropriate brightness based on current time
             if [ $current_minutes -lt $first_light_min ] || [ $current_minutes -ge $last_light_min ]; then
                 # Night time
                 desired_brightness=$((max_brightness * night_brightness / 100))
 
                   ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/night.frag"
+              then "set_shader ~/.config/anti-sleep-neglector/shaders/night.frag"
               else ""
             }
             elif [ $current_minutes -lt $dawn_min ]; then
@@ -434,7 +408,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/first_light.frag"
+              then "set_shader ~/.config/anti-sleep-neglector/shaders/first_light.frag"
               else ""
             }
             elif [ $current_minutes -lt $sunrise_min ]; then
@@ -443,7 +417,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/dawn.frag"
+              then "set_shader ~/.config/anti-sleep-neglector/shaders/dawn.frag"
               else ""
             }
             elif [ $current_minutes -lt $solar_noon_min ]; then
@@ -452,7 +426,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/sunrise.frag"
+              then "set_shader ~/.config/anti-sleep-neglector/shaders/sunrise.frag"
               else ""
             }
             elif [ $current_minutes -lt $sunset_min ]; then
@@ -461,7 +435,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/solar_noon.frag"
+              then "set_shader ~/.config/anti-sleep-neglector/shaders/solar_noon.frag"
               else ""
             }
             elif [ $current_minutes -lt $last_light_min ]; then
@@ -470,12 +444,11 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "hyprctl keyword decoration:screen_shader ~/.config/anti-sleep-neglector/shaders/sunset.frag"
+              then "set_shader ~/.config/anti-sleep-neglector/shaders/sunset.frag"
               else ""
             }
             fi
 
-            # Set the brightness
             brightnessctl set "$(printf "%.0f" "$desired_brightness")"
           ''}";
         };
@@ -554,14 +527,11 @@ in {
                 local image_w=$1
                 local image_h=$2
 
-                # Get monitor resolution with error handling
                 read -r monitor_w monitor_h < <(get_main_monitor_resolution 2>/dev/null || echo "1920 1080")
 
-                # Calculate thresholds (80% of resolution)
                 threshold_w=$(bc <<< "scale=0; $monitor_w * 0.8 / 1" 2>/dev/null || echo 1536)
                 threshold_h=$(bc <<< "scale=0; $monitor_h * 0.8 / 1" 2>/dev/null || echo 864)
 
-                # Native bash comparison
                 if (( image_w < threshold_w || image_h < threshold_h )); then
                   echo "--no-resize"
                 fi
@@ -672,7 +642,7 @@ in {
                 threshold1=$(bc <<< "$min_brightness + ($brightness_range * 0.33)")
                 threshold2=$(bc <<< "$min_brightness + ($brightness_range * 0.66)")
 
-                # group wallpapers
+                # Group wallpapers by time period
                 for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
                     brightness=$(get_brightness "$wallpaper")
                     if (( $(echo "$brightness < $threshold1" | bc -l) )); then
@@ -693,7 +663,6 @@ in {
                 eval "$(group_wallpapers)"
                 current_period=$(get_current_period)
 
-                # Select and set wallpaper
                 wallpapers_for_period=("''${grouped_wallpapers[$current_period]}")
                 wallpapers_for_period=($wallpapers_for_period)
                 if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
@@ -712,22 +681,19 @@ in {
                     --fill-color ${removeHash outputs.colors.base00}
                   )
 
-                  monitor_names=$(hyprctl monitors all -j | jq -r '.[] | .name')
-                  for monitor in $monitor_names; do
-                    swww_cmd+=(-o "$monitor")
-                  done
-
                   resize_flag=$(should_no_resize "$img_w" "$img_h")
                   if [[ -n "$resize_flag" ]]; then
                     swww_cmd+=("$resize_flag")
                     echo "Using --no-resize for image ($img_w x $img_h)"
                   fi
 
-                  nohup "''${swww_cmd[@]}" </dev/null >command.log 2>&1 &
+                  monitor_names=$(hyprctl monitors all -j | jq -r '.[] | .name')
+                  for monitor in $monitor_names; do
+                    nohup "''${swww_cmd[@]}" -o "$monitor" </dev/null >command.log 2>&1 &
+                  done
                 fi
 
                 next_period=$(get_next_period "$current_period")
-                echo "Debug: next_period: $next_period"
                 current_date=$(date +%Y-%m-%d)
                 next_period_time=$(date -d "$next_period" +%T)
                 next_time=$(date -d "$current_date $next_period_time" +%s)
@@ -743,11 +709,6 @@ in {
                 if (( wait_time < 0 )); then
                     wait_time=1800  # 30 minutes
                 fi
-
-                echo "Debug: start_of_day = $start_of_day"
-                echo "Debug: current_time = $current_time"
-                echo "Debug: next_time = $next_time"
-                echo "Debug: wait_time = $wait_time"
 
                 sleep $wait_time
             done

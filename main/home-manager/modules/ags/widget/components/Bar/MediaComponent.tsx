@@ -8,17 +8,22 @@ import Hoverable from "../Hoverable";
 const { START, CENTER, END } = Gtk.Align;
 const POSITION_BAR_WIDTH = 110;
 
-const spotify = Mpris.Player.new("spotify");
+// var currentPlayer
+// if zenable
+//    spotify.stop()
+//    currentPlayer = mpv
+//    currentPlayer.play()
+//    set colors
+
+const playa = Mpris.Player.new("spotify");
 // raise() bring up spotify
-// <label label={bind(spotify, "title")} />
 
 const PlayButton = () => (
   <button
     className={
-      "play " +
-      bind(spotify, "can_play").as((b) => (b ? "enabled" : "disabled"))
+      "play " + bind(playa, "can_play").as((b) => (b ? "enabled" : "disabled"))
     }
-    onClicked={() => spotify.get_can_play() && spotify.play()}
+    onClicked={() => playa.get_can_play() && playa.play()}
     valign={CENTER}
     halign={CENTER}
   >
@@ -30,9 +35,9 @@ const PauseButton = () => (
   <button
     className={
       "pause " +
-      bind(spotify, "can_pause").as((b) => (b ? "enabled" : "disabled"))
+      bind(playa, "can_pause").as((b) => (b ? "enabled" : "disabled"))
     }
-    onClicked={() => spotify.get_can_pause() && spotify.pause()}
+    onClicked={() => playa.get_can_pause() && playa.pause()}
     valign={CENTER}
     halign={CENTER}
   >
@@ -47,29 +52,29 @@ const component = (enabled: boolean) => {
       main={
         <eventbox
           onClick={() =>
-            spotify.get_available() && spotify.get_can_raise()
-              ? spotify.raise()
+            playa.get_available() && playa.get_can_raise()
+              ? playa.raise()
               : exec("bash -c 'spotify'")
           }
           valign={CENTER}
         >
-          {bind(spotify, "available").as(() => (
+          {bind(playa, "available").as(() => (
             <box className="main" valign={CENTER}>
               <box className="media-controls" valign={CENTER} halign={START}>
                 <button
                   valign={CENTER}
                   halign={START}
-                  className={bind(spotify, "can_go_previous").as((b) =>
+                  className={bind(playa, "can_go_previous").as((b) =>
                     b ? "enabled" : "disabled",
                   )}
                   onClicked={() =>
-                    spotify.get_can_go_previous() && spotify.previous()
+                    playa.get_can_go_previous() && playa.previous()
                   }
                 >
                   ⏮
                 </button>
 
-                {bind(spotify, "playback-status").as((status) => {
+                {bind(playa, "playback-status").as((status) => {
                   switch (status) {
                     case 2:
                     case 1:
@@ -83,20 +88,20 @@ const component = (enabled: boolean) => {
                 <button
                   valign={CENTER}
                   halign={END}
-                  className={bind(spotify, "can_go_next").as((b) =>
+                  className={bind(playa, "can_go_next").as((b) =>
                     b ? "enabled" : "disabled",
                   )}
-                  onClicked={() => spotify.get_can_go_next() && spotify.next()}
+                  onClicked={() => playa.get_can_go_next() && playa.next()}
                 >
                   ⏭
                 </button>
               </box>
 
               <box halign={CENTER} valign={CENTER}>
-                {bind(spotify, "position").as((p) => {
+                {bind(playa, "position").as((p) => {
                   let positionInPx = 0;
                   if (p >= 0) {
-                    const length = spotify.get_length();
+                    const length = playa.get_length();
                     positionInPx = Math.round(
                       (p / length) * POSITION_BAR_WIDTH,
                     );
@@ -127,10 +132,10 @@ const component = (enabled: boolean) => {
               </box>
 
               <box halign={END} valign={CENTER}>
-                {bind(spotify, "position").as((p) => {
+                {bind(playa, "position").as((p) => {
                   let time;
                   if (p >= 0) {
-                    const length = spotify.get_length();
+                    const length = playa.get_length();
                     const positionMSS = fmtMSS(Math.round(p));
                     const lengthMSS = fmtMSS(Math.round(length));
 
@@ -157,7 +162,7 @@ const component = (enabled: boolean) => {
         <box className="panel ">
           <box
             className="cover-art"
-            css={bind(spotify, "art_url").as(
+            css={bind(playa, "art_url").as(
               (cover) =>
                 `background-image: url("${cover}"); background-size: contain; min-width: 50px; min-height: 50px;`,
             )}
@@ -167,19 +172,19 @@ const component = (enabled: boolean) => {
             <label
               className="album-title"
               truncate
-              label={bind(spotify, "album").as((s) => s || "")}
+              label={bind(playa, "album").as((s) => s || "")}
               halign={START}
             />
             <label
               className="artist-names"
               truncate
-              label={bind(spotify, "artist").as((s) => s || "")}
+              label={bind(playa, "artist").as((s) => s || "")}
               halign={START}
             />
             <label
               className="project-name"
               truncate
-              label={bind(spotify, "title").as((s) => s || "")}
+              label={bind(playa, "title").as((s) => s || "")}
               halign={START}
             />
           </box>
@@ -189,5 +194,5 @@ const component = (enabled: boolean) => {
   );
 };
 export default function () {
-  return bind(spotify, "available").as(component);
+  return bind(playa, "available").as(component);
 }
