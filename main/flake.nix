@@ -63,6 +63,10 @@
     nixcord = {
       url = "github:kaylorben/nixcord";
     };
+
+    chaotic = {
+      url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    };
   };
 
   outputs = {
@@ -71,6 +75,7 @@
     home-manager,
     nixos-hardware,
     colors,
+    chaotic,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -104,6 +109,7 @@
           nixos-hardware.nixosModules.common-pc-laptop-ssd
           nixos-hardware.nixosModules.common-pc-laptop-hdd
           ./nixos/configuration.nix
+          chaotic.nixosModules.default
         ];
       };
     };

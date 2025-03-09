@@ -241,6 +241,7 @@ in {
   #     MINSTOP=hwmon4/device/pwm1=0
   #   '';
   # };
+
   hardware.nvidia = {
     modesetting.enable = true; # Modesetting is required.
 
