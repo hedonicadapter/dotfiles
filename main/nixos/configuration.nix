@@ -205,7 +205,8 @@ in {
   hardware.logitech.wireless.enableGraphical = true;
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_zen;
+    kernelPackages = pkgs.linuxPackages_cachyos;
+    # kernelPackages = pkgs.linuxPackages_zen;
     tmp.cleanOnBoot = true;
     loader.grub.timeoutStyle = false;
     kernelParams = [
@@ -397,7 +398,7 @@ in {
     xkb.layout = "se";
     xkb.variant = "";
 
-    videoDrivers = ["nvidia"];
+    videoDrivers = ["nvidia" "nvidia-utils"];
 
     displayManager.gdm.enable = true; # GNOME Desktop Environment
     desktopManager.gnome.enable = true;

@@ -327,6 +327,9 @@ in {
     })
 
     (mkIf config.services.anti-sleep-neglector-monitor.enable {
+      # doesnt work
+      # wayland.windowManager.hyprland.systemd.extraCommands = ["systemctl --user enable --now hyprsunset.service"];
+      # wayland.windowManager.hyprland.plugins = [pkgs.hyprsunset];
       systemd.user.services."anti-sleep-neglector-monitor" = {
         Unit = {
           Description = "Run anti sleep neglector automatic monitor brightness control";

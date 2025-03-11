@@ -25,7 +25,7 @@
     exec-once=[workspace 1 silent] $browser
     exec-once=[workspace 5 silent] obsidian
 
-    # env = AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1
+    env = AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1
 
     env = XCURSOR_SIZE,100
     env = XCURSOR_THEME,rah
@@ -60,6 +60,29 @@
             count = 4
             enable_notifications = 0
         }
+
+        #  TODO: marked broken
+        # hyprfocus {
+        #     enabled = yes
+        #     animate_floating = yes
+        #     animate_workspacechange = yes
+        #     focus_animation = flash
+        #
+        #     bezier = bezIn, 0.5,0.0,1.0,0.5
+        #     bezier = bezOut, 0.0,0.5,0.5,1.0
+        #     bezier = overshot, 0.05, 0.9, 0.1, 1.05
+        #     bezier = smoothOut, 0.36, 0, 0.66, -0.56
+        #     bezier = smoothIn, 0.25, 1, 0.5, 1
+        #     bezier = realsmooth, 0.28,0.29,.69,1.08
+        #
+        #     flash {
+        #         flash_opacity = 0.95
+        #         in_bezier = realsmooth
+        #         in_speed = 0.5
+        #         out_bezier = realsmooth
+        #         out_speed = 3
+        #     }
+        # }
     }
 
     input {
@@ -91,6 +114,10 @@
 
         allow_tearing = false
         no_focus_fallback = true
+    }
+
+    debug {
+      damage_tracking = 0
     }
 
     decoration {
@@ -145,6 +172,10 @@
 
     opengl {
         nvidia_anti_flicker = false
+    }
+
+    render {
+        direct_scanout = 2
     }
 
     binds {

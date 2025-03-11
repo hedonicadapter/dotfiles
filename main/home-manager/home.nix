@@ -50,13 +50,13 @@ in {
       sunset = 5000.0;
     };
     crt-effect = {
-      glowStrength = 0.62;
+      glowStrength = 0.52;
       glowRadius = 0.001;
-      scanlineFrequency = 1000.0;
-      scanlineIntensity = 0.08;
+      scanlineFrequency = 1500.0;
+      scanlineIntensity = 0.03;
       curvatureStrength = 0.06;
-      brightness = 0.2;
-      contrast = 1.05;
+      brightness = 0.0;
+      contrast = 1.00;
     };
   };
   services.anti-sleep-neglector-wallpaper = {
@@ -366,6 +366,7 @@ in {
   home.packages = with pkgs;
     [
       (callPackage ./modules/hints/hints-derivation.nix {})
+      inputs.zen-browser.packages."${system}".beta
       google-chrome
       webcord
       neovide
@@ -453,7 +454,11 @@ in {
     systemd.enable = true;
     systemd.variables = ["--all"];
     extraConfig = import ./modules/hyprland/hyprland.conf.nix {inherit outputs lib;};
-    plugins = [inputs.split-monitor-workspaces.packages.${pkgs.system}.default];
+    plugins = [
+      inputs.split-monitor-workspaces.packages.${pkgs.system}.default
+      #  TODO: marked broken
+      # pkgs.hyprlandPlugins.hyprfocus
+    ];
     xwayland.enable = true;
   };
 

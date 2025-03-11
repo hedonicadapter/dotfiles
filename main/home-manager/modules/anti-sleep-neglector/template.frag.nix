@@ -11,15 +11,12 @@
 }: let
   frag = ''
     precision highp float;
-
     varying vec2 v_texcoord;
+
     uniform sampler2D tex;
+    uniform float time;
 
     const float COLOR_TEMPERATURE = ${builtins.toString temp};
-    const float TEMPERATURE_STRENGTH = 1.0;
-
-    #define WITH_QUICK_AND_DIRTY_LUMINANCE_PRESERVATION
-    const float LUMINANCE_PRESERVATION_FACTOR = 0.0;
 
     const float GLOW_STRENGTH = ${builtins.toString glowStrength};
     const float GLOW_RADIUS = ${builtins.toString glowRadius};
@@ -48,24 +45,66 @@
     }
 
     void main() {
-        // CRT curvature distortion
-        vec2 tc = v_texcoord;
+        vec2 tc = vec2(v_texcoord.x, v_texcoord.y);
+
+        // Distance from the center
         float dx = abs(0.5 - tc.x);
         float dy = abs(0.5 - tc.y);
+
+        // Square it to smooth the edges
         dx *= dx;
         dy *= dy;
-        tc.x = (tc.x - 0.5) * (1.0 + dy * CURVATURE_STRENGTH) + 0.5;
-        tc.y = (tc.y - 0.5) * (1.0 + dx * CURVATURE_STRENGTH) + 0.5;
 
-        // Sample base color with distortion
-        vec4 baseColor = texture2D(tex, tc);
-        vec3 color = baseColor.rgb;
+        tc.x -= 0.5;
+        tc.x *= 1.0 + (dy * CURVATURE_STRENGTH);
+        tc.x += 0.5;
 
-        // Apply color temperature
-        color *= colorTemperatureToRGB(COLOR_TEMPERATURE);
+        tc.y -= 0.5;
+        tc.y *= 1.0 + (dx * CURVATURE_STRENGTH);
+        tc.y += 0.5;
 
-        // Calculate glow from surrounding pixels
-        // Calculate glow with better sampling
+        // Add RGB offset for retro color separation effect
+        vec2 r_tc = tc + vec2(0.001, 0.0);
+        vec2 g_tc = tc;
+        vec2 b_tc = tc - vec2(0.001, 0.0);
+
+        vec4 color;
+        color.r = texture2D(tex, r_tc).r;
+        color.g = texture2D(tex, g_tc).g;
+        color.b = texture2D(tex, b_tc).b;
+        color.a = 1.0;
+
+        // Add scanlines
+        float scanline = sin(tc.y * SCANLINE_FREQUENCY) * SCANLINE_INTENSITY;
+        color.rgb += scanline;
+
+        // Add noise
+        float noise = (fract(sin(dot(tc.xy + vec2(time), vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.05;
+        color.rgb += noise;
+
+        color.rgb = clamp(color.rgb, 0.0, 1.0);
+        // Add after noise/scanline additions
+
+        // Apply vignette effect
+        float vignette = smoothstep(0.8, 0.2, dx + dy);
+        color.rgb *= vignette;
+
+        // Vertical CRT lines with reduced intensity
+        float lines = sin((tc.y + time * 0.1) * 40.0) * 0.02;
+        color.rgb *= 1.0 - lines;
+
+        // Apply color temperature to RGB components only
+        color.rgb *= colorTemperatureToRGB(COLOR_TEMPERATURE);
+
+        // Apply retro orange color transformation
+        vec3 retroColor = vec3(
+            color.r * 1.2,  // Boost the red channel
+            color.g * 1.0,  // Keep the green channel as is
+            color.b * 0.8   // Reduce the blue channel
+        );
+        color.rgb = retroColor;
+
+        // Glow
         vec3 glow = vec3(0.0);
         float samples = 0.0;
         for (float x = -2.0; x <= 2.0; x += 1.0) {
@@ -77,33 +116,18 @@
         }
         glow /= samples;
 
-        // Enhanced glow blending (additive + screen)
-        vec3 blendedGlow = mix(color, max(color, glow * 1.5), GLOW_STRENGTH);
-        color = mix(color, blendedGlow, 0.8);
+        // Fixed glow blending (operate on RGB components)
+        vec3 blendedGlow = mix(color.rgb, max(color.rgb, glow * 1.5), GLOW_STRENGTH);
+        color.rgb = mix(color.rgb, blendedGlow, 0.8);
 
-        // Apply color temperature after glow
-        color *= colorTemperatureToRGB(COLOR_TEMPERATURE);
+        // Cutoff
+        if (tc.y > 1.0 || tc.x < 0.0 || tc.x > 1.0 || tc.y < 0.0)
+            color = vec4(0.0);
 
-        // Scanlines with gamma correction
-        float scanline = 1.0 - abs(sin(tc.y * SCANLINE_FREQUENCY * 3.1415 * 2.0)) * SCANLINE_INTENSITY;
-        color = pow(color * scanline, vec3(1.0/1.1));
+        // Apply brightness & contrast
+        color.rgb = (color.rgb - 0.5) * CONTRAST + 0.5 + BRIGHTNESS;
 
-        // Contrast/brightness with better range control
-        color = (color - 0.5) * CONTRAST * 1.1 + 0.5 + BRIGHTNESS * 0.3;
-
-        // Luminance preservation
-        #ifdef WITH_QUICK_AND_DIRTY_LUMINANCE_PRESERVATION
-        vec3 luminance = vec3(dot(color, vec3(0.2126, 0.7152, 0.0722)));
-        color = mix(color, luminance, LUMINANCE_PRESERVATION_FACTOR);
-        #endif
-
-        // Clamp and output
-        color = clamp(color, 0.0, 2.0); // Allow overbright for glow
-        vec4 outCol = (any(greaterThan(tc, vec2(1.0))) || any(lessThan(tc, vec2(0.0))))
-            ? vec4(0.0)
-            : vec4(color, baseColor.a);
-
-        gl_FragColor = outCol;
+        gl_FragColor = color;
     }
   '';
 in

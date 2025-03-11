@@ -2,70 +2,65 @@
   description = "Best thing ever";
 
   inputs = {
-    nixpkgs = {url = "github:nixos/nixpkgs/nixos-unstable";};
-
-    nixos-hardware = {url = "github:NixOS/nixos-hardware/master";};
-
+    nixpkgs = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
     hyprland = {
       type = "git";
       url = "https://github.com/hyprwm/Hyprland";
       submodules = true;
     };
-
     split-monitor-workspaces = {
       url = "github:Duckonaut/split-monitor-workspaces";
       inputs.hyprland.follows = "hyprland";
     };
-
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
-
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     colors = {
       url = "github:hedonicadapter/colors-flake";
     };
-
     neovim-config = {
       url = "github:hedonicadapter/neovim-config-flake";
     };
-
     ags = {
       url = "github:aylur/ags";
     };
-
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     stylix = {
       url = "github:danth/stylix/ed91a20c84a80a525780dcb5ea3387dddf6cd2de";
     };
-
-    swww = {url = "github:LGFae/swww";};
-
-    nur = {url = "github:nix-community/NUR";};
-
+    swww = {
+      url = "github:LGFae/swww";
+    };
+    nur = {
+      url = "github:nix-community/NUR";
+    };
     matugen = {
       url = "github:/InioX/Matugen";
     };
-
     xremap-flake = {
       url = "github:xremap/nix-flake";
     };
-
     nixcord = {
       url = "github:kaylorben/nixcord";
     };
-
     chaotic = {
       url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
     };
   };
 
