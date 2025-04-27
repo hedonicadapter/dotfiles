@@ -12,6 +12,28 @@
       "lst" = "lsd --tree";
       "cat" = "bat"; # c*ts are terrible people, this config doesn't condone c*t use
       "grep" = "grep --color=auto";
+      "git log" = "git log --all --graph --decorate --oneline --pretty=format:'%C(auto)%h %C(bold blue)%an %C(green)(%ar)%C(reset) %s'";
+    };
+    zsh-abbr = {
+      enable = true;
+      abbreviations = {
+        "gs" = "git status --short";
+        "ga" = "git add ";
+        "gap" = "git add --patch";
+        "gc" = "git commit ";
+        "gp" = "git push";
+        "gu" = "git pull";
+        "gl" = "git log";
+        "gb" = "git branch";
+        "gi" = "git init ";
+        "gco" = "git checkout ";
+        "gcl" = "git clone ";
+
+        "dcd" = "docker-compose down";
+        "dcu" = "docker-compose up";
+
+        "ns" = "nix-shell --run zsh ";
+      };
     };
     autosuggestion = {enable = true;};
     syntaxHighlighting = {

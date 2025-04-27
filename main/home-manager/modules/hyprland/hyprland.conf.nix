@@ -18,10 +18,10 @@
     $fileManager = nautilus
     $menu = tofi-run
     $mail = xdg-open https://mail.google.com
-    $browser = firefox-beta
+    $browser = zen-beta
     $music = spotify
 
-    exec-once=[workspace 1 silent] $terminal
+    exec-once=[workspace 1 silent] $terminal --detach --hold -e nvim ~/big-todo.md
     exec-once=[workspace 1 silent] $browser
     exec-once=[workspace 5 silent] obsidian
 
@@ -104,11 +104,11 @@
     }
 
     general {
-        gaps_in = 2
-        gaps_out = 6
+        gaps_in = 8
+        gaps_out = 16
         border_size = 1
         col.active_border = rgb(${processColor outputs.colors.base04})
-        col.inactive_border = rgb(${processColor outputs.colors.base04})
+        col.inactive_border = rgb(${processColor outputs.colors.base03})
 
         layout = dwindle
 
@@ -122,7 +122,7 @@
 
     decoration {
         dim_inactive = true
-        dim_strength = 0.40
+        dim_strength = 0.3
 
         rounding = 0
 
@@ -237,6 +237,7 @@
     submap = browser
       bindd = , B, DEFAULT, exec, $browser & $resetSubmap
       bindd = , F, FIREFOX, exec, firefox-beta & $resetSubmap
+      bindd = , Z, ZEN BROWSER, exec, zen-beta & $resetSubmap
       bindd = , E, EDGE, exec, microsoft-edge & $resetSubmap
     bind = , escape, submap, reset
     submap = reset

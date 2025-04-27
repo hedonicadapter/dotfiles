@@ -1,6 +1,6 @@
 import { bind, Variable } from "astal";
 import { Gtk } from "astal/gtk3";
-import Textarea from "../../Textarea";
+import Textarea from "../Textarea";
 import { subprocess } from "astal/process";
 
 export const toggleHAL = Variable(false);
@@ -61,46 +61,48 @@ const processStdout = (stdout: string) => {
 export default function () {
   return (
     <box vertical className="HAL" visible={bind(toggleHAL)}>
-      <scrollable heightRequest={800} hscroll={Gtk.PolicyType.NEVER}>
-        <box className="responses" orientation={1} vertical={true}>
-          {bind(HALResponses).as((responses) =>
-            responses.map((response) =>
-              response.startsWith("USER: ") ? (
-                <box className="response user" halign={Gtk.Align.START}>
-                  <label
-                    className="label"
-                    label="USER: "
-                    valign={Gtk.Align.START}
-                  />
-                  <label
-                    className="text"
-                    label={response.substring(6)}
-                    wrap={true}
-                    maxWidthChars={70}
-                    halign={Gtk.Align.START}
-                  />
-                </box>
-              ) : (
-                <box className="response puter" halign={Gtk.Align.END}>
-                  <label
-                    className="text"
-                    label={response.substring(7)}
-                    wrap={true}
-                    maxWidthChars={70}
-                    halign={Gtk.Align.END}
-                  />
+      <box className="panel">
+        <scrollable heightRequest={800} hscroll={Gtk.PolicyType.NEVER}>
+          <box className="responses" orientation={1} vertical={true}>
+            {bind(HALResponses).as((responses) =>
+              responses.map((response) =>
+                response.startsWith("USER: ") ? (
+                  <box className="response user" halign={Gtk.Align.START}>
+                    <label
+                      className="label"
+                      label="USER: "
+                      valign={Gtk.Align.START}
+                    />
+                    <label
+                      className="text"
+                      label={response.substring(6)}
+                      wrap={true}
+                      maxWidthChars={70}
+                      halign={Gtk.Align.START}
+                    />
+                  </box>
+                ) : (
+                  <box className="response puter" halign={Gtk.Align.END}>
+                    <label
+                      className="text"
+                      label={response.substring(7)}
+                      wrap={true}
+                      maxWidthChars={70}
+                      halign={Gtk.Align.END}
+                    />
 
-                  <label
-                    className="label"
-                    label=" :PUTER"
-                    valign={Gtk.Align.START}
-                  />
-                </box>
+                    <label
+                      className="label"
+                      label=" :PUTER"
+                      valign={Gtk.Align.START}
+                    />
+                  </box>
+                ),
               ),
-            ),
-          )}
-        </box>
-      </scrollable>
+            )}
+          </box>
+        </scrollable>
+      </box>
       <Textarea
         className="textarea"
         vexpand

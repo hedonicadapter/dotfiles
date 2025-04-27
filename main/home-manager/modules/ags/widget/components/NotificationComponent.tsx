@@ -107,9 +107,9 @@ export default function NotificationComponent(props: Props) {
             )}
             <box className="actions">
               {n.get_actions().length > 0 &&
-                n.get_actions().map(({ label, id }) => (
-                  <button onClicked={() => n.invoke(id)}>
-                    <label label={label} />
+                n.get_actions().map((action) => (
+                  <button onClicked={() => n.invoke(action.id)}>
+                    <label label={action.label} />
                   </button>
                 ))}
             </box>

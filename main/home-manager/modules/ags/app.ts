@@ -5,7 +5,8 @@ import Outline from "./widget/Outline";
 import Dash from "./widget/Dash";
 import { readFile, readFileAsync } from "astal/file";
 import { execAsync } from "astal/process";
-import { toggleHAL } from "./widget/components/Bar/Dash/HALComponent";
+import { toggleHAL } from "./widget/components/Dash/HALComponent";
+import { toggleAudioSettings } from "./widget/components/Bar/AudioSettingsComponent";
 
 const monitors = App.get_monitors();
 
@@ -24,10 +25,13 @@ App.start({
     monitors.map(Outline);
   },
   requestHandler(request: string, res: (response: any) => void) {
-    console.log(request);
     switch (request) {
       case "toggleHAL":
         toggleHAL.set(!toggleHAL.get());
+        break;
+      case "toggleAudioSettings":
+        toggleAudioSettings.set(!toggleAudioSettings.get());
+        break;
     }
   },
 });

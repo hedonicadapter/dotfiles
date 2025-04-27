@@ -52,7 +52,7 @@ export default function WorkspaceComponent() {
               if (index > 3) return <></>;
               return (
                 <label
-                  className="indicator workspace"
+                  className="workspace"
                   label={bind(hypr, "focusedWorkspace").as((fw) =>
                     ws === fw ? "✦" : "✧",
                   )}

@@ -1,4 +1,4 @@
-import HALComponent from "./components/Bar/Dash/HALComponent";
+import HALComponent from "./components/Dash/HALComponent";
 import { Variable, bind } from "astal";
 import { App, Astal, Gtk, Gdk } from "astal/gtk3";
 

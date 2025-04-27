@@ -181,10 +181,10 @@ in {
         name = "Noto Color Emoji";
       };
 
-      sizes.applications = 12;
-      sizes.desktop = 12;
-      sizes.popups = 12;
-      sizes.terminal = 12;
+      sizes.applications = 14;
+      sizes.desktop = 14;
+      sizes.popups = 14;
+      sizes.terminal = 14;
     };
 
     cursor = {

@@ -13,6 +13,13 @@ import TemperatureComponent from "./components/Bar/TemperatureComponent";
 import BluetoothComponent from "./components/Bar/BluetoothComponent";
 import { getGdkMonitorFromName } from "../util";
 import NoiseComponent from "./components/Bar/NoiseComponent";
+import MinReproComponent from "./components/Bar/MinReproComponent";
+import AudioSettingsComponent, {
+  toggleAudioSettings,
+} from "./components/Bar/AudioSettingsComponent";
+import BluetoothSettingsComponent, {
+  toggleBluetoothSettings,
+} from "./components/Bar/BluetoothSettingsComponent";
 
 const hypr = Hyprland.get_default();
 
@@ -40,8 +47,14 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       }
       application={App}
     >
-      <centerbox className="bar-items" valign={START}>
-        <box className="left" hexpand halign={START}>
+      <box vexpand={false} className="bar-items" valign={START}>
+        <box
+          vexpand={false}
+          className="left"
+          hexpand
+          halign={START}
+          valign={START}
+        >
           <box valign={START}>
             <WorkspaceComponent />
           </box>
@@ -59,33 +72,50 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           </box>
         </box>
 
-        <box className="center" halign={CENTER}>
+        <box className="center" halign={CENTER} valign={START}>
           <box valign={START}>
             <TitleComponent />
           </box>
         </box>
 
-        <box className="right" hexpand halign={END}>
-          <box valign={START}>
+        <box className="right" hexpand halign={END} valign={START}>
+          {/*<box valign={START} vertical>
+            <MinReproComponent />
+          </box>*/}
+          <box valign={START} vertical>
             <NotificationsComponent />
           </box>
-          <box valign={START}>
-            <AudioComponent />
-          </box>
-          <box valign={START}>
+          <eventbox
+            onHover={() => toggleAudioSettings.set(true)}
+            onHoverLost={() => toggleAudioSettings.set(false)}
+            valign={START}
+          >
+            <box vertical>
+              <AudioComponent />
+              <AudioSettingsComponent />
+            </box>
+          </eventbox>
+          <box valign={START} vertical>
             <TemperatureComponent />
           </box>
-          <box valign={START}>
-            <BluetoothComponent />
-          </box>
-          <box valign={START}>
+          <eventbox
+            onHover={() => toggleBluetoothSettings.set(true)}
+            onHoverLost={() => toggleBluetoothSettings.set(false)}
+            valign={START}
+          >
+            <box vertical>
+              <BluetoothComponent />
+              <BluetoothSettingsComponent />
+            </box>
+          </eventbox>
+          <box valign={START} vertical>
             <WifiComponent />
           </box>
-          <box valign={START}>
+          <box valign={START} vertical>
             <TimeComponent />
           </box>
         </box>
-      </centerbox>
+      </box>
     </window>
   );
 }

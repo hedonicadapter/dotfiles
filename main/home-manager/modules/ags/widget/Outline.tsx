@@ -17,15 +17,15 @@ import { getGdkMonitorFromName } from "../util";
 //   // console.log(waylandName);
 //   // console.log(currentMonitorIsFocusedMonitor);
 //   return currentMonitorIsFocusedMonitor
-//     ? "Screen active-monitor"
-//     : "Screen";
+//     ? "Outline active-monitor"
+//     : "Outline";
 // })}
 
 export default function Outline(gdkmonitor: Gdk.Monitor) {
   const hovered = Variable(false);
   return (
     <window
-      className={bind(hovered).as((h) => (h ? "Screen hovered" : "Screen"))}
+      className={bind(hovered).as((h) => (h ? "Outline hovered" : "Outline"))}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.IGNORE}
       clickThrough={true}
@@ -41,10 +41,7 @@ export default function Outline(gdkmonitor: Gdk.Monitor) {
       <eventbox
         hexpand
         vexpand
-        onHover={() => {
-          console.log("chungus");
-          hovered.set(true);
-        }}
+        onHover={() => hovered.set(true)}
         onHoverLost={() => hovered.set(false)}
       ></eventbox>
     </window>

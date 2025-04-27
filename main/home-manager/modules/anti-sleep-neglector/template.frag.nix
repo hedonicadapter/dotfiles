@@ -86,21 +86,21 @@
         // Add after noise/scanline additions
 
         // Apply vignette effect
-        float vignette = smoothstep(0.8, 0.2, dx + dy);
+        float vignette = smoothstep(0.6, 0.3, dx + dy);
         color.rgb *= vignette;
 
-        // Vertical CRT lines with reduced intensity
+        // Vertical CRT lines
         float lines = sin((tc.y + time * 0.1) * 40.0) * 0.02;
         color.rgb *= 1.0 - lines;
 
-        // Apply color temperature to RGB components only
+        // Apply color temperature
         color.rgb *= colorTemperatureToRGB(COLOR_TEMPERATURE);
 
         // Apply retro orange color transformation
         vec3 retroColor = vec3(
-            color.r * 1.2,  // Boost the red channel
+            color.r * 1.1,  // Boost the red channel
             color.g * 1.0,  // Keep the green channel as is
-            color.b * 0.8   // Reduce the blue channel
+            color.b * 0.9   // Reduce the blue channel
         );
         color.rgb = retroColor;
 

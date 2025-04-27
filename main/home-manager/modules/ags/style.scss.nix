@@ -9,71 +9,87 @@
       }
     }
 
+    .active {
+      background-color: ${outputs.colors.base0D};
+      color: ${outputs.colors.base07};
+    }
+
+    .muted {
+      opacity: 0.6;
+    }
+
     button, box {
       all:unset;
       padding: 0;
       background: transparent;
     }
 
-    @keyframes spin-low {
-        to { -gtk-icon-transform: rotate(1turn); }
-    }
-    @keyframes spin-mid {
-        to { -gtk-icon-transform: rotate(1turn); }
-    }
-    @keyframes spin-high {
+    @keyframes spin {
+        from { -gtk-icon-transform: rotate(0turn); }
         to { -gtk-icon-transform: rotate(1turn); }
     }
 
-    window.Screen {
+    @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        15% {
+          opacity: 0.1;
+        }
+        52.5% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+    }
+
+    window.Outline {
       border: 0.5px solid ${outputs.colors.base03};
     }
-    window.Screen.active-monitor {
+    window.Outline.active-monitor {
       border: 0.5px solid ${outputs.colors.base04};
     }
 
     window.Bar {
       color: ${outputs.colors.base05};
-      font-size: 18px;
+      font-size: 20px;
 
       .bar-items {
         margin-top: 1px;
         min-height: 26px;
 
         .bar-item {
-          margin-left: 8px;
-          margin-right: 8px;
+          margin-left: 7px;
+          margin-right: 7px;
 
           .main {
-            padding-left: 8px;
-            padding-right: 8px;
+            padding-left: 7px;
+            padding-right: 7px;
             padding-bottom: 2px;
           }
           .panel {}
         }
 
-        .indicator {
-          color: ${outputs.colors.base05};
-          margin-left: 4px;
-          margin-right: 4px;
-        }
-
         > * {
-          padding-left: 18px;
-          padding-right: 18px;
+          padding-left: 14px;
+          padding-right: 14px;
           padding-top: 2px;
           margin-top: -1px;
-          border: 0.5px solid ${outputs.colors.base03};
         }
 
         .left {
+          border: 0.5px solid ${outputs.colors.base03};
           .workspaces {
             .workspace-indicator {
-              font-size: 15px;
+              font-size: 20px;
             }
-
+            .workspace {
+              font-size: 20px;
+              margin-right: 4px;
+            }
             .focused-workspace {
-              font-size: 16px;
+              font-size: 21px;
               margin-left: 8px;
 
               .main {
@@ -131,7 +147,7 @@
             margin-left: 4px;
             margin-right: 4px;
             margin-top: 1px;
-            font-size: 15px;
+            font-size: 17px;
 
             > * {
               padding: 0 3px;
@@ -145,7 +161,7 @@
 
             .main {
               .media-controls {
-                font-size: 15px;
+                font-size: 17px;
                 margin-left: 6px;
                 margin-top:-1px;
               }
@@ -165,7 +181,7 @@
 
               .position-and-length{
                 padding: 0 6px;
-                font-size: 15px;
+                font-size: 17px;
                 font-weight: 600;
               }
             }
@@ -176,7 +192,7 @@
                 margin-right: 4px;
               }
               .track-info {
-                font-size: 15px;
+                font-size: 17px;
                 padding-bottom: 1px;
                 padding-top: 2px;
 
@@ -199,6 +215,7 @@
         }
 
         .right {
+          border: 0.5px solid ${outputs.colors.base03};
           .notifications {
             background-color: ${outputs.colors.base00};
             color: ${outputs.colors.base05};
@@ -211,7 +228,7 @@
             }
             .header {
               border: 2px solid transparent;
-              font-size: 17px;
+              font-size: 19px;
 
               .app-name {
                 padding-left: 1px;
@@ -221,7 +238,7 @@
               .summary {
               }
               .time {
-                font-size: 15px;
+                font-size: 17px;
               }
               .close-button {
                 margin-left: -4px;
@@ -251,13 +268,13 @@
             }
 
             .bar-label {
-              font-size: 18px;
+              font-size: 20px;
               padding-top: 1px;
             }
 
             .bar {
-              font-size: 18px;
-              margin-top: -2px;
+              font-size: 20px;
+              margin-top: -3px;
 
               .low {
                 color: ${outputs.colors.base05};
@@ -282,28 +299,42 @@
           }
 
           .fan {
-            margin-left: 4px;
-            font-size: 14px;
-          }
-
-          .bluetooth {
-            font-size: 20px;
-          }
-
-          .network {
+            margin-left: 1px;
             font-size: 16px;
           }
 
-          .time {
+          .bluetooth {
             font-size: 18px;
+          }
+
+          .network {
+            font-size: 18px;
+          }
+
+          .datetime {
+            .day {
+              margin-right: 6px;
+              font-size: 17px;
+            }
+            .time {
+              font-size: 20px;
+            }
           }
         }
       }
     }
     window.Dash {
-      .HAL {
+      .panel {
          border: 0.5px solid ${outputs.colors.base03};
-         font-size: 20px;
+      }
+      .heading {
+        padding: 1px;
+        font-weight: bold;
+      }
+
+      .HAL {
+         min-width: 380px;
+         font-size: 22px;
 
         .responses {
           min-width: 380px;
@@ -341,6 +372,22 @@
         .textarea {
           margin-left: 4px;
           min-height: 200px;
+        }
+      }
+      .audio-settings {
+         min-width: 380px;
+
+        .active {
+          background-color: ${outputs.colors.base0D};
+          color: ${outputs.colors.base07};
+        }
+
+        .device-panel {
+          margin: 4px;
+          min-width:380px;
+        }
+        .endpoints {
+          margin: 4px;
         }
       }
     }
@@ -389,12 +436,11 @@
       }
 
       .fan {
-        color: ${outputs.colors.base05};
-        animation: spin-low 1.5s linear infinite;
+        animation: spin 2s steps(8) infinite;
       }
     }
     .mid {
-      color: ${outputs.colors.base05};
+      color: ${outputs.colors.base0A};
 
       .header {
         border-color: ${outputs.colors.base0C};
@@ -407,8 +453,7 @@
       }
 
       .fan {
-        color: ${outputs.colors.base05};
-        animation: spin-mid 1s linear infinite;
+        animation: spin 1.5s steps(8) infinite;
       }
     }
     .high {
@@ -424,9 +469,11 @@
         }
       }
 
+      .temperature-label {
+        animation: blink 2.55s steps(14) infinite;
+      }
       .fan {
-        color: ${outputs.colors.base08};
-        animation: spin-high 0.25s linear infinite;
+        animation: spin 1s steps(8) infinite, blink 2.55s steps(14) infinite;
       }
     }
 

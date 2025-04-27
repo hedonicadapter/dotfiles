@@ -88,6 +88,7 @@ in {
           "betterttv"
           "discord-canary"
           "discord"
+          "zsh-abbr"
         ];
     };
   };
@@ -131,10 +132,25 @@ in {
     userName = "hedonicadapter";
     userEmail = "mailservice.samherman@gmail.com";
     extraConfig = {
+      init.defaultBranch = "main";
       credential.helper = "${
         pkgs.git.override {withLibsecret = true;}
       }/bin/git-credential-libsecret";
+
+      color.ui = "auto";
+
+      delta = {
+        navigate = true;
+      };
+      merge = {
+        conflictstyle = "zdiff3";
+      };
+
+      push = {
+        autoSetupRemote = true;
+      };
     };
+    delta .enable = true;
   };
 
   programs.ags = {
@@ -148,6 +164,7 @@ in {
       bluetooth
       network
       notifd
+      pkgs.libnotify
       tray
       mpris
       powerprofiles
@@ -232,6 +249,7 @@ in {
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+    enableZshIntegration = true;
   };
 
   programs.nixcord = {
@@ -509,6 +527,9 @@ in {
     ".config/streamlink/config".source = ./modules/streamlink/config;
 
     ".config/hints/config.json".text = import ./modules/hints/config.json.nix {inherit outputs;};
+
+    "${config.home.homeDirectory}/.zen/wx2n5f38.default/chrome/userChrome.css".text = import ./modules/zen-browser/userChrome.css.nix {inherit outputs;};
+    "${config.home.homeDirectory}/.zen/wx2n5f38.default/chrome/userContent.css".text = import ./modules/zen-browser/userContent.css.nix {inherit outputs;};
   };
 
   programs.home-manager.enable = true;

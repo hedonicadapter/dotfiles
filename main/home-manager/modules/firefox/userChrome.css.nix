@@ -615,7 +615,7 @@
     menuitem > *, menuitem {
       margin: 0 !important;
       color: ${outputs.colors.base07};
-      font-size: 23px !important;
+      font-size: 25px !important;
     }
     menu, menuitem {
       &:where([_moz-menuactive]:not([disabled="true"])) {

@@ -1,33 +1,48 @@
 import { Variable, bind, type Binding } from "astal";
 import { Gtk } from "astal/gtk3";
-import Wp from "gi://AstalWp";
+import Wp, { type Device, type Endpoint, type Stream } from "gi://AstalWp";
 import Hoverable from "../Hoverable";
+import { execAsync } from "astal/process";
 
 const { START, CENTER } = Gtk.Align;
 
-const audio = Wp.get_default()?.audio;
-
+const wp = Wp.get_default();
+const audio = wp?.audio;
 const speaker = audio.defaultSpeaker!;
 const mic = audio.defaultMicrophone!;
 
-const UnmuteButton = ({ stream }: { stream: any }) => {
-  return (
-    <button onClicked={() => (stream.mute = false)}>
-      <label label="MUTED" />
-    </button>
-  );
-};
+const deviceAddedNotification = (deviceName: string) =>
+  `bash -c 'notify-send "Device added" "${deviceName}" --action=use=use'`;
+const deviceChangedNotification = (deviceName: string) =>
+  `bash -c 'notify-send "Device changed to ${deviceName}"'`;
+const deviceChangeFailedNotification = (deviceName: string) =>
+  `bash -c 'notify-send "Failed setting device to ${deviceName}"'`;
+const deviceRemovedNotification = (deviceName: string) =>
+  `bash -c 'notify-send "Device removed" "${deviceName}"'`;
 
-// const volOrMuted: (
-//   n: Binding<number>,
-//   b: Binding<boolean>,
-// ) => Variable<string> = (n, b) =>
-//   Variable.derive([n, b], (n: number, b: boolean) => {
-//     if (b) return "MUTED ";
-//     return bars(n);
-//   });
+const deviceAddedConnection = wp.connect(
+  "device-added",
+  async (_: any, device: Device) => {
+    try {
+      const res = await execAsync(deviceAddedNotification(device.description));
 
-const Bar = ({ stream }: { stream: any }) => {
+      if (res === "use") {
+        console.log(device.id);
+        const res = await execAsync(`bash -c 'wpctl set-default ${device.id}'`);
+        await execAsync(deviceChangedNotification(device.description));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+);
+const deviceRemovedConnection = wp.connect(
+  "device-removed",
+  async (_: any, device: Device) =>
+    await execAsync(deviceRemovedNotification(device.description)),
+);
+
+export const Bar = ({ stream }: { stream: any }) => {
   return (
     <box>
       {bind(stream, "volume").as((volume) =>
@@ -37,12 +52,14 @@ const Bar = ({ stream }: { stream: any }) => {
 
           return (
             <button
-              className="bar"
               onClicked={() => {
                 const newVolume = i * 0.2;
 
                 stream.volume = newVolume;
               }}
+              className={bind(stream, "muted").as((b) =>
+                b ? "bar muted" : "bar",
+              )}
               valign={CENTER}
             >
               <label
@@ -68,86 +85,50 @@ const Bar = ({ stream }: { stream: any }) => {
 };
 
 export default function () {
-  const outputMuted: Binding<boolean> = bind(speaker, "mute");
-  const inputMuted: Binding<boolean> = bind(mic, "mute");
-
-  // const outputVolOrMuted = volOrMuted(output, outputMuted);
-  // const inputVolOrMuted = volOrMuted(input, inputMuted);
-
   return (
-    <Hoverable
+    <box
       className="audio"
-      main={
-        <box className="main" valign={CENTER} halign={START}>
-          <box className="bar-item" valign={CENTER}>
-            <button valign={CENTER} onClicked={() => (mic.mute = !mic.mute)}>
-              <label valign={CENTER} className="bar-label" label="IN:" />
-            </button>
+      valign={CENTER}
+      halign={START}
+      onDestroy={() => {
+        wp.disconnect(deviceAddedConnection);
+        wp.disconnect(deviceRemovedConnection);
+      }}
+    >
+      <box className="bar-item" valign={CENTER}>
+        <button valign={CENTER} onClicked={() => (mic.mute = !mic.mute)}>
+          <label valign={CENTER} className="bar-label" label="IN:" />
+        </button>
 
-            {bind(mic, "muted").as((m) =>
-              m ? (
-                <button valign={CENTER} onClicked={() => (mic.mute = false)}>
-                  <label label="MUTED" valign={CENTER} />
-                </button>
-              ) : (
-                <box />
-              ),
-            )}
+        {bind(mic, "muted").as((m) =>
+          m ? (
+            <button valign={CENTER} onClicked={() => (mic.mute = false)}>
+              <label label="MUTED" valign={CENTER} />
+            </button>
+          ) : (
             <Bar stream={mic} />
-          </box>
+          ),
+        )}
+      </box>
 
-          <box className="bar-item" valign={CENTER}>
-            <button
-              valign={CENTER}
-              onClicked={() => (speaker.mute = !speaker.mute)}
-            >
-              <label valign={CENTER} className="bar-label" label="OUT:" />
+      <box className="bar-item" valign={CENTER}>
+        <button
+          valign={CENTER}
+          onClicked={() => (speaker.mute = !speaker.mute)}
+        >
+          <label valign={CENTER} className="bar-label" label="OUT:" />
+        </button>
+
+        {bind(speaker, "muted").as((m) =>
+          m ? (
+            <button valign={CENTER} onClicked={() => (speaker.mute = false)}>
+              <label valign={CENTER} label="MUTED" />
             </button>
-
-            {bind(speaker, "muted").as((m) =>
-              m ? (
-                <button
-                  valign={CENTER}
-                  onClicked={() => (speaker.mute = false)}
-                >
-                  <label valign={CENTER} label="MUTED" />
-                </button>
-              ) : (
-                <box />
-              ),
-            )}
+          ) : (
             <Bar stream={speaker} />
-          </box>
-        </box>
-      }
-      hoveredElement={
-        <box className="panel" vertical>
-          {bind(audio, "streams").as((streams) =>
-            streams.length > 0 ? (
-              streams.map((stream: any) => {
-                return (
-                  <box vertical>
-                    <button
-                      valign={START}
-                      onClicked={() => (stream.mute = !stream.mute)}
-                    >
-                      <label
-                        className="bar-label"
-                        label={stream.name || ""}
-                        halign={START}
-                      />
-                    </button>
-
-                    <Bar stream={stream} />
-                  </box>
-                );
-              })
-            ) : (
-              <box />
-            ),
-          )}
-        </box>
-      }
-    />
+          ),
+        )}
+      </box>
+    </box>
   );
 }

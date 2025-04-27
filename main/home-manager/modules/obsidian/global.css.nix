@@ -43,7 +43,7 @@
         14px/20px italic Times,
         serif;
       content: "“";
-      font-size: 3em;
+      font-size: 5em;
       line-height: 0.1em;
       vertical-align: -0.4em;
     }
@@ -77,7 +77,7 @@
       background-color: var(--text-accent);
       border: none;
       color: ${outputs.colors.base00};
-      font-size: 11px;
+      font-size: 13px;
       padding: 1px 8px;
       text-align: center;
       text-decoration: none;

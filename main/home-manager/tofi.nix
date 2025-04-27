@@ -26,7 +26,7 @@
       text-cursor-style = "block";
       text-cursor = true;
 
-      font-size = 16;
+      font-size = 18;
       background-color = outputs.colors.base00;
 
       prompt-color = outputs.colors.base04;

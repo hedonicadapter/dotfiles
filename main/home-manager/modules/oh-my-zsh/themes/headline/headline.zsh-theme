@@ -91,6 +91,7 @@ if [ $IS_SSH = 0 ]; then HEADLINE_USER_BEGIN='=> '; fi
 HEADLINE_USER_TO_HOST=' @ '
 HEADLINE_HOST_TO_PATH=': '
 HEADLINE_PATH_TO_BRANCH=' | ' # only used when no padding between <path> and <branch>
+HEADLINE_PATH_TO_NIX_SHELL='  '
 HEADLINE_PATH_TO_PAD='' # used if padding between <path> and <branch>
 HEADLINE_PAD_TO_BRANCH='' # used if padding between <path> and <branch>
 HEADLINE_BRANCH_TO_STATUS=' ['
@@ -146,6 +147,10 @@ HEADLINE_GIT_STASHED='*'
 HEADLINE_GIT_CONFLICTS='%{$red%}✘' # consider "%{$red%}✘"
 HEADLINE_GIT_CLEAN='✔' # consider "✓" or "✔"
 
+# Nix-shell indicator
+HEADLINE_NIX_PREFIX='🐚 '                 # what shows up on the prompt
+HEADLINE_STYLE_NIX=$fg[cyan]$bold        # colors / weight; pick any you like
+
 # Git status options
 HEADLINE_DO_GIT_STATUS_COUNTS=false # set "true" to show count of each status
 HEADLINE_DO_GIT_STATUS_OMIT_ONE=false # set "true" to omit the status number when it is 1
@@ -160,7 +165,7 @@ HEADLINE_STYLE_CLOCK=$faint
 HEADLINE_CLOCK_FORMAT='%l:%M:%S %p' # consider "%+" for full date (see man strftime)
 
 # Exit code
-HEADLINE_DO_ERR=false # whether to show non-zero exit codes above prompt
+HEADLINE_DO_ERR=true # whether to show non-zero exit codes above prompt
 HEADLINE_DO_ERR_INFO=true # whether to show exit code meaning as well
 HEADLINE_ERR_PREFIX='→ '
 HEADLINE_STYLE_ERR=$italic$faint
@@ -434,6 +439,11 @@ headline_precmd() {
     fi
     len=$(( $_HEADLINE_LEN_REMAIN - ${#HEADLINE_PATH_PREFIX} - ( ${#branch_str} ? ${#HEADLINE_PATH_TO_BRANCH} : 0 ) ))
     _headline_part PATH "$HEADLINE_PATH_PREFIX%$len<$HEADLINE_TRUNC_PREFIX<$path_str%<<" left
+    #
+    if [[ -n $IN_NIX_SHELL ]]; then
+      _headline_part JOINT "$HEADLINE_PATH_TO_NIX_SHELL" left
+      _headline_part NIX "$HEADLINE_NIX_PREFIX${IN_NIX_SHELL}" left
+    fi
   fi
 
   # Padding
