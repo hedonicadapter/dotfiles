@@ -27,7 +27,8 @@
         "gb" = "git branch";
         "gi" = "git init ";
         "gco" = "git checkout ";
-        "gcl" = "git clone ";
+        "gcl" = "git clone --recurse-submodules ";
+        "gsu" = "git submodule foreach git pull origin main";
 
         "dcd" = "docker-compose down";
         "dcu" = "docker-compose up";
