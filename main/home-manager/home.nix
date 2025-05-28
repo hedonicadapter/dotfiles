@@ -96,12 +96,6 @@ in {
   home.username = "hedonicadapter";
   home.homeDirectory = "/home/hedonicadapter";
 
-  programs.neovim =
-    {
-      enable = true;
-    }
-    // inputs.neovim-config.neovimConfig;
-
   programs.matugen = {enable = true;};
 
   programs.atuin = {

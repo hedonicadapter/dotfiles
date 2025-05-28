@@ -28,7 +28,7 @@
     colors = {
       url = "github:hedonicadapter/colors-flake";
     };
-    neovim-config = {
+    neovim-flake = {
       url = "github:hedonicadapter/neovim-config-flake";
     };
     ags = {
@@ -69,6 +69,7 @@
     nixpkgs,
     home-manager,
     nixos-hardware,
+    neovim-flake,
     colors,
     chaotic,
     ...
@@ -88,11 +89,8 @@
     nixosModules = import ./modules/nixos;
     homeManagerModules = import ./modules/home-manager;
 
-    colors = colors.outputs.colors;
-    transparentize = colors.outputs.transparentize;
-    darken = colors.outputs.darken;
-    colors_opaque = colors.outputs.colors_opaque;
-    cssColorVariables = colors.outputs.cssColorVariables;
+    colors = (builtins.fromJSON (builtins.readFile ./colors.json)) or colors.outputs.colors;
+    inherit (colors.outputs) transparentize darken colors_opaque cssColorVariables;
 
     nixosConfigurations = {
       default = nixpkgs.lib.nixosSystem {
@@ -103,6 +101,7 @@
           nixos-hardware.nixosModules.common-pc-laptop
           nixos-hardware.nixosModules.common-pc-laptop-ssd
           nixos-hardware.nixosModules.common-pc-laptop-hdd
+          neovim-flake.nixosModules.default
           ./nixos/configuration.nix
           chaotic.nixosModules.default
         ];

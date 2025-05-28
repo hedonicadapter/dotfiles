@@ -62,8 +62,21 @@ in {
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
+  nvim = let
+    inherit (inputs.neovim-flake) utils packageDefinitions;
+    basePackage = inputs.neovim-flake.packageDefinitions.nvim or ({...}: {});
+  in {
+    enable = true;
+    packageDefinitions = {
+      merge.nvim = utils.mergeCatDefs basePackage ({pkgs, ...}: {
+        extra.colors = outputs.colors;
+      });
+    };
+  };
+
   environment.pathsToLink = ["/share/zsh"];
   environment.systemPackages = with pkgs; [
+    # inputs.neovim-flake.packages.${system}.nvim
     onlyoffice-bin
     wine
     winetricks
@@ -536,6 +549,14 @@ in {
         systemd
       ]}:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin"
     '';
+  };
+
+  programs.gnupg.agent = {
+    enable = true;
+    settings = {
+      default-cache-ttl = 600;
+      max-cache-ttl = 7200;
+    };
   };
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
