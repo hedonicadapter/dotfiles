@@ -11,12 +11,12 @@
   fillColor = outputs.colors.base00;
   saturation = 100;
 in {
-  imports = [
-    inputs.home-manager.nixosModules.home-manager
-    inputs.stylix.nixosModules.stylix
-    inputs.nur.modules.nixos.default
+  imports = with inputs; [
+    home-manager.nixosModules.home-manager
+    stylix.nixosModules.stylix
+    nur.modules.nixos.default
 
-    inputs.xremap-flake.nixosModules.default
+    xremap-flake.nixosModules.default
 
     ./maintenance.nix
     ./hardware-configuration.nix
@@ -61,7 +61,7 @@ in {
   };
 
   nvim = let
-    inherit (inputs.neovim-flake) utils packageDefinitions;
+    inherit (inputs.neovim-flake) utils;
     basePackage = inputs.neovim-flake.packageDefinitions.nvim or ({...}: {});
   in {
     enable = true;
