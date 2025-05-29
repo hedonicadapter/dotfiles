@@ -24,7 +24,7 @@ in {
 
   home-manager = {
     extraSpecialArgs = {inherit inputs outputs;};
-    users = {hedonicadapter = import ../home-manager/home.nix;};
+    users.hedonicadapter = import ../home-manager/home-nixos.nix;
     backupFileExtension = "backup";
   };
 

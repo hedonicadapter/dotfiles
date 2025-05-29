@@ -48,7 +48,7 @@
     ...
   } @ inputs: let
     inherit (self) outputs;
-    systems = ["x86_64-linux"];
+    systems = ["x86_64-linux" "aarch64-darwin"];
     lib = nixpkgs.lib;
     forAllSystems = lib.genAttrs systems;
   in {
