@@ -273,11 +273,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1737394597,
-        "narHash": "sha256-UzwleQwdUA2A/VRvuGZ+Z+a7r3eqtbg5dsLvE4D1WGc=",
+        "lastModified": 1748521997,
+        "narHash": "sha256-G5Qc7Mh8EhJdGWuG2jclVqqZ88ZfjbicUpaUfH6TM/Y=",
         "owner": "hedonicadapter",
         "repo": "colors-flake",
-        "rev": "6c7de56b4822c1b9aece02919ef98bbc4d3204d4",
+        "rev": "275c9367d82bc156361013bf007a67fdfd483d8e",
         "type": "github"
       },
       "original": {
@@ -1595,11 +1595,11 @@
         "nur": "nur"
       },
       "locked": {
-        "lastModified": 1748504126,
-        "narHash": "sha256-v1bmNbggRtvodsHkZFCbUsMeF/eu/If1mh2OtKIgCTw=",
+        "lastModified": 1748519326,
+        "narHash": "sha256-oSkoJocavKx2jAlxchl3Dky4f+UjQIs5Z0/6fnke6Ug=",
         "owner": "hedonicadapter",
         "repo": "neovim-config-flake",
-        "rev": "e81d0d829db1cf938f226b4bfaaad23aaae38d3a",
+        "rev": "7892bbc0e1e5d9efdf7d1f82f5ded4deffd8fa9f",
         "type": "github"
       },
       "original": {
@@ -1693,16 +1693,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1748352827,
-        "narHash": "sha256-sNUUP6qxGkK9hXgJ+p362dtWLgnIWwOCmiq72LAWtYo=",
+        "lastModified": 1748373722,
+        "narHash": "sha256-qi6aDGP2W6GyAUNEhg+slQWEpUiJ8LNIrQkmxHpzadI=",
         "owner": "nix-darwin",
         "repo": "nix-darwin",
-        "rev": "44a7d0e687a87b73facfe94fba78d323a6686a90",
+        "rev": "75b99daa12b1fffd646d6c3cf13b06f1fa5cef63",
         "type": "github"
       },
       "original": {
         "owner": "nix-darwin",
-        "ref": "master",
+        "ref": "nix-darwin-25.05",
         "repo": "nix-darwin",
         "type": "github"
       }

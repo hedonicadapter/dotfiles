@@ -26,18 +26,6 @@ in {
   home.username = "samherman1";
   home.homeDirectory = "/Users/samherman1";
 
-  nixpkgs = {
-    overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-
-      inputs.nur.overlays.default
-    ];
-    config.allowUnfree = true;
-  };
-
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;

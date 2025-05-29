@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
+    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -57,8 +57,8 @@
 
     overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
 
-    colors = colors.outputs.colors // (builtins.fromJSON (builtins.readFile ./colors.json));
-    inherit (colors.outputs) transparentize darken colors_opaque cssColorVariables;
+    # colors = colors.outputs.colors // (builtins.fromJSON (builtins.readFile ./colors.json));
+    inherit (colors.outputs) colors transparentize darken colors_opaque cssColorVariables hexColorTo0xAARRGGBB;
 
     nixosConfigurations."default" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -80,8 +80,10 @@
       specialArgs = {inherit inputs outputs;};
 
       modules = with inputs; [
+        home-manager.darwinModules.home-manager
         mac-app-util.darwinModules.default
         stylix.darwinModules.stylix
+        neovim-flake.nixosModules.default
         ./darwin/configuration.nix
       ];
     };

@@ -8,12 +8,15 @@
   nix.settings.experimental-features = "nix-command flakes";
   system.stateVersion = 6;
 
-  imports = with inputs; [
-    home-manager.darwinModules.home-manager
-    stylix.darwinModules.stylix
+  users.users.samherman1 = {
+    name = "samherman1";
+    home = "/Users/samherman1";
+  };
 
-    # ./maintenance.nix
-  ];
+  # imports = with inputs; [
+  #
+  #   # ./maintenance.nix
+  # ];
 
   home-manager = {
     extraSpecialArgs = {inherit inputs outputs;};
@@ -31,14 +34,13 @@
   };
 
   nixpkgs = {
-    hostPlatform = pkgs.system;
-    config.allowUnfree = true;
     overlays = [
       # Add overlays from flake exports (from overlays and pkgs dir):
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
     ];
+    config.allowUnfree = true;
   };
 
   nvim = let
