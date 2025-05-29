@@ -292,11 +292,11 @@
         "nixpkgs": "nixpkgs_8"
       },
       "locked": {
-        "lastModified": 1748330567,
-        "narHash": "sha256-7wbtKXRgAKi9v7GO4I4HflewgIIh0FsZX1HBFLtA4A4=",
+        "lastModified": 1748532595,
+        "narHash": "sha256-ZUpB1fmwkTYEtROuWx6BU6aD+eIxthzWoymEr2cBJ6I=",
         "owner": "hedonicadapter",
         "repo": "colors-flake",
-        "rev": "5d204590f0832686c3e09ac9c42b7715325bd7a3",
+        "rev": "f5a0194ec0a71d879b15ed34dfc7261b2c5ab2ae",
         "type": "github"
       },
       "original": {
@@ -1595,11 +1595,11 @@
         "nur": "nur"
       },
       "locked": {
-        "lastModified": 1748519326,
-        "narHash": "sha256-oSkoJocavKx2jAlxchl3Dky4f+UjQIs5Z0/6fnke6Ug=",
+        "lastModified": 1748534648,
+        "narHash": "sha256-15IqmhkpUa/LW6Rv7BC4X8rJ2QwP+OQofbvRe9fWGPw=",
         "owner": "hedonicadapter",
         "repo": "neovim-config-flake",
-        "rev": "7892bbc0e1e5d9efdf7d1f82f5ded4deffd8fa9f",
+        "rev": "af5622e3b24363c83797c80e61a43fe03a8dcd6c",
         "type": "github"
       },
       "original": {
