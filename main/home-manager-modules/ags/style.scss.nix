@@ -5,13 +5,13 @@
       border-radius: 1px;
 
       * .hover {
-        border-color: ${outputs.colors.base07};
+        border-color: ${outputs.palette.base07};
       }
     }
 
     .active {
-      background-color: ${outputs.colors.base0D};
-      color: ${outputs.colors.base07};
+      background-color: ${outputs.palette.base0D};
+      color: ${outputs.palette.base07};
     }
 
     .muted {
@@ -45,14 +45,14 @@
     }
 
     window.Outline {
-      border: 0.5px solid ${outputs.colors.base03};
+      border: 0.5px solid ${outputs.palette.base03};
     }
     window.Outline.active-monitor {
-      border: 0.5px solid ${outputs.colors.base04};
+      border: 0.5px solid ${outputs.palette.base04};
     }
 
     window.Bar {
-      color: ${outputs.colors.base05};
+      color: ${outputs.palette.base05};
       font-size: 20px;
 
       .bar-items {
@@ -79,7 +79,7 @@
         }
 
         .left {
-          border: 0.5px solid ${outputs.colors.base03};
+          border: 0.5px solid ${outputs.palette.base03};
           .workspaces {
             .workspace-indicator {
               font-size: 20px;
@@ -105,40 +105,40 @@
               .NORMAL {
               }
               .RUN {
-                background-color: ${outputs.colors.base0D};
-                color: ${outputs.colors.base01};
+                background-color: ${outputs.palette.base0D};
+                color: ${outputs.palette.base01};
               }
               .BROWSER {
-                background-color: ${outputs.colors.base0D};
-                color: ${outputs.colors.base01};
+                background-color: ${outputs.palette.base0D};
+                color: ${outputs.palette.base01};
               }
               .FILES {
-                background-color: ${outputs.colors.base06};
-                color: ${outputs.colors.base02};
+                background-color: ${outputs.palette.base06};
+                color: ${outputs.palette.base02};
               }
               .QUERY {
-                background-color: ${outputs.colors.base0C};
-                color: ${outputs.colors.base01};
+                background-color: ${outputs.palette.base0C};
+                color: ${outputs.palette.base01};
               }
               .UTIL {
-                background-color: ${outputs.colors.base0E};
-                color: ${outputs.colors.base01};
+                background-color: ${outputs.palette.base0E};
+                color: ${outputs.palette.base01};
               }
               .SYSTEM {
-                background-color: ${outputs.colors.base0F};
-                color: ${outputs.colors.base01};
+                background-color: ${outputs.palette.base0F};
+                color: ${outputs.palette.base01};
               }
               .POWER {
-                background-color: ${outputs.colors.base08};
-                color: ${outputs.colors.base05};
+                background-color: ${outputs.palette.base08};
+                color: ${outputs.palette.base05};
               }
               .DISPLAY {
-                background-color: ${outputs.colors.base0D};
-                color: ${outputs.colors.base06};
+                background-color: ${outputs.palette.base0D};
+                color: ${outputs.palette.base06};
               }
               .AUDIO {
-                background-color: ${outputs.colors.base0E};
-                color: ${outputs.colors.base06};
+                background-color: ${outputs.palette.base0E};
+                color: ${outputs.palette.base06};
               }
             }
           }
@@ -156,8 +156,8 @@
 
           .media-player {
             margin-top: 2px;
-            background-color: ${outputs.colors.base0E};
-            color: ${outputs.colors.base00};
+            background-color: ${outputs.palette.base0E};
+            color: ${outputs.palette.base00};
 
             .main {
               .media-controls {
@@ -167,14 +167,14 @@
               }
 
               .position-bar {
-                border: 2px solid ${outputs.colors.base00};
+                border: 2px solid ${outputs.palette.base00};
                 min-height: 8px;
                 margin-top: 2px;
                 margin-left: 3px;
 
                 .current-position {
-                  border: 1px solid ${outputs.colors.base0E};
-                  background-color: ${outputs.colors.base00};
+                  border: 1px solid ${outputs.palette.base0E};
+                  background-color: ${outputs.palette.base00};
                   min-height: 6px;
                 }
               }
@@ -215,10 +215,10 @@
         }
 
         .right {
-          border: 0.5px solid ${outputs.colors.base03};
+          border: 0.5px solid ${outputs.palette.base03};
           .notifications {
-            background-color: ${outputs.colors.base00};
-            color: ${outputs.colors.base05};
+            background-color: ${outputs.palette.base00};
+            color: ${outputs.palette.base05};
             margin-right: 3px;
             margin-top: -2px;
             padding-bottom: 1px;
@@ -277,25 +277,25 @@
               margin-top: -3px;
 
               .low {
-                color: ${outputs.colors.base05};
+                color: ${outputs.palette.base05};
               }
               .mid {
-                color: ${outputs.colors.base09};
+                color: ${outputs.palette.base09};
               }
               .high {
-                color: ${outputs.colors.base08};
+                color: ${outputs.palette.base08};
               }
 
               .hovered {
                 .low {
-                  color: ${outputs.colors.base00};
+                  color: ${outputs.palette.base00};
                 }
               }
             }
           }
           .audio.hovered {
-            background-color: ${outputs.colors.base05};
-            color: ${outputs.colors.base00};
+            background-color: ${outputs.palette.base05};
+            color: ${outputs.palette.base00};
           }
 
           .fan {
@@ -325,7 +325,7 @@
     }
     window.Dash {
       .panel {
-         border: 0.5px solid ${outputs.colors.base03};
+         border: 0.5px solid ${outputs.palette.base03};
       }
       .heading {
         padding: 1px;
@@ -348,11 +348,11 @@
             margin-right: 16px;
 
             .label {
-              color: ${outputs.colors.base06};
+              color: ${outputs.palette.base06};
             }
             .text {
-              background-color: ${outputs.colors.base04};
-              color: ${outputs.colors.base00};
+              background-color: ${outputs.palette.base04};
+              color: ${outputs.palette.base00};
             }
           }
 
@@ -361,11 +361,11 @@
             margin-bottom: 10px;
 
             .label {
-              color: ${outputs.colors.base07};
+              color: ${outputs.palette.base07};
             }
             .text {
-              background-color: ${outputs.colors.base05};
-              color: ${outputs.colors.base00};
+              background-color: ${outputs.palette.base05};
+              color: ${outputs.palette.base00};
             }
           }
         }
@@ -378,8 +378,8 @@
          min-width: 380px;
 
         .active {
-          background-color: ${outputs.colors.base0D};
-          color: ${outputs.colors.base07};
+          background-color: ${outputs.palette.base0D};
+          color: ${outputs.palette.base07};
         }
 
         .device-panel {
@@ -395,18 +395,18 @@
     window.Bar.active-monitor {
       .bar-items {
         .left {
-            border-color: ${outputs.colors.base04};
+            border-color: ${outputs.palette.base04};
         }
         .center {
         }
         .right {
-            border-color: ${outputs.colors.base04};
+            border-color: ${outputs.palette.base04};
         }
       }
     }
 
     menu {
-      background-color: ${outputs.colors.base00};
+      background-color: ${outputs.palette.base00};
       padding: 1px;
       margin: 0px;
 
@@ -416,22 +416,22 @@
       }
 
       > *:hover {
-          background-color: ${outputs.colors.base04};
-          color: ${outputs.colors.base00};
+          background-color: ${outputs.palette.base04};
+          color: ${outputs.palette.base00};
       }
     }
 
 
     .low {
-      color: ${outputs.colors.base05};
+      color: ${outputs.palette.base05};
 
       .header {
-        border-color: ${outputs.colors.base05};
-        color: ${outputs.colors.base05};
+        border-color: ${outputs.palette.base05};
+        color: ${outputs.palette.base05};
 
         .app-name {
-          background-color: ${outputs.colors.base05};
-          color: ${outputs.colors.base00};
+          background-color: ${outputs.palette.base05};
+          color: ${outputs.palette.base00};
         }
       }
 
@@ -440,15 +440,15 @@
       }
     }
     .mid {
-      color: ${outputs.colors.base0A};
+      color: ${outputs.palette.base0A};
 
       .header {
-        border-color: ${outputs.colors.base0C};
-        color: ${outputs.colors.base05};
+        border-color: ${outputs.palette.base0C};
+        color: ${outputs.palette.base05};
 
         .app-name {
-            background-color: ${outputs.colors.base0C};
-            color: ${outputs.colors.base00};
+            background-color: ${outputs.palette.base0C};
+            color: ${outputs.palette.base00};
         }
       }
 
@@ -457,15 +457,15 @@
       }
     }
     .high {
-      color: ${outputs.colors.base08};
+      color: ${outputs.palette.base08};
 
       .header {
-        border-color: ${outputs.colors.base08};
-        color: ${outputs.colors.base05};
+        border-color: ${outputs.palette.base08};
+        color: ${outputs.palette.base05};
 
         .app-name{
-            background-color: ${outputs.colors.base08};
-            color: ${outputs.colors.base05};
+            background-color: ${outputs.palette.base08};
+            color: ${outputs.palette.base05};
         }
       }
 

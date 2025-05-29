@@ -107,8 +107,8 @@
         gaps_in = 8
         gaps_out = 16
         border_size = 1
-        col.active_border = rgb(${processColor outputs.colors.base04})
-        col.inactive_border = rgb(${processColor outputs.colors.base03})
+        col.active_border = rgb(${processColor outputs.palette.base04})
+        col.inactive_border = rgb(${processColor outputs.palette.base03})
 
         layout = dwindle
 

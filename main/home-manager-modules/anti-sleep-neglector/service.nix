@@ -681,7 +681,7 @@ in {
                     --transition-angle 30
                     --transition-step 20
                     --transition-fps 144
-                    --fill-color ${removeHash outputs.colors.base00}
+                    --fill-color ${removeHash outputs.palette.base00}
                   )
 
                   resize_flag=$(should_no_resize "$img_w" "$img_h")

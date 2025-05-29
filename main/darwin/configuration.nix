@@ -50,7 +50,7 @@
     enable = true;
     packageDefinitions = {
       merge.nvim = utils.mergeCatDefs basePackage ({pkgs, ...}: {
-        extra.colors = outputs.colors;
+        extra.palette = outputs.palette;
       });
     };
   };
@@ -63,8 +63,8 @@
       hidpi = true;
       width = 8.0;
       order = "above";
-      active_color = outputs.colors.hexColorTo0xAARRGGBB outputs.colors.base07 1.0;
-      inactive_color = outputs.colors.hexColorTo0xAARRGGBB outputs.colors.base05 1.0;
+      active_color = outputs.palette.hexColorTo0xAARRGGBB outputs.palette.base07 1.0;
+      inactive_color = outputs.palette.hexColorTo0xAARRGGBB outputs.palette.base05 1.0;
     };
   };
 

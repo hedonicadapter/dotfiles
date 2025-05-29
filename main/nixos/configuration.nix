@@ -8,7 +8,7 @@
 }: let
   brightness = 0;
   contrast = 0;
-  fillColor = outputs.colors.base00;
+  fillColor = outputs.palette.base00;
   saturation = 100;
 in {
   imports = with inputs; [
@@ -67,7 +67,7 @@ in {
     enable = true;
     packageDefinitions = {
       merge.nvim = utils.mergeCatDefs basePackage ({pkgs, ...}: {
-        extra.colors = outputs.colors;
+        extra.palette = outputs.palette;
       });
     };
   };
@@ -165,7 +165,7 @@ in {
     #   } -fill "${fillColor}" $out
     # '';
     polarity = "dark";
-    base16Scheme = outputs.colors;
+    base16Scheme = outputs.palette;
     targets = {
       gnome.enable = true;
       gtk.enable = true;

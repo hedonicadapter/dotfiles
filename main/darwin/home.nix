@@ -8,7 +8,7 @@
   ...
 }: let
   removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
-  colorsRGB = builtins.mapAttrs (name: value: removeHash value) outputs.colors;
+  colorsRGB = builtins.mapAttrs (name: value: removeHash value) outputs.palette;
 in {
   programs.home-manager.enable = true;
 
@@ -142,54 +142,54 @@ in {
       ''
         :root {
           --txt-pad: 5px;
-          --bg-0: ${outputs.colors.base00}; /* main background color */
-          --bg-1: ${outputs.colors.base01}; /* background color for secondary elements */
-          --bg-2: ${outputs.colors.base02}; /* color of neutral buttons */
-          --bg-3: ${outputs.colors.base03}; /* color of neutral buttons when hovered */
+          --bg-0: ${outputs.palette.base00}; /* main background color */
+          --bg-1: ${outputs.palette.base01}; /* background color for secondary elements */
+          --bg-2: ${outputs.palette.base02}; /* color of neutral buttons */
+          --bg-3: ${outputs.palette.base03}; /* color of neutral buttons when hovered */
 
           --hover: hsla(0, 0%, 40%, 0.1); /* keeping original as it's an opacity value */
           --active: hsla(0, 0%, 40%, 0.2); /* keeping original as it's an opacity value */
           --selected: var(--active);
 
-          --txt-dark: ${outputs.colors.base00};
-          --txt-link: ${outputs.colors.base0C};
-          --txt-0: ${outputs.colors.base07};
-          --txt-1: ${outputs.colors.base05};
-          --txt-2: ${outputs.colors.base04};
-          --txt-3: ${outputs.colors.base03};
+          --txt-dark: ${outputs.palette.base00};
+          --txt-link: ${outputs.palette.base0C};
+          --txt-0: ${outputs.palette.base07};
+          --txt-1: ${outputs.palette.base05};
+          --txt-2: ${outputs.palette.base04};
+          --txt-3: ${outputs.palette.base03};
 
-          --acc-0: ${outputs.colors.base0A};
-          --acc-1: color-mix(in oklch, ${outputs.colors.base0A}, white 10%);
-          --acc-2: color-mix(in oklch, ${outputs.colors.base0A}, black 10%);
+          --acc-0: ${outputs.palette.base0A};
+          --acc-1: color-mix(in oklch, ${outputs.palette.base0A}, white 10%);
+          --acc-2: color-mix(in oklch, ${outputs.palette.base0A}, black 10%);
 
           --border-width: 1px;
-          --border-color: ${outputs.colors.base03};
-          --border-hover-color: ${outputs.colors.base0A};
+          --border-color: ${outputs.palette.base03};
+          --border-hover-color: ${outputs.palette.base0A};
           --border-transition: 0.2s ease;
 
-          --online-dot: ${outputs.colors.base0B};
-          --dnd-dot: ${outputs.colors.base08};
-          --idle-dot: ${outputs.colors.base0A};
-          --streaming-dot: ${outputs.colors.base0E};
+          --online-dot: ${outputs.palette.base0B};
+          --dnd-dot: ${outputs.palette.base08};
+          --idle-dot: ${outputs.palette.base0A};
+          --streaming-dot: ${outputs.palette.base0E};
 
-          --mention-txt: ${outputs.colors.base0C};
-          --mention-bg: color-mix(in oklch, ${outputs.colors.base0C}, transparent 90%);
-          --mention-overlay: color-mix(in oklch, ${outputs.colors.base0C}, transparent 90%);
-          --mention-hover-overlay: color-mix(in oklch, ${outputs.colors.base0C}, transparent 95%);
+          --mention-txt: ${outputs.palette.base0C};
+          --mention-bg: color-mix(in oklch, ${outputs.palette.base0C}, transparent 90%);
+          --mention-overlay: color-mix(in oklch, ${outputs.palette.base0C}, transparent 90%);
+          --mention-hover-overlay: color-mix(in oklch, ${outputs.palette.base0C}, transparent 95%);
           --reply-overlay: var(--active);
           --reply-hover-overlay: var(--hover);
 
-          --pink: ${outputs.colors.base08};
-          --pink-1: color-mix(in oklch, ${outputs.colors.base08}, black 10%);
-          --pink-2: color-mix(in oklch, ${outputs.colors.base08}, black 20%);
-          --purple: ${outputs.colors.base0E};
-          --purple-1: color-mix(in oklch, ${outputs.colors.base0E}, black 10%);
-          --purple-2: color-mix(in oklch, ${outputs.colors.base0E}, black 20%);
-          --cyan: ${outputs.colors.base0C};
-          --yellow: ${outputs.colors.base0A};
-          --green: ${outputs.colors.base0B};
-          --green-1: color-mix(in oklch, ${outputs.colors.base0B}, black 10%);
-          --green-2: color-mix(in oklch, ${outputs.colors.base0B}, black 20%);
+          --pink: ${outputs.palette.base08};
+          --pink-1: color-mix(in oklch, ${outputs.palette.base08}, black 10%);
+          --pink-2: color-mix(in oklch, ${outputs.palette.base08}, black 20%);
+          --purple: ${outputs.palette.base0E};
+          --purple-1: color-mix(in oklch, ${outputs.palette.base0E}, black 10%);
+          --purple-2: color-mix(in oklch, ${outputs.palette.base0E}, black 20%);
+          --cyan: ${outputs.palette.base0C};
+          --yellow: ${outputs.palette.base0A};
+          --green: ${outputs.palette.base0B};
+          --green-1: color-mix(in oklch, ${outputs.palette.base0B}, black 10%);
+          --green-2: color-mix(in oklch, ${outputs.palette.base0B}, black 20%);
         }
 
         * {

@@ -34,7 +34,7 @@
   tabs = ''
     /* Tabs Audio */
     #tabbrowser-tabs .tabbrowser-tab:is([soundplaying]) .tab-background {
-      background-color: ${outputs.colors.base08} !important;
+      background-color: ${outputs.palette.base08} !important;
     }
 
     /* Tab Close on hover */
@@ -43,7 +43,7 @@
     }
     .tab-close-button {
       margin: -6px !important;
-      color: ${outputs.colors.base07} !important;
+      color: ${outputs.palette.base07} !important;
     }
 
     .tabbrowser-tab:not([selected]):hover {
@@ -63,7 +63,7 @@
     }
 
     .tabbrowser-tab:hover .tab-background {
-      background-color: ${outputs.colors.base00} !important;
+      background-color: ${outputs.palette.base00} !important;
     }
 
     .tabbrowser-tab:not([pinned]) {
@@ -134,7 +134,7 @@
       border-radius: 1px !important;
       padding-inline: var(--6) !important;
       margin: 0 !important;
-      color: ${outputs.colors.base01} !important;
+      color: ${outputs.palette.base01} !important;
     }
     .menu-accel {
       margin-inline: var(--6) 0 !important;
@@ -158,21 +158,21 @@
     }
     menuitem > *, menuitem {
       margin: 0 !important;
-      color: ${outputs.colors.base07};
+      color: ${outputs.palette.base07};
       font-size: 25px !important;
     }
     menu, menuitem {
       &:where([_moz-menuactive]:not([disabled="true"])) {
-        color: ${outputs.colors.base00};
-        background-color: ${outputs.colors.base07};
+        color: ${outputs.palette.base00};
+        background-color: ${outputs.palette.base07};
       }
     }
     menuitem[_moz-menuactive]:not([disabled="true"]) > * {
         text-transform: uppercase !important;
     }
     menuitem[_moz-menuactive="true"]:not([disabled]), menuitem[_moz-menuactive="true"]:not([disabled]) > *, menupopup > menuitem[_moz-menuactive], menupopup > menu[_moz-menuactive] {
-      background-color: ${outputs.colors.base07} !important;
-      color: ${outputs.colors.base00} !important;
+      background-color: ${outputs.palette.base07} !important;
+      color: ${outputs.palette.base00} !important;
     }
     menu, menuitem, menucaption {
       @media (-moz-platform: linux) {
@@ -183,15 +183,15 @@
 
   downloads = ''
     #downloads-button[attention="success"] #downloads-indicator-progress-outer {
-      background: ${outputs.colors.base0D} !important;
+      background: ${outputs.palette.base0D} !important;
     }
     #downloads-button:is([attention="warning"], [attention="severe"])
       #downloads-indicator-progress-inner {
-      background: ${outputs.colors.base09} !important;
+      background: ${outputs.palette.base09} !important;
     }
     #downloadsPanel-mainView {
-      background-color: ${outputs.colors.base01} !important;
-      color: ${outputs.colors.base06};
+      background-color: ${outputs.palette.base01} !important;
+      color: ${outputs.palette.base06};
     }
   '';
 
@@ -209,11 +209,11 @@
     }
 
     .vertical-pinned-tabs-container-separator {
-      background: light-dark(${outputs.colors.base04}, ${outputs.colors.base06}) !important;
+      background: light-dark(${outputs.palette.base04}, ${outputs.palette.base06}) !important;
       height: 1px !important;
     }
     .zen-sidebar-web-panel-splitter, .zen-split-view-splitter[orient="vertical"], #zen-sidebar-splitter {
-      background: light-dark(${outputs.colors.base04}, ${outputs.colors.base06}) !important;
+      background: light-dark(${outputs.palette.base04}, ${outputs.palette.base06}) !important;
       width: 1px !important;
     }
 

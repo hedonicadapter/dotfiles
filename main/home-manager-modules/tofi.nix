@@ -27,16 +27,16 @@
       text-cursor = true;
 
       font-size = 18;
-      background-color = outputs.colors.base00;
+      background-color = outputs.palette.base00;
 
-      prompt-color = outputs.colors.base04;
-      input-color = outputs.colors.base07;
-      input-background = outputs.colors.base00;
+      prompt-color = outputs.palette.base04;
+      input-color = outputs.palette.base07;
+      input-background = outputs.palette.base00;
 
-      selection-color = outputs.colors.base00;
-      selection-match-color = outputs.colors.base07;
+      selection-color = outputs.palette.base00;
+      selection-match-color = outputs.palette.base07;
 
-      selection-background = outputs.colors.base0D;
+      selection-background = outputs.palette.base0D;
       selection-background-corner-radius = 1;
       selection-background-padding = 1;
 

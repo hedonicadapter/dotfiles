@@ -273,11 +273,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1748521997,
-        "narHash": "sha256-G5Qc7Mh8EhJdGWuG2jclVqqZ88ZfjbicUpaUfH6TM/Y=",
+        "lastModified": 1748532595,
+        "narHash": "sha256-ZUpB1fmwkTYEtROuWx6BU6aD+eIxthzWoymEr2cBJ6I=",
         "owner": "hedonicadapter",
         "repo": "colors-flake",
-        "rev": "275c9367d82bc156361013bf007a67fdfd483d8e",
+        "rev": "f5a0194ec0a71d879b15ed34dfc7261b2c5ab2ae",
         "type": "github"
       },
       "original": {

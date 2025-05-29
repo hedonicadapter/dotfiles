@@ -57,8 +57,12 @@
 
     overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
 
-    # colors = colors.outputs.colors // (builtins.fromJSON (builtins.readFile ./colors.json));
-    inherit (colors.outputs) colors transparentize darken colors_opaque cssColorVariables hexColorTo0xAARRGGBB;
+    colors =
+      colors.outputs
+      // {
+        palette = colors.outputs.palette // (builtins.fromJSON (builtins.readFile ./palette.json));
+      };
+    inherit (colors.outputs) palette transparentize darken palette_opaque cssColorVariables hexColorTo0xAARRGGBB;
 
     nixosConfigurations."default" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";

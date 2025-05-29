@@ -9,10 +9,10 @@
         /* Source: https://github.com/Tagggar/Firefox-Alpha/ */
         html > * {
           background-color: transparent;
-          color: ${outputs.colors.base07};
+          color: ${outputs.palette.base07};
         }
         html {
-          color: ${outputs.colors.base07};
+          color: ${outputs.palette.base07};
         }
         #browser > #appcontent {
           margin: 6px;
@@ -136,8 +136,8 @@
           padding-block: 2px !important;
           border-radius: 1px !important;
           margin: var(--8) !important;
-          background-color: ${outputs.colors.base00} !important;
-          color: ${outputs.colors.base07} !important;
+          background-color: ${outputs.palette.base00} !important;
+          color: ${outputs.palette.base07} !important;
         }
 
         /* ℹ️ Findbar Ctrl+F */
@@ -146,7 +146,7 @@
           margin: 0 8px !important;
           border-radius: 1px !important;
           width: 240px;
-          background: ${outputs.colors.base01} !important;
+          background: ${outputs.palette.base01} !important;
           order: -1;
           position: absolute;
         }
@@ -159,7 +159,7 @@
           width: 168px !important;
           padding-inline: var(--6) !important;
           height: var(--tab-min-height) !important;
-          color: ${outputs.colors.base07} !important;
+          color: ${outputs.palette.base07} !important;
           background: none !important;
         }
         findbar toolbarbutton {
@@ -167,7 +167,7 @@
           padding: 4px !important;
           margin: 0 !important;
           background: none !important;
-          fill: ${outputs.colors.base07} !important;
+          fill: ${outputs.palette.base07} !important;
           scale: 0.7;
         }
 
@@ -196,7 +196,7 @@
         #main-menubar {
           margin: 4px;
           background-color: none;
-          color: ${outputs.colors.base00};
+          color: ${outputs.palette.base00};
           height: 16px !important;
         }
 
@@ -204,8 +204,8 @@
         .menupopup-arrowscrollbox {
           border-radius: 1px !important;
           padding: var(--6) !important;
-          background-color: ${outputs.colors.base01} !important;
-          color: ${outputs.colors.base07} !important;
+          background-color: ${outputs.palette.base01} !important;
+          color: ${outputs.palette.base07} !important;
         }
         #scrollbutton-down,
         #scrollbutton-up {
@@ -229,7 +229,7 @@
           border-radius: 1px !important;
           padding-inline: var(--6) !important;
           margin: 0 !important;
-          color: ${outputs.colors.base01} !important;
+          color: ${outputs.palette.base01} !important;
         }
         .menu-accel {
           margin-inline: var(--6) 0 !important;
@@ -240,7 +240,7 @@
         menupopup > menuitem[_moz-menuactive],
         menupopup > menu[_moz-menuactive] {
           background-color: var(--main) !important;
-          color: ${outputs.colors.base07} !important;
+          color: ${outputs.palette.base07} !important;
         }
         #context-navigation {
           flex-direction: column !important;
@@ -292,7 +292,7 @@
 
         /* Tabs Audio */
         #tabbrowser-tabs .tabbrowser-tab:is([soundplaying]) .tab-background {
-          background-color: ${outputs.colors.base08} !important;
+          background-color: ${outputs.palette.base08} !important;
           transition: background-color 0.15s !important;
           transition-timing-function: var(--easink) !important;
         }
@@ -309,7 +309,7 @@
         }
         .tab-close-button {
           margin: -6px !important;
-          color: ${outputs.colors.base07} !important;
+          color: ${outputs.palette.base07} !important;
         }
 
         /* New Tab by MMB on Tabs Toolbar  */
@@ -339,7 +339,7 @@
           margin: 0 var(--8) var(--8) 0 !important;
           padding: 0 var(--6) !important;
           background: var(--item) !important;
-          color: ${outputs.colors.base01} !important;
+          color: ${outputs.palette.base01} !important;
           height: var(--tab-min-height);
         }
 
@@ -364,17 +364,17 @@
           visibility: visible !important;
         }
         #downloads-indicator-progress-inner {
-          background: url("data:image/svg+xml;charset=UTF-8,%3csvg width='6' height='25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='6' height='25' fill='${outputs.colors.base0D}'/%3e%3c/svg%3e")
+          background: url("data:image/svg+xml;charset=UTF-8,%3csvg width='6' height='25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='6' height='25' fill='${outputs.palette.base0D}'/%3e%3c/svg%3e")
             bottom no-repeat !important;
           height: var(--download-progress-pcent) !important;
           border-radius: 1px !important;
         }
         #downloads-button[attention="success"] #downloads-indicator-progress-outer {
-          background: ${outputs.colors.base0D} !important;
+          background: ${outputs.palette.base0D} !important;
         }
         #downloads-button:is([attention="warning"], [attention="severe"])
           #downloads-indicator-progress-inner {
-          background: ${outputs.colors.base09} !important;
+          background: ${outputs.palette.base09} !important;
           height: var(--8) !important;
         }
 
@@ -384,8 +384,8 @@
           margin: 4px var(--6) !important;
         }
         #downloadsPanel-mainView {
-          background-color: ${outputs.colors.base01} !important;
-          color: ${outputs.colors.base00};
+          background-color: ${outputs.palette.base01} !important;
+          color: ${outputs.palette.base00};
           padding: var(--6) !important;
         }
         #downloadsFooterButtons > button,
@@ -432,7 +432,7 @@
           border-radius: 1px;
         }
         .tabbrowser-tab:hover .tab-background {
-          background-color: ${outputs.colors.base00} !important;
+          background-color: ${outputs.palette.base00} !important;
           overflow: visible !important;
         }
 
@@ -614,21 +614,21 @@
     }
     menuitem > *, menuitem {
       margin: 0 !important;
-      color: ${outputs.colors.base07};
+      color: ${outputs.palette.base07};
       font-size: 25px !important;
     }
     menu, menuitem {
       &:where([_moz-menuactive]:not([disabled="true"])) {
-        color: ${outputs.colors.base00};
-        background-color: ${outputs.colors.base07};
+        color: ${outputs.palette.base00};
+        background-color: ${outputs.palette.base07};
       }
     }
     menuitem[_moz-menuactive]:not([disabled="true"]) > * {
         text-transform: uppercase !important;
     }
     menuitem[_moz-menuactive="true"]:not([disabled]), menuitem[_moz-menuactive="true"]:not([disabled]) > *, menupopup > menuitem[_moz-menuactive], menupopup > menu[_moz-menuactive] {
-      background-color: ${outputs.colors.base07} !important;
-      color: ${outputs.colors.base00} !important;
+      background-color: ${outputs.palette.base07} !important;
+      color: ${outputs.palette.base00} !important;
     }
     menu, menuitem, menucaption {
       @media (-moz-platform: linux) {

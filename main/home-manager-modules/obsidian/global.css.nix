@@ -7,12 +7,12 @@
     /* background-color:  */
     /* } */
     * {
-      --background-primary: ${outputs.colors.base00} !important;
-      --background-secondary: ${outputs.colors.base01} !important;
-      --ribbon-background: ${outputs.colors.base00} !important;
+      --background-primary: ${outputs.palette.base00} !important;
+      --background-secondary: ${outputs.palette.base01} !important;
+      --ribbon-background: ${outputs.palette.base00} !important;
 
-      --titlebar-background: ${outputs.colors.base01} !important;
-      --titlebar-background-focused: ${outputs.colors.base00} !important;
+      --titlebar-background: ${outputs.palette.base01} !important;
+      --titlebar-background-focused: ${outputs.palette.base00} !important;
     }
     .mod-fade:not(.mod-at-end):after {
       background: linear-gradient(
@@ -76,7 +76,7 @@
     .tag:not(.token) {
       background-color: var(--text-accent);
       border: none;
-      color: ${outputs.colors.base00};
+      color: ${outputs.palette.base00};
       font-size: 13px;
       padding: 1px 8px;
       text-align: center;
@@ -87,27 +87,27 @@
       border-radius: 1px;
     }
     .tag:not(.token):hover {
-      color: ${outputs.colors.base00};
+      color: ${outputs.palette.base00};
       background-color: var(--text-accent-hover);
     }
     .tag[href^="#obsidian"] {
       background-color: #4d3ca6;
     }
     .tag[href^="#important"] {
-      background-color: ${outputs.colors.base08};
+      background-color: ${outputs.palette.base08};
     }
     .tag[href^="#complete"] {
-      background-color: ${outputs.colors.base0B};
+      background-color: ${outputs.palette.base0B};
     }
     .tag[href^="#inprogress"] {
-      background-color: ${outputs.colors.base09}
+      background-color: ${outputs.palette.base09}
     }
 
     /* Custom icons for specific folders or files */
 
     :root {
-      --active-file-bg-color: ${outputs.colors.base0B};
-      --active-file-fg-color: ${outputs.colors.base00};
+      --active-file-bg-color: ${outputs.palette.base0B};
+      --active-file-fg-color: ${outputs.palette.base00};
     }
 
     /* folder begin */
@@ -258,22 +258,22 @@
     }
 
     :root {
-      --base00: ${outputs.colors.base00};
-      --base01: ${outputs.colors.base01};
-      --base02: ${outputs.colors.base02};
-      --base03: ${outputs.colors.base03};
-      --base04: ${outputs.colors.base04};
-      --base05: ${outputs.colors.base05};
-      --base06: ${outputs.colors.base06};
-      --base07: ${outputs.colors.base07};
-      --base08: ${outputs.colors.base08};
-      --base09: ${outputs.colors.base09};
-      --base0A: ${outputs.colors.base0A};
-      --base0B: ${outputs.colors.base0B};
-      --base0C: ${outputs.colors.base0C};
-      --base0D: ${outputs.colors.base0D};
-      --base0E: ${outputs.colors.base0E};
-      --base0F: ${outputs.colors.base0F};
+      --base00: ${outputs.palette.base00};
+      --base01: ${outputs.palette.base01};
+      --base02: ${outputs.palette.base02};
+      --base03: ${outputs.palette.base03};
+      --base04: ${outputs.palette.base04};
+      --base05: ${outputs.palette.base05};
+      --base06: ${outputs.palette.base06};
+      --base07: ${outputs.palette.base07};
+      --base08: ${outputs.palette.base08};
+      --base09: ${outputs.palette.base09};
+      --base0A: ${outputs.palette.base0A};
+      --base0B: ${outputs.palette.base0B};
+      --base0C: ${outputs.palette.base0C};
+      --base0D: ${outputs.palette.base0D};
+      --base0E: ${outputs.palette.base0E};
+      --base0F: ${outputs.palette.base0F};
     }
 
     /*************************
