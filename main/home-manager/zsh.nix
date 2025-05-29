@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   home.packages = with pkgs; [
     lsd
     bat
@@ -13,10 +17,12 @@
       "cat" = "bat"; # c*ts are terrible people, this config doesn't condone c*t use
       "grep" = "grep --color=auto";
       "git log" = "git log --all --graph --decorate --oneline --pretty=format:'%C(auto)%h %C(bold blue)%an %C(green)(%ar)%C(reset) %s'";
+      "debug-flake" = "nix --extra-experimental-features repl-flake repl";
     };
     zsh-abbr = {
       enable = true;
       abbreviations = {
+        "df" = "debug-flake ";
         "gs" = "git status --short";
         "ga" = "git add ";
         "gap" = "git add --patch";
@@ -33,10 +39,12 @@
         "dcd" = "docker-compose down";
         "dcu" = "docker-compose up";
 
+        "kc" = "kubectl";
+
         "ns" = "nix-shell --run zsh ";
       };
     };
-    autosuggestion = {enable = true;};
+    autosuggestion.enable = true;
     syntaxHighlighting = {
       enable = true;
       highlighters = ["main" "brackets" "pattern" "regexp" "cursor" "root" "line"];
@@ -47,7 +55,7 @@
       searchUpKey = "^p";
     };
     enableCompletion = true;
-    initExtra = ''
+    initContent = lib.mkOrder 1000 ''
       # Load fzf-tab after `compinit`, but before plugins that wrap widgets
       source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.zsh
       function git() {
@@ -60,10 +68,6 @@
           else
               command git "$@"
           fi
-      }
-
-      nix-refresh() {
-        sudo nixos-rebuild switch --flake "$@" --show-trace --impure && nvd diff /run/current-system result
       }
 
       cheat() {
@@ -84,7 +88,6 @@
         eval "$(zoxide init zsh)"
         eval "$(direnv hook zsh)"
 
-        export XDG_RUNTIME_DIR=/run/user/$(id -u)
         setopt HIST_EXPIRE_DUPS_FIRST
         setopt HIST_IGNORE_DUPS
         setopt HIST_IGNORE_ALL_DUPS

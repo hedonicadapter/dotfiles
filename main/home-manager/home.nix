@@ -10,36 +10,65 @@
   #   unstable = import <nixos-unstable> {};
   removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
   colorsRGB = builtins.mapAttrs (name: value: removeHash value) outputs.colors;
+
+  isDarwin = pkgs.stdenv.isDarwin;
+  isLinux = pkgs.stdenv.isLinux;
 in {
   # You can import other home-manager modules here
-  imports = [
-    inputs.ags.homeManagerModules.default
-    # ../cachix.nix
-    inputs.matugen.nixosModules.default
-    inputs.spicetify-nix.homeManagerModules.default
+  imports =
+    [
+      inputs.ags.homeManagerModules.default
+      # ../cachix.nix
+      inputs.matugen.nixosModules.default
+      inputs.spicetify-nix.homeManagerModules.default
 
-    inputs.nixcord.homeManagerModules.nixcord
+      inputs.nixcord.homeManagerModules.nixcord
 
-    ./firefox.nix
-    # ./tmux.nix
-    # ./zellij.nix
-    (import ./zsh.nix {inherit pkgs;})
-    # (import ./foot.nix {inherit outputs;})
-    (import ./kitty.nix {inherit outputs pkgs lib;})
-    # (import ./yazi.nix {inherit pkgs;})
-    (import ./tofi.nix {inherit config lib outputs pkgs;})
-    (import ./modules/anti-sleep-neglector/service.nix {inherit outputs inputs config lib pkgs;})
-    (import ./modules/fastfetch/default.nix {inherit outputs;})
-  ];
+      ./firefox.nix
+      # ./tmux.nix
+      # ./zellij.nix
+      (import ./zsh.nix {inherit pkgs lib;})
+      (import ./kitty.nix {inherit outputs pkgs lib;})
+      # (import ./yazi.nix {inherit pkgs;})
+    ]
+    ++ lib.optionals isLinux [
+      (import ./tofi.nix {inherit config lib outputs pkgs;})
+      (import ./modules/anti-sleep-neglector/service.nix {inherit outputs inputs config lib pkgs;})
+      (import ./modules/fastfetch/default.nix {inherit outputs;})
+    ]
+    ++ lib.optionals isDarwin [
+      ./stuff/aerospace.nix
+    ];
+
+  home.username =
+    if isDarwin
+    then "samherman1"
+    else "hedonicadapter";
+  home.homeDirectory =
+    if isDarwin
+    then "/Users/samherman1"
+    else "/home/hedonicadapter";
+
+  nixpkgs = {
+    overlays = [
+      # Add overlays your own flake exports (from overlays and pkgs dir):
+      outputs.overlays.additions
+      outputs.overlays.modifications
+      outputs.overlays.unstable-packages
+
+      inputs.nur.overlays.default
+    ];
+    config.allowUnfree = true;
+  };
 
   services.anti-sleep-neglector = {
-    enable = true;
+    enable = isLinux;
   };
   services.anti-sleep-neglector-monitor = {
-    enable = true;
+    enable = isLinux;
   };
   services.anti-sleep-neglector-gamma = {
-    enable = true;
+    enable = isLinux;
 
     periods = {
       dawn = 4000.0;
@@ -60,43 +89,11 @@ in {
     };
   };
   services.anti-sleep-neglector-wallpaper = {
-    enable = true;
+    enable = isLinux;
     wallpapersDir = "${config.home.homeDirectory}/Pictures/wallpapers";
   };
 
-  nixpkgs = {
-    overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-
-      inputs.nur.overlays.default
-    ];
-
-    config = {
-      allowUnfreePredicate = pkg:
-        builtins.elem (lib.getName pkg) [
-          "google-chrome"
-          "spotify"
-          "steam-unwrapped"
-          "steam-original"
-          "steam-run"
-          "steam"
-          "sf-pro"
-          "ticktick"
-          "betterttv"
-          "discord-canary"
-          "discord"
-          "zsh-abbr"
-        ];
-    };
-  };
-
-  home.username = "hedonicadapter";
-  home.homeDirectory = "/home/hedonicadapter";
-
-  programs.matugen = {enable = true;};
+  programs.matugen.enable = true;
 
   programs.atuin = {
     enable = true;
@@ -375,41 +372,22 @@ in {
     extraConfig = {};
   };
 
-  home.packages = with pkgs;
-    [
-      (callPackage ./modules/hints/hints-derivation.nix {})
-      inputs.zen-browser.packages."${system}".beta
-      google-chrome
-      webcord
-      neovide
-      transmission
-      hyprpicker
-      speedread
-      lutris
-      (mpv.override {scripts = [mpvScripts.mpris];})
-      streamlink
-      twitch-tui
-      pipe-viewer # youtube cli
-      yt-dlp # youtube to mp3
-      resources
-
-      ncdu
-      alsa-utils
-      grim
-      slurp
+  home.packages = with pkgs; let
+    # Core packages available on all platforms
+    commonPackages = [
       jq
       gh
-      libGLU
-      docker-compose
-      lazydocker
-      socat # for listening to unix socket events
-      dotool # for speed-reader.sh
-      inputs.ags.packages.${pkgs.system}.io # expose ags cli
-      rofimoji
-      blender
-    ]
-    # Languages
-    ++ [
+      socat
+      speedread
+      streamlink
+      twitch-tui
+      pipe-viewer
+      yt-dlp
+    ];
+
+    # Development tools and languages
+    devPackages = [
+      # Languages
       go
       dart-sass
       sassc
@@ -417,9 +395,8 @@ in {
       bun
       cargo
       rustc
-    ]
-    # Language servers
-    ++ [
+
+      # Language servers
       nodePackages.bash-language-server
       lua-language-server
       tailwindcss-language-server
@@ -432,33 +409,72 @@ in {
       htmx-lsp
       sqls
       vim-language-server
-    ]
-    # Formatters & linters
-    ++ [
+
+      # Formatters & linters
       nodePackages.prettier
       prettierd
       alejandra
       stylua
       sqlfluff
-    ]
+    ];
+
     # Fonts
-    ++ [
+    fontPackages = [
       nerd-fonts.symbols-only
       maple-mono-NF
-      # cartograph-cf DMCA'd
       ultimate-oldschool-pc-font-pack
       glasstty-ttf
       material-symbols
-    ]
-    # AGS
-    ++ [
+    ];
+
+    linuxPackages = [
+      # Browsers
+      inputs.zen-browser.packages."${system}".beta
+      google-chrome
+      webcord
+
+      # Media & graphics
+      blender
+      neovide
+      hyprpicker
+      (mpv.override {scripts = [mpvScripts.mpris];})
+
+      # System utilities
+      dotool
+      resources
+      ncdu
+      alsa-utils
+      grim
+      slurp
+      libGLU
+      lazydocker
+      rofimoji
+      (callPackage ./modules/hints/hints-derivation.nix {})
+
+      # G*ming
+      lutris
+
+      #AGS
       inputs.ags.packages.${pkgs.system}.notifd
+      inputs.ags.packages.${pkgs.system}.io
       meson
       vala
       gdk-pixbuf
       json-glib
       gobject-introspection
     ];
+
+    darwinPackages = [
+      appcleaner
+      slack
+      autoraise
+    ];
+  in
+    commonPackages
+    ++ devPackages
+    ++ fontPackages
+    ++ lib.optionals isLinux linuxPackages
+    ++ lib.optionals isDarwin darwinPackages;
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -527,12 +543,12 @@ in {
   };
 
   programs.home-manager.enable = true;
-  systemd.user.startServices = "sd-switch"; # Nicely reload system units when changing configs
+  systemd.user.startServices = lib.mkIf isLinux "sd-switch"; # Nicely reload system units when changing configs
 
-  fonts.fontconfig.enable = true;
+  fonts.fontconfig.enable = lib.mkIf isLinux true;
 
   gtk = {
-    enable = true;
+    enable = isLinux;
     # iconTheme.package = pkgs.fluent-icon-theme;
     # iconTheme.name = "Fluent";
     # cursorTheme.package = pkgs.callPackage ./oxygen-neon-cursors.nix {};
@@ -554,7 +570,10 @@ in {
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
 
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
-    XDG_RUNTIME_DIR = "/run/user/$UID";
+    XDG_RUNTIME_DIR =
+      if pkgs.stdenv.isDarwin
+      then "/tmp"
+      else "/run/user/$UID";
     # WINIT_X11_SCALE_FACTOR = 0.75;
   };
 
