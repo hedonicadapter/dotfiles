@@ -81,8 +81,6 @@
   in {
     packages =
       forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
-    formatter =
-      forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
     overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
 

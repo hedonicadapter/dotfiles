@@ -1521,11 +1521,11 @@
         "nur": "nur"
       },
       "locked": {
-        "lastModified": 1748457563,
-        "narHash": "sha256-Vb3YFuNDINjB7LapaAuh5SMeqQ9Pa7hTF1jzWXjnfGM=",
+        "lastModified": 1748504126,
+        "narHash": "sha256-v1bmNbggRtvodsHkZFCbUsMeF/eu/If1mh2OtKIgCTw=",
         "owner": "hedonicadapter",
         "repo": "neovim-config-flake",
-        "rev": "80d8d0ab5b74339d1eef4c4be2ee44728d9107a6",
+        "rev": "e81d0d829db1cf938f226b4bfaaad23aaae38d3a",
         "type": "github"
       },
       "original": {
