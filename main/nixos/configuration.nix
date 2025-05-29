@@ -20,8 +20,6 @@ in {
 
     ./maintenance.nix
     ./hardware-configuration.nix
-
-    (import ../modules/nixos/mousekeys/default.nix {inherit pkgs;})
   ];
 
   home-manager = {

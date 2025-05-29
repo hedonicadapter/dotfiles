@@ -86,10 +86,7 @@
 
     overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
 
-    nixosModules = import ./modules/nixos;
-    homeManagerModules = import ./modules/home-manager;
-
-    colors = (builtins.fromJSON (builtins.readFile ./colors.json)) or colors.outputs.colors;
+    colors = colors.outputs.colors // (builtins.fromJSON (builtins.readFile ./colors.json));
     inherit (colors.outputs) transparentize darken colors_opaque cssColorVariables;
 
     nixosConfigurations = {
@@ -106,24 +103,6 @@
           chaotic.nixosModules.default
         ];
       };
-    };
-
-    devShell.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.mkShell {
-      buildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
-        # Video/Audio data composition framework tools like "gst-inspect", "gst-launch" ...
-        gst_all_1.gstreamer
-        # Common plugins like "filesrc" to combine within e.g. gst-launch
-        gst_all_1.gst-plugins-base
-        # Specialized plugins separated by quality
-        gst_all_1.gst-plugins-good
-        gst_all_1.gst-plugins-bad
-        gst_all_1.gst-plugins-ugly
-        # Plugins to reuse ffmpeg to play almost every video format
-        gst_all_1.gst-libav
-        # Support the Video Audio (Hardware) Acceleration API
-        gst_all_1.gst-vaapi
-        #...
-      ];
     };
   };
 }
