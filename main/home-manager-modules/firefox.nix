@@ -119,10 +119,10 @@
       };
       search.force = true;
 
-      extraConfig = builtins.readFile ./modules/firefox/user.js;
-      userChrome = import ./modules/firefox/userChrome.css.nix {inherit outputs;};
+      extraConfig = builtins.readFile ../home-manager-modules/firefox/user.js;
+      userChrome = import ../home-manager-modules/firefox/userChrome.css.nix {inherit outputs;};
 
-      userContent = import ./modules/firefox/userContent.css.nix {inherit outputs;};
+      userContent = import ../home-manager-modules/firefox/userContent.css.nix {inherit outputs;};
     };
   };
 }

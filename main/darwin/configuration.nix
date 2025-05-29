@@ -20,7 +20,7 @@
     #     extraSpecialArgs = {
     #       inherit system pkgs colors-flake spicetify-nix;
     #     };
-    users.samherman1 = import ../home-manager/home-darwin.nix;
+    users.samherman1 = import ./home.nix;
     backupFileExtension = "backup";
     sharedModules = with inputs; [
       mac-app-util.homeManagerModules.default
