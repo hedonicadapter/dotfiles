@@ -1,8 +1,8 @@
 [submodule "neovim-config"]
 	path = neovim-config
-	url = https://github.com/hedonicadapter/neovim-config-flake.git
+	url = git@github.com:hedonicadapter/neovim-config-flake.git
 	branch=main
 [submodule "colors"]
 	path = colors
-	url = https://github.com/hedonicadapter/colors-flake.git
+	url = git@github.com:hedonicadapter/colors-flake.git
 	branch=main

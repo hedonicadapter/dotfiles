@@ -22,18 +22,18 @@
     zsh-abbr = {
       enable = true;
       abbreviations = {
-        "df" = "debug-flake ";
+        "df" = "debug-flake";
         "gs" = "git status --short";
-        "ga" = "git add ";
+        "ga" = "git add";
         "gap" = "git add --patch";
-        "gc" = "git commit ";
+        "gc" = "git commit";
         "gp" = "git push";
         "gu" = "git pull";
         "gl" = "git log";
         "gb" = "git branch";
-        "gi" = "git init ";
-        "gco" = "git checkout ";
-        "gcl" = "git clone --recurse-submodules ";
+        "gi" = "git init";
+        "gco" = "git checkout";
+        "gcl" = "git clone --recurse-submodules";
         "gsu" = "git submodule foreach git pull origin main";
 
         "dcd" = "docker-compose down";
@@ -41,7 +41,7 @@
 
         "kc" = "kubectl";
 
-        "ns" = "nix-shell --run zsh ";
+        "ns" = "nix-shell --run zsh";
       };
     };
     autosuggestion.enable = true;

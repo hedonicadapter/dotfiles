@@ -131,7 +131,7 @@ in {
     enable = true;
     discord = {
       package = pkgs.discord;
-      vencord.unstable = true;
+      # vencord.unstable = true;
     };
     vesktop.enable = true;
     # programs.nixcord.userPlugins
@@ -259,7 +259,6 @@ in {
   home.packages = with pkgs;
     [
       # inputs.zen-browser.packages."${system}".beta
-      webcord
       streamlink
       twitch-tui
 
