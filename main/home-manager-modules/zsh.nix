@@ -18,6 +18,10 @@
       "grep" = "grep --color=auto";
       "git log" = "git log --all --graph --decorate --oneline --pretty=format:'%C(auto)%h %C(bold blue)%an %C(green)(%ar)%C(reset) %s'";
       "debug-flake" = "nix --extra-experimental-features repl-flake repl";
+      "nix-rebuild" =
+        if pkgs.stdenv.isDarwin
+        then "darwin-rebuild"
+        else "nixos-rebuild";
     };
     zsh-abbr = {
       enable = true;
@@ -42,6 +46,7 @@
         "kc" = "kubectl";
 
         "ns" = "nix-shell --run zsh";
+        "nr" = "sudo nix-rebuild switch --flake .#default";
       };
     };
     autosuggestion.enable = true;
@@ -97,5 +102,10 @@
       '';
       theme = "headline/headline";
     };
+  };
+
+  home.file.".hushlogin" = {
+    enable = pkgs.stdenv.isDarwin;
+    text = "";
   };
 }
