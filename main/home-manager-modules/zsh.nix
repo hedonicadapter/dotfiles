@@ -48,6 +48,7 @@
           if pkgs.stdenv.isDarwin
           then "sudo darwin-rebuild switch --flake .#default"
           else "sudo nixos-rebuild switch --flake .#default";
+        "nu" = "sudo nix flake update";
       };
     };
     autosuggestion.enable = true;
