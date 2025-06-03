@@ -54,7 +54,7 @@
         extra.contrast =
           if outputs.isDarkColor outputs.palette.base00
           then 0.6
-          else -0.6;
+          else -0.5;
       });
     };
   };
