@@ -1,19 +1,18 @@
-{  
-        "base00": "#171413",
-        "base01": "#2b2420",
-        "base02": "#382f29",
-        "base03": "#593e2e",
-        "base04": "#967b6b",
-        "base05": "#d1b5a5",
-        "base06": "#e3d2c8",
-        "base07": "#ebdfd8",
-        "base08": "#94001b",
-        "base09": "#a86500",
-        "base0A": "#A87E00",
-        "base0B": "#277A00",
-        "base0C": "#247F94",
-        "base0D": "#13578E",
-        "base0E": "#790239",
-        "base0F": "#a83800"
+{
+  "base00": "#fbf1f2",
+  "base01": "#f2f1f4",
+  "base02": "#d8d5dd",
+  "base03": "#bfb9c6",
+  "base04": "#a59daf",
+  "base05": "#8b8198",
+  "base06": "#72677E",
+  "base07": "#585062",
+  "base08": "#D57E85",
+  "base09": "#EBB790",
+  "base0A": "#DCB16C",
+  "base0B": "#A3B367",
+  "base0C": "#69A9A7",
+  "base0D": "#7297B9",
+  "base0E": "#BB99B4",
+  "base0F": "#BAA58C"
 }
-
