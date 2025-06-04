@@ -154,31 +154,16 @@
     polarity = "light";
     base16Scheme = outputs.palette;
 
-    # fonts = {
-    #   serif = {
-    #     package = pkgs.merriweather;
-    #     name = "Merriweather";
-    #   };
-    #
-    #   sansSerif = {
-    #     package = pkgs.ultimate-oldschool-pc-font-pack;
-    #     name = "Mx437 DOS/V re. JPN30";
-    #   };
-    #
-    #   monospace = {
-    #     package = pkgs.ultimate-oldschool-pc-font-pack;
-    #     name = "Mx437 DOS/V re. JPN30";
-    #   };
-    #
-    #   emoji = {
-    #     package = pkgs.noto-fonts-color-emoji;
-    #     name = "Noto Color Emoji";
-    #   };
-    #
-    #   sizes.applications = 14;
-    #   sizes.desktop = 14;
-    #   sizes.popups = 14;
-    #   sizes.terminal = 14;
-    # };
+    fonts = {
+      monospace = {
+        package = pkgs.nerd-fonts.victor-mono;
+        name = "Victor Mono";
+      };
+
+      sizes.applications = 14;
+      sizes.desktop = 14;
+      sizes.popups = 14;
+      sizes.terminal = 14;
+    };
   };
 }
