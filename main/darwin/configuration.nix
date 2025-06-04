@@ -55,6 +55,25 @@
           if outputs.isDarkColor outputs.palette.base00
           then 0.6
           else -0.5;
+
+        extra.modeColors = {
+          n = outputs.paletteOpaque.base03;
+          i = outputs.paletteOpaque.base0F;
+
+          c = outputs.paletteOpaque.base0E;
+          C = outputs.paletteOpaque.base0E;
+
+          v = outputs.paletteOpaque.base0C;
+          V = outputs.paletteOpaque.base0C;
+
+          r = outputs.paletteOpaque.base0E;
+          R = outputs.paletteOpaque.base0E;
+
+          s = outputs.paletteOpaque.base0E;
+          S = outputs.paletteOpaque.base0E;
+
+          y = outputs.paletteOpaque.base0D;
+        };
       });
     };
   };
