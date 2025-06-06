@@ -37,7 +37,6 @@
       window_border_width = "0.8pt";
 
       tab_title_template = "{fmt.fg.red}{bell_symbol}{fmt.fg.tab}{index}{title}{activity_symbol}";
-      tab_activity_symbol = "";
 
       update_check_interval = 0; #disable
       notify_on_cmd_finish = "unfocused";
