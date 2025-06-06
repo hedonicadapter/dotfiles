@@ -28,15 +28,18 @@
       paste_actions = "quote-urls-at-prompt,filter,confirm-if-large";
       confirm_os_window_close = 0;
       strip_trailing_spaces = "always";
+
+      repaint_delay = 6;
       input_delay = 0;
       sync_to_monitor = "yes";
-      inactive_text_alpha = "0.4";
+
       window_padding_width = "4 10";
       hide_window_decorations = "yes";
       remember_window_size = "no";
-      window_border_width = "0.8pt";
+      window_border_width = "0.0pt";
 
       tab_title_template = "{fmt.fg.red}{bell_symbol}{fmt.fg.tab}{index}{title}{activity_symbol}";
+      macos_show_window_title_in = "menubar";
 
       update_check_interval = 0; #disable
       notify_on_cmd_finish = "unfocused";
