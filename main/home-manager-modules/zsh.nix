@@ -29,6 +29,7 @@
         "ga" = "git add";
         "gap" = "git add --patch";
         "gc" = "git commit";
+        "gd" = "git diff";
         "gp" = "git push";
         "gu" = "git pull";
         "gl" = "git log";

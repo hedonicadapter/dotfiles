@@ -54,7 +54,7 @@
         extra.contrast =
           if outputs.isDarkColor outputs.palette.base00
           then 0.6
-          else -0.5;
+          else -0.8;
 
         extra.modeColors = {
           n = outputs.paletteOpaque.base03;
@@ -99,6 +99,13 @@
       swapLeftCtrlAndFn = true;
     };
     defaults = {
+      finder = {
+        ShowPathbar = true;
+        AppleShowAllExtensions = true;
+        AppleShowAllFiles = true;
+        CreateDesktop = false;
+        ShowStatusBar = true;
+      };
       ".GlobalPreferences"."com.apple.mouse.scaling" = 1.0; # mouse accel
       NSGlobalDomain.AppleInterfaceStyle = null; # This option requires logging out and logging back in to apply. Type: null or value “Dark”
       dock = {
