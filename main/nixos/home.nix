@@ -14,7 +14,7 @@
     inputs.matugen.nixosModules.default
     inputs.spicetify-nix.homeManagerModules.default
 
-    inputs.nixcord.homeManagerModules.nixcord
+    inputs.nixcord.homeModules.nixcord
 
     # ../home-manager-modules/tmux.nix
     (import ../home-manager-modules/zsh.nix {inherit pkgs lib;})
