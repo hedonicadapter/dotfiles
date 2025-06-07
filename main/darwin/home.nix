@@ -12,7 +12,7 @@
   # You can import other home-manager modules here
   imports = [
     inputs.spicetify-nix.homeManagerModules.default
-    inputs.nixcord.homeManagerModules.nixcord
+    inputs.nixcord.homeModules.nixcord
 
     (import ../home-manager-modules/zsh.nix {inherit pkgs lib;})
     (import ../home-manager-modules/kitty.nix {inherit outputs pkgs lib;})

@@ -4,15 +4,67 @@
 }: {
   programs.nixcord = {
     enable = true;
-    discord = {
-      package = pkgs.discord;
-      vencord.unstable = true;
-    };
     vesktop.enable = true;
+
     # programs.nixcord.userPlugins
     #     # enable custom user plugins from github
     #     # type: attrsOf (coercedTo (strMatching regex))
-    # disable the minimum size for the discord window   #     # regex matches the form "github:user/repo/commitHash"
+
+    config = {
+      useQuickCss = true;
+      themeLinks = [
+        "https://refact0r.github.io/system24/theme/system24.theme.css"
+      ];
+      frameless = true;
+      disableMinSize = true;
+
+      plugins = {
+        alwaysAnimate.enable = true;
+        alwaysTrust.enable = true;
+        betterSettings = {
+          enable = true;
+          eagerLoad = false;
+        };
+        betterGifPicker.enable = true;
+        betterUploadButton.enable = true;
+        clearURLs.enable = true;
+        consoleJanitor.enable = true;
+        copyFileContents.enable = true;
+        experiments.enable = true;
+        fakeNitro.enable = true;
+        favoriteEmojiFirst.enable = true;
+        favoriteGifSearch.enable = true;
+        fixSpotifyEmbeds.enable = true;
+        fixYoutubeEmbeds.enable = true;
+        forceOwnerCrown.enable = true;
+        friendsSince.enable = true;
+        messageLogger.enable = true;
+        moreKaomoji.enable = true;
+        noOnboardingDelay.enable = true;
+        noRPC.enable = true;
+        relationshipNotifier.enable = true;
+        reverseImageSearch.enable = true;
+        reviewDB.enable = true;
+        secretRingToneEnabler.enable = true;
+        showHiddenThings.enable = true;
+        showMeYourName.enable = true;
+        silentTyping.enable = true;
+        silentMessageToggle.enable = true;
+        spotifyShareCommands.enable = true;
+        streamerModeOnStream.enable = true;
+        unindent.enable = true;
+        voiceChatDoubleClick.enable = true;
+        vcNarrator .enable = true;
+        volumeBooster.enable = true;
+        whoReacted.enable = true;
+        youtubeAdblock.enable = true;
+        webScreenShareFixes.enable = true;
+        imageZoom = {
+          enable = true;
+          saveZoomValues = false;
+        };
+      };
+    };
     quickCss =
       ''
         :root {
@@ -72,62 +124,5 @@
         }
       ''
       + import ../home-manager-modules/discord/custom.css.nix {inherit outputs;};
-    config = {
-      useQuickCss = true;
-      themeLinks = [
-        "https://refact0r.github.io/system24/theme/system24.theme.css"
-      ];
-      frameless = true;
-
-      plugins = {
-        alwaysAnimate.enable = true;
-        alwaysTrust.enable = true;
-        betterSettings = {
-          enable = true;
-          eagerLoad = false;
-        };
-        betterGifPicker.enable = true;
-        betterUploadButton.enable = true;
-        clearURLs.enable = true;
-        consoleJanitor.enable = true;
-        copyFileContents.enable = true;
-        experiments.enable = true;
-        fakeNitro.enable = true;
-        favoriteEmojiFirst.enable = true;
-        favoriteGifSearch.enable = true;
-        fixSpotifyEmbeds.enable = true;
-        fixYoutubeEmbeds.enable = true;
-        forceOwnerCrown.enable = true;
-        friendsSince.enable = true;
-        messageLogger.enable = true;
-        moreKaomoji.enable = true;
-        noOnboardingDelay.enable = true;
-        noRPC.enable = true;
-        relationshipNotifier.enable = true;
-        reverseImageSearch.enable = true;
-        reviewDB.enable = true;
-        secretRingToneEnabler.enable = true;
-        showHiddenThings.enable = true;
-        showMeYourName.enable = true;
-        silentTyping.enable = true;
-        silentMessageToggle.enable = true;
-        spotifyShareCommands.enable = true;
-        streamerModeOnStream.enable = true;
-        unindent.enable = true;
-        voiceChatDoubleClick.enable = true;
-        vcNarrator .enable = true;
-        volumeBooster.enable = true;
-        whoReacted.enable = true;
-        youtubeAdblock.enable = true;
-        webScreenShareFixes.enable = true;
-        imageZoom = {
-          enable = true;
-          saveZoomValues = false;
-        };
-      };
-
-      disableMinSize = true;
-    };
-    extraConfig = {};
   };
 }
