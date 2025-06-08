@@ -1,12 +1,12 @@
-[![neovim dashboard](./images/neovim-dash.png)]
+![neovim dashboard](./images/neovim-dash.png)
 
-[![neovim](./images/neovim.png)]
+![neovim](./images/neovim.png)
 
-[![css injectable apps](./images/js-apps.png)]
+![css injectable apps](./images/js-apps.png)
 
-[![firefox based browsers](./images/browsers.png)]
+![firefox based browsers](./images/browsers.png)
 
-[![AGS shell widgets](./images/audio-panel.png)]
+![AGS shell widgets](./images/audio-panel.png)
 
 Goals:
 1. Experimentation
