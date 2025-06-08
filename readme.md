@@ -1,13 +1,13 @@
 ## Preview
-[![neovim dashboard](./images/neovim-dash.png)](URL)
+[![neovim dashboard](./images/neovim-dash.png)]
 
-[![neovim](./images/neovim.png)](URL)
+[![neovim](./images/neovim.png)]
 
-[![css injectable apps](./images/js-apps.png)](URL)
+[![css injectable apps](./images/js-apps.png)]
 
-[![firefox based browsers](./images/browsers.png)](URL)
+[![firefox based browsers](./images/browsers.png)]
 
-[![AGS shell widgets](./images/audio-panel.png)](URL)
+[![AGS shell widgets](./images/audio-panel.png)]
 
 Goals:
 1. Experimentation
