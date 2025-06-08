@@ -1,7 +1,13 @@
 ## Preview
-[![splash](./images/splash.png)](URL)
+[![neovim dashboard](./images/neovim-dash.png)](URL)
 
 [![neovim](./images/neovim.png)](URL)
+
+[![css injectable apps](./images/js-apps.png)](URL)
+
+[![firefox based browsers](./images/browsers.png)](URL)
+
+[![AGS shell widgets](./images/audio-panel.png)](URL)
 
 Goals:
 1. Experimentation
@@ -19,7 +25,7 @@ Goals:
 + Speed read selection with keybind
 
 ### Aesthetics
-Anti-minimalist without being cluttered
+Retro and anti-minimalist without being cluttered
 - Global Base-16 colors injected into shells, neovim, and electron apps
 + ~~Transparent, blurry, and grainy~~ retro everything, get used to it or disable it
 + Extremely minimal space saving firefox theme forked from Firefox Alpha
@@ -34,6 +40,7 @@ Anti-minimalist without being cluttered
 - [ ] System-wide font selection
 - [ ] Hyprland workspace session manager(?)
 - [ ] Change light/dark mode depending on time of day
+- [ ] Moar kaomojis!! <(˶˃⤙˂˶)> 
 
 ## Credits
  - (https://github.com/hyprwm/Hyprland/issues/1140#issuecomment-1335128437)[Blue light shaders from MahouShoujoMivutilde]
