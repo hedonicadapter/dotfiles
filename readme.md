@@ -1,4 +1,3 @@
-## Preview
 [![neovim dashboard](./images/neovim-dash.png)]
 
 [![neovim](./images/neovim.png)]
