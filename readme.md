@@ -39,6 +39,8 @@ Retro and anti-minimalist without being cluttered
 - [ ] System-wide font selection
 - [ ] Hyprland workspace session manager(?)
 - [ ] Change light/dark mode depending on time of day
+- [ ] nix-darwin feature parity
+- [ ] slightly less extreme CRT effect
 - [ ] Moar kaomojis!! <(˶˃⤙˂˶)> 
 
 ## Credits
