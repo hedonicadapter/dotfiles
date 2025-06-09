@@ -23,14 +23,15 @@
     ../home-manager-modules/atuin.nix
     ../home-manager-modules/fzf.nix
     ../home-manager-modules/direnv.nix
-
-    (import ../home-manager-modules/anti-sleep-neglector/service.nix {inherit outputs inputs config lib pkgs;})
-    (import ../home-manager-modules/fastfetch/default.nix {inherit outputs;})
+    ../home-manager-modules/nh.nix
     (import ../home-manager-modules/git.nix {
       userName = "hedonicadapter";
       userEmail = "mailservice.samherman@gmail.com";
       inherit pkgs;
     })
+
+    (import ../home-manager-modules/anti-sleep-neglector/service.nix {inherit outputs inputs config lib pkgs;})
+    (import ../home-manager-modules/fastfetch/default.nix {inherit outputs;})
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
     (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs;})
@@ -178,7 +179,7 @@
     # Fonts
     ++ [
       nerd-fonts.symbols-only
-      maple-mono-NF
+      maple-mono.NF
       # cartograph-cf DMCA'd
       ultimate-oldschool-pc-font-pack
       glasstty-ttf

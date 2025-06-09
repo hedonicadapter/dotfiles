@@ -47,8 +47,8 @@
         "ns" = "nix-shell --run zsh";
         "nr" =
           if pkgs.stdenv.isDarwin
-          then "sudo darwin-rebuild switch --flake .#default"
-          else "sudo nixos-rebuild switch --flake .#default";
+          then "sudo nh darwin switch .#default"
+          else "sudo nh os switch .#default";
         "nu" = "sudo nix flake update";
       };
     };

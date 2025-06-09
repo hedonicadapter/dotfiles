@@ -29,6 +29,9 @@
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
     (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs;})
+    (import ../home-manager-modules/nh.nix {
+      flakeDir = "${config.home.homeDirectory}/Documents/projects/dotfiles/main";
+    })
   ];
 
   home.username = "samherman1";
@@ -62,7 +65,7 @@
     # Fonts
     ++ [
       nerd-fonts.symbols-only
-      maple-mono-NF
+      maple-mono.NF
       # cartograph-cf DMCA'd
       ultimate-oldschool-pc-font-pack
       glasstty-ttf

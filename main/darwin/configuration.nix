@@ -26,7 +26,6 @@
     backupFileExtension = "backup";
     sharedModules = with inputs; [
       mac-app-util.homeManagerModules.default
-      spicetify-nix.homeManagerModules.spicetify
     ];
     useGlobalPkgs = true;
     useUserPackages = true;
