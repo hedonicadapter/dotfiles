@@ -53,6 +53,9 @@ in {
       flake-registry = "";
       # Workaround for https://github.com/NixOS/nix/issues/9574
       nix-path = config.nix.nixPath;
+
+      trusted-substituters = ["https://ai.cachix.org"];
+      trusted-public-keys = ["ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="];
     };
 
     # Opinionated: make flake registry and nix path match flake inputs
@@ -336,6 +339,9 @@ in {
     127.0.0.1 localhost
     ::1 localhost
     127.0.0.2 nixos
+
+    3.75.10.80 portal.pinokio.computer
+    3.75.10.80 pinokio.computer
   '';
   networking.nameservers = ["8.8.8.8" "8.8.4.4"];
 
@@ -558,6 +564,10 @@ in {
   };
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
+
+  services.comfyui = {
+    enable = true;
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
