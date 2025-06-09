@@ -29,6 +29,7 @@
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
     (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs;})
+    ../home-manager-modules/nh.nix
   ];
 
   home.username = "samherman1";
