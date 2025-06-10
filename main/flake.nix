@@ -38,8 +38,6 @@
     nixcord.url = "github:kaylorben/nixcord";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
-
-    nixified-ai.url = "github:nixified-ai/flake";
   };
 
   outputs = {
@@ -47,7 +45,6 @@
     nixpkgs,
     nix-darwin,
     colors,
-    nixified-ai,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -74,7 +71,6 @@
         nixos-hardware.nixosModules.common-pc-laptop-ssd
         nixos-hardware.nixosModules.common-pc-laptop-hdd
         neovim-flake.nixosModules.default
-        nixified-ai.nixosModules.comfyui
         ./nixos/configuration.nix
         chaotic.nixosModules.default
       ];

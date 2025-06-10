@@ -5,7 +5,6 @@
   ...
 }: {
   nix.enable = false;
-  nix.settings.experimental-features = "nix-command flakes";
   system.stateVersion = 6;
 
   users.users.samherman1 = {
@@ -13,15 +12,14 @@
     home = "/Users/samherman1";
   };
 
-  # imports = with inputs; [
-  #   # ./maintenance.nix
-  # ];
+  imports = with inputs; [
+    (import ../nix-modules/nix.nix {inherit inputs lib config;})
+    (import ../nix-modules/nixpkgs.nix {inherit outputs;})
+    # ./maintenance.nix
+  ];
 
   home-manager = {
     extraSpecialArgs = {inherit inputs outputs;};
-    #     extraSpecialArgs = {
-    #       inherit system pkgs colors-flake spicetify-nix;
-    #     };
     users.samherman1 = import ./home.nix;
     backupFileExtension = "backup";
     sharedModules = with inputs; [
@@ -29,16 +27,6 @@
     ];
     useGlobalPkgs = true;
     useUserPackages = true;
-  };
-
-  nixpkgs = {
-    overlays = [
-      # Add overlays from flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-    ];
-    config.allowUnfree = true;
   };
 
   nvim = let

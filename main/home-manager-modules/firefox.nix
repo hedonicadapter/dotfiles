@@ -10,7 +10,7 @@
     enable = true;
     package = pkgs.firefox-beta;
     profiles.hedonicadapter = {
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
         vimium
         ublock-origin
         h264ify # pick codecs to block to mitigate youtube resource usage

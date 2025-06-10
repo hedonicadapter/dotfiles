@@ -18,6 +18,8 @@ in {
 
     xremap-flake.nixosModules.default
 
+    (import ../nix-modules/nix.nix {inherit inputs lib config;})
+    (import ../nix-modules/nixpkgs.nix {inherit outputs;})
     ./maintenance.nix
     ./hardware-configuration.nix
   ];
@@ -26,41 +28,6 @@ in {
     extraSpecialArgs = {inherit inputs outputs;};
     users.hedonicadapter = import ./home.nix;
     backupFileExtension = "backup";
-  };
-
-  nixpkgs = {
-    overlays = [
-      # Add overlays from flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-    ];
-    config = {
-      permittedInsecurePackages = [
-        "electron-25.9.0" # ONLY for obsidian at the moment
-        "dotnet-sdk-wrapped-6.0.428"
-      ];
-      allowUnfree = true;
-    };
-  };
-
-  nix = let
-    flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
-  in {
-    settings = {
-      experimental-features = "nix-command flakes";
-      # Opinionated: disable global registry
-      flake-registry = "";
-      # Workaround for https://github.com/NixOS/nix/issues/9574
-      nix-path = config.nix.nixPath;
-
-      trusted-substituters = ["https://ai.cachix.org"];
-      trusted-public-keys = ["ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="];
-    };
-
-    # Opinionated: make flake registry and nix path match flake inputs
-    registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
-    nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
   nvim = let
@@ -84,7 +51,6 @@ in {
     gcc
     python311Packages.cmake
     nodejs_22
-    microsoft-edge
     xorg.xmodmap
     git
     nix-output-monitor
@@ -143,14 +109,6 @@ in {
   programs.gamemode.enable = true;
 
   programs.ydotool.enable = true; # for AlfredoSequeida/hints
-
-  programs._1password.enable = true;
-  programs._1password-gui = {
-    enable = true;
-    # Certain features, including CLI integration and system authentication support,
-    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-    polkitPolicyOwners = ["hedonicadapter"];
-  };
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
@@ -211,10 +169,9 @@ in {
   security.polkit.enable = true;
 
   # formerly hardware.opengl
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
+  hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
+
   hardware.logitech.wireless.enable = true;
   hardware.logitech.wireless.enableGraphical = true;
 
@@ -317,6 +274,7 @@ in {
   console.keyMap = "sv-latin1";
 
   security.rtkit.enable = true;
+
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -339,9 +297,6 @@ in {
     127.0.0.1 localhost
     ::1 localhost
     127.0.0.2 nixos
-
-    3.75.10.80 portal.pinokio.computer
-    3.75.10.80 pinokio.computer
   '';
   networking.nameservers = ["8.8.8.8" "8.8.4.4"];
 
@@ -409,8 +364,7 @@ in {
   # Load nvidia driver for Xorg and Wayland
   # Configure keymap in X11
   services.xserver = {
-    # Enable X11 windowing system
-    enable = true;
+    enable = true; # Enable X11 windowing system
 
     xkb.layout = "se";
     xkb.variant = "";
@@ -418,8 +372,8 @@ in {
     videoDrivers = ["nvidia" "nvidia-utils"];
 
     displayManager.gdm.enable = true; # GNOME Desktop Environment
-    desktopManager.gnome.enable = true;
   };
+  services.desktopManager.gnome.enable = true;
   # services.libinput.mouse.accelProfile = "adaptive"; configured in hyprland.conf
   services.printing.enable = true;
   services.thermald.enable = true;
@@ -528,7 +482,6 @@ in {
     };
   };
 
-  services.intune.enable = true;
   services.envfs.enable = true;
 
   security.sudo = {
@@ -562,12 +515,8 @@ in {
       max-cache-ttl = 7200;
     };
   };
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
 
-  services.comfyui = {
-    enable = true;
-  };
+  # services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

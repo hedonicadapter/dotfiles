@@ -23,7 +23,7 @@
     ../home-manager-modules/atuin.nix
     ../home-manager-modules/fzf.nix
     ../home-manager-modules/direnv.nix
-    ../home-manager-modules/nh.nix
+    (import ../home-manager-modules/nh.nix {flakeDir = "/etc/nixos/main";})
     (import ../home-manager-modules/git.nix {
       userName = "hedonicadapter";
       userEmail = "mailservice.samherman@gmail.com";
@@ -195,6 +195,7 @@
       gobject-introspection
     ];
 
+  stylix.targets.hyprland.enable = lib.mkForce false; # INFO: stylix configures a deprecated shadow attribute
   wayland.windowManager.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.system}.default;
@@ -202,7 +203,7 @@
     systemd.variables = ["--all"];
     extraConfig = import ../home-manager-modules/hyprland/hyprland.conf.nix {inherit outputs lib;};
     plugins = [
-      inputs.split-monitor-workspaces.packages.${pkgs.system}.default
+      inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
       #  TODO: marked broken
       # pkgs.hyprlandPlugins.hyprfocus
     ];

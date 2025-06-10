@@ -198,9 +198,9 @@
     windowrulev2 = bordersize 0, floating:0, onworkspace:f[1]
     windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
 
-    windowrule = float, ^(.*popup.*)$
-    windowrule = center, ^(.*popup.*)$
-    windowrule = stayfocused, ^(.*popup.*)$
+    windowrule = float, class:^(.*popup.*)$
+    windowrule = center, class:^(.*popup.*)$
+    windowrule = stayfocused, class:^(.*popup.*)$
 
     bezier=easeOutQuart, 0.25,1,0.5,1
     animation=windows, 1, 3.5, easeOutQuart, popin
