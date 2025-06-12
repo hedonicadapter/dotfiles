@@ -34,7 +34,7 @@
     (import ../home-manager-modules/fastfetch/default.nix {inherit outputs;})
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
-    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs;})
+    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib;})
     ../home-manager-modules/firefox.nix
   ];
 
@@ -242,10 +242,6 @@
       source = ../home-manager-modules/emoji/list.txt;
     };
     "${config.home.homeDirectory}/Documents/notes/Braing/.obsidian/snippets/global.css".text = import ../home-manager-modules/obsidian/global.css.nix {inherit outputs;};
-    ".config/BetterDiscord" = {
-      source = ../home-manager-modules/discord;
-      recursive = true;
-    };
     ".oh-my-zsh/custom/themes" = {
       source = ../home-manager-modules/oh-my-zsh/themes;
       recursive = true;

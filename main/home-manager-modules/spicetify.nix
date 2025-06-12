@@ -28,7 +28,7 @@ in {
 
     customColorScheme = {
       text = colorsRGB.base0A;
-      subtext = colorsRGB.base04;
+      subtext = colorsRGB.base03;
       sidebar-text = colorsRGB.base05;
       main = colorsRGB.base00;
       sidebar = colorsRGB.base01;

@@ -28,7 +28,7 @@
     })
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
-    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs;})
+    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib;})
     (import ../home-manager-modules/nh.nix {
       flakeDir = "${config.home.homeDirectory}/Documents/projects/dotfiles/main";
     })
@@ -73,10 +73,6 @@
     ];
 
   home.file = {
-    ".config/BetterDiscord" = {
-      source = ../home-manager-modules/discord;
-      recursive = true;
-    };
     ".oh-my-zsh/custom/themes" = {
       source = ../home-manager-modules/oh-my-zsh/themes;
       recursive = true;

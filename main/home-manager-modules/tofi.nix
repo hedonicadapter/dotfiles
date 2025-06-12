@@ -14,7 +14,8 @@
       width = "25%";
       height = "20%";
       border-width = 0;
-      outline-width = 0;
+      outline-width = 1;
+      outline-color = outputs.palette.base04;
       padding-left = "0%";
       padding-top = "0%";
       num-results = 5;

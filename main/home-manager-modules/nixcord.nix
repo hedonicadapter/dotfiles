@@ -1,6 +1,7 @@
 {
   outputs,
   pkgs,
+  lib,
 }: {
   programs.nixcord = {
     enable = true;
@@ -65,64 +66,80 @@
         };
       };
     };
-    quickCss =
-      ''
-        :root {
-          --txt-pad: 5px;
-          --bg-0: ${outputs.palette.base00}; /* main background color */
-          --bg-1: ${outputs.palette.base01}; /* background color for secondary elements */
-          --bg-2: ${outputs.palette.base02}; /* color of neutral buttons */
-          --bg-3: ${outputs.palette.base03}; /* color of neutral buttons when hovered */
+    quickCss = ''
+      * {
+          font-family: 'Mx437 DOS/V re. JPN30'!important;
+      }
 
-          --hover: hsla(0, 0%, 40%, 0.1); /* keeping original as it's an opacity value */
-          --active: hsla(0, 0%, 40%, 0.2); /* keeping original as it's an opacity value */
-          --selected: var(--active);
+      body {
+          --border-thickness: 1px;
+      }
+      :root {
+          --text-0: ${outputs.palette.base07};
+          --text-1: ${outputs.palette.base07};
+          --text-2: ${outputs.palette.base06};
+          --text-3: ${outputs.palette.base06};
+          --text-4: ${outputs.palette.base04};
+          --text-5: ${outputs.palette.base03};
+          --bg-1: ${outputs.palette.base03};
+          --bg-2: ${outputs.palette.base00};
+          --bg-3: ${outputs.palette.base00};
+          --bg-4: ${outputs.palette.base00};
+          --hover: ${outputs.palette.base01};
+          --active: ${outputs.palette.base02};
+          --active-2: ${outputs.palette.base03};
+          --message-hover: var(--hover);
+          --accent-1: ${outputs.palette.base0A};
+          --accent-2: ${outputs.palette.base0F};
+          --accent-3: ${outputs.palette.base0B};
+          --accent-4: ${outputs.palette.base0D};
+          --accent-5: ${outputs.palette.base09};
+          --accent-new: ${outputs.palette.base08};
+          --mention: linear-gradient(to right,
+      color-mix(in hsl, var(--accent-2), transparent 90%) 40%, transparent);
+          --mention-hover: linear-gradient(to right,
+      color-mix(in hsl, var(--accent-2), transparent 95%) 40%, transparent);
+          --reply: linear-gradient(to right,
+      color-mix(in hsl, var(--text-3), transparent 90%) 40%, transparent);
+          --reply-hover: linear-gradient(to right,
+      color-mix(in hsl, var(--text-3), transparent 95%) 40%, transparent);
+          --online: ${outputs.palette.base0B};
+          --dnd: ${outputs.palette.base08};
+          --idle: ${outputs.palette.base0A};
+          --streaming: ${outputs.palette.base0D};
+          --offline: var(--text-4);
+          --border-light: var(--hover);
+          --border: ${outputs.palette.base03};
+          --border-hover: var(--accent-2);
+          --button-border: ${outputs.palette.base06};
+          --border-thickness: 1px !important;
 
-          --txt-dark: ${outputs.palette.base00};
-          --txt-link: ${outputs.palette.base0C};
-          --txt-0: ${outputs.palette.base07};
-          --txt-1: ${outputs.palette.base05};
-          --txt-2: ${outputs.palette.base04};
-          --txt-3: ${outputs.palette.base03};
-
-          --acc-0: ${outputs.palette.base0A};
-          --acc-1: color-mix(in oklch, ${outputs.palette.base0A}, white 10%);
-          --acc-2: color-mix(in oklch, ${outputs.palette.base0A}, black 10%);
-
-          --border-width: 1px;
-          --border-color: ${outputs.palette.base03};
-          --border-hover-color: ${outputs.palette.base0A};
-          --border-transition: 0.2s ease;
-
-          --online-dot: ${outputs.palette.base0B};
-          --dnd-dot: ${outputs.palette.base08};
-          --idle-dot: ${outputs.palette.base0A};
-          --streaming-dot: ${outputs.palette.base0E};
-
-          --mention-txt: ${outputs.palette.base0C};
-          --mention-bg: color-mix(in oklch, ${outputs.palette.base0C}, transparent 90%);
-          --mention-overlay: color-mix(in oklch, ${outputs.palette.base0C}, transparent 90%);
-          --mention-hover-overlay: color-mix(in oklch, ${outputs.palette.base0C}, transparent 95%);
-          --reply-overlay: var(--active);
-          --reply-hover-overlay: var(--hover);
-
-          --pink: ${outputs.palette.base08};
-          --pink-1: color-mix(in oklch, ${outputs.palette.base08}, black 10%);
-          --pink-2: color-mix(in oklch, ${outputs.palette.base08}, black 20%);
-          --purple: ${outputs.palette.base0E};
-          --purple-1: color-mix(in oklch, ${outputs.palette.base0E}, black 10%);
-          --purple-2: color-mix(in oklch, ${outputs.palette.base0E}, black 20%);
-          --cyan: ${outputs.palette.base0C};
-          --yellow: ${outputs.palette.base0A};
-          --green: ${outputs.palette.base0B};
-          --green-1: color-mix(in oklch, ${outputs.palette.base0B}, black 10%);
-          --green-2: color-mix(in oklch, ${outputs.palette.base0B}, black 20%);
-        }
-
-        * {
-            font-family: 'Mx437 DOS/V re. JPN30'!important;
-        }
-      ''
-      + import ../home-manager-modules/discord/custom.css.nix {inherit outputs;};
+          --red-1: ${outputs.palette.base08};
+          --red-2: ${outputs.palette.base08};
+          --red-3: ${outputs.palette.base08};
+          --red-4: ${outputs.palette.base08};
+          --red-5: ${outputs.palette.base08};
+          --green-1: ${outputs.palette.base0B};
+          --green-2: ${outputs.palette.base0B};
+          --green-3: ${outputs.palette.base0B};
+          --green-4: ${outputs.palette.base0B};
+          --green-5: ${outputs.palette.base0B};
+          --blue-1: ${outputs.palette.base0D};
+          --blue-2: ${outputs.palette.base0D};
+          --blue-3: ${outputs.palette.base0D};
+          --blue-4: ${outputs.palette.base0D};
+          --blue-5: ${outputs.palette.base0D};
+          --yellow-1: ${outputs.palette.base0A};
+          --yellow-2: ${outputs.palette.base0A};
+          --yellow-3: ${outputs.palette.base0A};
+          --yellow-4: ${outputs.palette.base0A};
+          --yellow-5: ${outputs.palette.base0A};
+          --purple-1: ${outputs.palette.base0E};
+          --purple-2: ${outputs.palette.base0E};
+          --purple-3: ${outputs.palette.base0E};
+          --purple-4: ${outputs.palette.base0E};
+          --purple-5: ${outputs.palette.base0E};
+      }
+    '';
   };
 }

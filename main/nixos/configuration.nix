@@ -76,7 +76,6 @@ in {
     playerctl
     spotify
 
-    betterdiscordctl
     acpi
 
     bc
