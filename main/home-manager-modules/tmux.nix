@@ -1,16 +1,33 @@
-{pkgs, ...}: let
-  tmuxResurrectPath = "~/.config/tmux/resurrect/";
-in {
+{
+  pkgs,
+  lib,
+  ...
+}: {
+  programs.zsh.zsh-abbr.abbreviations = {
+    "tm" = ''tmux new-session -A -s $(basename "$PWD")'';
+  };
+  # stylix.targets.tmux.enable = lib.mkForce false;
   programs.tmux = {
     enable = true;
     clock24 = true;
     baseIndex = 1;
     keyMode = "vi";
     prefix = "C-Space";
-    terminal = "screen-256color";
+    terminal = "tmux-256color";
 
     extraConfig = ''
+      set-option -a terminal-features 'kitty:RGB'
+      set-option -g focus-events on
+
       set-option -g status-style bg=default
+      set-window-option -g window-status-current-format ' #I (~‾⌣‾)> #W '
+      set -g status-right ""
+
+      set -gq allow-passthrough on
+      set -g visual-activity off
+
+      set -s escape-time 0
+      set-option -g allow-rename off
 
       bind-key h select-pane -L
       bind-key j select-pane -D
@@ -29,7 +46,7 @@ in {
       {
         plugin = prefix-highlight;
         extraConfig = ''
-          set -g status-left '#{prefix_highlight}'
+          set -g status-left '#{prefix_highlight} '
         '';
       }
       {

@@ -16,7 +16,7 @@
 
     inputs.nixcord.homeModules.nixcord
 
-    # ../home-manager-modules/tmux.nix
+    (import ../home-manager-modules/tmux.nix {inherit pkgs lib;})
     (import ../home-manager-modules/zsh.nix {inherit pkgs lib;})
     (import ../home-manager-modules/kitty.nix {inherit outputs pkgs lib;})
     (import ../home-manager-modules/tofi.nix {inherit config lib outputs pkgs;})
