@@ -98,6 +98,9 @@
 
         follow_mouse = 1
 
+        repeat_rate = 20
+        repeat_delay = 200
+
         touchpad {
             natural_scroll = true
         }
