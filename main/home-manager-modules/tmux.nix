@@ -23,6 +23,8 @@
       set-window-option -g window-status-current-format ' #I (~‾⌣‾)> #W '
       set -g status-right ""
 
+      set -g mouse on
+
       set -gq allow-passthrough on
       set -g visual-activity off
 

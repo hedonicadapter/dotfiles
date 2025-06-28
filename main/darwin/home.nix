@@ -14,6 +14,8 @@
     inputs.spicetify-nix.homeManagerModules.default
     inputs.nixcord.homeModules.nixcord
 
+    (import ../home-manager-modules/tmux.nix {inherit pkgs lib;})
+    # ../home-manager-modules/zellij.nix
     (import ../home-manager-modules/zsh.nix {inherit pkgs lib;})
     (import ../home-manager-modules/kitty.nix {inherit outputs pkgs lib;})
     ../home-manager-modules/atuin.nix
@@ -49,12 +51,13 @@
       ncdu
       jq
       gh
+      zoxide
 
       appcleaner
-      zoxide
       raycast
       slack
       autoraise
+      google-chrome
     ]
     # Languages
     ++ []
