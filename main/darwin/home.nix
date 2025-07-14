@@ -58,6 +58,7 @@
       slack
       autoraise
       google-chrome
+      keycastr
     ]
     # Languages
     ++ []
