@@ -86,6 +86,7 @@
       swapLeftCtrlAndFn = true;
     };
     defaults = {
+      universalaccess.mouseDriverCursorSize = 4.0;
       finder = {
         ShowPathbar = true;
         AppleShowAllExtensions = true;
@@ -97,11 +98,15 @@
       NSGlobalDomain.AppleInterfaceStyle = null; # This option requires logging out and logging back in to apply. Type: null or value “Dark”
       dock = {
         autohide = true;
+        wvous-tl-corner = 1;
+        wvous-bl-corner = 1;
+        wvous-br-corner = 1;
+        wvous-tr-corner = 1;
       };
 
       NSGlobalDomain = {
-        KeyRepeat = 1;
-        InitialKeyRepeat = 1;
+        KeyRepeat = 2; # steps in GUI: 120, 90, 60, 30, 12, 6, 2
+        InitialKeyRepeat = 12; # steps in GUI: 120, 94, 68, 35, 25, 15
         AppleShowAllFiles = true; # finder hidden files
         NSWindowShouldDragOnGesture = true; # ctrl + cmd + drag = drag windows
       };
@@ -123,7 +128,7 @@
                 NightStartMinute = 0;
               };
               BlueReductionAvailable = 1;
-              BlueReductionEnabled = 0;
+              BlueReductionEnabled = 1;
               BlueReductionMode = 1;
               BlueReductionSunScheduleAllowed = 1;
               Version = 1;

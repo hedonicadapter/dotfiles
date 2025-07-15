@@ -74,7 +74,6 @@ in {
     brightnessctl
     pulseaudio
     playerctl
-    spotify
 
     acpi
 

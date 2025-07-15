@@ -27,6 +27,7 @@
         "df" = "debug-flake";
         "gs" = "git status --short";
         "ga" = "git add";
+        "gr" = "git reset";
         "gap" = "git add --patch";
         "gc" = "git commit";
         "gd" = "git diff";

@@ -16,12 +16,15 @@
     terminal = "tmux-256color";
 
     extraConfig = ''
+      set-option -ga terminal-overrides ",xterm-256color:Tc"
       set-option -a terminal-features 'kitty:RGB'
       set-option -g focus-events on
 
       set-option -g status-style bg=default
       set-window-option -g window-status-current-format ' #I (~‾⌣‾)> #W '
       set -g status-right ""
+
+      set -g mouse on
 
       set -gq allow-passthrough on
       set -g visual-activity off
