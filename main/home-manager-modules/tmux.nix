@@ -16,6 +16,7 @@
     terminal = "tmux-256color";
 
     extraConfig = ''
+      set-option -ga terminal-overrides ",xterm-256color:Tc"
       set-option -a terminal-features 'kitty:RGB'
       set-option -g focus-events on
 
