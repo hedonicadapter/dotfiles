@@ -143,20 +143,13 @@
   stylix = {
     enable = true;
     image = ../wallpapers/Frame21.png;
-    # pkgs.runCommand "dimmed-background.png" {} ''
-    #   ${pkgs.imagemagick}/bin/magick "${inputImage}" -brightness-contrast ${
-    #     toString brightness
-    #   },${toString contrast} -modulate 100,${
-    #     toString saturation
-    #   } -fill "${fillColor}" $out
-    # '';
     polarity = "light";
     base16Scheme = outputs.palette;
 
     fonts = {
       monospace = {
-        package = pkgs.nerd-fonts.victor-mono;
-        name = "Victor Mono";
+        package = pkgs.nerd-fonts.caskaydia-cove;
+        name = "Cascaydia Cove";
       };
 
       sizes.applications = 14;

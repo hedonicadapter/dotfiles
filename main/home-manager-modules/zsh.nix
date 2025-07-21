@@ -4,7 +4,6 @@
   ...
 }: {
   home.packages = with pkgs; [
-    lsd
     bat
   ];
 
@@ -12,8 +11,6 @@
     enable = true;
     dotDir = ".config/zsh";
     shellAliases = {
-      "ls" = "lsd -latr";
-      "lst" = "lsd --tree";
       "cat" = "bat"; # c*ts are terrible people, this config doesn't condone c*t use
       "grep" = "grep --color=auto";
 
@@ -24,7 +21,9 @@
     zsh-abbr = {
       enable = true;
       abbreviations = {
-        "df" = "debug-flake";
+        "ls" = "lsd -latr";
+        "lst" = "lsd --tree";
+
         "gs" = "git status --short";
         "ga" = "git add";
         "gr" = "git reset";
@@ -50,6 +49,7 @@
           if pkgs.stdenv.isDarwin
           then "sudo nh darwin switch .#default"
           else "sudo nh os switch .#default";
+        "df" = "debug-flake";
         "nu" = "sudo nix flake update";
       };
     };

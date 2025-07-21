@@ -34,7 +34,7 @@
     (import ../home-manager-modules/fastfetch/default.nix {inherit outputs;})
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
-    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib;})
+    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib config;})
     ../home-manager-modules/firefox.nix
   ];
 
@@ -252,7 +252,7 @@
 
     ".config/streamlink/config".source = ../home-manager-modules/streamlink/config;
 
-    ".config/hints/config.json".text = import ../home-manager-modules/hints/config.json.nix {inherit outputs;};
+    ".config/hints/config.json".text = import ../home-manager-modules/hints/config.json.nix {inherit outputs config;};
 
     "${config.home.homeDirectory}/.zen/wx2n5f38.default/chrome/userChrome.css".text = import ../home-manager-modules/zen-browser/userChrome.css.nix {inherit outputs;};
     "${config.home.homeDirectory}/.zen/wx2n5f38.default/chrome/userContent.css".text = import ../home-manager-modules/zen-browser/userContent.css.nix {inherit outputs;};

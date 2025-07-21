@@ -21,6 +21,8 @@
     ../home-manager-modules/atuin.nix
     ../home-manager-modules/fzf.nix
     ../home-manager-modules/direnv.nix
+    ../home-manager-modules/ls-colors.nix
+    ../home-manager-modules/lsd.nix
 
     ../home-manager-modules/aerospace.nix
     (import ../home-manager-modules/git.nix {
