@@ -70,7 +70,6 @@
         nixos-hardware.nixosModules.common-pc-laptop
         nixos-hardware.nixosModules.common-pc-laptop-ssd
         nixos-hardware.nixosModules.common-pc-laptop-hdd
-        neovim-flake.nixosModules.default
         ./nixos/configuration.nix
         chaotic.nixosModules.default
       ];

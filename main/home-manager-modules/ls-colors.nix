@@ -1,5 +1,9 @@
 # yoinked from i-am-logger https://github.com/nix-community/stylix/issues/560#issuecomment-2362331400
-{lib, ...}:
+{
+  lib,
+  config,
+  ...
+}:
 with lib; let
   cfg = config.stylix.ls-colors;
 
@@ -103,19 +107,15 @@ in {
   options.stylix.ls-colors.enable = mkEnableOption "Stylix-based LS_COLORS" // {default = true;};
 
   config = mkIf cfg.enable {
-    environment.sessionVariables = {
+    home.sessionVariables = {
       LS_COLORS = generateLsColors config.lib.stylix.colors;
     };
 
-    environment.extraInit = ''
+    programs.bash.initExtra = ''
       export LS_COLORS="${generateLsColors config.lib.stylix.colors}"
     '';
 
-    programs.bash.interactiveShellInit = ''
-      export LS_COLORS="${generateLsColors config.lib.stylix.colors}"
-    '';
-
-    programs.zsh.interactiveShellInit = mkIf config.programs.zsh.enable ''
+    programs.zsh.initContent = mkIf config.programs.zsh.enable ''
       export LS_COLORS="${generateLsColors config.lib.stylix.colors}"
     '';
 

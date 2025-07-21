@@ -21,8 +21,7 @@
     zsh-abbr = {
       enable = true;
       abbreviations = {
-        "ls" = "lsd -latr";
-        "lst" = "lsd --tree";
+        "ls" = "eza -s=modified -la";
 
         "gs" = "git status --short";
         "ga" = "git add";

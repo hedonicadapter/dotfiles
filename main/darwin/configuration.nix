@@ -24,45 +24,10 @@
     backupFileExtension = "backup";
     sharedModules = with inputs; [
       mac-app-util.homeManagerModules.default
+      neovim-flake.homeModules.default
     ];
     useGlobalPkgs = true;
     useUserPackages = true;
-  };
-
-  nvim = let
-    inherit (inputs.neovim-flake) utils;
-    basePackage = inputs.neovim-flake.packageDefinitions.nvim or ({...}: {});
-  in {
-    enable = true;
-    packageDefinitions = {
-      merge.nvim = utils.mergeCatDefs basePackage ({pkgs, ...}: {
-        extra.palette = outputs.palette;
-        extra.palette_opaque = outputs.paletteOpaque;
-        extra.contrast =
-          if outputs.isDarkColor outputs.palette.base00
-          then 0.6
-          else -0.8;
-
-        extra.modeColors = {
-          n = outputs.paletteOpaque.base03;
-          i = outputs.paletteOpaque.base0F;
-
-          c = outputs.paletteOpaque.base0E;
-          C = outputs.paletteOpaque.base0E;
-
-          v = outputs.paletteOpaque.base0C;
-          V = outputs.paletteOpaque.base0C;
-
-          r = outputs.paletteOpaque.base0E;
-          R = outputs.paletteOpaque.base0E;
-
-          s = outputs.paletteOpaque.base0E;
-          S = outputs.paletteOpaque.base0E;
-
-          y = outputs.paletteOpaque.base0D;
-        };
-      });
-    };
   };
 
   security.pam.services.sudo_local.touchIdAuth = true;
@@ -147,9 +112,17 @@
     base16Scheme = outputs.palette;
 
     fonts = {
+      serif = {
+        package = pkgs.nerd-fonts.caskaydia-cove;
+        name = "CaskaydiaCove Nerd Font Propo";
+      };
+      sansSerif = {
+        package = pkgs.nerd-fonts.caskaydia-cove;
+        name = "CaskaydiaCove Nerd Font Propo";
+      };
       monospace = {
         package = pkgs.nerd-fonts.caskaydia-cove;
-        name = "Cascaydia Cove";
+        name = "CaskaydiaCove Nerd Font Propo";
       };
 
       sizes.applications = 14;

@@ -1,12 +1,15 @@
 {
   outputs,
   lib,
+  config,
   ...
 }: {
   # stylix.targets.kitty.enable = false;
   programs.kitty = {
     enable = true;
     font.size = lib.mkForce 14;
+    font.name = lib.mkForce config.stylix.fonts.monospace.name;
+    font.package = lib.mkForce config.stylix.fonts.monospace.package;
     shellIntegration.enableZshIntegration = true;
     extraConfig = ''
       map kitty_mod+w

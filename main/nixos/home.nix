@@ -8,17 +8,17 @@
   ...
 }: {
   # You can import other home-manager modules here
-  imports = [
-    inputs.ags.homeManagerModules.default
+  imports = with inputs; [
+    ags.homeManagerModules.default
     # ../cachix.nix
-    inputs.matugen.nixosModules.default
-    inputs.spicetify-nix.homeManagerModules.default
-
-    inputs.nixcord.homeModules.nixcord
+    matugen.nixosModules.default
+    spicetify-nix.homeManagerModules.default
+    nixcord.homeModules.nixcord
+    neovim-flake.homeModules.default
 
     (import ../home-manager-modules/tmux.nix {inherit pkgs lib;})
     (import ../home-manager-modules/zsh.nix {inherit pkgs lib;})
-    (import ../home-manager-modules/kitty.nix {inherit outputs pkgs lib;})
+    (import ../home-manager-modules/kitty.nix {inherit outputs pkgs lib config;})
     (import ../home-manager-modules/tofi.nix {inherit config lib outputs pkgs;})
     ../home-manager-modules/atuin.nix
     ../home-manager-modules/fzf.nix
@@ -194,6 +194,19 @@
       json-glib
       gobject-introspection
     ];
+
+  nvim = let
+    inherit (inputs.neovim-flake) utils;
+    basePackage = inputs.neovim-flake.packageDefinitions.nvim or ({...}: {});
+  in {
+    enable = true;
+    packageDefinitions = {
+      merge.nvim = utils.mergeCatDefs basePackage ({pkgs, ...}: {
+        extra.palette = outputs.palette;
+        extra.font = config.stylix.fonts.monospace.name;
+      });
+    };
+  };
 
   stylix.targets.hyprland.enable = lib.mkForce false; # INFO: stylix configures a deprecated shadow attribute
   wayland.windowManager.hyprland = {
