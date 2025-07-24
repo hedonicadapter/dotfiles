@@ -8,17 +8,17 @@
   ...
 }: {
   # You can import other home-manager modules here
-  imports = [
-    inputs.ags.homeManagerModules.default
+  imports = with inputs; [
+    ags.homeManagerModules.default
     # ../cachix.nix
-    inputs.matugen.nixosModules.default
-    inputs.spicetify-nix.homeManagerModules.default
-
-    inputs.nixcord.homeModules.nixcord
+    matugen.nixosModules.default
+    spicetify-nix.homeManagerModules.default
+    nixcord.homeModules.nixcord
+    neovim-flake.homeModules.default
 
     (import ../home-manager-modules/tmux.nix {inherit pkgs lib;})
     (import ../home-manager-modules/zsh.nix {inherit pkgs lib;})
-    (import ../home-manager-modules/kitty.nix {inherit outputs pkgs lib;})
+    (import ../home-manager-modules/kitty.nix {inherit outputs pkgs lib config;})
     (import ../home-manager-modules/tofi.nix {inherit config lib outputs pkgs;})
     ../home-manager-modules/atuin.nix
     ../home-manager-modules/fzf.nix
@@ -34,7 +34,7 @@
     (import ../home-manager-modules/fastfetch/default.nix {inherit outputs;})
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
-    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib;})
+    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib config;})
     ../home-manager-modules/firefox.nix
   ];
 
@@ -195,6 +195,19 @@
       gobject-introspection
     ];
 
+  nvim = let
+    inherit (inputs.neovim-flake) utils;
+    basePackage = inputs.neovim-flake.packageDefinitions.nvim or ({...}: {});
+  in {
+    enable = true;
+    packageDefinitions = {
+      merge.nvim = utils.mergeCatDefs basePackage ({pkgs, ...}: {
+        extra.palette = outputs.palette;
+        extra.font = config.stylix.fonts.monospace.name;
+      });
+    };
+  };
+
   stylix.targets.hyprland.enable = lib.mkForce false; # INFO: stylix configures a deprecated shadow attribute
   wayland.windowManager.hyprland = {
     enable = true;
@@ -252,7 +265,7 @@
 
     ".config/streamlink/config".source = ../home-manager-modules/streamlink/config;
 
-    ".config/hints/config.json".text = import ../home-manager-modules/hints/config.json.nix {inherit outputs;};
+    ".config/hints/config.json".text = import ../home-manager-modules/hints/config.json.nix {inherit outputs config;};
 
     "${config.home.homeDirectory}/.zen/wx2n5f38.default/chrome/userChrome.css".text = import ../home-manager-modules/zen-browser/userChrome.css.nix {inherit outputs;};
     "${config.home.homeDirectory}/.zen/wx2n5f38.default/chrome/userContent.css".text = import ../home-manager-modules/zen-browser/userContent.css.nix {inherit outputs;};

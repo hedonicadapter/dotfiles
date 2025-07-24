@@ -30,18 +30,6 @@ in {
     backupFileExtension = "backup";
   };
 
-  nvim = let
-    inherit (inputs.neovim-flake) utils;
-    basePackage = inputs.neovim-flake.packageDefinitions.nvim or ({...}: {});
-  in {
-    enable = true;
-    packageDefinitions = {
-      merge.nvim = utils.mergeCatDefs basePackage ({pkgs, ...}: {
-        extra.palette = outputs.palette;
-      });
-    };
-  };
-
   environment.pathsToLink = ["/share/zsh"];
   environment.systemPackages = with pkgs; [
     # inputs.neovim-flake.packages.${system}.nvim

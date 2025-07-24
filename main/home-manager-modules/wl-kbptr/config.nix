@@ -1,4 +1,8 @@
-{outputs, ...}: let
+{
+  outputs,
+  config,
+  ...
+}: let
   configContent = ''
     [general]
     home_row_keys=
@@ -9,7 +13,7 @@
     unselectable_bg_color=${outputs.transparentize outputs.paletteOpaque.grey 0.4}
     selectable_bg_color=${outputs.transparentize outputs.paletteOpaque.green 0.6}
     selectable_border_color=${outputs.transparentize outputs.paletteOpaque.green 0.0}
-    label_font_family=Mx437 DOS/V re. JPN30
+    label_font_family=${config.stylix.fonts.monospace.name}
 
     [mode_bisect]
     label_color=${outputs.paletteOpaque.white}
@@ -17,7 +21,7 @@
     label_padding=12
     pointer_size=20
     pointer_color=${outputs.paletteOpaque.black}
-    label_font_family=Mx437 DOS/V re. JPN30
+    label_font_family=${config.stylix.fonts.monospace.name}
 
     unselectable_bg_color=${outputs.transparentize outputs.paletteOpaque.grey 0.4}
     even_area_bg_color=${outputs.transparentize outputs.paletteOpaque.green 0.6}

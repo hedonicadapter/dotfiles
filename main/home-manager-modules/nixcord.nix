@@ -2,6 +2,8 @@
   outputs,
   pkgs,
   lib,
+  config,
+  ...
 }: {
   programs.nixcord = {
     enable = true;
@@ -68,7 +70,7 @@
     };
     quickCss = ''
       * {
-          font-family: 'Mx437 DOS/V re. JPN30'!important;
+          font-family: '${config.stylix.fonts.monospace.name}'!important;
       }
 
       body {
