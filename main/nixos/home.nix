@@ -23,6 +23,10 @@
     ../home-manager-modules/atuin.nix
     ../home-manager-modules/fzf.nix
     ../home-manager-modules/direnv.nix
+    # ../home-manager-modules/ls-colors.nix
+    # ../home-manager-modules/lsd.nix
+    ../home-manager-modules/eza.nix
+
     (import ../home-manager-modules/nh.nix {flakeDir = "/etc/nixos/main";})
     (import ../home-manager-modules/git.nix {
       userName = "hedonicadapter";
