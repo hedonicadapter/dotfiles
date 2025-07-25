@@ -1610,14 +1610,15 @@
         "nixCats": "nixCats",
         "nixneovimplugins": "nixneovimplugins",
         "nixpkgs": "nixpkgs_11",
-        "nur": "nur"
+        "nur": "nur",
+        "plugins-kubectl-nvim": "plugins-kubectl-nvim"
       },
       "locked": {
-        "lastModified": 1751056622,
-        "narHash": "sha256-C8EInOVYE2LkIDFqy89781S0mYTXhKPbpNpQMSAgZNI=",
+        "lastModified": 1753365465,
+        "narHash": "sha256-DJAZsPH/Jna3TYZ5n7unPnN/atO0aU6JBE9NI6kuM1A=",
         "owner": "hedonicadapter",
         "repo": "neovim-config-flake",
-        "rev": "9c15e08936bded943c6b53be6987b520b04f5972",
+        "rev": "68c026c08d571288bd7bcef2b44c240a9bd29a4c",
         "type": "github"
       },
       "original": {
@@ -2316,6 +2317,22 @@
       "original": {
         "owner": "nix-community",
         "repo": "NUR",
+        "type": "github"
+      }
+    },
+    "plugins-kubectl-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1751799341,
+        "narHash": "sha256-D+EkKZQxwAz3+vcOGMwHUoSowinml6PrimYqguoIYJc=",
+        "owner": "ramilito",
+        "repo": "kubectl.nvim",
+        "rev": "a5269c6a85786c5a7a32abf588be5c7853164b03",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ramilito",
+        "repo": "kubectl.nvim",
         "type": "github"
       }
     },
