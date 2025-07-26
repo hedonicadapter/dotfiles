@@ -14,6 +14,8 @@
     inputs.spicetify-nix.homeManagerModules.default
     inputs.nixcord.homeModules.nixcord
 
+    ../home-manager-modules/nvim.nix
+
     (import ../home-manager-modules/tmux.nix {inherit pkgs lib;})
     # ../home-manager-modules/zellij.nix
 
@@ -80,43 +82,6 @@
       glasstty-ttf
       material-symbols
     ];
-
-  nvim = let
-    inherit (inputs.neovim-flake) utils;
-    basePackage = inputs.neovim-flake.packageDefinitions.nvim or ({...}: {});
-  in {
-    enable = true;
-    packageDefinitions = {
-      merge.nvim = utils.mergeCatDefs basePackage ({pkgs, ...}: {
-        extra.font = config.stylix.fonts.monospace.name;
-        extra.palette = outputs.palette;
-        extra.palette_opaque = outputs.paletteOpaque;
-        extra.contrast =
-          if outputs.isDarkColor outputs.palette.base00
-          then 0.6
-          else -0.8;
-
-        extra.modeColors = {
-          n = outputs.paletteOpaque.base03;
-          i = outputs.paletteOpaque.base0F;
-
-          c = outputs.paletteOpaque.base0E;
-          C = outputs.paletteOpaque.base0E;
-
-          v = outputs.paletteOpaque.base0C;
-          V = outputs.paletteOpaque.base0C;
-
-          r = outputs.paletteOpaque.base0E;
-          R = outputs.paletteOpaque.base0E;
-
-          s = outputs.paletteOpaque.base0E;
-          S = outputs.paletteOpaque.base0E;
-
-          y = outputs.paletteOpaque.base0D;
-        };
-      });
-    };
-  };
 
   home.file = {
     ".oh-my-zsh/custom/themes" = {

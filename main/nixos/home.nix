@@ -16,6 +16,8 @@
     nixcord.homeModules.nixcord
     neovim-flake.homeModules.default
 
+    ../home-manager-modules/nvim.nix
+
     (import ../home-manager-modules/tmux.nix {inherit pkgs lib;})
     (import ../home-manager-modules/zsh.nix {inherit pkgs lib;})
     (import ../home-manager-modules/kitty.nix {inherit outputs pkgs lib config;})
@@ -198,19 +200,6 @@
       json-glib
       gobject-introspection
     ];
-
-  nvim = let
-    inherit (inputs.neovim-flake) utils;
-    basePackage = inputs.neovim-flake.packageDefinitions.nvim or ({...}: {});
-  in {
-    enable = true;
-    packageDefinitions = {
-      merge.nvim = utils.mergeCatDefs basePackage ({pkgs, ...}: {
-        extra.palette = outputs.palette;
-        extra.font = config.stylix.fonts.monospace.name;
-      });
-    };
-  };
 
   stylix.targets.hyprland.enable = lib.mkForce false; # INFO: stylix configures a deprecated shadow attribute
   wayland.windowManager.hyprland = {
