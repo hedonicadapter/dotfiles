@@ -17,7 +17,7 @@
       map kitty_mod+H next_window
       map kitty_mod+L previous_window
 
-      modify_font cell_height 140%
+      modify_font cell_height 180%
       modify_font cell_width 95%
 
       modify_font underline_position 2px
