@@ -17,7 +17,7 @@
     DEFAULT_BROWSER = 'zen'
 
     [gaps.inner]
-    horizontal = [{monitor."^built-in retina display$" = 12}, { monitor.main = 18 }, 12]
+    horizontal = [{monitor."^built-in retina display$" = 16}, { monitor.main = 18 }, 16]
     vertical = [{monitor."^built-in retina display$" = 12}, { monitor.main = 18 }, 12]
 
     [gaps.outer]

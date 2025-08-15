@@ -36,10 +36,10 @@
     jankyborders = {
       enable = true;
       hidpi = true;
-      width = 8.0;
+      width = 12.0;
       order = "above";
-      active_color = outputs.hexColorTo0xAARRGGBB outputs.palette.base07 1.0;
-      inactive_color = outputs.hexColorTo0xAARRGGBB outputs.palette.base05 1.0;
+      active_color = outputs.hexColorTo0xAARRGGBB outputs.palette.base0A 1.0;
+      inactive_color = outputs.hexColorTo0xAARRGGBB outputs.palette.base02 1.0;
     };
   };
 
@@ -130,5 +130,12 @@
       sizes.popups = 14;
       sizes.terminal = 14;
     };
+  };
+
+  homebrew = {
+    enable = true;
+    casks = [
+      "hazeover"
+    ];
   };
 }
