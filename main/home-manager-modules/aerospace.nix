@@ -70,6 +70,7 @@
 
     [mode.query.binding]
     esc = "mode main"
+    a = ["exec-and-forget osascript -e 'tell application \"System Events\" to key code 49 using {command down}'", "mode main"]
 
     [mode.run.binding]
     esc = "mode main"

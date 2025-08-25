@@ -5,18 +5,24 @@ pkgs.mkShellNoCC {
   packages = with pkgs;
     [
       mono # for sniprun c#
-      (with dotnetCorePackages; combinePackages [sdk_6_0 sdk_7_0 sdk_8_0])
-      jetbrains.rider
-      vscode
+      # (with dotnetCorePackages;
+      #   combinePackages [
+      #     # sdk_6_0
+      #     # sdk_7_0
+      #     sdk_8_0
+      #   ])
+      dotnetCorePackages.sdk_8_0
+      # jetbrains.rider
+      # vscode
     ]
     # Language servers
     ++ [
-      dockerfile-language-server-nodejs
-      sqls
+      # sqls
+      # csharp-ls
+      omnisharp-roslyn
     ]
     # Formatters
     ++ [
       csharpier
-      sqlfluff
     ];
 }

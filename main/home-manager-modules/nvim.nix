@@ -18,7 +18,7 @@
         extra.contrast =
           if outputs.isDarkColor outputs.paletteOpaque.base00
           then 0.5
-          else -0.8;
+          else -0.5;
 
         extra.modeColors = {
           n = outputs.paletteOpaque.base03;

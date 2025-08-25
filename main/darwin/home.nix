@@ -61,7 +61,6 @@
       zoxide
 
       appcleaner
-      raycast
       slack
       autoraise
       google-chrome
