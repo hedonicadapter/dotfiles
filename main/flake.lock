@@ -1614,11 +1614,11 @@
         "plugins-kubectl-nvim": "plugins-kubectl-nvim"
       },
       "locked": {
-        "lastModified": 1756043497,
-        "narHash": "sha256-6gvAyxreJsjgxkN2GFqIUbCL+6W3f1SqcDW38566zmc=",
+        "lastModified": 1757403772,
+        "narHash": "sha256-nDX9ESTWsNirYK0v3AFbsn8vjU4hbJ+xR3faSvs0+wg=",
         "owner": "hedonicadapter",
         "repo": "neovim-config-flake",
-        "rev": "fb1c73ad49216eba3d50feb6a0792948c163ca6f",
+        "rev": "38a957a9a9e44fc8fbdba0e4ae5f736ac7f344fb",
         "type": "github"
       },
       "original": {

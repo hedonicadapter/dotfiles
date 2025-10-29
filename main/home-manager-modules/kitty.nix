@@ -2,6 +2,7 @@
   outputs,
   lib,
   config,
+  pkgs,
   ...
 }: {
   # stylix.targets.kitty.enable = false;
@@ -51,6 +52,15 @@
 
       cursor_trail = 1;
       cursor_trail_decay = "0.1 0.4";
+
+      background_blur =
+        if pkgs.stdenv.isDarwin
+        then "100"
+        else "0";
+      background_opacity =
+        if pkgs.stdenv.isDarwin
+        then lib.mkForce "0.6"
+        else lib.mkForce "1.0";
     };
     # darwinLaunchOptions = ["--single-instance"];
   };

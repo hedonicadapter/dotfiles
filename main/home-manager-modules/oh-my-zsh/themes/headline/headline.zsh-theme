@@ -78,6 +78,8 @@ HEADLINE_HOST_CMD='hostname -s' # consider 'basename "$VIRTUAL_ENV"' to replace 
 HEADLINE_PATH_CMD='print -rP "%~"'
 HEADLINE_GIT_BRANCH_CMD='headline_git_branch'
 HEADLINE_GIT_STATUS_CMD='headline_git_status'
+HEADLINE_K8S_CONTEXT_CMD='kubectl config current-context'
+HEADLINE_K8S_NAMESPACE_CMD='NS=$(kubectl config view --minify --output "jsonpath={..namespace}"); echo ${NS:-default}'
 
 # Info symbols (optional)
 HEADLINE_USER_PREFIX='(~‾⌣‾)> '
@@ -97,6 +99,7 @@ HEADLINE_PAD_TO_BRANCH='' # used if padding between <path> and <branch>
 HEADLINE_BRANCH_TO_STATUS=' ['
 HEADLINE_STATUS_TO_STATUS='' # between each status section, consider "]"
 HEADLINE_STATUS_END=']'
+HEADLING_K8S_CONTEXT_TO_NAMESPACE=': '
 
 # Info padding character
 HEADLINE_PAD_CHAR=' ' # repeated for space between <path> and <branch>
@@ -369,10 +372,12 @@ headline_precmd() {
   local err=$?
 
   # Information
-  local user_str host_str path_str branch_str status_str
+  local user_str host_str path_str k8s_context_str k8s_namespace_str branch_str status_str
   user_str=$(eval $HEADLINE_USER_CMD)
   host_str=$(eval $HEADLINE_HOST_CMD)
   path_str=$(eval $HEADLINE_PATH_CMD)
+  k8s_context_str=$(command -v kubectl >/dev/null 2>&1 && eval "$HEADLINE_K8S_CONTEXT_CMD" || echo "")
+  k8s_namespace_str=$(command -v kubectl >/dev/null 2>&1 && eval "$HEADLINE_K8S_NAMESPACE_CMD" || echo "")
   branch_str=$(eval $HEADLINE_GIT_BRANCH_CMD)
   status_str=$(eval $HEADLINE_GIT_STATUS_CMD)
 
@@ -405,6 +410,14 @@ headline_precmd() {
       len=$(( $len - ${#HEADLINE_PAD_TO_BRANCH} ))
     fi
     _headline_part BRANCH "$HEADLINE_BRANCH_PREFIX%$len<$HEADLINE_TRUNC_PREFIX<$branch_str%<<" right
+  fi
+
+  if command -v kubectl >/dev/null 2>&1; then
+    _headline_part JOINT " " right
+    _headline_part K8S "$k8s_context_str" right
+    _headline_part JOINT "$HEADLING_K8S_CONTEXT_TO_NAMESPACE" right
+    _headline_part K8S "$k8s_namespace_str" right
+    _headline_part JOINT " " right
   fi
 
   # Trimming

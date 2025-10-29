@@ -17,14 +17,14 @@
     DEFAULT_BROWSER = 'zen'
 
     [gaps.inner]
-    horizontal = [{monitor."^built-in retina display$" = 16}, { monitor.main = 18 }, 16]
+    horizontal = [{monitor."^built-in retina display$" = 14}, { monitor.main = 18 }, 14]
     vertical = [{monitor."^built-in retina display$" = 12}, { monitor.main = 18 }, 12]
 
     [gaps.outer]
     bottom = [{monitor."^built-in retina display$" = 12}, { monitor.main = 42 }, 12]
     left = [{monitor."^built-in retina display$" = 12}, { monitor.main = 542 }, 12]
     right = [{monitor."^built-in retina display$" = 12}, { monitor.main = 542 }, 12]
-    top = [{monitor."^built-in retina display$" = 12}, { monitor.main = 42 }, 12]
+    top = [{monitor."^built-in retina display$" = 14}, { monitor.main = 42 }, 14]
 
     [key-mapping]
     preset = "qwerty"
