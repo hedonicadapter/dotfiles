@@ -12,16 +12,13 @@
     dotDir = ".config/zsh";
     shellAliases = {
       "cat" = "bat"; # c*ts are terrible people, this config doesn't condone c*t use
-      "grep" = "grep --color=auto";
-
-      "git log" = "git log --all --graph --decorate --oneline --pretty=format:'%C(auto)%h %C(bold blue)%an %C(green)(%ar)%C(reset) %s'";
-
       "debug-flake" = "nix --extra-experimental-features repl-flake repl";
     };
     zsh-abbr = {
       enable = true;
       abbreviations = {
         "ls" = "eza -s=modified -la";
+        "grep" = "grep --color=auto";
 
         "gs" = "git status --short";
         "ga" = "git add";
@@ -31,7 +28,7 @@
         "gd" = "git diff";
         "gp" = "git push";
         "gu" = "git pull";
-        "gl" = "git log";
+        "gl" = "git log --all --graph --decorate --oneline --pretty=format:'%C(auto)%h %C(bold blue)%an %C(green)(%ar)%C(reset) %s'";
         "gb" = "git branch";
         "gi" = "git init";
         "gco" = "git checkout";
@@ -41,7 +38,11 @@
         "dcd" = "docker-compose down";
         "dcu" = "docker-compose up";
 
-        "kc" = "kubectl";
+        "kc" = "kubectl config use-context";
+        "kn" = "kname kubectl config set-context --current --namespace";
+        "kg" = "kubectl get";
+        "kl" = "kubectl logs";
+        "kd" = "kubectl describe";
 
         "ns" = "nix-shell --run zsh";
         "nr" =
@@ -50,6 +51,8 @@
           else "sudo nh os switch .#default";
         "df" = "debug-flake";
         "nu" = "sudo nix flake update";
+
+        "kbp" = "kill_by_port";
       };
     };
     autosuggestion.enable = true;
@@ -80,6 +83,24 @@
 
       cheat() {
           curl "cheat.sh/$*"
+      }
+
+      kill_by_port() {
+        if [ -z "$1" ]; then
+            echo "Usage: k <port_number>"
+            return 1
+        fi
+
+        PORT=$1
+        PIDS=$(lsof -t -i:"$PORT")
+
+        if [ -z "$PIDS" ]; then
+            echo "No processes found running on port $PORT"
+            return 0
+        fi
+
+        echo "Killing processes on port $PORT: $PIDS"
+        kill -9 $PIDS
       }
     '';
     plugins = with pkgs; [
