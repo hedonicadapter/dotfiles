@@ -111,11 +111,12 @@
       }
     ];
 
+    # TODO: zoxide and direnv should come from their respective modules
     oh-my-zsh = {
       enable = true;
       extraConfig = ''
         eval "$(zoxide init zsh)"
-        eval "$(direnv hook zsh)"
+        eval "$(direnv-instant hook zsh)"
 
         setopt HIST_EXPIRE_DUPS_FIRST
         setopt HIST_IGNORE_DUPS
