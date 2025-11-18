@@ -39,7 +39,7 @@
         "dcu" = "docker-compose up";
 
         "kc" = "kubectl config use-context";
-        "kn" = "kname kubectl config set-context --current --namespace";
+        "kn" = "kubectl config set-context --current --namespace";
         "kg" = "kubectl get";
         "kl" = "kubectl logs";
         "kd" = "kubectl describe";
