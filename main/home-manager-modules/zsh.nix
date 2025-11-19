@@ -28,7 +28,7 @@
         "gd" = "git diff";
         "gp" = "git push";
         "gu" = "git pull";
-        "gl" = "git log --all --graph --decorate --oneline --pretty=format:'%C(auto)%h %C(bold blue)%an %C(green)(%ar)%C(reset) %s'";
+        "gl" = "git log --graph --decorate --oneline --pretty=format:'%C(auto)%h %C(bold blue)%an %C(green)(%ar)%C(reset) %s'";
         "gb" = "git branch";
         "gi" = "git init";
         "gco" = "git checkout";
