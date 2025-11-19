@@ -156,7 +156,9 @@ in {
 
   # formerly hardware.opengl
   hardware.graphics.enable = true;
+  hardware.graphics.extraPackages = with pkgs; [intel-media-driver];
   hardware.graphics.enable32Bit = true;
+  environment.sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
 
   hardware.logitech.wireless.enable = true;
   hardware.logitech.wireless.enableGraphical = true;

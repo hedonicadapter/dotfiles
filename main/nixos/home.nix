@@ -119,7 +119,7 @@
   home.packages = with pkgs;
     [
       (callPackage ../home-manager-modules/hints/hints-derivation.nix {})
-      inputs.zen-browser.packages."${system}".beta
+      inputs.zen-browser.packages."${system}".default
       google-chrome
       webcord
       neovide

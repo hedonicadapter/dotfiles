@@ -37,7 +37,7 @@
     xremap-flake.url = "github:xremap/nix-flake";
     nixcord.url = "github:kaylorben/nixcord";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake/revert/beta-broken";
     direnv-instant.url = "github:Mic92/direnv-instant";
   };
 
