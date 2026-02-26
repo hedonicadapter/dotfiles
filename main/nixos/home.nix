@@ -28,6 +28,7 @@
     # ../home-manager-modules/ls-colors.nix
     # ../home-manager-modules/lsd.nix
     ../home-manager-modules/eza.nix
+    ../home-manager-modules/hints/hints.nix
 
     (import ../home-manager-modules/nh.nix {flakeDir = "/etc/nixos/main";})
     (import ../home-manager-modules/git.nix {
@@ -118,7 +119,6 @@
 
   home.packages = with pkgs;
     [
-      (callPackage ../home-manager-modules/hints/hints-derivation.nix {})
       inputs.zen-browser.packages."${system}".default
       google-chrome
       webcord
@@ -257,8 +257,6 @@
     };
 
     ".config/streamlink/config".source = ../home-manager-modules/streamlink/config;
-
-    ".config/hints/config.json".text = import ../home-manager-modules/hints/config.json.nix {inherit outputs config;};
 
     "${config.home.homeDirectory}/.zen/wx2n5f38.default/chrome/userChrome.css".text = import ../home-manager-modules/zen-browser/userChrome.css.nix {inherit outputs;};
     "${config.home.homeDirectory}/.zen/wx2n5f38.default/chrome/userContent.css".text = import ../home-manager-modules/zen-browser/userContent.css.nix {inherit outputs;};
