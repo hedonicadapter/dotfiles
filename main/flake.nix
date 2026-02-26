@@ -23,7 +23,9 @@
 
     colors.url = "github:hedonicadapter/colors-flake";
     neovim-flake.url = "github:hedonicadapter/neovim-config-flake";
+    neovim-flake.inputs.nixpkgs.follows = "nixpkgs";
     ags.url = "github:aylur/ags";
+    ags.inputs.nixpkgs.follows = "nixpkgs";
 
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -31,13 +33,14 @@
     mac-app-util.url = "github:hraban/mac-app-util";
 
     stylix.url = "github:danth/stylix";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
     swww.url = "github:LGFae/swww";
     nur.url = "github:nix-community/NUR";
-    matugen.url = "github:/InioX/Matugen";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     xremap-flake.url = "github:xremap/nix-flake";
     nixcord.url = "github:kaylorben/nixcord";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    zen-browser.url = "github:0xc000022070/zen-browser-flake/revert/beta-broken";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     direnv-instant.url = "github:Mic92/direnv-instant";
   };
 
@@ -46,6 +49,7 @@
     nixpkgs,
     nix-darwin,
     colors,
+    nix-cachyos-kernel,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -56,7 +60,7 @@
     packages =
       forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
 
-    overlays = import ./overlays {inherit inputs;}; # Your custom packages and modifications, exported as overlays
+    overlays = import ./overlays {inherit inputs outputs;}; # Your custom packages and modifications, exported as overlays
 
     inherit (colors.outputs) transparentize darken cssColorVariables hexColorTo0xAARRGGBB isDarkColor;
     palette = builtins.fromJSON (builtins.readFile ./palette.json);
@@ -72,7 +76,6 @@
         nixos-hardware.nixosModules.common-pc-laptop-ssd
         nixos-hardware.nixosModules.common-pc-laptop-hdd
         ./nixos/configuration.nix
-        chaotic.nixosModules.default
       ];
     };
 

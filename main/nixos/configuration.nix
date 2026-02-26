@@ -94,8 +94,6 @@ in {
   };
   programs.gamemode.enable = true;
 
-  programs.ydotool.enable = true; # for AlfredoSequeida/hints
-
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     TERM = "kitty";
@@ -292,7 +290,7 @@ in {
     hedonicadapter = {
       isNormalUser = true;
       openssh.authorizedKeys.keys = [];
-      extraGroups = ["networkmanager" "wheel" "docker" "dialout" "ydotool"];
+      extraGroups = ["networkmanager" "wheel" "docker" "dialout" "input"];
     };
   };
 
@@ -358,8 +356,6 @@ in {
     xkb.variant = "";
 
     videoDrivers = ["nvidia" "nvidia-utils"];
-
-    displayManager.gdm.enable = true; # GNOME Desktop Environment
   };
   services.desktopManager.gnome.enable = true;
   # services.libinput.mouse.accelProfile = "adaptive"; configured in hyprland.conf
@@ -505,6 +501,10 @@ in {
   };
 
   # services.openssh.enable = true;
+
+  services.udev.extraRules = ''
+    KERNEL=="uinput", GROUP="input", MODE:="0660"
+  '';
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

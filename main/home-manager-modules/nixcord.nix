@@ -31,7 +31,7 @@
         };
         betterGifPicker.enable = true;
         betterUploadButton.enable = true;
-        clearURLs.enable = true;
+        # clearURLs.enable = true;
         consoleJanitor.enable = true;
         copyFileContents.enable = true;
         experiments.enable = true;
@@ -45,10 +45,10 @@
         messageLogger.enable = true;
         moreKaomoji.enable = true;
         noOnboardingDelay.enable = true;
-        noRPC.enable = true;
+        # noRPC.enable = true;
         relationshipNotifier.enable = true;
         reverseImageSearch.enable = true;
-        reviewDB.enable = true;
+        # reviewDB.enable = true;
         secretRingToneEnabler.enable = true;
         showHiddenThings.enable = true;
         showMeYourName.enable = true;
