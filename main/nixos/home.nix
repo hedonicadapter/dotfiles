@@ -47,18 +47,6 @@
   home.username = "hedonicadapter";
   home.homeDirectory = "/home/hedonicadapter";
 
-  nixpkgs = {
-    overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-
-      inputs.nur.overlays.default
-    ];
-    config.allowUnfree = true;
-  };
-
   services.anti-sleep-neglector = {
     enable = true;
   };
