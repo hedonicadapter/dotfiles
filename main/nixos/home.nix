@@ -10,8 +10,8 @@
   # You can import other home-manager modules here
   imports = with inputs; [
     ags.homeManagerModules.default
-    # ../cachix.nix
-    matugen.nixosModules.default
+    # # ../cachix.nix
+    # # matugen.nixosModules.default
     spicetify-nix.homeManagerModules.default
     nixcord.homeModules.nixcord
     neovim-flake.homeModules.default
@@ -28,7 +28,7 @@
     # ../home-manager-modules/ls-colors.nix
     # ../home-manager-modules/lsd.nix
     ../home-manager-modules/eza.nix
-    ../home-manager-modules/hints/hints.nix
+    # ../home-manager-modules/hints/hints.nix
 
     (import ../home-manager-modules/nh.nix {flakeDir = "/etc/nixos/main";})
     (import ../home-manager-modules/git.nix {
@@ -37,7 +37,7 @@
       inherit pkgs;
     })
 
-    (import ../home-manager-modules/anti-sleep-neglector/service.nix {inherit outputs inputs config lib pkgs;})
+    # (import ../home-manager-modules/anti-sleep-neglector/service.nix {inherit outputs inputs config lib pkgs;})
     (import ../home-manager-modules/fastfetch/default.nix {inherit outputs;})
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
@@ -55,44 +55,44 @@
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
 
-      inputs.nur.overlays.default
+      outputs.overlays.nur
     ];
     config.allowUnfree = true;
   };
 
-  services.anti-sleep-neglector = {
-    enable = true;
-  };
-  services.anti-sleep-neglector-monitor = {
-    enable = true;
-  };
-  services.anti-sleep-neglector-gamma = {
-    enable = true;
+  # services.anti-sleep-neglector = {
+  #   enable = true;
+  # };
+  # services.anti-sleep-neglector-monitor = {
+  #   enable = true;
+  # };
+  # services.anti-sleep-neglector-gamma = {
+  #   enable = true;
+  #
+  #   periods = {
+  #     dawn = 4000.0;
+  #     first_light = 4000.0;
+  #     night = 3500.0;
+  #     solar_noon = 7000.0;
+  #     sunrise = 5500.0;
+  #     sunset = 5000.0;
+  #   };
+  #   crt-effect = {
+  #     glowStrength = 0.52;
+  #     glowRadius = 0.001;
+  #     scanlineFrequency = 1500.0;
+  #     scanlineIntensity = 0.03;
+  #     curvatureStrength = 0.06;
+  #     brightness = 0.0;
+  #     contrast = 1.00;
+  #   };
+  # };
+  # services.anti-sleep-neglector-wallpaper = {
+  #   enable = true;
+  #   wallpapersDir = "${config.home.homeDirectory}/Pictures/wallpapers";
+  # };
 
-    periods = {
-      dawn = 4000.0;
-      first_light = 4000.0;
-      night = 3500.0;
-      solar_noon = 7000.0;
-      sunrise = 5500.0;
-      sunset = 5000.0;
-    };
-    crt-effect = {
-      glowStrength = 0.52;
-      glowRadius = 0.001;
-      scanlineFrequency = 1500.0;
-      scanlineIntensity = 0.03;
-      curvatureStrength = 0.06;
-      brightness = 0.0;
-      contrast = 1.00;
-    };
-  };
-  services.anti-sleep-neglector-wallpaper = {
-    enable = true;
-    wallpapersDir = "${config.home.homeDirectory}/Pictures/wallpapers";
-  };
-
-  programs.matugen.enable = true;
+  # programs.matugen.enable = true;
 
   programs.ags = {
     enable = true;
@@ -111,7 +111,7 @@
       powerprofiles
 
       pkgs.gtksourceview
-      pkgs.webkitgtk
+      pkgs.webkitgtk_4_1
       pkgs.accountsservice
     ];
     # configDir = ../home-manager-modules/ags;
@@ -123,7 +123,8 @@
       google-chrome
       webcord
       neovide
-      transmission
+      # transmission has been removed in favour of transmission_4
+      # transmission
       hyprpicker
       speedread
       lutris
@@ -292,6 +293,11 @@
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
     XDG_RUNTIME_DIR = "/run/user/$UID";
     # WINIT_X11_SCALE_FACTOR = 0.75;
+
+    # Fixes "Invalid Argument" errors when pushing high refresh rates
+    AQ_NO_ATOMIC = "1";
+    # Helps NVIDIA cards negotiate higher bandwidth on Wayland
+    NVD_BACKEND = "direct";
   };
 
   # You should not change this value, even if you update Home Manager. If you do
