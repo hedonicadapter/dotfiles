@@ -14,12 +14,12 @@ in {
   imports = with inputs; [
     home-manager.nixosModules.home-manager
     stylix.nixosModules.stylix
-    nur.modules.nixos.default
 
     xremap-flake.nixosModules.default
 
     (import ../nix-modules/nix.nix {inherit inputs lib config;})
     (import ../nix-modules/nixpkgs.nix {inherit outputs;})
+    ../nix-modules/samba.nix
     ./maintenance.nix
     ./hardware-configuration.nix
   ];
@@ -33,7 +33,7 @@ in {
   environment.pathsToLink = ["/share/zsh"];
   environment.systemPackages = with pkgs; [
     # inputs.neovim-flake.packages.${system}.nvim
-    onlyoffice-bin
+    onlyoffice-desktopeditors
     wine
     winetricks
     gcc
@@ -69,11 +69,19 @@ in {
     wl-clipboard
     cliphist
     wl-clip-persist
-    teams-for-linux
     vscode
     obsidian
     font-manager
     fsearch
+
+    libvpx
+    dav1d
+    ffmpeg-full
+    libva-utils
+    vdpauinfo
+
+    mangohud
+    goverlay
   ];
 
   programs.hyprland = {
@@ -93,10 +101,17 @@ in {
     gamescopeSession.enable = true;
   };
   programs.gamemode.enable = true;
+  programs.gamemode.enableRenice = true;
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     TERM = "kitty";
+    MOZ_ENABLE_WAYLAND = "1";
+    # LIBVA_DRIVER_NAME = "i915"; # INFO: Use "i915" for older Intel or "radeonsi" for AMD
+    # MOZ_DISABLE_RDD_SANDBOX = "1";
+    # Only set these if Hyprland continues to freeze
+    # GBM_BACKEND = "nvidia-drm";
+    # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
 
   stylix = {
@@ -143,36 +158,52 @@ in {
       sizes.terminal = 14;
     };
 
-    cursor = {
-      # package = pkgs.callPackage ../home-manager/oxygen-neon-cursors.nix {};
-      name = "rah";
-      size = 200;
-    };
+    # cursor = {
+    # package = pkgs.callPackage ../home-manager/oxygen-neon-cursors.nix {};
+    #   name = "rah";
+    #   size = 200;
+    # };
   };
 
   security.polkit.enable = true;
 
   # formerly hardware.opengl
   hardware.graphics.enable = true;
-  hardware.graphics.extraPackages = with pkgs; [intel-media-driver];
+  hardware.graphics.extraPackages = with pkgs; [
+    intel-media-driver
+    libvdpau-va-gl
+    nvidia-vaapi-driver
+
+    intel-vaapi-driver # i965
+    libvdpau-va-gl
+  ];
   hardware.graphics.enable32Bit = true;
-  environment.sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
+  # environment.sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
+  # environment.sessionVariables = {
+  #   LIBVA_DRIVER_NAME = "nvidia";
+  #   GBM_BACKEND = "nvidia-drm";
+  #   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  # }; # Force nvidia driver
 
   hardware.logitech.wireless.enable = true;
   hardware.logitech.wireless.enableGraphical = true;
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_cachyos;
-    # kernelPackages = pkgs.linuxPackages_zen;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;
     tmp.cleanOnBoot = true;
     loader.grub.timeoutStyle = false;
     kernelParams = [
-      "i915.fastboot=1"
+      "nvidia-drm.modeset=1"
+      # "nvidia_drm.fbdev=1"
+      # "i915.fastboot=1"
       # "boot.shell_on_fail"
       # "rd.systemd.show_status=false"
       # "rd.udev.log_level=3"
       # "udev.log_priority=3"
+      "acpi_enforce_resources=lax" # GDM/UCSI fix for older Lenovo ACPI bugs
     ];
+
+    blacklistedKernelModules = ["ucsi_ccg"];
 
     loader = {
       efi.canTouchEfiVariables = true;
@@ -182,6 +213,8 @@ in {
         configurationLimit = 100;
       };
     };
+
+    kernel.sysctl."vm.max_map_count" = 1048576;
   };
 
   # hardware.fancontrol = {
@@ -200,6 +233,8 @@ in {
   #   '';
   # };
 
+  powerManagement.cpuFreqGovernor = "performance";
+  systemd.services.nvidia-powerd.enable = true;
   hardware.nvidia = {
     modesetting.enable = true; # Modesetting is required.
 
@@ -207,7 +242,7 @@ in {
     # Enable this if you have graphical corruption issues or application crashes after waking
     # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
     # of just the bare essentials.
-    powerManagement.enable = false;
+    powerManagement.enable = true;
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
@@ -235,7 +270,7 @@ in {
     };
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
   networking.networkmanager.enable = true;
@@ -290,7 +325,7 @@ in {
     hedonicadapter = {
       isNormalUser = true;
       openssh.authorizedKeys.keys = [];
-      extraGroups = ["networkmanager" "wheel" "docker" "dialout" "input"];
+      extraGroups = ["networkmanager" "wheel" "docker" "dialout" "input" "gamemode"];
     };
   };
 
@@ -302,6 +337,7 @@ in {
   '';
 
   services.xremap = {
+    enable = true;
     config = {
       modmap = [
         {
@@ -356,14 +392,22 @@ in {
     xkb.variant = "";
 
     videoDrivers = ["nvidia" "nvidia-utils"];
+
+    displayManager.gdm.enable = false; # GNOME Desktop Environment
   };
+  services.displayManager.ly.enable = true;
+  services.displayManager.ly.settings = {
+    save = true;
+    load = true;
+  };
+
   services.desktopManager.gnome.enable = true;
   # services.libinput.mouse.accelProfile = "adaptive"; configured in hyprland.conf
   services.printing.enable = true;
   services.thermald.enable = true;
   services.fwupd.enable = true; # Firmware updator
   services.upower.enable = true; # battery
-  services.system76-scheduler.enable = true;
+  services.system76-scheduler.enable = false;
 
   # services.throttled = {
   #   enable = true;
@@ -449,9 +493,12 @@ in {
 
       # for intel-pstate
       CPU_MIN_PERF_ON_AC = 0;
-      CPU_MAX_PERF_ON_AC = 80;
+      CPU_MAX_PERF_ON_AC = 85;
       CPU_MIN_PERF_ON_BAT = 0;
       CPU_MAX_PERF_ON_BAT = 70;
+
+      CPU_BOOST_ON_AC = 1;
+      NVIDIA_GPU_PERF_LEVEL_ON_AC = "high";
 
       RUNTIME_PM_ON_AC = "auto";
       RUNTIME_PM_ON_BAT = "auto";
@@ -505,6 +552,9 @@ in {
   services.udev.extraRules = ''
     KERNEL=="uinput", GROUP="input", MODE:="0660"
   '';
+
+  nix.settings.substituters = ["https://attic.xuyh0120.win/lantian"];
+  nix.settings.trusted-public-keys = ["lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="];
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
