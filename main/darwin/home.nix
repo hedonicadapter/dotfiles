@@ -30,6 +30,7 @@
     ../home-manager-modules/eza.nix
 
     ../home-manager-modules/aerospace.nix
+    ../home-manager-modules/barik.nix
     (import ../home-manager-modules/git.nix {
       userName = "samherman";
       userEmail = "sam.herman@xenit.se";
@@ -65,6 +66,11 @@
       autoraise
       google-chrome
       keycastr
+      azure-cli
+      tree
+      watch
+
+      warp-terminal
     ]
     # Languages
     ++ []

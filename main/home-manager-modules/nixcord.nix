@@ -8,6 +8,7 @@
   programs.nixcord = {
     enable = true;
     vesktop.enable = true;
+    equibop.enable = true;
 
     # programs.nixcord.userPlugins
     #     # enable custom user plugins from github

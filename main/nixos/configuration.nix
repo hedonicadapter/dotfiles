@@ -91,6 +91,10 @@ in {
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   };
 
+  programs.niri = {
+    enable = true;
+  };
+
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
