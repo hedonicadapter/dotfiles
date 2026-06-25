@@ -30,6 +30,7 @@
     ../home-manager-modules/eza.nix
     # ../home-manager-modules/hints/hints.nix
     (import ../home-manager-modules/niri.nix {inherit pkgs;})
+    ../home-manager-modules/wlr-which-key/menus.nix
 
     (import ../home-manager-modules/nh.nix {flakeDir = "/etc/nixos/main";})
     (import ../home-manager-modules/git.nix {

@@ -254,7 +254,7 @@
     ];
   };
 in {
-  inherit
+  home.packages = [
     runMenu
     browserMenu
     directoriesMenu
@@ -264,5 +264,5 @@ in {
     powerMenu
     audioMenu
     displayMenu
-    ;
+  ];
 }
