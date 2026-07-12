@@ -560,9 +560,18 @@ in {
     KERNEL=="uinput", GROUP="input", MODE:="0660"
   '';
 
+  sops = {
+    defaultSopsFile = ./secrets/hermes.yaml;
+    age.keyFile = "/var/lib/sops-nix/key.txt";
+    secrets."hermes-env" = {format = "yaml";};
+  };
+
   services.hermes-agent = {
     enable = true;
-    settings.model.default = "anthropic/claude-sonnet-5";
+    settings.model = {
+      provider = "anthropic";
+      default = "claude-sonnet-5";
+    };
     environmentFiles = [config.sops.secrets."hermes-env".path];
     addToSystemPackages = true;
   };

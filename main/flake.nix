@@ -49,8 +49,8 @@
     direnv-instant.url = "github:Mic92/direnv-instant";
     hermes-agent.url = "github:NousResearch/hermes-agent";
 
-    inputs.sops-nix.url = "github:Mic92/sops-nix";
-    inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
