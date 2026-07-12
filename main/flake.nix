@@ -47,6 +47,10 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     direnv-instant.url = "github:Mic92/direnv-instant";
+    hermes-agent.url = "github:NousResearch/hermes-agent";
+
+    inputs.sops-nix.url = "github:Mic92/sops-nix";
+    inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -55,6 +59,8 @@
     nix-darwin,
     colors,
     nix-cachyos-kernel,
+    hermes-agent,
+    sops-nix,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -98,6 +104,8 @@
         nixos-hardware.nixosModules.common-pc-laptop
         nixos-hardware.nixosModules.common-pc-laptop-ssd
         nixos-hardware.nixosModules.common-pc-laptop-hdd
+        sops-nix.nixosModules.sops
+        hermes-agent.nixosModules.default
         ./nixos/configuration.nix
       ];
     };
@@ -112,6 +120,7 @@
         mac-app-util.darwinModules.default
         stylix.darwinModules.stylix
         neovim-flake.nixosModules.default
+        sops-nix.darwinModules.sops
         ./darwin/configuration.nix
       ];
     };

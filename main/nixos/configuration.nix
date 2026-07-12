@@ -560,6 +560,13 @@ in {
     KERNEL=="uinput", GROUP="input", MODE:="0660"
   '';
 
+  services.hermes-agent = {
+    enable = true;
+    settings.model.default = "anthropic/claude-sonnet-5";
+    environmentFiles = [config.sops.secrets."hermes-env".path];
+    addToSystemPackages = true;
+  };
+
   nix.settings.substituters = ["https://attic.xuyh0120.win/lantian"];
   nix.settings.trusted-public-keys = ["lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="];
 
