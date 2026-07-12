@@ -475,7 +475,7 @@ in {
   #   };
   # };
 
-  # systemd.user.services.niri.enableDefaultPath = false;
+  systemd.user.services.niri.enableDefaultPath = false;
 
   services.tlp = {
     enable = true;
