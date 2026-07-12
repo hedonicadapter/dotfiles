@@ -1,0 +1,19 @@
+{
+  programs.claude-code = {
+    enable = true;
+
+    hooks = {
+      Notification = [
+        {
+          matcher = "";
+          hooks = [
+            {
+              type = "command";
+              command = ''osascript -e 'display notification "Claude Code needs your attention" with title "Claude Code"' '';
+            }
+          ];
+        }
+      ];
+    };
+  };
+}
