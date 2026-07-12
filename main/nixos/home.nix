@@ -43,7 +43,7 @@
     (import ../home-manager-modules/fastfetch/default.nix {inherit outputs;})
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
-    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib config;})
+    # (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib config;})
     ../home-manager-modules/firefox.nix
   ];
 
