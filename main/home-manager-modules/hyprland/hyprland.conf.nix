@@ -210,110 +210,15 @@
     animation=workspaces, 1, 3.5, easeOutQuart, slide
 
     $mainMod = SUPER
-    $resetSubmap = hyprctl dispatch submap reset
-    $timeoutSubmap = sleep 1 && hyprctl dispatch submap reset
 
-    $appQuery = tofi-run | xargs hyprctl dispatch exec --
-    # $nixQuery = PATH= tofi-run | xargs -I {} xdg-open "https://search.nixos.org/packages?query={}"
-    # $googleQuery = PATH= tofi-run | xargs -I {} xdg-open "https://www.google.com/search?q={}"
-    # $protonDbQuery = PATH= tofi-run | xargs -I {} xdg-open "https://www.protondb.com/search?q={}"
-    # $nixOptionsQuery = PATH= tofi-run | xargs -I {} xdg-open "https://search.nixos.org/options?query={}"
-    # $homeManagerQuery = PATH= tofi-run | xargs -I {} xdg-open "https://home-manager-options.extranix.com/?query={}"
-    $clipboardHistoryQuery = cliphist list | tofi | cliphist decode | wl-copy
-
-    # Run
-    bindd = $mainMod, R, RUN, submap, run
-    bind = $mainMod, R, exec, $timeoutSubmap
-    submap = run
-      bindd = , T, TERMINAL, exec, $terminal & $resetSubmap
-      bindd = , M, MUSIC, exec, $music & $resetSubmap
-      bindd = , E, MAIL, exec, $mail & $resetSubmap
-      bindd = , D, DISCORD, exec, vesktop & $resetSubmap
-      bindd = , S, M0XYY, exec, $terminal 'streamlink twitch.tv/m0xyy 720p60 --player mpv --twitch-low-latency & TERM=xterm-kitty twt' & $resetSubmap
-      bindd = , Y, YOUTUBE, exec, $terminal pipe-viewer & $resetSubmap
-    bind = , escape, submap, reset
-    submap = reset
-
-    # Browser
-    bindd = $mainMod, B, BROWSER, submap, browser
-    bind = $mainMod, B, exec, $timeoutSubmap
-    submap = browser
-      bindd = , B, DEFAULT, exec, $browser & $resetSubmap
-      bindd = , F, FIREFOX, exec, firefox-beta & $resetSubmap
-      bindd = , Z, ZEN BROWSER, exec, zen-beta & $resetSubmap
-      bindd = , E, EDGE, exec, microsoft-edge & $resetSubmap
-    bind = , escape, submap, reset
-    submap = reset
-
-    # Directories
-    bindd = $mainMod, D, DIRECTORIES, submap, directories
-    bind = $mainMod, D, exec, $timeoutSubmap
-    submap = directories
-      bindd = , T, TEMP, exec, $fileManager ~/Documents/temp & $resetSubmap
-      bindd = , D, DOWNLOADS, exec, $fileManager ~/Downloads & $resetSubmap
-    bind = , escape, submap, reset
-    submap = reset
-
-    # Query
-    bindd = $mainMod, Q, QUERY, submap, query
-    bind = $mainMod, Q, exec, $timeoutSubmap
-    submap = query
-      bindd = , A, APPS, exec, $appQuery & $resetSubmap
-      bindd = , H, HOME MANAGER OPTIONS, exec, $homeManagerQuery & $resetSubmap
-      bindd = , C, CLIPBOARD, exec, $clipboardHistoryQuery & $resetSubmap
-    bind = , escape, submap, reset
-    submap = reset
-
-    # Utility
-    bindd = $mainMod, U, UTILITY, submap, util
-    bind = $mainMod, U, exec, $timeoutSubmap
-    submap = util
-      bindd = , P, PRINT-SCREEN, exec, grim -g "$(slurp)" - | swappy -f - | wl-copy & $resetSubmap
-      bindd = , C, COLOR PICKER, exec, hyprpicker -a & $resetSubmap
-      bindd = , R, SPEED READER, exec, $terminal bash ~/.config/hypr/speed-read.sh & $resetSubmap
-      bindd = , E, EMOJI PICKER, exec, rofimoji --selector tofi & $resetSubmap
-      bindd = , Y, AI YAP SESH, exec, astal toggleHAL & $resetSubmap
-    bind = , escape, submap, reset
-    submap = reset
-
-    # System
-    bindd = $mainMod, S, SYSTEM, submap, system
-    bind = $mainMod, S, exec, $timeoutSubmap
-    submap = system
-      bindd = , R, RELOAD SHELL, exec, ags quit; ags run & hyprctl reload & $resetSubmap & sleep 3 && hyprctl seterror disable
-      bindd = , Z, TOGGLE ZEN MODE, exec, astal zenable & $resetSubmap # toggle zen mode
-
-      # Power menu
-      bindd = , P, POWER, submap, power
-      submap = power
-        bindd = , Q, SHUT DOWN, exec, sudo shutdown -h now
-        bindd = , R, SHUT DOWN, exec, sudo shutdown -r now
-      bind = , escape, submap, system
-
-      # Audio
-      bindd = , A, AUDIO, submap, audio
-      submap = audio
-        binddl = , P, PLAY/PAUSE, exec, playerctl play-pause & $resetSubmap
-        binddl = , L, NEXT, exec, playerctl next & $resetSubmap
-        binddl = , H, PREVIOUS, exec, playerctl previous & $resetSubmap
-
-        binddle = , K, VOL UP, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+ & $resetSubmap
-        binddle = , J, VOL DOWN, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- & $resetSubmap
-
-        binddle = , SM, MUTE/UNMUTE OUT, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle & $resetSubmap
-        bindd = , MM, MUTE/UNMUTE IN, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle & $resetSubmap
-
-        bindd = , S, AUDIO SETTINGS, exec, easyeffects & $resetSubmap # TODO: replace wiwth AGS later
-      bind = , escape, submap, system
-
-      # Display
-      bindd = , D, DISPLAY, submap, display
-      submap = display
-        binddle = , K, BRIGHTNESS UP, exec, brightnessctl set +10% & $resetSubmap
-        binddle = , J, BRIGHTNESS DOWN, exec, brightnessctl set 10%- & $resetSubmap
-      bind = , escape, submap, system
-    bind = , escape, submap, reset
-    submap = reset
+    # Which-key menus (wlr-which-key) — globally available on PATH, shared with niri.
+    # Menu contents live in home-manager-modules/wlr-which-key/menus.nix
+    bind = $mainMod, R, exec, wlr-which-key-run
+    bind = $mainMod, B, exec, wlr-which-key-browser
+    bind = $mainMod, D, exec, wlr-which-key-directories
+    bind = $mainMod, Q, exec, wlr-which-key-query
+    bind = $mainMod, U, exec, wlr-which-key-utility
+    bind = $mainMod, S, exec, wlr-which-key-system
 
     bind = SUPER, V, exec, hints
     # bind = SUPER, Y, exec, hints --mode scroll

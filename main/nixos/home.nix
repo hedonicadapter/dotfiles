@@ -30,6 +30,7 @@
     ../home-manager-modules/eza.nix
     # ../home-manager-modules/hints/hints.nix
     (import ../home-manager-modules/niri.nix {inherit pkgs config lib;})
+    ../home-manager-modules/wlr-which-key/menus.nix
 
     (import ../home-manager-modules/nh.nix {flakeDir = "/etc/nixos/main";})
     (import ../home-manager-modules/git.nix {
@@ -209,7 +210,7 @@
     package = inputs.hyprland.packages.${pkgs.system}.default;
     systemd.enable = true;
     systemd.variables = ["--all"];
-    extraConfig = import ../home-manager-modules/hyprland/hyprland.conf.nix {inherit outputs lib pkgs;};
+    extraConfig = import ../home-manager-modules/hyprland/hyprland.conf.nix {inherit outputs lib;};
     plugins = [
       inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
       #  TODO: marked broken

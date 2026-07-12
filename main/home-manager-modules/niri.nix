@@ -133,7 +133,7 @@
             //   together with the previously focused column.
             center-focused-column "never"
 
-            // You can customize the widths that "switch-preset-column-width" (Mod+R) toggles between.
+            // You can customize the widths that "switch-preset-column-width" (Mod+Ctrl+W) toggles between.
             preset-column-widths {
                 // Proportion sets the width as a fraction of the output width, taking gaps into account.
                 // For example, you can perfectly fit four windows sized "proportion 0.25" on an output.
@@ -373,9 +373,18 @@
             // shows a list of important hotkeys.
             Mod+Shift+Slash { show-hotkey-overlay; }
 
+            // wlr-which-key menus — globally available on PATH, shared with Hyprland.
+            // Menu contents live in home-manager-modules/wlr-which-key/menus.nix
+            Mod+R { spawn "wlr-which-key-run"; }
+            Mod+B { spawn "wlr-which-key-browser"; }
+            Mod+D { spawn "wlr-which-key-directories"; }
+            Mod+Q { spawn "wlr-which-key-query"; }
+            Mod+U { spawn "wlr-which-key-utility"; }
+            Mod+S { spawn "wlr-which-key-system"; }
+
             // Suggested binds for running programs: terminal, app launcher, screen locker.
             Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "kitty"; }
-            Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
+            // Mod+D is now the wlr-which-key directories menu (was: spawn "fuzzel")
             Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
             // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
@@ -411,7 +420,8 @@
             // or do a four-finger swipe up on a touchpad.
             Mod+O repeat=false { toggle-overview; }
 
-            Mod+Q repeat=false { close-window; }
+            // close active window — Mod+W matches the Hyprland keybind (Mod+Q is now the query menu)
+            Mod+W repeat=false { close-window; }
 
             Mod+Left  { focus-column-left; }
             Mod+Down  { focus-window-down; }
@@ -471,7 +481,7 @@
 
             Mod+Page_Down      { focus-workspace-down; }
             Mod+Page_Up        { focus-workspace-up; }
-            Mod+U              { focus-workspace-down; }
+            // Mod+U is now the wlr-which-key utility menu (Mod+Page_Down still focuses workspace down)
             Mod+I              { focus-workspace-up; }
             Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
             Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
@@ -564,9 +574,10 @@
             Mod+Period { expel-window-from-column; }
 
             // Cycle through widths set in preset-column-widths.
-            Mod+R { switch-preset-column-width; }
+            // (moved from Mod+R / Mod+Shift+R — now the run menu — to Mod+Ctrl+W / Mod+Ctrl+Shift+W)
+            Mod+Ctrl+W { switch-preset-column-width; }
             // Cycling through the presets in reverse order is also possible.
-            Mod+Shift+R { switch-preset-column-width-back; }
+            Mod+Ctrl+Shift+W { switch-preset-column-width-back; }
 
             Mod+Ctrl+Shift+R { switch-preset-window-height; }
             Mod+Ctrl+R { reset-window-height; }
@@ -611,7 +622,8 @@
             // Toggle tabbed column display mode.
             // Windows in this column will appear as vertical tabs,
             // rather than stacked on top of each other.
-            Mod+W { toggle-column-tabbed-display; }
+            // (moved from Mod+W, which is now close-window, to match Hyprland)
+            Mod+Shift+W { toggle-column-tabbed-display; }
 
             // Actions to switch layouts.
             // Note: if you uncomment these, make sure you do NOT have
