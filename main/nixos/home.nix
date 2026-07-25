@@ -45,6 +45,7 @@
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
     # (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib config;})
     ../home-manager-modules/firefox.nix
+    ../home-manager-modules/kdeconnect.nix
   ];
 
   home.username = "hedonicadapter";
