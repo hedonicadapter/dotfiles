@@ -30,7 +30,7 @@ in ''
   end)
 
   -- env (set before display server init)
-  hl.env("AQ_DRM_DEVICES", "/dev/dri/card0:/dev/dri/card1")
+  -- hl.env("AQ_DRM_DEVICES", "/dev/dri/card0:/dev/dri/card1")
 
   hl.env("XCURSOR_SIZE", "100")
   hl.env("XCURSOR_THEME", "rah")
@@ -50,10 +50,10 @@ in ''
   hl.monitor({ output = "DP-1", mode = "preferred", position = "auto",       scale = 1 })
 
   -- for AlfredoSequeida/hints
-  hl.device({
-    name = "ydotoold-virtual-device-1",
-    accel_profile = "flat",
-  })
+  -- hl.device({
+  --  name = "ydotoold-virtual-device-1",
+  --  accel_profile = "flat",
+  -- })
 
   hl.config({
     xwayland = {
