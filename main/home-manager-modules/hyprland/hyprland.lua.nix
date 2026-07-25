@@ -212,10 +212,10 @@ in ''
   hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "u" }))
   hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "d" }))
 
-  hl.bind(mainMod .. " + Control_L + H", hl.dsp.window.resize({ x = -30, y = 0,   relative = true }), { repeating = true })
-  hl.bind(mainMod .. " + Control_L + L", hl.dsp.window.resize({ x = 30,  y = 0,   relative = true }), { repeating = true })
-  hl.bind(mainMod .. " + Control_L + K", hl.dsp.window.resize({ x = 0,   y = -30, relative = true }), { repeating = true })
-  hl.bind(mainMod .. " + Control_L + J", hl.dsp.window.resize({ x = 0,   y = 30,  relative = true }), { repeating = true })
+  hl.bind(mainMod .. " + CTRL + H", hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { repeating = true })
+  hl.bind(mainMod .. " + CTRL + L", hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { repeating = true })
+  hl.bind(mainMod .. " + CTRL + K", hl.dsp.window.resize({ x = 0, y = -30, relative = true }), { repeating = true })
+  hl.bind(mainMod .. " + CTRL + J", hl.dsp.window.resize({ x = 0, y = 30, relative = true }), { repeating = true })
 
   -- switch to Nth workspace on focused monitor
   for i = 1, 4 do
