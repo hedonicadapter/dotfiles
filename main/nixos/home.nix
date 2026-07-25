@@ -211,9 +211,9 @@
     package = inputs.hyprland.packages.${pkgs.system}.default;
     systemd.enable = true;
     systemd.variables = ["--all"];
-    extraConfig = import ../home-manager-modules/hyprland/hyprland.conf.nix {inherit outputs lib pkgs;};
+    configType = "lua";
+    extraConfig = import ../home-manager-modules/hyprland/hyprland.lua.nix {inherit outputs lib inputs pkgs;};
     plugins = [
-      inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
       #  TODO: marked broken
       # pkgs.hyprlandPlugins.hyprfocus
     ];
