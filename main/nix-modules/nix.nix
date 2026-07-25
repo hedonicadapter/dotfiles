@@ -11,9 +11,15 @@
       flake-registry = ""; # Opinionated: disable global registry
       nix-path = config.nix.nixPath; # Workaround for https://github.com/NixOS/nix/issues/9574
     };
-
     # Opinionated: make flake registry and nix path match flake inputs
-    registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+    registry =
+      lib.mapAttrs (
+        name: flake:
+          if name == "nixpkgs"
+          then lib.mkForce {inherit flake;}
+          else {inherit flake;}
+      )
+      flakeInputs;
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 }
