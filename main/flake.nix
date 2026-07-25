@@ -21,11 +21,10 @@
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.hyprland.follows = "hyprland";
 
-    home-manager.url = "github:nix-community/home-manager/master";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    home-manager-stable.url = "github:nix-community/home-manager/release-26.05";
-    home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable-darwin";
+    # One HM release (26.05) for both OSes; each uses its own system nixpkgs via
+    # useGlobalPkgs, so this follows is cosmetic (closure dedup / hm.lib only).
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs-stable-nixos";
 
     colors.url = "github:hedonicadapter/colors-flake";
     neovim-flake.url = "github:hedonicadapter/neovim-config-flake";
@@ -122,7 +121,7 @@
       pkgs = darwinPkgs;
 
       modules = with inputs; [
-        home-manager-stable.darwinModules.home-manager
+        home-manager.darwinModules.home-manager
         mac-app-util.darwinModules.default
         stylix.darwinModules.stylix
         neovim-flake.nixosModules.default
