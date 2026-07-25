@@ -25,6 +25,8 @@ in {
   ];
 
   home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
     extraSpecialArgs = {inherit inputs outputs;};
     users.hedonicadapter = import ./home.nix;
     backupFileExtension = "backup";
