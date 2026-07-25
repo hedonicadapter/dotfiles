@@ -196,7 +196,7 @@
   stylix.targets.hyprland.enable = lib.mkForce false; # INFO: stylix configures a deprecated shadow attribute
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.default;
+    package = pkgs.hyprland;
     systemd.enable = true;
     systemd.variables = ["--all"];
     configType = "lua";
