@@ -333,12 +333,12 @@ in {
     };
   };
 
-  systemd.sleep.extraConfig = ''
-    AllowSuspend=no
-    AllowHibernation=no
-    AllowHybridSleep=no
-    AllowSuspendThenHibernate=no
-  '';
+  systemd.sleep.settings.Sleep = {
+    AllowSuspend = "no";
+    AllowHibernation = "no";
+    AllowHybridSleep = "no";
+    AllowSuspendThenHibernate = "no";
+  };
 
   services.xremap = {
     enable = true;
@@ -395,7 +395,7 @@ in {
     xkb.layout = "se";
     xkb.variant = "";
 
-    videoDrivers = ["nvidia" "nvidia-utils"];
+    videoDrivers = ["nvidia"];
 
     displayManager.gdm.enable = false; # GNOME Desktop Environment
   };
@@ -475,7 +475,7 @@ in {
   #   };
   # };
 
-  # systemd.user.services.niri.enableDefaultPath = false;
+  systemd.user.services.niri.enableDefaultPath = false;
 
   services.tlp = {
     enable = true;
@@ -560,21 +560,21 @@ in {
     KERNEL=="uinput", GROUP="input", MODE:="0660"
   '';
 
-  sops = {
-    defaultSopsFile = ./secrets/hermes.yaml;
-    age.keyFile = "/var/lib/sops-nix/key.txt";
-    secrets."hermes-env" = {format = "yaml";};
-  };
+  # sops = {
+  #   defaultSopsFile = ./secrets/hermes.yaml;
+  #   age.keyFile = "/var/lib/sops-nix/key.txt";
+  #   secrets."hermes-env" = {format = "yaml";};
+  # };
 
-  services.hermes-agent = {
-    enable = true;
-    settings.model = {
-      provider = "anthropic";
-      default = "claude-sonnet-5";
-    };
-    environmentFiles = [config.sops.secrets."hermes-env".path];
-    addToSystemPackages = true;
-  };
+  # services.hermes-agent = {
+  #   enable = true;
+  #   settings.model = {
+  #     provider = "anthropic";
+  #     default = "claude-sonnet-5";
+  #   };
+  #   environmentFiles = [config.sops.secrets."hermes-env".path];
+  #   addToSystemPackages = true;
+  # };
 
   nix.settings.substituters = ["https://attic.xuyh0120.win/lantian"];
   nix.settings.trusted-public-keys = ["lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="];
@@ -584,6 +584,17 @@ in {
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  # kdeconnect
+  networking.firewall = rec {
+    allowedTCPPortRanges = [
+      {
+        from = 1714;
+        to = 1764;
+      }
+    ];
+    allowedUDPPortRanges = allowedTCPPortRanges;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

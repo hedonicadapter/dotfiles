@@ -4,9 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.follows = "nixpkgs";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
+    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
+    nixpkgs-stable-nixos.url = "github:nixos/nixpkgs/nixos-26.05";
     nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-stable";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-stable-darwin";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
@@ -24,7 +25,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager-stable.url = "github:nix-community/home-manager/release-26.05";
-    home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable";
+    home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable-darwin";
 
     colors.url = "github:hedonicadapter/colors-flake";
     neovim-flake.url = "github:hedonicadapter/neovim-config-flake";
@@ -37,8 +38,8 @@
 
     mac-app-util.url = "github:hraban/mac-app-util";
 
-    stylix.url = "github:danth/stylix/release-26.05";
-    stylix.inputs.nixpkgs.follows = "nixpkgs-stable";
+    stylix.url = "github:nix-community/stylix/release-26.05";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
     swww.url = "github:LGFae/swww";
     nur.url = "github:nix-community/NUR";
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
@@ -47,10 +48,11 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     direnv-instant.url = "github:Mic92/direnv-instant";
-    hermes-agent.url = "github:NousResearch/hermes-agent";
+    # hermes-agent.url = "github:NousResearch/hermes-agent";
+    # hermes-agent.inputs.nixpkgs.follows = "nixpkgs";
 
-    sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    # sops-nix.url = "github:Mic92/sops-nix";
+    # sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -59,8 +61,8 @@
     nix-darwin,
     colors,
     nix-cachyos-kernel,
-    hermes-agent,
-    sops-nix,
+    # hermes-agent,
+    # sops-nix,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -84,7 +86,7 @@
     };
     mkPkgs = nixpkgsInput: system:
       import nixpkgsInput (commonNixpkgsConfig // {inherit system;});
-    darwinPkgs = mkPkgs inputs.nixpkgs-stable "aarch64-darwin";
+    darwinPkgs = mkPkgs inputs.nixpkgs-stable-darwin "aarch64-darwin";
   in {
     packages =
       forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
@@ -95,17 +97,21 @@
     palette = builtins.fromJSON (builtins.readFile ./palette.json);
     paletteOpaque = builtins.fromJSON (builtins.readFile ./palette.json);
 
-    nixosConfigurations."default" = nixpkgs.lib.nixosSystem {
+    nixosConfigurations."default" = inputs.nixpkgs-stable-nixos.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {inherit inputs outputs;};
 
       modules = with inputs; [
+        {
+          nixpkgs.overlays = commonNixpkgsConfig.overlays;
+          nixpkgs.config = commonNixpkgsConfig.config;
+        }
         nixos-hardware.nixosModules.common-cpu-intel
         nixos-hardware.nixosModules.common-pc-laptop
         nixos-hardware.nixosModules.common-pc-laptop-ssd
         nixos-hardware.nixosModules.common-pc-laptop-hdd
-        sops-nix.nixosModules.sops
-        hermes-agent.nixosModules.default
+        # sops-nix.nixosModules.sops
+        # hermes-agent.nixosModules.default
         ./nixos/configuration.nix
       ];
     };
@@ -120,7 +126,7 @@
         mac-app-util.darwinModules.default
         stylix.darwinModules.stylix
         neovim-flake.nixosModules.default
-        sops-nix.darwinModules.sops
+        # sops-nix.darwinModules.sops
         ./darwin/configuration.nix
       ];
     };
