@@ -211,7 +211,7 @@
     systemd.enable = true;
     systemd.variables = ["--all"];
     configType = "lua";
-    extraConfig = import ../home-manager-modules/hyprland/hyprland.lua.nix {inherit outputs lib inputs;};
+    extraConfig = import ../home-manager-modules/hyprland/hyprland.lua.nix {inherit outputs lib inputs pkgs;};
     plugins = [
       #  TODO: marked broken
       # pkgs.hyprlandPlugins.hyprfocus

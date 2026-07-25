@@ -2,12 +2,12 @@
   outputs,
   lib,
   inputs,
+  pkgs,
   ...
 }: let
   processColor = color: lib.toLower (builtins.substring 1 6 (builtins.toString color));
 
-  # split-monitor-workspaces is a lua library now (>= 0.55), not a .so
-  smwSrc = inputs.split-monitor-workspaces;
+  hyprsplitSrc = inputs.hyprsplit.packages.${pkgs.system}.hyprsplitlua;
 in ''
   local mainMod = "SUPER"
 
@@ -177,11 +177,11 @@ in ''
   hl.window_rule({ match = { class = "^(.*popup.*)$" }, center = true })
   hl.window_rule({ match = { class = "^(.*popup.*)$" }, stay_focused = true })
 
-  package.path = package.path .. ";${smwSrc}/lua/?.lua"
-  local smw = require("split-monitor-workspaces")
-  smw.setup({
-    workspace_count = 4,
-    enable_notifications = false,
+  package.path = package.path .. ";${hyprsplitSrc}/share/?/init.lua"
+  local hs = require("hyprsplit")
+  hs.config({
+    num_workspaces = 4,
+    persistent_workspaces = true,
   })
 
   -- Which-key menus (wlr-which-key), shared with niri.
@@ -219,12 +219,12 @@ in ''
 
   -- switch to Nth workspace on focused monitor
   for i = 1, 4 do
-    hl.bind(mainMod .. " + " .. i, smw.workspace(tostring(i)))
+    hl.bind(mainMod .. " + " .. i, hs.dsp.focus({ workspace = i }))
   end
   -- move active window to Nth workspace (follows focus); SHIFT+0 -> 10
   for i = 1, 10 do
     local key = (i == 10) and "0" or tostring(i)
-    hl.bind(mainMod .. " + SHIFT + " .. key, smw.move_to_workspace(tostring(i)))
+    hl.bind(mainMod .. " + SHIFT + " .. key, hs.dsp.window.move({ workspace = i, follow = true }))
   end
 
   -- move/resize with mainMod + LMB/RMB drag
