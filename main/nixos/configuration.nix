@@ -328,7 +328,7 @@ in {
   users.users = {
     hedonicadapter = {
       isNormalUser = true;
-      openssh.authorizedKeys.keys = [];
+      openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ3K6FA+Gy2wNolnPVeM7sNoy/Q9wj4mn3STOsF4ySOT sam.herman@xenit.se"];
       extraGroups = ["networkmanager" "wheel" "docker" "dialout" "input" "gamemode"];
     };
   };
@@ -554,7 +554,7 @@ in {
     };
   };
 
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   services.udev.extraRules = ''
     KERNEL=="uinput", GROUP="input", MODE:="0660"
