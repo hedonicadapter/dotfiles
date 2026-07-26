@@ -330,7 +330,7 @@ in {
     hedonicadapter = {
       isNormalUser = true;
       openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ3K6FA+Gy2wNolnPVeM7sNoy/Q9wj4mn3STOsF4ySOT sam.herman@xenit.se"];
-      extraGroups = ["networkmanager" "wheel" "docker" "dialout" "input" "gamemode"];
+      extraGroups = ["networkmanager" "wheel" "docker" "dialout" "input" "gamemode" "ydotool"];
     };
   };
 
@@ -555,6 +555,8 @@ in {
     };
   };
 
+  programs.ydotool.enable = true;
+
   services.openssh.enable = true;
 
   services.udev.extraRules = ''
@@ -595,6 +597,7 @@ in {
       }
     ];
     allowedUDPPortRanges = allowedTCPPortRanges;
+    allowedTCPPorts = [8443];
   };
 
   # This value determines the NixOS release from which the default
