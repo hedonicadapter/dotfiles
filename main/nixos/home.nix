@@ -117,6 +117,7 @@
       # transmission has been removed in favour of transmission_4
       # transmission
       hyprpicker
+      (speed-read.override {xkbLayout = osConfig.services.xserver.xkb.layout;})
       lutris
       (mpv.override {scripts = [mpvScripts.mpris];})
       streamlink
