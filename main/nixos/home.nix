@@ -29,7 +29,7 @@
     # ../home-manager-modules/lsd.nix
     ../home-manager-modules/eza.nix
     # ../home-manager-modules/hints/hints.nix
-    (import ../home-manager-modules/niri.nix {inherit pkgs config lib;})
+    (import ../home-manager-modules/niri.nix {inherit outputs pkgs;})
     ../home-manager-modules/wlr-which-key/menus.nix
 
     (import ../home-manager-modules/nh.nix {flakeDir = "/etc/nixos/main";})
@@ -117,7 +117,7 @@
       # transmission has been removed in favour of transmission_4
       # transmission
       hyprpicker
-      speedread
+      (speed-read.override {xkbLayout = osConfig.services.xserver.xkb.layout;})
       lutris
       (mpv.override {scripts = [mpvScripts.mpris];})
       streamlink
@@ -136,7 +136,6 @@
       docker-compose
       lazydocker
       socat # for listening to unix socket events
-      dotool # for speed-reader.sh
       inputs.ags.packages.${pkgs.system}.io # expose ags cli
       rofimoji
       blender
@@ -222,20 +221,6 @@
       source = ../home-manager-modules/hyprland;
       recursive = true;
     };
-    ".config/hypr/speed-read.sh".source = "${pkgs.writeShellScript "speed-reader" ''
-      #!/usr/bin/env bash
-
-      (
-        for i in {1..4}; do
-          sleep "0.$i"
-          echo key rightbrace | DOTOOL_XKB_LAYOUT=${osConfig.services.xserver.xkb.layout} dotool
-          echo key rightbrace | DOTOOL_XKB_LAYOUT=${osConfig.services.xserver.xkb.layout} dotool
-        done
-      ) &
-
-      wl-paste --no-newline --primary | speedread -w 150
-      read -p 'Press [Enter] to close...'
-    ''}";
     ".config/tofi/emoji-list.txt" = {
       source = ../home-manager-modules/emoji/list.txt;
     };

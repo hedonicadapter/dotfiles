@@ -10,7 +10,7 @@
   mail = "xdg-open https://mail.google.com";
   browser = "zen-beta";
   fileManager = "nautilus";
-  appQuery = "tofi-run | xargs hyprctl dispatch exec --";
+  appQuery = ''setsid -f sh -c "$(tofi-run)"'';
   homeManagerQuery = "home-manager-options.extranix.com";
   clipboardHistoryQuery = "cliphist list | tofi | cliphist decode | wl-copy";
 
@@ -207,7 +207,7 @@
       {
         key = "r";
         desc = "SPEED READER";
-        cmd = "${terminal} bash ~/.config/hypr/speed-read.sh";
+        cmd = "${terminal} speed-read";
       }
       {
         key = "e";
@@ -228,7 +228,7 @@
       {
         key = "r";
         desc = "RELOAD SHELL";
-        cmd = "ags quit; ags run & hyprctl reload && sleep 3 && hyprctl seterror disable";
+        cmd = "ags quit; ags run &";
       }
       {
         key = "z";
