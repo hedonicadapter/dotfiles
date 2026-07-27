@@ -27,7 +27,6 @@
     # ../home-manager-modules/ls-colors.nix
     # ../home-manager-modules/lsd.nix
     ../home-manager-modules/eza.nix
-    ../home-manager-modules/speed-read.nix
     # ../home-manager-modules/hints/hints.nix
     (import ../home-manager-modules/niri.nix {inherit outputs pkgs;})
     ../home-manager-modules/wlr-which-key/menus.nix
