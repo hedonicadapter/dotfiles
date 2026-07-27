@@ -4,4 +4,5 @@ pkgs: {
   # example =
   # cartograph-cf = pkgs.callPackage ./cartograph-cf { };
   stay-awake = pkgs.callPackage ./stay-awake {};
+  speed-read = pkgs.callPackage ./speed-read {};
 }
