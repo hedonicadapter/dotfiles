@@ -109,6 +109,14 @@ in ''
       backdrop-color "${p.base00}"
   }
 
+  // Noise is a blur sub-effect — only renders where blur is applied
+  blur {
+      passes 3
+      offset 3
+      noise 0.05
+      saturation 1.5
+  }
+
   animations {
       // Pixelate — github.com/Xansidev/nirimation
       // Curve must stay linear; shader drives pixel size off niri_clamped_progress
@@ -185,6 +193,16 @@ in ''
       match is-active=false
       exclude app-id="^mpv$"
       opacity 0.6
+  }
+
+  // Blur+noise behind all windows; shows through the opacity rule above.
+  // Keeps default xray — non-xray blur breaks the open/close shaders.
+  window-rule {
+      exclude app-id="^mpv$"
+      background-effect {
+          blur true
+          noise 0.05
+      }
   }
 
   window-rule {
