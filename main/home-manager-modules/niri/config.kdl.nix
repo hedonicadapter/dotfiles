@@ -123,7 +123,8 @@ in ''
 
   window-rule {
       match is-active=false
-      opacity 0.7
+      exclude app-id="^mpv$"
+      opacity 0.6
   }
 
   window-rule {
