@@ -4,6 +4,7 @@
   pkgs,
   lib,
   config,
+  osConfig,
   ...
 }: {
   # You can import other home-manager modules here

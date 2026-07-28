@@ -20,33 +20,21 @@ in ''
           accel-profile "adaptive"
       }
 
-      focus-follows-mouse max-scroll-amount="0%"
+      focus-follows-mouse
+      warp-mouse-to-focus mode="center-xy"
   }
 
   output "eDP-1" {
-      mode "2150x1440"
+      mode "2150x1440@144"
       scale 1
       position x=0 y=0
   }
 
   output "HDMI-A-1" {
-      scale 0.75
-      position x=2160 y=0
-  }
-
-  // Xenit
-  output "DP-3" {
-      scale 1
-      position x=2560 y=-1440
-  }
-
-  output "DP-4" {
-      scale 1
-      position x=5120 y=-1440
-  }
-
-  output "DP-1" {
-      scale 1
+      mode "2560x1440@119.998"
+      scale 2.0
+      variable-refresh-rate // on-demand=true
+      focus-at-startup
   }
 
   layout {
@@ -174,23 +162,23 @@ in ''
       Mod+M { maximize-window-to-edges; }
       Mod+Shift+M { fullscreen-window; }
 
-      Mod+H     { focus-column-left; }
+      Mod+H     { focus-column-or-monitor-left; }
       Mod+J     { focus-window-down; }
       Mod+K     { focus-window-up; }
-      Mod+L     { focus-column-right; }
-      Mod+Left  { focus-column-left; }
+      Mod+L     { focus-column-or-monitor-right; }
+      Mod+Left  { focus-column-or-monitor-left; }
       Mod+Down  { focus-window-down; }
       Mod+Up    { focus-window-up; }
-      Mod+Right { focus-column-right; }
+      Mod+Right { focus-column-or-monitor-right; }
 
-      Mod+Shift+H     { move-column-left; }
+      Mod+Shift+H     { move-column-left-or-to-monitor-left; }
       Mod+Shift+J     { move-window-down; }
       Mod+Shift+K     { move-window-up; }
-      Mod+Shift+L     { move-column-right; }
-      Mod+Shift+Left  { move-column-left; }
+      Mod+Shift+L     { move-column-right-or-to-monitor-right; }
+      Mod+Shift+Left  { move-column-left-or-to-monitor-left; }
       Mod+Shift+Down  { move-window-down; }
       Mod+Shift+Up    { move-window-up; }
-      Mod+Shift+Right { move-column-right; }
+      Mod+Shift+Right { move-column-right-or-to-monitor-right; }
 
       Mod+Ctrl+H { set-column-width "-30"; }
       Mod+Ctrl+L { set-column-width "+30"; }
