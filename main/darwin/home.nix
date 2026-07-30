@@ -29,7 +29,13 @@
     # ../home-manager-modules/lsd.nix
     ../home-manager-modules/eza.nix
 
-    ../home-manager-modules/aerospace.nix
+    # Replaced by omniwm — never run two tiling WMs at once.
+    # ../home-manager-modules/aerospace.nix
+    ../home-manager-modules/omniwm.nix
+    # Spawn/launcher binds OmniWM can't express
+    ../home-manager-modules/skhd.nix
+    # NOTE: barik's default.spaces widget reads aerospace and is now dead;
+    # OmniWM's own workspace bar covers it (workspaceBar in settings.toml.nix).
     ../home-manager-modules/barik.nix
     (import ../home-manager-modules/git.nix {
       userName = "samherman";
