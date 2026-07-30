@@ -30,7 +30,8 @@
     ../home-manager-modules/eza.nix
 
     ../home-manager-modules/aerospace.nix
-    ../home-manager-modules/barik.nix
+    # ../home-manager-modules/paneru.nix
+    # ../home-manager-modules/barik.nix
     (import ../home-manager-modules/git.nix {
       userName = "samherman";
       userEmail = "sam.herman@xenit.se";
@@ -38,10 +39,15 @@
     })
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
-    (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib config;})
+    # (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib config;})
     (import ../home-manager-modules/nh.nix {
       flakeDir = "${config.home.homeDirectory}/Documents/projects/dotfiles/main";
     })
+    (import ../home-manager-modules/autoraise.nix {inherit pkgs;})
+    ../home-manager-modules/stay-awake.nix
+
+    # ../home-manager-modules/yabai.nix
+    ../home-manager-modules/claude-code.nix
   ];
 
   home.username = "samherman1";
@@ -63,14 +69,21 @@
 
       appcleaner
       slack
-      autoraise
       google-chrome
       keycastr
-      azure-cli
+
+      (azure-cli.withExtensions (with azure-cli-extensions; [
+        azure-devops
+        webapp
+        # containerapp pins kubernetes==24.2.0; nixpkgs has 35.0.0. Skip the runtime dep check.
+        (containerapp.overrideAttrs (_: {dontCheckRuntimeDeps = true;}))
+      ]))
       tree
       watch
-
-      warp-terminal
+      ripgrep
+      vscode
+      github-copilot-cli
+      rtk
     ]
     # Languages
     ++ []
