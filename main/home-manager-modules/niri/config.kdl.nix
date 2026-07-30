@@ -39,7 +39,7 @@ in ''
 
   layout {
       gaps 16
-      center-focused-column "never"
+      center-focused-column "on-overflow"
       always-center-single-column
       background-color "${p.base00}"
 

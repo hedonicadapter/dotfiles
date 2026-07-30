@@ -3,8 +3,12 @@
   pkgs,
   ...
 }: {
-  home.packages = with pkgs; [
-    xwayland-satellite
+  home.packages = [
+    pkgs.xwayland-satellite
+
+    # Folds new windows into existing columns instead of scrolling sideways
+    (pkgs.writers.writePython3Bin "niri-autotile" {flakeIgnore = ["E501"];}
+      (builtins.readFile ./niri/autotile.py))
   ];
 
   home.file = {
