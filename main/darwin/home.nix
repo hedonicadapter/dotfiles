@@ -29,9 +29,12 @@
     # ../home-manager-modules/lsd.nix
     ../home-manager-modules/eza.nix
 
-    ../home-manager-modules/aerospace.nix
     # ../home-manager-modules/paneru.nix
     # ../home-manager-modules/barik.nix
+    # ../home-manager-modules/aerospace.nix
+    ../home-manager-modules/omniwm.nix
+    ../home-manager-modules/skhd.nix
+
     (import ../home-manager-modules/git.nix {
       userName = "samherman";
       userEmail = "sam.herman@xenit.se";
