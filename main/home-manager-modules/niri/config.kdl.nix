@@ -179,14 +179,22 @@ in ''
       Mod+Up    { focus-window-up; }
       Mod+Right { focus-column-or-monitor-right; }
 
-      Mod+Shift+H     { move-column-left-or-to-monitor-left; }
+      // swap-window moves the window across columns, not the whole column.
+      // Falls back to a column move when both columns hold a single window.
+      Mod+Shift+H     { swap-window-left; }
       Mod+Shift+J     { move-window-down; }
       Mod+Shift+K     { move-window-up; }
-      Mod+Shift+L     { move-column-right-or-to-monitor-right; }
-      Mod+Shift+Left  { move-column-left-or-to-monitor-left; }
+      Mod+Shift+L     { swap-window-right; }
+      Mod+Shift+Left  { swap-window-left; }
       Mod+Shift+Down  { move-window-down; }
       Mod+Shift+Up    { move-window-up; }
-      Mod+Shift+Right { move-column-right-or-to-monitor-right; }
+      Mod+Shift+Right { swap-window-right; }
+
+      // Whole-column moves, incl. hopping to the next monitor
+      Mod+Ctrl+Shift+H     { move-column-left-or-to-monitor-left; }
+      Mod+Ctrl+Shift+L     { move-column-right-or-to-monitor-right; }
+      Mod+Ctrl+Shift+Left  { move-column-left-or-to-monitor-left; }
+      Mod+Ctrl+Shift+Right { move-column-right-or-to-monitor-right; }
 
       Mod+Ctrl+H { set-column-width "-30"; }
       Mod+Ctrl+L { set-column-width "+30"; }
