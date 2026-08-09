@@ -39,7 +39,7 @@
       inherit pkgs;
     })
 
-    # (import ../home-manager-modules/anti-sleep-neglector/service.nix {inherit outputs inputs config lib pkgs;})
+    (import ../home-manager-modules/anti-sleep-neglector/service.nix {inherit outputs inputs config lib pkgs;})
     (import ../home-manager-modules/fastfetch/default.nix {inherit outputs;})
 
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
@@ -51,37 +51,37 @@
   home.username = "hedonicadapter";
   home.homeDirectory = "/home/hedonicadapter";
 
-  # services.anti-sleep-neglector = {
-  #   enable = true;
-  # };
-  # services.anti-sleep-neglector-monitor = {
-  #   enable = true;
-  # };
-  # services.anti-sleep-neglector-gamma = {
-  #   enable = true;
-  #
-  #   periods = {
-  #     dawn = 4000.0;
-  #     first_light = 4000.0;
-  #     night = 3500.0;
-  #     solar_noon = 7000.0;
-  #     sunrise = 5500.0;
-  #     sunset = 5000.0;
-  #   };
-  #   crt-effect = {
-  #     glowStrength = 0.52;
-  #     glowRadius = 0.001;
-  #     scanlineFrequency = 1500.0;
-  #     scanlineIntensity = 0.03;
-  #     curvatureStrength = 0.06;
-  #     brightness = 0.0;
-  #     contrast = 1.00;
-  #   };
-  # };
-  # services.anti-sleep-neglector-wallpaper = {
-  #   enable = true;
-  #   wallpapersDir = "${config.home.homeDirectory}/Pictures/wallpapers";
-  # };
+  services.anti-sleep-neglector = {
+    enable = true;
+  };
+  services.anti-sleep-neglector-monitor = {
+    enable = true;
+  };
+  services.anti-sleep-neglector-gamma = {
+    enable = true;
+
+    periods = {
+      dawn = 4000.0;
+      first_light = 4000.0;
+      night = 3500.0;
+      solar_noon = 7000.0;
+      sunrise = 5500.0;
+      sunset = 5000.0;
+    };
+    crt-effect = {
+      glowStrength = 0.52;
+      glowRadius = 0.001;
+      scanlineFrequency = 1500.0;
+      scanlineIntensity = 0.03;
+      curvatureStrength = 0.06;
+      brightness = 0.0;
+      contrast = 1.00;
+    };
+  };
+  services.anti-sleep-neglector-wallpaper = {
+    enable = true;
+    wallpapersDir = "${config.home.homeDirectory}/Pictures/wallpapers";
+  };
 
   # programs.matugen.enable = true;
 
