@@ -102,43 +102,12 @@
               margin-top: 1px;
               margin-left: -10px;
 
+              // niri has no submaps — overview is the only modal state
               .NORMAL {
               }
-              .RUN {
+              .OVERVIEW {
                 background-color: ${outputs.palette.base0D};
                 color: ${outputs.palette.base01};
-              }
-              .BROWSER {
-                background-color: ${outputs.palette.base0D};
-                color: ${outputs.palette.base01};
-              }
-              .FILES {
-                background-color: ${outputs.palette.base06};
-                color: ${outputs.palette.base02};
-              }
-              .QUERY {
-                background-color: ${outputs.palette.base0C};
-                color: ${outputs.palette.base01};
-              }
-              .UTIL {
-                background-color: ${outputs.palette.base0E};
-                color: ${outputs.palette.base01};
-              }
-              .SYSTEM {
-                background-color: ${outputs.palette.base0F};
-                color: ${outputs.palette.base01};
-              }
-              .POWER {
-                background-color: ${outputs.palette.base08};
-                color: ${outputs.palette.base05};
-              }
-              .DISPLAY {
-                background-color: ${outputs.palette.base0D};
-                color: ${outputs.palette.base06};
-              }
-              .AUDIO {
-                background-color: ${outputs.palette.base0E};
-                color: ${outputs.palette.base06};
               }
             }
           }

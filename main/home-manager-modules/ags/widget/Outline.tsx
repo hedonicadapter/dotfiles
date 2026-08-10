@@ -1,31 +1,27 @@
-import Hyprland from "gi://AstalHyprland";
 import { Variable, bind } from "astal";
-import { App, Astal, Gtk, Gdk } from "astal/gtk3";
-import { getGdkMonitorFromName } from "../util";
-
-// const hypr = Hyprland.get_default();
-//
-// className={bind(hypr, "focused-monitor").as((fm) => {
-//   const gdkName = gdkmonitor.display.get_name();
-//   const waylandName = getGdkMonitorFromName(fm.name)
-//     ?.get_display()
-//     .get_name();
-//   const currentMonitorIsFocusedMonitor = gdkName === waylandName;
-//
-//   // console.log(fm.name);
-//   // console.log(gdkName);
-//   // console.log(waylandName);
-//   // console.log(currentMonitorIsFocusedMonitor);
-//   return currentMonitorIsFocusedMonitor
-//     ? "Outline active-monitor"
-//     : "Outline";
-// })}
+import { App, Astal, Gdk } from "astal/gtk3";
+import { getMonitorPlugName } from "../util";
+import { focusedOutput } from "../niri";
 
 export default function Outline(gdkmonitor: Gdk.Monitor) {
   const hovered = Variable(false);
+  const monitorName = getMonitorPlugName(gdkmonitor);
+
+  const className = Variable.derive(
+    [hovered, focusedOutput],
+    (isHovered, output) =>
+      [
+        "Outline",
+        output && output === monitorName ? "active-monitor" : "",
+        isHovered ? "hovered" : "",
+      ]
+        .filter(Boolean)
+        .join(" "),
+  );
+
   return (
     <window
-      className={bind(hovered).as((h) => (h ? "Outline hovered" : "Outline"))}
+      className={bind(className)}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.IGNORE}
       clickThrough={true}
@@ -41,6 +37,10 @@ export default function Outline(gdkmonitor: Gdk.Monitor) {
       <eventbox
         hexpand
         vexpand
+        onDestroy={() => {
+          className.drop();
+          hovered.drop();
+        }}
         onHover={() => hovered.set(true)}
         onHoverLost={() => hovered.set(false)}
       ></eventbox>

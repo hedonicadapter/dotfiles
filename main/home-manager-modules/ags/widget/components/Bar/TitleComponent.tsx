@@ -1,12 +1,11 @@
-import Hyprland from "gi://AstalHyprland";
 import { Gtk } from "astal/gtk3";
 import { bind, Variable } from "astal";
 import { execAsync } from "astal/process";
 import { escapeShellString } from "../../../util";
+import { focusedWindow } from "../../../niri";
 
 export default function TitleComponent() {
-  const hypr = Hyprland.get_default();
-  const focused = bind(hypr, "focusedClient");
+  const focused = bind(focusedWindow);
   const currentTitle = Variable("");
   let timeout: ReturnType<typeof setTimeout>;
 
@@ -29,8 +28,9 @@ export default function TitleComponent() {
       valign={Gtk.Align.CENTER}
     >
       {focused.as((client) => {
-        const title =
-          client.title.length > 0 ? client.title.split("—")[0] : "♥︎";
+        const title = client?.title?.length
+          ? client.title.split("—")[0]
+          : "♥︎";
         clearTimeout(timeout);
         currentTitle.set(title);
 

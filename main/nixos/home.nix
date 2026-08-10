@@ -91,7 +91,6 @@
       io
       apps
       battery
-      hyprland
       wireplumber
       bluetooth
       network
