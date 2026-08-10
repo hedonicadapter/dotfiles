@@ -40,11 +40,12 @@ let focusedWindowId: number | null = null;
 let started = false;
 
 function publishWorkspaces(list: NiriWorkspace[]) {
-  workspaces.set(list);
-
+  // Derived state first — subscribers of `workspaces` read it in the same tick
   const focused = list.find((ws) => ws.is_focused) ?? null;
   focusedWorkspace.set(focused);
   if (focused?.output) focusedOutput.set(focused.output);
+
+  workspaces.set(list);
 }
 
 function publishFocusedWindow() {
