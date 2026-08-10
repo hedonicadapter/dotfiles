@@ -4,7 +4,7 @@
 // connection is enough to keep everything below in sync.
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
-import { Variable } from "astal";
+import { createState } from "ags";
 
 export type NiriWorkspace = {
   id: number;
@@ -28,12 +28,14 @@ export type NiriWindow = {
 
 const RECONNECT_MS = 1000;
 
-export const workspaces = Variable<NiriWorkspace[]>([]);
-export const focusedWorkspace = Variable<NiriWorkspace | null>(null);
-export const focusedOutput = Variable<string | null>(null);
-export const focusedWindow = Variable<NiriWindow | null>(null);
-export const overviewOpen = Variable(false);
-export const keyboardLayout = Variable("");
+export const [workspaces, setWorkspaces] = createState<NiriWorkspace[]>([]);
+export const [focusedWorkspace, setFocusedWorkspace] =
+  createState<NiriWorkspace | null>(null);
+export const [focusedOutput, setFocusedOutput] = createState<string | null>(null);
+export const [focusedWindow, setFocusedWindow] =
+  createState<NiriWindow | null>(null);
+export const [overviewOpen, setOverviewOpen] = createState(false);
+export const [keyboardLayout, setKeyboardLayout] = createState("");
 
 const windows = new Map<number, NiriWindow>();
 let focusedWindowId: number | null = null;
@@ -42,14 +44,14 @@ let started = false;
 function publishWorkspaces(list: NiriWorkspace[]) {
   // Derived state first — subscribers of `workspaces` read it in the same tick
   const focused = list.find((ws) => ws.is_focused) ?? null;
-  focusedWorkspace.set(focused);
-  if (focused?.output) focusedOutput.set(focused.output);
+  setFocusedWorkspace(focused);
+  if (focused?.output) setFocusedOutput(focused.output);
 
-  workspaces.set(list);
+  setWorkspaces(list);
 }
 
 function publishFocusedWindow() {
-  focusedWindow.set(
+  setFocusedWindow(
     focusedWindowId === null ? null : (windows.get(focusedWindowId) ?? null),
   );
 }
@@ -64,7 +66,7 @@ function handleEvent(event: Record<string, any>) {
 
     // Workspace became active on its output; focused=true also moves output focus
     case "WorkspaceActivated": {
-      const list = workspaces.get();
+      const list = workspaces.peek();
       const target = list.find((ws) => ws.id === data.id);
       if (!target) break;
 
@@ -81,7 +83,7 @@ function handleEvent(event: Record<string, any>) {
 
     case "WorkspaceActiveWindowChanged":
       publishWorkspaces(
-        workspaces.get().map((ws) =>
+        workspaces.peek().map((ws) =>
           ws.id === data.workspace_id
             ? {...ws, active_window_id: data.active_window_id}
             : ws,
@@ -92,7 +94,7 @@ function handleEvent(event: Record<string, any>) {
     case "WorkspaceUrgencyChanged":
       publishWorkspaces(
         workspaces
-          .get()
+          .peek()
           .map((ws) => (ws.id === data.id ? {...ws, is_urgent: data.urgent} : ws)),
       );
       break;
@@ -137,7 +139,7 @@ function handleEvent(event: Record<string, any>) {
     }
 
     case "KeyboardLayoutsChanged":
-      keyboardLayout.set(
+      setKeyboardLayout(
         data.keyboard_layouts.names[data.keyboard_layouts.current_idx] ?? "",
       );
       break;
@@ -147,7 +149,7 @@ function handleEvent(event: Record<string, any>) {
       break;
 
     case "OverviewOpenedOrClosed":
-      overviewOpen.set(data.is_open);
+      setOverviewOpen(data.is_open);
       break;
   }
 }

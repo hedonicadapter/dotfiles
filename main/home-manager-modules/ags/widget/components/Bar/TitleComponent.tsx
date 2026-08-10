@@ -1,21 +1,20 @@
-import { Gtk } from "astal/gtk3";
-import { bind, Variable } from "astal";
-import { execAsync } from "astal/process";
+import Gtk from "gi://Gtk?version=3.0";
+import { createState, With } from "ags";
+import { execAsync } from "ags/process";
 import { escapeShellString } from "../../../util";
 import { focusedWindow } from "../../../niri";
 
 export default function TitleComponent() {
-  const focused = bind(focusedWindow);
-  const currentTitle = Variable("");
+  const [currentTitle, setCurrentTitle] = createState("");
   let timeout: ReturnType<typeof setTimeout>;
 
   const copyToClipboardAndNotify = async (title: string) => {
     try {
       const escapedString = escapeShellString(title);
       await execAsync(`bash -c "wl-copy '${escapedString}'"`);
-      currentTitle.set("COPIED.");
+      setCurrentTitle("COPIED.");
       clearTimeout(timeout);
-      timeout = setTimeout(() => currentTitle.set(title), 1000);
+      timeout = setTimeout(() => setCurrentTitle(title), 1000);
     } catch (e) {
       console.log("Error copying title: ", e);
     }
@@ -23,27 +22,29 @@ export default function TitleComponent() {
 
   return (
     <box
-      className="bar-item title"
-      visible={focused.as(Boolean)}
+      class="bar-item title"
+      visible={focusedWindow.as(Boolean)}
       valign={Gtk.Align.CENTER}
     >
-      {focused.as((client) => {
-        const title = client?.title?.length
-          ? client.title.split("—")[0]
-          : "♥︎";
-        clearTimeout(timeout);
-        currentTitle.set(title);
+      <With value={focusedWindow}>
+        {(client) => {
+          const title = client?.title?.length
+            ? client.title.split("—")[0]
+            : "♥︎";
+          clearTimeout(timeout);
+          setCurrentTitle(title);
 
-        return (
-          <eventbox onClick={() => copyToClipboardAndNotify(title)}>
-            <label
-              valign={Gtk.Align.CENTER}
-              ellipsize={3}
-              label={bind(currentTitle).as((s) => s || "NULL")}
-            />
-          </eventbox>
-        );
-      })}
+          return (
+            <eventbox onClick={() => copyToClipboardAndNotify(title)}>
+              <label
+                valign={Gtk.Align.CENTER}
+                ellipsize={3}
+                label={currentTitle}
+              />
+            </eventbox>
+          );
+        }}
+      </With>
     </box>
   );
 }

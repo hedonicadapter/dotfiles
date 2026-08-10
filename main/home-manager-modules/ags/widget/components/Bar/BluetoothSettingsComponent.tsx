@@ -1,11 +1,12 @@
-import { Gtk } from "astal/gtk3";
-import { Variable, bind, type Binding } from "astal";
-import { execAsync } from "astal/process";
+import Gtk from "gi://Gtk?version=3.0";
+import { createBinding, createState, For } from "ags";
+import { execAsync } from "ags/process";
 import Bluetooth, { type Device, type Adapter } from "gi://AstalBluetooth";
 
 const { START, CENTER, END } = Gtk.Align;
 
-export const toggleBluetoothSettings = Variable(false);
+export const [toggleBluetoothSettings, setBluetoothSettings] =
+  createState(false);
 let discoveryTimeouts: ReturnType<typeof setTimeout>[] = [];
 
 const deviceOperationErrorNotification = (error: any) =>
@@ -17,6 +18,14 @@ const DevicePanel = ({
   type: "paired" | "connected" | "trusted" | "detected";
 }) => {
   const bluetooth = Bluetooth.get_default();
+  const adapters = createBinding(bluetooth, "adapters");
+
+  const devices = createBinding(bluetooth, "devices").as((ds: Device[]) =>
+    ds.filter((d: Device) => {
+      if (type === "detected") return !d.paired && !d.connected;
+      return d[type];
+    }),
+  );
 
   return (
     <box vertical onDestroy={() => discoveryTimeouts.forEach(clearTimeout)}>
@@ -24,11 +33,10 @@ const DevicePanel = ({
         <label
           halign={START}
           valign={CENTER}
-          className="heading"
+          class="heading"
           label={type.toUpperCase()}
           maxWidthChars={50}
           ellipsize={3}
-          truncate
           hexpand
         />
 
@@ -36,7 +44,7 @@ const DevicePanel = ({
           <button
             valign={CENTER}
             halign={END}
-            className={bind(bluetooth, "adapters").as((as: Adapter[]) =>
+            class={adapters.as((as: Adapter[]) =>
               as.some((a: Adapter) => a.discovering) ? "discovering" : "",
             )}
             onClicked={() => {
@@ -52,7 +60,7 @@ const DevicePanel = ({
             }}
           >
             <label
-              label={bind(bluetooth, "adapters").as((as: Adapter[]) =>
+              label={adapters.as((as: Adapter[]) =>
                 as.some((a: Adapter) => a.discovering) ? "SCANNING" : "SCAN",
               )}
             />
@@ -61,59 +69,53 @@ const DevicePanel = ({
       </box>
 
       <scrollable heightRequest={80} hscroll={Gtk.PolicyType.AUTOMATIC}>
-        <box className={type} vertical>
-          {bind(bluetooth, "devices").as((ds: Device[]) =>
-            ds
-              .filter((d: Device) => {
-                if (type === "detected")
-                  return !d.paired && !d.connected && !d.paired;
-                else return d[type];
-              })
-              .map((d: Device) => {
-                const name = d.name;
-                const battery = d.batteryPercentage;
-                const finalLabel = [
-                  name !== undefined ? name : null,
-                  battery !== undefined ? `${battery}%` : null,
-                ]
-                  .filter(Boolean)
-                  .join(" ");
+        <box class={type} vertical>
+          <For each={devices}>
+            {(d: Device) => {
+              const name = d.name;
+              const battery = d.batteryPercentage;
+              const finalLabel = [
+                name !== undefined ? name : null,
+                battery !== undefined ? `${battery}%` : null,
+              ]
+                .filter(Boolean)
+                .join(" ");
 
-                return (
-                  <button
-                    className={type}
-                    onClicked={() => {
-                      switch (type) {
-                        case "paired":
-                        case "trusted":
-                          d.connect_device((_: any, res: any) => {
-                            try {
-                              d.connect_device_finish(res);
-                            } catch (e) {
-                              execAsync(deviceOperationErrorNotification(e));
-                            }
-                          });
-                          break;
-                        case "connected":
-                          d.set_trusted(true);
-                          break;
-                        default:
-                          break;
-                      }
-                    }}
+              return (
+                <button
+                  class={type}
+                  onClicked={() => {
+                    switch (type) {
+                      case "paired":
+                      case "trusted":
+                        d.connect_device((_: any, res: any) => {
+                          try {
+                            d.connect_device_finish(res);
+                          } catch (e) {
+                            execAsync(deviceOperationErrorNotification(e));
+                          }
+                        });
+                        break;
+                      case "connected":
+                        d.set_trusted(true);
+                        break;
+                      default:
+                        break;
+                    }
+                  }}
+                  valign={CENTER}
+                  hexpand
+                >
+                  <label
                     valign={CENTER}
-                    hexpand
-                  >
-                    <label
-                      valign={CENTER}
-                      halign={START}
-                      className="bar-label"
-                      label={finalLabel.trim() || d.address || "Unknown"}
-                    />
-                  </button>
-                );
-              }),
-          )}
+                    halign={START}
+                    class="bar-label"
+                    label={finalLabel.trim() || d.address || "Unknown"}
+                  />
+                </button>
+              );
+            }}
+          </For>
         </box>
       </scrollable>
     </box>
@@ -123,25 +125,25 @@ const DevicePanel = ({
 export default function () {
   return (
     <box
-      className="bluetooth-settings"
-      visible={bind(toggleBluetoothSettings)}
+      class="bluetooth-settings"
+      visible={toggleBluetoothSettings}
       halign={START}
       vexpand
       vertical
     >
-      <box className="panel device-panel" hexpand>
+      <box class="panel device-panel" hexpand>
         <DevicePanel type="connected" />
       </box>
 
-      <box className="panel device-panel" hexpand>
+      <box class="panel device-panel" hexpand>
         <DevicePanel type="trusted" />
       </box>
 
-      <box className="panel device-panel" hexpand>
+      <box class="panel device-panel" hexpand>
         <DevicePanel type="paired" />
       </box>
 
-      <box className="panel device-panel" hexpand>
+      <box class="panel device-panel" hexpand>
         <DevicePanel type="detected" />
       </box>
     </box>

@@ -1,4 +1,4 @@
-import { Gdk } from "astal/gtk3";
+import Gdk from "gi://Gdk?version=3.0";
 
 // stolen from https://stackoverflow.com/a/37770048 by GitaarLAB
 export function fmtMSS(s: number) {

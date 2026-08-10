@@ -1,40 +1,41 @@
-import { App } from "astal/gtk3";
-import { Variable } from "astal";
+import app from "ags/gtk3/app";
 import Bar from "./widget/Bar";
 import Outline from "./widget/Outline";
 import Dash from "./widget/Dash";
-import { readFile, readFileAsync } from "astal/file";
-import { execAsync } from "astal/process";
-import { toggleHAL } from "./widget/components/Dash/HALComponent";
-import { toggleAudioSettings } from "./widget/components/Bar/AudioSettingsComponent";
+import { readFileAsync } from "ags/file";
+import { execAsync } from "ags/process";
+import { setHAL, toggleHAL } from "./widget/components/Dash/HALComponent";
+import {
+  setAudioSettings,
+  toggleAudioSettings,
+} from "./widget/components/Bar/AudioSettingsComponent";
 import { connect as connectNiri } from "./niri";
-
-const monitors = App.get_monitors();
 
 const style = await readFileAsync("style.scss");
 const convertedToCss = await execAsync(
   `bash -c "echo '${style}' | sass --stdin"`,
 );
 
-App.start({
+app.start({
   css: convertedToCss,
   icons: `${SRC}/icons`,
-  // env: ".env",
   main() {
     connectNiri();
 
+    const monitors = app.get_monitors();
     monitors.map(Bar);
     monitors.map(Dash);
     monitors.map(Outline);
   },
-  requestHandler(request: string, res: (response: any) => void) {
-    switch (request) {
+  requestHandler(argv: string[], res: (response: any) => void) {
+    switch (argv[0]) {
       case "toggleHAL":
-        toggleHAL.set(!toggleHAL.get());
+        setHAL(!toggleHAL.peek());
         break;
       case "toggleAudioSettings":
-        toggleAudioSettings.set(!toggleAudioSettings.get());
+        setAudioSettings(!toggleAudioSettings.peek());
         break;
     }
+    res("ok");
   },
 });

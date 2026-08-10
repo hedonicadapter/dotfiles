@@ -1,5 +1,5 @@
-import { bind } from "astal";
-import { Gtk } from "astal/gtk3";
+import { createComputed, For } from "ags";
+import Gtk from "gi://Gtk?version=3.0";
 import Hoverable from "../Hoverable";
 import { loadKeybinds } from "../../../keybinds";
 import {
@@ -16,67 +16,70 @@ export default function WorkspaceComponent({monitor}: {monitor?: string}) {
   const keybinds = loadKeybinds();
 
   // niri has no submaps — overview is the only modal state
-  const mode = bind(overviewOpen).as((open) => (open ? "OVERVIEW" : "NORMAL"));
+  const mode = overviewOpen.as((open) => (open ? "OVERVIEW" : "NORMAL"));
 
   const onThisMonitor = (wss: NiriWorkspace[]) =>
     wss.filter((ws) => !monitor || ws.output === monitor);
 
+  const indicators = workspaces.as((wss) =>
+    onThisMonitor([...wss])
+      .sort((a, b) => a.idx - b.idx)
+      .slice(0, MAX_INDICATORS),
+  );
+
+  const activeName = createComputed(
+    [workspaces, focusedWorkspace],
+    (wss, focused) => {
+      const active = onThisMonitor(wss).find((ws) => ws.is_active) ?? focused;
+      return active?.name ?? String(active?.idx ?? "");
+    },
+  );
+
   return (
     <box
-      className="bar-item workspaces"
+      class="bar-item workspaces"
       halign={Gtk.Align.START}
       valign={Gtk.Align.CENTER}
     >
       <box
-        className="workspace-indicator"
+        class="workspace-indicator"
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        {bind(workspaces).as((wss) =>
-          onThisMonitor([...wss])
-            .sort((a, b) => a.idx - b.idx)
-            .slice(0, MAX_INDICATORS)
-            .map((ws) => (
-              <eventbox
-                onClick={() =>
-                  niriAction({FocusWorkspace: {reference: {Id: ws.id}}})
-                }
-              >
-                <label className="workspace" label={ws.is_active ? "✦" : "✧"} />
-              </eventbox>
-            )),
-        )}
+        <For each={indicators}>
+          {(ws) => (
+            <eventbox
+              onClick={() =>
+                niriAction({FocusWorkspace: {reference: {Id: ws.id}}})
+              }
+            >
+              <label class="workspace" label={ws.is_active ? "✦" : "✧"} />
+            </eventbox>
+          )}
+        </For>
       </box>
 
       <box
-        className="focused-workspace"
+        class="focused-workspace"
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        {bind(workspaces).as((wss) => {
-          const active =
-            onThisMonitor(wss).find((ws) => ws.is_active) ??
-            focusedWorkspace.get();
-          const name = active?.name ?? String(active?.idx ?? "");
-
-          return <label className={`workspace-${name}`} label={name + " | "} />;
-        })}
+        <label
+          class={activeName.as((name) => `workspace-${name}`)}
+          label={activeName.as((name) => name + " | ")}
+        />
       </box>
 
       <Hoverable
-        className="mode"
+        class="mode"
         main={
-          <box
-            className="main"
-            halign={Gtk.Align.START}
-            valign={Gtk.Align.CENTER}
-          >
-            <label className={mode} label={mode} />
+          <box class="main" halign={Gtk.Align.START} valign={Gtk.Align.CENTER}>
+            <label class={mode} label={mode} />
           </box>
         }
         hoveredElement={
           <scrollable
-            className="panel"
+            class="panel"
             hscroll={Gtk.PolicyType.NEVER}
             vscroll={Gtk.PolicyType.AUTOMATIC}
             heightRequest={400}

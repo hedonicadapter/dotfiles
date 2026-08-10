@@ -6,17 +6,7 @@
         "target": "ES2022",
         "module": "ES2022",
         "moduleResolution": "Bundler",
-        // "checkJs": true,
-        // "allowJs": true,
         "jsx": "react-jsx",
-        "jsxImportSource": "/home/hedonicadapter/.local/share/ags/gtk3",
-        "paths": {
-            "astal": [
-                "/home/hedonicadapter/.local/share/ags"
-            ],
-            "astal/*": [
-                "/home/hedonicadapter/.local/share/ags/*"
-            ]
-        },
+        "jsxImportSource": "ags/gtk3"
     }
 }
