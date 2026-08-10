@@ -1,6 +1,5 @@
 import { bind } from "astal";
 import { App, Astal, Gtk, Gdk } from "astal/gtk3";
-import Hyprland from "gi://AstalHyprland";
 import TimeComponent from "./components/Bar/TimeComponent";
 import SysTrayComponent from "./components/Bar/SysTrayComponent";
 import WifiComponent from "./components/Bar/WifiComponent";
@@ -11,7 +10,7 @@ import AudioComponent from "./components/Bar/AudioComponent";
 import MediaComponent from "./components/Bar/MediaComponent";
 import TemperatureComponent from "./components/Bar/TemperatureComponent";
 import BluetoothComponent from "./components/Bar/BluetoothComponent";
-import { getGdkMonitorFromName } from "../util";
+import { getMonitorPlugName } from "../util";
 import NoiseComponent from "./components/Bar/NoiseComponent";
 import MinReproComponent from "./components/Bar/MinReproComponent";
 import AudioSettingsComponent, {
@@ -20,23 +19,17 @@ import AudioSettingsComponent, {
 import BluetoothSettingsComponent, {
   toggleBluetoothSettings,
 } from "./components/Bar/BluetoothSettingsComponent";
-
-const hypr = Hyprland.get_default();
+import { focusedOutput } from "../niri";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   const { START, END, CENTER } = Gtk.Align;
+  const monitorName = getMonitorPlugName(gdkmonitor);
 
   return (
     <window
-      className={bind(hypr, "focused-monitor").as((fm) => {
-        const gdkName = gdkmonitor.display.get_name();
-        const waylandName = getGdkMonitorFromName(fm.name)
-          ?.get_display()
-          .get_name();
-        const currentMonitorIsFocusedMonitor = gdkName === waylandName;
-
-        return currentMonitorIsFocusedMonitor ? "Bar active-monitor" : "Bar";
-      })}
+      className={bind(focusedOutput).as((output) =>
+        output && output === monitorName ? "Bar active-monitor" : "Bar",
+      )}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       keymode={Astal.Keymode.ON_DEMAND}
@@ -56,7 +49,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           valign={START}
         >
           <box valign={START}>
-            <WorkspaceComponent />
+            <WorkspaceComponent monitor={monitorName} />
           </box>
 
           <box valign={START}>

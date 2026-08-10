@@ -1,38 +1,25 @@
-import Hyprland from "gi://AstalHyprland";
-import { bind, Variable } from "astal";
+import { bind } from "astal";
 import { Gtk } from "astal/gtk3";
 import Hoverable from "../Hoverable";
+import { loadKeybinds } from "../../../keybinds";
+import {
+  focusedWorkspace,
+  niriAction,
+  NiriWorkspace,
+  overviewOpen,
+  workspaces,
+} from "../../../niri";
 
-type Bind = {
-  key: string;
-  args?: string;
-  description?: string;
-};
-export default function WorkspaceComponent() {
-  const hypr = Hyprland.get_default();
+const MAX_INDICATORS = 4;
 
-  const submapLabel = Variable("NORMAL");
-  const submapKeymaps = new Map<string, Bind[]>();
+export default function WorkspaceComponent({monitor}: {monitor?: string}) {
+  const keybinds = loadKeybinds();
 
-  hypr.get_binds().forEach((keybind) => {
-    const kb = {
-      key: keybind.key,
-      args: keybind.args,
-      description: keybind.description,
-    };
+  // niri has no submaps — overview is the only modal state
+  const mode = bind(overviewOpen).as((open) => (open ? "OVERVIEW" : "NORMAL"));
 
-    const current =
-      (keybind.submap && keybind.submap.toUpperCase()) || "NORMAL";
-    const saved = submapKeymaps.get(current);
-
-    if (saved && saved.length > 0) submapKeymaps.set(current, [...saved, kb]);
-    else submapKeymaps.set(current, [kb]);
-  });
-
-  hypr.connect("submap", (_: any, submap) => {
-    const current = submap || "NORMAL";
-    submapLabel.set(current.toUpperCase());
-  });
+  const onThisMonitor = (wss: NiriWorkspace[]) =>
+    wss.filter((ws) => !monitor || ws.output === monitor);
 
   return (
     <box
@@ -45,20 +32,19 @@ export default function WorkspaceComponent() {
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        {bind(hypr, "workspaces").as((wss) =>
-          wss
-            .sort((a, b) => a.id - b.id)
-            .map((ws, index) => {
-              if (index > 3) return <></>;
-              return (
-                <label
-                  className="workspace"
-                  label={bind(hypr, "focusedWorkspace").as((fw) =>
-                    ws === fw ? "✦" : "✧",
-                  )}
-                />
-              );
-            }),
+        {bind(workspaces).as((wss) =>
+          onThisMonitor([...wss])
+            .sort((a, b) => a.idx - b.idx)
+            .slice(0, MAX_INDICATORS)
+            .map((ws) => (
+              <eventbox
+                onClick={() =>
+                  niriAction({FocusWorkspace: {reference: {Id: ws.id}}})
+                }
+              >
+                <label className="workspace" label={ws.is_active ? "✦" : "✧"} />
+              </eventbox>
+            )),
         )}
       </box>
 
@@ -67,9 +53,14 @@ export default function WorkspaceComponent() {
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        {bind(hypr, "focused-workspace").as((fws) => (
-          <label className={fws.name} label={fws.name + " | "} />
-        ))}
+        {bind(workspaces).as((wss) => {
+          const active =
+            onThisMonitor(wss).find((ws) => ws.is_active) ??
+            focusedWorkspace.get();
+          const name = active?.name ?? String(active?.idx ?? "");
+
+          return <label className={`workspace-${name}`} label={name + " | "} />;
+        })}
       </box>
 
       <Hoverable
@@ -77,31 +68,28 @@ export default function WorkspaceComponent() {
         main={
           <box
             className="main"
-            onDestroy={() => submapLabel.drop()}
             halign={Gtk.Align.START}
             valign={Gtk.Align.CENTER}
           >
-            <label
-              className={bind(submapLabel)}
-              label={bind(submapLabel).as((l) => l.toUpperCase())}
-            />
+            <label className={mode} label={mode} />
           </box>
         }
         hoveredElement={
-          <box className="panel" vertical>
-            {bind(submapLabel).as(
-              (l: string) =>
-                submapKeymaps.get(l)?.map((v) => (
-                  <box>
-                    <label label={v.key} halign={Gtk.Align.START} />
-                    <label
-                      label={v.description ?? "NULL"}
-                      halign={Gtk.Align.END}
-                    />
-                  </box>
-                )) || <box />,
-            )}
-          </box>
+          <scrollable
+            className="panel"
+            hscroll={Gtk.PolicyType.NEVER}
+            vscroll={Gtk.PolicyType.AUTOMATIC}
+            heightRequest={400}
+          >
+            <box vertical>
+              {keybinds.map((kb) => (
+                <box>
+                  <label label={kb.key} halign={Gtk.Align.START} hexpand />
+                  <label label={kb.description} halign={Gtk.Align.END} />
+                </box>
+              ))}
+            </box>
+          </scrollable>
         }
       />
     </box>

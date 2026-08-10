@@ -7,6 +7,7 @@ import { readFile, readFileAsync } from "astal/file";
 import { execAsync } from "astal/process";
 import { toggleHAL } from "./widget/components/Dash/HALComponent";
 import { toggleAudioSettings } from "./widget/components/Bar/AudioSettingsComponent";
+import { connect as connectNiri } from "./niri";
 
 const monitors = App.get_monitors();
 
@@ -20,6 +21,8 @@ App.start({
   icons: `${SRC}/icons`,
   // env: ".env",
   main() {
+    connectNiri();
+
     monitors.map(Bar);
     monitors.map(Dash);
     monitors.map(Outline);
