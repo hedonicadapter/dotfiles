@@ -154,19 +154,19 @@ const component = (enabled: boolean) => {
           <box class="track-info" vertical>
             <label
               class="album-title"
-              ellipsize={3}
+              truncate
               label={createBinding(playa, "album").as((s) => s || "")}
               halign={START}
             />
             <label
               class="artist-names"
-              ellipsize={3}
+              truncate
               label={createBinding(playa, "artist").as((s) => s || "")}
               halign={START}
             />
             <label
               class="project-name"
-              ellipsize={3}
+              truncate
               label={createBinding(playa, "title").as((s) => s || "")}
               halign={START}
             />

@@ -37,6 +37,7 @@ const DevicePanel = ({
           label={type.toUpperCase()}
           maxWidthChars={50}
           ellipsize={3}
+          truncate
           hexpand
         />
 

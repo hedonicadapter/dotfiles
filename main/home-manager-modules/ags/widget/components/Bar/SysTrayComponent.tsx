@@ -1,6 +1,6 @@
 import app from "ags/gtk3/app";
 import Gtk from "gi://Gtk?version=3.0";
-import { createBinding, For } from "ags";
+import { createBinding, For, onCleanup } from "ags";
 import Tray from "gi://AstalTray";
 
 export default function SysTrayComponent() {
@@ -20,11 +20,16 @@ export default function SysTrayComponent() {
             <menubutton
               tooltipMarkup={createBinding(item, "tooltipMarkup")}
               usePopover={false}
-              actionGroup={createBinding(item, "action-group").as((ag) => [
-                "dbusmenu",
-                ag,
-              ])}
               menuModel={createBinding(item, "menu-model")}
+              // Gtk.MenuButton has no action-group property — insert it by hand
+              $={(self) => {
+                const actionGroup = createBinding(item, "action-group");
+                const apply = () =>
+                  self.insert_action_group("dbusmenu", actionGroup.peek());
+
+                apply();
+                onCleanup(actionGroup.subscribe(apply));
+              }}
             >
               <icon gicon={createBinding(item, "gicon")} />
             </menubutton>

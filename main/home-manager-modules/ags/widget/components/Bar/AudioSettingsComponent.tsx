@@ -24,6 +24,7 @@ const DevicePanel = ({ io }: { io: "input" | "output" }) => {
           label={io.toUpperCase()}
           maxWidthChars={50}
           ellipsize={3}
+          truncate
           hexpand
         />
         <box halign={END} valign={CENTER}>
