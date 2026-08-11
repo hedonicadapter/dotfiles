@@ -139,6 +139,7 @@
       inputs.ags.packages.${pkgs.system}.io # expose ags cli
       rofimoji
       blender
+      stremio-linux-shell
     ]
     # Languages
     ++ [
