@@ -1,12 +1,15 @@
-import { Gtk } from "astal/gtk3";
-import { GLib, Variable } from "astal";
+import Gtk from "gi://Gtk?version=3.0";
+import { GLib } from "ags";
+import { createPoll, createBinding } from "ags";
 
-const day = Variable<string>("").poll(
+const day = createPoll(
+  0,
   1000,
   () => GLib.DateTime.new_now_local().format("%a %d %b")!,
 );
 
-const time = Variable<string>("").poll(
+const time = createPoll(
+  0,
   1000,
   () => GLib.DateTime.new_now_local().format("%H:%M")!,
 );
@@ -14,7 +17,7 @@ const time = Variable<string>("").poll(
 export default function TimeComponent() {
   return (
     <box
-      className="bar-item datetime"
+      class="bar-item datetime"
       onDestroy={() => {
         day.drop();
         time.drop();
@@ -26,13 +29,13 @@ export default function TimeComponent() {
         label={day()}
         halign={Gtk.Align.CENTER}
         valign={Gtk.Align.CENTER}
-        className="day"
+        class="day"
       />
       <label
         label={time()}
         halign={Gtk.Align.CENTER}
         valign={Gtk.Align.CENTER}
-        className="time"
+        class="time"
       />
     </box>
   );

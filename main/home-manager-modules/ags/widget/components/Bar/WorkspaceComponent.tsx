@@ -1,7 +1,7 @@
 import Hyprland from "gi://AstalHyprland";
-import { bind, Variable } from "astal";
-import { Gtk } from "astal/gtk3";
+import Gtk from "gi://Gtk?version=3.0";
 import Hoverable from "../Hoverable";
+import { createState, createBinding } from "ags";
 
 type Bind = {
   key: string;
@@ -11,7 +11,7 @@ type Bind = {
 export default function WorkspaceComponent() {
   const hypr = Hyprland.get_default();
 
-  const submapLabel = Variable("NORMAL");
+  const [submapLabel, setSubmapLabel] = createState("NORMAL");
   const submapKeymaps = new Map<string, Bind[]>();
 
   hypr.get_binds().forEach((keybind) => {
@@ -31,29 +31,31 @@ export default function WorkspaceComponent() {
 
   hypr.connect("submap", (_: any, submap) => {
     const current = submap || "NORMAL";
-    submapLabel.set(current.toUpperCase());
+    setSubmapLabel(current.toUpperCase());
   });
 
   return (
     <box
-      className="bar-item workspaces"
+      class="bar-item workspaces"
       halign={Gtk.Align.START}
       valign={Gtk.Align.CENTER}
     >
       <box
-        className="workspace-indicator"
+        class="workspace-indicator"
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        {bind(hypr, "workspaces").as((wss) =>
+        // TODO:
+        {createBinding(hypr, "workspaces").as((wss) =>
           wss
             .sort((a, b) => a.id - b.id)
             .map((ws, index) => {
               if (index > 3) return <></>;
               return (
                 <label
-                  className="workspace"
-                  label={bind(hypr, "focusedWorkspace").as((fw) =>
+                  class="workspace"
+                  // TODO:
+                  label={createBinding(hypr, "focusedWorkspace").as((fw) =>
                     ws === fw ? "✦" : "✧",
                   )}
                 />
@@ -63,33 +65,29 @@ export default function WorkspaceComponent() {
       </box>
 
       <box
-        className="focused-workspace"
+        class="focused-workspace"
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        {bind(hypr, "focused-workspace").as((fws) => (
-          <label className={fws.name} label={fws.name + " | "} />
+        // TODO:
+        {createBinding(hypr, "focused-workspace").as((fws) => (
+          <label class={fws.name} label={fws.name + " | "} />
         ))}
       </box>
 
       <Hoverable
-        className="mode"
+        class="mode"
         main={
-          <box
-            className="main"
-            onDestroy={() => submapLabel.drop()}
-            halign={Gtk.Align.START}
-            valign={Gtk.Align.CENTER}
-          >
+          <box class="main" halign={Gtk.Align.START} valign={Gtk.Align.CENTER}>
             <label
-              className={bind(submapLabel)}
-              label={bind(submapLabel).as((l) => l.toUpperCase())}
+              class={createBinding(submapLabel)}
+              label={submapLabel((l) => l.toUpperCase())}
             />
           </box>
         }
         hoveredElement={
-          <box className="panel" vertical>
-            {bind(submapLabel).as(
+          <box class="panel" vertical>
+            {submapLabel(
               (l: string) =>
                 submapKeymaps.get(l)?.map((v) => (
                   <box>

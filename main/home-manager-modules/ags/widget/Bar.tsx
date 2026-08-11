@@ -1,5 +1,7 @@
-import { bind } from "astal";
-import { App, Astal, Gtk, Gdk } from "astal/gtk3";
+import { createBinding } from "ags";
+import { Astal, Gdk } from "ags/gtk3";
+import Gtk from "gi://Gtk?version=3.0";
+import app from "ags/gtk3/app";
 import Hyprland from "gi://AstalHyprland";
 import TimeComponent from "./components/Bar/TimeComponent";
 import SysTrayComponent from "./components/Bar/SysTrayComponent";
@@ -28,7 +30,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
   return (
     <window
-      className={bind(hypr, "focused-monitor").as((fm) => {
+      // TODO:
+      class={createBinding(hypr, "focused-monitor").as((fm) => {
         const gdkName = gdkmonitor.display.get_name();
         const waylandName = getGdkMonitorFromName(fm.name)
           ?.get_display()
@@ -45,16 +48,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         Astal.WindowAnchor.LEFT |
         Astal.WindowAnchor.RIGHT
       }
-      application={App}
+      application={app}
     >
-      <box vexpand={false} className="bar-items" valign={START}>
-        <box
-          vexpand={false}
-          className="left"
-          hexpand
-          halign={START}
-          valign={START}
-        >
+      <box vexpand={false} class="bar-items" valign={START}>
+        <box vexpand={false} class="left" hexpand halign={START} valign={START}>
           <box valign={START}>
             <WorkspaceComponent />
           </box>
@@ -72,13 +69,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           </box>
         </box>
 
-        <box className="center" halign={CENTER} valign={START}>
+        <box class="center" halign={CENTER} valign={START}>
           <box valign={START}>
             <TitleComponent />
           </box>
         </box>
 
-        <box className="right" hexpand halign={END} valign={START}>
+        <box class="right" hexpand halign={END} valign={START}>
           {/*<box valign={START} vertical>
             <MinReproComponent />
           </box>*/}

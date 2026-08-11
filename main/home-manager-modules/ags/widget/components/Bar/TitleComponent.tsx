@@ -1,34 +1,30 @@
 import Hyprland from "gi://AstalHyprland";
-import { Gtk } from "astal/gtk3";
-import { bind, Variable } from "astal";
-import { execAsync } from "astal/process";
+import Gtk from "gi://Gtk?version=3.0";
+import { execAsync } from "ags/process";
 import { escapeShellString } from "../../../util";
+import { createState, createBinding } from "ags";
 
 export default function TitleComponent() {
   const hypr = Hyprland.get_default();
-  const focused = bind(hypr, "focusedClient");
-  const currentTitle = Variable("");
+  const focused = createBinding(hypr, "focusedClient");
+  const [currentTitle, setCurrentTitle] = createState("");
   let timeout: ReturnType<typeof setTimeout>;
 
   const copyToClipboardAndNotify = async (title: string) => {
     try {
       const escapedString = escapeShellString(title);
       await execAsync(`bash -c "wl-copy '${escapedString}'"`);
-      currentTitle.set("COPIED.");
+      setCurrentTitle("COPIED.");
       clearTimeout(timeout);
-      timeout = setTimeout(() => currentTitle.set(title), 1000);
+      timeout = setTimeout(() => setCurrentTitle(title), 1000);
     } catch (e) {
       console.log("Error copying title: ", e);
     }
   };
 
   return (
-    <box
-      className="bar-item title"
-      visible={focused.as(Boolean)}
-      valign={Gtk.Align.CENTER}
-    >
-      {focused.as((client) => {
+    <box class="bar-item title" visible={focused} valign={Gtk.Align.CENTER}>
+      {focused((client) => {
         const title =
           client.title.length > 0 ? client.title.split("—")[0] : "♥︎";
         clearTimeout(timeout);
@@ -39,7 +35,7 @@ export default function TitleComponent() {
             <label
               valign={Gtk.Align.CENTER}
               ellipsize={3}
-              label={bind(currentTitle).as((s) => s || "NULL")}
+              label={currentTitle((s) => s || "NULL")}
             />
           </eventbox>
         );

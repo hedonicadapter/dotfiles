@@ -1,8 +1,8 @@
-import { Gtk } from "astal/gtk3";
+import Gtk from "gi://Gtk?version=3.0";
 import Notifd, { type Notification } from "gi://AstalNotifd";
 import NotificationComponent from "../NotificationComponent";
-import { type Subscribable } from "astal/binding";
-import { Variable, Binding, bind, timeout } from "astal";
+import { type Subscribable } from "ags/binding";
+import { createState, createBinding, type Accessor } from "ags";
 
 const TIMEOUT_DELAY = 5000;
 const BLACKLIST = ["Spotify"];
@@ -16,17 +16,19 @@ class NotificationMap implements Subscribable {
 
   // it makes sense to use a Variable under the hood and use its
   // reactivity implementation instead of keeping track of subscribers ourselves
-  private var: Variable<Array<Gtk.Widget>> = Variable([]);
+  private var = createState<Array<Gtk.Widget>>([]);
 
-  private latestNotification: Variable<[Notification | null, number]> =
-    Variable([null, 0]);
+  private latestNotification = createState<[Notification | null, number]>([
+    null,
+    0,
+  ]);
 
   // notify subscribers to rerender when state changes
   private notifiy() {
     this.var.set([...this.map.values()].reverse());
   }
 
-  constructor(hovered: Variable<boolean>) {
+  constructor(hovered: Accessor<boolean>) {
     const notifd = Notifd.get_default();
     notifd.connect("notified", (_, id) => {
       const notification = notifd.get_notification(id)!;
@@ -42,19 +44,20 @@ class NotificationMap implements Subscribable {
         }
       });
 
-      const visible = Variable.derive(
-        [this.latestNotification, hovered],
-        (l: [Notification | null, number], h) => h || id === l[0]?.get_id(),
-      );
+      // TODO:
+      // const visible = Variable.derive(
+      //   [this.latestNotification, hovered],
+      //   (l: [Notification | null, number], h) => h || id === l[0]?.get_id(),
+      // );
 
-      this.set(
-        id,
-        NotificationComponent({
-          notification,
-          hovered,
-          visible,
-        }),
-      );
+      // this.set(
+      //   id,
+      //   NotificationComponent({
+      //     notification,
+      //     hovered,
+      //     visible,
+      //   }),
+      // );
     });
 
     notifd.connect("resolved", (_, id) => {
@@ -84,17 +87,17 @@ class NotificationMap implements Subscribable {
 }
 
 export default function NotificationsComponent() {
-  const hovered = Variable(false);
+  const [hovered, setHovered] = createState(false);
   const notifs = new NotificationMap(hovered);
 
   return (
     <eventbox
-      className="bar-item notifications"
-      onHover={() => hovered.set(true)}
-      onHoverLost={() => hovered.set(false)}
+      class="bar-item notifications"
+      onHover={() => setHovered(true)}
+      onHoverLost={() => setHovered(false)}
     >
-      <box vertical className="panel ">
-        {bind(notifs)}
+      <box vertical class="panel ">
+        {createBinding(notifs)}
       </box>
     </eventbox>
   );

@@ -1,8 +1,8 @@
-import { Variable, bind, type Binding } from "astal";
-import { Gtk } from "astal/gtk3";
+import Gtk from "gi://Gtk?version=3.0";
 import Wp, { type Device, type Endpoint, type Stream } from "gi://AstalWp";
 import Hoverable from "../Hoverable";
-import { execAsync } from "astal/process";
+import { execAsync } from "ags/process";
+import { createBinding } from "ags";
 
 const { START, CENTER } = Gtk.Align;
 
@@ -45,7 +45,8 @@ const deviceRemovedConnection = wp.connect(
 export const Bar = ({ stream }: { stream: any }) => {
   return (
     <box>
-      {bind(stream, "volume").as((volume) =>
+      // TODO:
+      {createBinding(stream, "volume").as((volume) =>
         Array.from({ length: 5 }).map((_, i) => {
           const tenths = Math.round(parseFloat(volume) * 5);
           const fill = i <= tenths;
@@ -57,13 +58,14 @@ export const Bar = ({ stream }: { stream: any }) => {
 
                 stream.volume = newVolume;
               }}
-              className={bind(stream, "muted").as((b) =>
+              // TODO:
+              class={createBinding(stream, "muted").as((b) =>
                 b ? "bar muted" : "bar",
               )}
               valign={CENTER}
             >
               <label
-                className={
+                class={
                   tenths < 2
                     ? "low"
                     : tenths < 4
@@ -87,7 +89,7 @@ export const Bar = ({ stream }: { stream: any }) => {
 export default function () {
   return (
     <box
-      className="audio"
+      class="audio"
       valign={CENTER}
       halign={START}
       onDestroy={() => {
@@ -95,12 +97,12 @@ export default function () {
         wp.disconnect(deviceRemovedConnection);
       }}
     >
-      <box className="bar-item" valign={CENTER}>
+      <box class="bar-item" valign={CENTER}>
         <button valign={CENTER} onClicked={() => (mic.mute = !mic.mute)}>
-          <label valign={CENTER} className="bar-label" label="IN:" />
+          <label valign={CENTER} class="bar-label" label="IN:" />
         </button>
-
-        {bind(mic, "muted").as((m) =>
+        // TODO:
+        {createBinding(mic, "muted").as((m) =>
           m ? (
             <button valign={CENTER} onClicked={() => (mic.mute = false)}>
               <label label="MUTED" valign={CENTER} />
@@ -111,15 +113,15 @@ export default function () {
         )}
       </box>
 
-      <box className="bar-item" valign={CENTER}>
+      <box class="bar-item" valign={CENTER}>
         <button
           valign={CENTER}
           onClicked={() => (speaker.mute = !speaker.mute)}
         >
-          <label valign={CENTER} className="bar-label" label="OUT:" />
+          <label valign={CENTER} class="bar-label" label="OUT:" />
         </button>
-
-        {bind(speaker, "muted").as((m) =>
+        // TODO:
+        {createBinding(speaker, "muted").as((m) =>
           m ? (
             <button valign={CENTER} onClicked={() => (speaker.mute = false)}>
               <label valign={CENTER} label="MUTED" />

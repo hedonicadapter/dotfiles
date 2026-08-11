@@ -1,7 +1,8 @@
-import { GLib, Variable, Binding, bind } from "astal";
+import { GLib } from "ags";
 import { Gtk, Astal } from "astal/gtk3";
-import { type EventBox } from "astal/gtk3/widget";
+import { type EventBox } from "ags/gtk3/widget";
 import Notifd from "gi://AstalNotifd";
+import { createBinding, type Accessor } from "ags";
 
 const isIcon = (icon: string) => !!Astal.Icon.lookup_icon(icon);
 const fileExists = (path: string) => GLib.file_test(path, GLib.FileTest.EXISTS);
@@ -33,8 +34,8 @@ function escapeHtml(unsafe) {
 
 type Props = {
   notification: Notifd.Notification;
-  hovered: Variable<boolean>;
-  visible: Variable<boolean>;
+  hovered: Accessor<boolean>;
+  visible: Accessor<boolean>;
   setup?: (self: EventBox) => void;
 };
 
@@ -43,18 +44,22 @@ export default function NotificationComponent(props: Props) {
   const { START, CENTER, END } = Gtk.Align;
 
   return (
-    <eventbox visible={bind(visible)} className={`${urgency(n)}`} setup={setup}>
+    <eventbox
+      visible={createBinding(visible)}
+      class={`${urgency(n)}`}
+      $={setup}
+    >
       <box vertical>
-        <box className="header">
+        <box class="header">
           <label
-            className="app-name"
+            class="app-name"
             halign={START}
             valign={CENTER}
             truncate
             label={(n.appName || "Unknown").toUpperCase() + ":"}
           />
           <label
-            className="summary"
+            class="summary"
             halign={START}
             valign={CENTER}
             xalign={0}
@@ -62,41 +67,41 @@ export default function NotificationComponent(props: Props) {
             truncate
           />
           <label
-            className="time"
+            class="time"
             hexpand
             halign={END}
             valign={CENTER}
-            visible={bind(hovered)}
+            visible={createBinding(hovered)}
             label={time(n.time) + " "}
           />
           <button
-            className="close-button"
+            class="close-button"
             valign={CENTER}
             onClicked={() => n.dismiss()}
-            visible={bind(hovered)}
+            visible={createBinding(hovered)}
           >
             <icon icon="window-close-symbolic" />
           </button>
         </box>
-        <box visible={bind(hovered)} className="content">
+        <box visible={createBinding(hovered)} class="content">
           {n.image && fileExists(n.image) && (
             <box
               valign={START}
-              className="image"
+              class="image"
               css={`
                 background-image: url("${n.image}");
               `}
             />
           )}
           {n.image && isIcon(n.image) && (
-            <box expand={false} valign={START} className="icon-image">
+            <box expand={false} valign={START} class="icon-image">
               <icon icon={n.image} expand halign={CENTER} valign={CENTER} />
             </box>
           )}
           <box vertical>
             {n.body && (
               <label
-                className="body"
+                class="body"
                 wrap
                 useMarkup
                 halign={START}
@@ -105,7 +110,7 @@ export default function NotificationComponent(props: Props) {
                 label={escapeHtml(n.body)}
               />
             )}
-            <box className="actions">
+            <box class="actions">
               {n.get_actions().length > 0 &&
                 n.get_actions().map((action) => (
                   <button onClicked={() => n.invoke(action.id)}>

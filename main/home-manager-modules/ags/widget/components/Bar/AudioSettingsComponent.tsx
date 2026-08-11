@@ -1,11 +1,11 @@
-import { Gtk } from "astal/gtk3";
-import { Variable, bind, type Binding } from "astal";
+import Gtk from "gi://Gtk?version=3.0";
 import Wp, { type Device, type Endpoint, type Stream } from "gi://AstalWp";
 import { Bar } from "./AudioComponent";
+import { createState, createBinding } from "ags";
 
 const { START, CENTER, END } = Gtk.Align;
 
-export const toggleAudioSettings = Variable(false);
+export const [toggleAudioSettings, setToggleAudioSettings] = createState(false);
 
 const DevicePanel = ({ io }: { io: "input" | "output" }) => {
   const wp = Wp.get_default();
@@ -20,7 +20,7 @@ const DevicePanel = ({ io }: { io: "input" | "output" }) => {
         <label
           halign={START}
           valign={CENTER}
-          className="heading"
+          class="heading"
           label={io.toUpperCase()}
           maxWidthChars={50}
           ellipsize={3}
@@ -33,11 +33,15 @@ const DevicePanel = ({ io }: { io: "input" | "output" }) => {
       </box>
 
       <box vertical>
-        {bind(audio, io === "input" ? "microphones" : "speakers").as(
+        // TODO:
+        {createBinding(audio, io === "input" ? "microphones" : "speakers").as(
           (ss: Endpoint[]) =>
             ss.map((s: Endpoint) => (
               <button
-                className={bind(s, "isDefault").as((b) => (b ? "active" : ""))}
+                // TODO:
+                class={createBinding(s, "isDefault").as((b) =>
+                  b ? "active" : "",
+                )}
                 onClicked={() => s.set_is_default(true)}
                 valign={CENTER}
                 hexpand
@@ -45,7 +49,7 @@ const DevicePanel = ({ io }: { io: "input" | "output" }) => {
                 <label
                   valign={CENTER}
                   halign={START}
-                  className="bar-label"
+                  class="bar-label"
                   label={s.description || ""}
                 />
               </button>
@@ -62,36 +66,32 @@ export default function () {
 
   return (
     <box
-      className="audio-settings"
-      visible={bind(toggleAudioSettings)}
+      class="audio-settings"
+      visible={createBinding(toggleAudioSettings)}
       halign={START}
       vexpand
       vertical
     >
-      <box className="panel device-panel" hexpand>
+      <box class="panel device-panel" hexpand>
         <DevicePanel io="input" />
       </box>
 
-      <box className="panel device-panel" hexpand>
+      <box class="panel device-panel" hexpand>
         <DevicePanel io="output" />
       </box>
 
-      <box className="panel endpoints" orientation={1} vertical={true}>
-        <label
-          className="heading"
-          halign={START}
-          valign={CENTER}
-          label="MIXER"
-        />
-
-        {bind(audio, "streams").as((streams) =>
+      <box class="panel endpoints" orientation={1} vertical={true}>
+        <label class="heading" halign={START} valign={CENTER} label="MIXER" />
+        // TODO:
+        {createBinding(audio, "streams").as((streams) =>
           streams.length > 0 ? (
             streams.map((stream: any) => {
               return (
                 <box hexpand>
                   <button
                     valign={START}
-                    className={bind(stream, "mute").as((b) =>
+                    // TODO:
+                    class={createBinding(stream, "mute").as((b) =>
                       b ? "muted" : "",
                     )}
                     onClicked={() => (stream.mute = !stream.mute)}

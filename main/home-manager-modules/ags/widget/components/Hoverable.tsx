@@ -1,36 +1,36 @@
-import { bind, Variable } from "astal";
-import { Gtk } from "astal/gtk3";
+import Gtk from "gi://Gtk?version=3.0"
+import { createState, createBinding } from "ags";
 
 export default function ({
   main,
   hoveredElement,
-  className,
+  class,
   enable = true,
 }: {
   main: JSX.Element;
   hoveredElement: JSX.Element;
-  className?: string;
+  class?: string;
   enable?: boolean;
 }) {
-  const hovered = Variable(false);
+  const [hovered, setHovered] = createState(false);
 
   return (
     <eventbox
-      onHover={() => enable && hovered.set(true)}
-      onHoverLost={() => enable && hovered.set(false)}
+      onHover={() => enable && setHovered(true)}
+      onHoverLost={() => enable && setHovered(false)}
       onDestroy={() => hovered.drop()}
       valign={Gtk.Align.CENTER}
     >
       <box
-        className={bind(hovered).as((h) =>
-          h ? `bar-item ${className} hovered` : `bar-item ${className}`,
+        class={hovered((h) =>
+          h ? `bar-item ${class} hovered` : `bar-item ${className}`,
         )}
         vertical
         valign={Gtk.Align.CENTER}
       >
         {main}
 
-        <box visible={bind(hovered)} valign={Gtk.Align.CENTER}>
+        <box visible={createBinding(hovered)} valign={Gtk.Align.CENTER}>
           {hoveredElement}
         </box>
       </box>

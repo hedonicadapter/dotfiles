@@ -1,6 +1,7 @@
-import { Gtk } from "astal/gtk3";
-import { bind, Variable } from "astal";
+import Gtk from "gi://Gtk?version=3.0";
+import { Variable } from "ags";
 import Network from "gi://AstalNetwork";
+import { createBinding } from "ags";
 
 const connectivityEnumToIcon = {
   [Network.Connectivity.UNKNOWN]: "unknown",
@@ -39,11 +40,12 @@ const wifiEnumToIcon = {
 export default function WifiComponent() {
   const network = Network.get_default();
 
-  const state = bind(network, "state");
-  const connectivity = bind(network, "connectivity");
-  const wired = bind(network, "wired");
-  const wifi = bind(network, "wifi");
+  const state = createBinding(network, "state");
+  const connectivity = createBinding(network, "connectivity");
+  const wired = createBinding(network, "wired");
+  const wifi = createBinding(network, "wifi");
 
+  // TODO:
   const networking = Variable.derive(
     [state, connectivity, wired, wifi],
     (state: any, connectivity: any, wired: any, wifi: any) => {
@@ -70,18 +72,18 @@ export default function WifiComponent() {
     <box
       valign={Gtk.Align.CENTER}
       halign={Gtk.Align.CENTER}
-      className="bar-item network"
+      class="bar-item network"
       onDestroy={() => networking.drop()}
     >
       <icon
         valign={Gtk.Align.CENTER}
         halign={Gtk.Align.CENTER}
-        icon={bind(networking)}
+        icon={createBinding(networking)}
       />
       <label
         valign={Gtk.Align.CENTER}
         halign={Gtk.Align.CENTER}
-        label={bind(networking).as((s) => s.replaceAll("-", " ").toUpperCase())}
+        label={networking((s) => s.replaceAll("-", " ").toUpperCase())}
       />
     </box>
   );

@@ -1,7 +1,7 @@
-import { bind } from "astal";
-import { Gtk } from "astal/gtk3";
+import { createBinding } from "ags";
+import { Gtk } from "ags/gtk3";
 import Mpris from "gi://AstalMpris";
-import { exec } from "astal/process";
+import { exec } from "ags/process";
 import { fmtMSS } from "../../../util";
 import Hoverable from "../Hoverable";
 
@@ -20,8 +20,10 @@ const playa = Mpris.Player.new("spotify");
 
 const PlayButton = () => (
   <button
-    className={
-      "play " + bind(playa, "can_play").as((b) => (b ? "enabled" : "disabled"))
+    // TODO:
+    class={
+      "play " +
+      createBinding(playa, "can_play").as((b) => (b ? "enabled" : "disabled"))
     }
     onClicked={() => playa.get_can_play() && playa.play()}
     valign={CENTER}
@@ -33,9 +35,10 @@ const PlayButton = () => (
 
 const PauseButton = () => (
   <button
-    className={
+    // TODO:
+    class={
       "pause " +
-      bind(playa, "can_pause").as((b) => (b ? "enabled" : "disabled"))
+      createBinding(playa, "can_pause").as((b) => (b ? "enabled" : "disabled"))
     }
     onClicked={() => playa.get_can_pause() && playa.pause()}
     valign={CENTER}
@@ -48,7 +51,7 @@ const PauseButton = () => (
 const component = (enabled: boolean) => {
   return (
     <Hoverable
-      className="media-player"
+      class="media-player"
       main={
         <eventbox
           onClick={() =>
@@ -58,13 +61,15 @@ const component = (enabled: boolean) => {
           }
           valign={CENTER}
         >
-          {bind(playa, "available").as(() => (
-            <box className="main" valign={CENTER}>
-              <box className="media-controls" valign={CENTER} halign={START}>
+          // TODO:
+          {createBinding(playa, "available").as(() => (
+            <box class="main" valign={CENTER}>
+              <box class="media-controls" valign={CENTER} halign={START}>
                 <button
                   valign={CENTER}
                   halign={START}
-                  className={bind(playa, "can_go_previous").as((b) =>
+                  // TODO:
+                  class={createBinding(playa, "can_go_previous").as((b) =>
                     b ? "enabled" : "disabled",
                   )}
                   onClicked={() =>
@@ -73,8 +78,8 @@ const component = (enabled: boolean) => {
                 >
                   ⏮
                 </button>
-
-                {bind(playa, "playback-status").as((status) => {
+                // TODO:
+                {createBinding(playa, "playback-status").as((status) => {
                   switch (status) {
                     case 2:
                     case 1:
@@ -84,11 +89,11 @@ const component = (enabled: boolean) => {
                       return <PauseButton />;
                   }
                 })}
-
                 <button
                   valign={CENTER}
                   halign={END}
-                  className={bind(playa, "can_go_next").as((b) =>
+                  // TODO:
+                  class={createBinding(playa, "can_go_next").as((b) =>
                     b ? "enabled" : "disabled",
                   )}
                   onClicked={() => playa.get_can_go_next() && playa.next()}
@@ -98,7 +103,8 @@ const component = (enabled: boolean) => {
               </box>
 
               <box halign={CENTER} valign={CENTER}>
-                {bind(playa, "position").as((p) => {
+                // TODO:
+                {createBinding(playa, "position").as((p) => {
                   let positionInPx = 0;
                   if (p >= 0) {
                     const length = playa.get_length();
@@ -109,7 +115,7 @@ const component = (enabled: boolean) => {
 
                   return (
                     <box
-                      className="position-bar"
+                      class="position-bar"
                       valign={CENTER}
                       halign={CENTER}
                       hexpand
@@ -121,7 +127,7 @@ const component = (enabled: boolean) => {
                       <box
                         vexpand
                         valign={CENTER}
-                        className="current-position"
+                        class="current-position"
                         css={`
                           min-width: ${positionInPx}px;
                         `}
@@ -132,7 +138,8 @@ const component = (enabled: boolean) => {
               </box>
 
               <box halign={END} valign={CENTER}>
-                {bind(playa, "position").as((p) => {
+                // TODO:
+                {createBinding(playa, "position").as((p) => {
                   let time;
                   if (p >= 0) {
                     const length = playa.get_length();
@@ -146,7 +153,7 @@ const component = (enabled: boolean) => {
                     <box
                       valign={CENTER}
                       halign={CENTER}
-                      className="position-and-length"
+                      class="position-and-length"
                     >
                       {time}
                     </box>
@@ -159,32 +166,36 @@ const component = (enabled: boolean) => {
       }
       enable={enabled}
       hoveredElement={
-        <box className="panel ">
+        <box class="panel ">
           <box
-            className="cover-art"
-            css={bind(playa, "art_url").as(
+            class="cover-art"
+            // TODO:
+            css={createBinding(playa, "art_url").as(
               (cover) =>
                 `background-image: url("${cover}"); background-size: contain; min-width: 50px; min-height: 50px;`,
             )}
           />
 
-          <box className="track-info" vertical>
+          <box class="track-info" vertical>
             <label
-              className="album-title"
+              class="album-title"
               truncate
-              label={bind(playa, "album").as((s) => s || "")}
+              // TODO:
+              label={createBinding(playa, "album").as((s) => s || "")}
               halign={START}
             />
             <label
-              className="artist-names"
+              class="artist-names"
               truncate
-              label={bind(playa, "artist").as((s) => s || "")}
+              // TODO:
+              label={createBinding(playa, "artist").as((s) => s || "")}
               halign={START}
             />
             <label
-              className="project-name"
+              class="project-name"
               truncate
-              label={bind(playa, "title").as((s) => s || "")}
+              // TODO:
+              label={createBinding(playa, "title").as((s) => s || "")}
               halign={START}
             />
           </box>
@@ -194,5 +205,6 @@ const component = (enabled: boolean) => {
   );
 };
 export default function () {
-  return bind(playa, "available").as(component);
+  // TODO:
+  return createBinding(playa, "available").as(component);
 }

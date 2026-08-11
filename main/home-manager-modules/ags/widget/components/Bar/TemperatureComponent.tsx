@@ -1,7 +1,8 @@
-import { Variable, bind } from "astal";
-import { Gtk } from "astal/gtk3";
+import Gtk from "gi://Gtk?version=3.0";
+import { createPoll, createBinding } from "ags";
 
-const temperature = Variable(0).poll(
+const temperature = createPoll(
+  0,
   5000,
   `bash -c '
       max_temp=0
@@ -17,12 +18,12 @@ const temperature = Variable(0).poll(
 
 export default function TemperatureComponent() {
   return (
-    <box className="bar-item temperature">
+    <box class="bar-item temperature">
       <box
         valign={Gtk.Align.CENTER}
         halign={Gtk.Align.CENTER}
         onDestroy={() => temperature.drop()}
-        className={bind(temperature).as((t: number) => {
+        class={temperature((t: number) => {
           switch (true) {
             case t < 40:
               return "low";
@@ -35,11 +36,11 @@ export default function TemperatureComponent() {
       >
         <label
           valign={Gtk.Align.CENTER}
-          label={bind(temperature).as((t) => t.toString() + "°")}
-          className="temperature-label"
+          label={temperature((t) => t.toString() + "°")}
+          class="temperature-label"
         />
         <icon
-          className="fan"
+          class="fan"
           icon="fan-symbolic"
           valign={Gtk.Align.CENTER}
           halign={Gtk.Align.CENTER}

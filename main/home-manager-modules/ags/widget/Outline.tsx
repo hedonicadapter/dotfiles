@@ -1,34 +1,16 @@
-import Hyprland from "gi://AstalHyprland";
-import { Variable, bind } from "astal";
-import { App, Astal, Gtk, Gdk } from "astal/gtk3";
+import { Astal, Gdk } from "astal/gtk3";
+import app from "ags/gtk3/app";
+import { createState, createBinding } from "ags";
 import { getGdkMonitorFromName } from "../util";
 
-// const hypr = Hyprland.get_default();
-//
-// className={bind(hypr, "focused-monitor").as((fm) => {
-//   const gdkName = gdkmonitor.display.get_name();
-//   const waylandName = getGdkMonitorFromName(fm.name)
-//     ?.get_display()
-//     .get_name();
-//   const currentMonitorIsFocusedMonitor = gdkName === waylandName;
-//
-//   // console.log(fm.name);
-//   // console.log(gdkName);
-//   // console.log(waylandName);
-//   // console.log(currentMonitorIsFocusedMonitor);
-//   return currentMonitorIsFocusedMonitor
-//     ? "Outline active-monitor"
-//     : "Outline";
-// })}
-
 export default function Outline(gdkmonitor: Gdk.Monitor) {
-  const hovered = Variable(false);
+  const [hovered, setHovered] = createState(false);
   return (
     <window
-      className={bind(hovered).as((h) => (h ? "Outline hovered" : "Outline"))}
+      class={hovered((h) => (h ? "Outline hovered" : "Outline"))}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.IGNORE}
-      clickThrough={true}
+      $={(self) => Astal.widget_set_click_through(self, true)}
       layer={Astal.Layer.OVERLAY}
       anchor={
         Astal.WindowAnchor.TOP |
@@ -36,13 +18,13 @@ export default function Outline(gdkmonitor: Gdk.Monitor) {
         Astal.WindowAnchor.RIGHT |
         Astal.WindowAnchor.BOTTOM
       }
-      application={App}
+      application={app}
     >
       <eventbox
         hexpand
         vexpand
-        onHover={() => hovered.set(true)}
-        onHoverLost={() => hovered.set(false)}
+        onHover={() => setHovered(true)}
+        onHoverLost={() => setHovered(false)}
       ></eventbox>
     </window>
   );
