@@ -1,5 +1,6 @@
 import GObject from "gi://GObject";
-import { Gtk, Gdk } from "astal/gtk3";
+import Gtk from "gi://Gtk?version=3.0";
+import Gdk from "gi://Gdk?version=3.0";
 
 const ignoreKeys = [
   Gdk.KEY_Alt_L,
@@ -14,12 +15,12 @@ const ignoreKeys = [
 
 export default function ({
   onEnter,
-  className,
+  class: className,
   hexpand,
   vexpand,
 }: {
   onEnter: (currentText: string) => void;
-  className?: string;
+  class?: string;
   hexpand?: boolean;
   vexpand?: boolean;
 }) {
@@ -44,7 +45,7 @@ export default function ({
         textBuffer.set_text("", 0);
       }}
     >
-      <box className={className} hexpand={hexpand} vexpand={vexpand}>
+      <box class={className} hexpand={hexpand} vexpand={vexpand}>
         {textView}
       </box>
     </eventbox>

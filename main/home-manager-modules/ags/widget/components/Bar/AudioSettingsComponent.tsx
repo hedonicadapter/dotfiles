@@ -1,17 +1,17 @@
-import { Gtk } from "astal/gtk3";
-import { Variable, bind, type Binding } from "astal";
-import Wp, { type Device, type Endpoint, type Stream } from "gi://AstalWp";
+import Gtk from "gi://Gtk?version=3.0";
+import { createBinding, createState, For } from "ags";
+import Wp, { type Endpoint } from "gi://AstalWp";
 import { Bar } from "./AudioComponent";
 
 const { START, CENTER, END } = Gtk.Align;
 
-export const toggleAudioSettings = Variable(false);
+export const [toggleAudioSettings, setAudioSettings] = createState(false);
 
 const DevicePanel = ({ io }: { io: "input" | "output" }) => {
   const wp = Wp.get_default();
   const audio = wp?.audio;
 
-  const binding =
+  const stream =
     io === "input" ? audio.default_microphone : audio.default_speaker;
 
   return (
@@ -20,37 +20,35 @@ const DevicePanel = ({ io }: { io: "input" | "output" }) => {
         <label
           halign={START}
           valign={CENTER}
-          className="heading"
+          class="heading"
           label={io.toUpperCase()}
           maxWidthChars={50}
           ellipsize={3}
-          truncate
           hexpand
         />
         <box halign={END} valign={CENTER}>
-          <Bar stream={binding} />
+          <Bar stream={stream} />
         </box>
       </box>
 
       <box vertical>
-        {bind(audio, io === "input" ? "microphones" : "speakers").as(
-          (ss: Endpoint[]) =>
-            ss.map((s: Endpoint) => (
-              <button
-                className={bind(s, "isDefault").as((b) => (b ? "active" : ""))}
-                onClicked={() => s.set_is_default(true)}
+        <For each={createBinding(audio, io === "input" ? "microphones" : "speakers")}>
+          {(s: Endpoint) => (
+            <button
+              class={createBinding(s, "isDefault").as((b) => (b ? "active" : ""))}
+              onClicked={() => s.set_is_default(true)}
+              valign={CENTER}
+              hexpand
+            >
+              <label
                 valign={CENTER}
-                hexpand
-              >
-                <label
-                  valign={CENTER}
-                  halign={START}
-                  className="bar-label"
-                  label={s.description || ""}
-                />
-              </button>
-            )),
-        )}
+                halign={START}
+                class="bar-label"
+                label={s.description || ""}
+              />
+            </button>
+          )}
+        </For>
       </box>
     </box>
   );
@@ -62,56 +60,41 @@ export default function () {
 
   return (
     <box
-      className="audio-settings"
-      visible={bind(toggleAudioSettings)}
+      class="audio-settings"
+      visible={toggleAudioSettings}
       halign={START}
       vexpand
       vertical
     >
-      <box className="panel device-panel" hexpand>
+      <box class="panel device-panel" hexpand>
         <DevicePanel io="input" />
       </box>
 
-      <box className="panel device-panel" hexpand>
+      <box class="panel device-panel" hexpand>
         <DevicePanel io="output" />
       </box>
 
-      <box className="panel endpoints" orientation={1} vertical={true}>
-        <label
-          className="heading"
-          halign={START}
-          valign={CENTER}
-          label="MIXER"
-        />
+      <box class="panel endpoints" orientation={1} vertical={true}>
+        <label class="heading" halign={START} valign={CENTER} label="MIXER" />
 
-        {bind(audio, "streams").as((streams) =>
-          streams.length > 0 ? (
-            streams.map((stream: any) => {
-              return (
-                <box hexpand>
-                  <button
-                    valign={START}
-                    className={bind(stream, "mute").as((b) =>
-                      b ? "muted" : "",
-                    )}
-                    onClicked={() => (stream.mute = !stream.mute)}
-                    hexpand
-                  >
-                    <label
-                      label={stream.name || ""}
-                      halign={START}
-                      ellipsize={3}
-                    />
-                  </button>
+        <For each={createBinding(audio, "streams")}>
+          {(stream: any) => (
+            <box hexpand>
+              <button
+                valign={START}
+                class={createBinding(stream, "mute").as((b) =>
+                  b ? "muted" : "",
+                )}
+                onClicked={() => (stream.mute = !stream.mute)}
+                hexpand
+              >
+                <label label={stream.name || ""} halign={START} ellipsize={3} />
+              </button>
 
-                  <Bar stream={stream} />
-                </box>
-              );
-            })
-          ) : (
-            <box />
-          ),
-        )}
+              <Bar stream={stream} />
+            </box>
+          )}
+        </For>
       </box>
     </box>
   );

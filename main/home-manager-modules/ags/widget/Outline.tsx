@@ -1,31 +1,30 @@
-import Hyprland from "gi://AstalHyprland";
-import { Variable, bind } from "astal";
-import { App, Astal, Gtk, Gdk } from "astal/gtk3";
-import { getGdkMonitorFromName } from "../util";
+import { createComputed, createState } from "ags";
+import app from "ags/gtk3/app";
+import Astal from "gi://Astal?version=3.0";
+import Gdk from "gi://Gdk?version=3.0";
+import { getMonitorPlugName } from "../util";
+import { focusedOutput } from "../niri";
 
-// const hypr = Hyprland.get_default();
-//
-// className={bind(hypr, "focused-monitor").as((fm) => {
-//   const gdkName = gdkmonitor.display.get_name();
-//   const waylandName = getGdkMonitorFromName(fm.name)
-//     ?.get_display()
-//     .get_name();
-//   const currentMonitorIsFocusedMonitor = gdkName === waylandName;
-//
-//   // console.log(fm.name);
-//   // console.log(gdkName);
-//   // console.log(waylandName);
-//   // console.log(currentMonitorIsFocusedMonitor);
-//   return currentMonitorIsFocusedMonitor
-//     ? "Outline active-monitor"
-//     : "Outline";
-// })}
+export default function Outline(gdkmonitor: Gdk.Monitor, index: number) {
+  const [hovered, setHovered] = createState(false);
+  const monitorName = getMonitorPlugName(gdkmonitor);
 
-export default function Outline(gdkmonitor: Gdk.Monitor) {
-  const hovered = Variable(false);
+  const className = createComputed(
+    [hovered, focusedOutput],
+    (isHovered, output) =>
+      [
+        "Outline",
+        output && output === monitorName ? "active-monitor" : "",
+        isHovered ? "hovered" : "",
+      ]
+        .filter(Boolean)
+        .join(" "),
+  );
+
   return (
     <window
-      className={bind(hovered).as((h) => (h ? "Outline hovered" : "Outline"))}
+      name={`outline-${index}`}
+      class={className}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.IGNORE}
       clickThrough={true}
@@ -36,13 +35,13 @@ export default function Outline(gdkmonitor: Gdk.Monitor) {
         Astal.WindowAnchor.RIGHT |
         Astal.WindowAnchor.BOTTOM
       }
-      application={App}
+      application={app}
     >
       <eventbox
         hexpand
         vexpand
-        onHover={() => hovered.set(true)}
-        onHoverLost={() => hovered.set(false)}
+        onHover={() => setHovered(true)}
+        onHoverLost={() => setHovered(false)}
       ></eventbox>
     </window>
   );

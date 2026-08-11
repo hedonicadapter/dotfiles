@@ -1,6 +1,7 @@
-import { bind } from "astal";
-import { App, Astal, Gtk, Gdk } from "astal/gtk3";
-import Hyprland from "gi://AstalHyprland";
+import app from "ags/gtk3/app";
+import Astal from "gi://Astal?version=3.0";
+import Gtk from "gi://Gtk?version=3.0";
+import Gdk from "gi://Gdk?version=3.0";
 import TimeComponent from "./components/Bar/TimeComponent";
 import SysTrayComponent from "./components/Bar/SysTrayComponent";
 import WifiComponent from "./components/Bar/WifiComponent";
@@ -11,32 +12,27 @@ import AudioComponent from "./components/Bar/AudioComponent";
 import MediaComponent from "./components/Bar/MediaComponent";
 import TemperatureComponent from "./components/Bar/TemperatureComponent";
 import BluetoothComponent from "./components/Bar/BluetoothComponent";
-import { getGdkMonitorFromName } from "../util";
+import { getMonitorPlugName } from "../util";
 import NoiseComponent from "./components/Bar/NoiseComponent";
 import MinReproComponent from "./components/Bar/MinReproComponent";
 import AudioSettingsComponent, {
-  toggleAudioSettings,
+  setAudioSettings,
 } from "./components/Bar/AudioSettingsComponent";
 import BluetoothSettingsComponent, {
-  toggleBluetoothSettings,
+  setBluetoothSettings,
 } from "./components/Bar/BluetoothSettingsComponent";
+import { focusedOutput } from "../niri";
 
-const hypr = Hyprland.get_default();
-
-export default function Bar(gdkmonitor: Gdk.Monitor) {
+export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
   const { START, END, CENTER } = Gtk.Align;
+  const monitorName = getMonitorPlugName(gdkmonitor);
 
   return (
     <window
-      className={bind(hypr, "focused-monitor").as((fm) => {
-        const gdkName = gdkmonitor.display.get_name();
-        const waylandName = getGdkMonitorFromName(fm.name)
-          ?.get_display()
-          .get_name();
-        const currentMonitorIsFocusedMonitor = gdkName === waylandName;
-
-        return currentMonitorIsFocusedMonitor ? "Bar active-monitor" : "Bar";
-      })}
+      name={`bar-${index}`}
+      class={focusedOutput.as((output) =>
+        output && output === monitorName ? "Bar active-monitor" : "Bar",
+      )}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       keymode={Astal.Keymode.ON_DEMAND}
@@ -45,18 +41,18 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         Astal.WindowAnchor.LEFT |
         Astal.WindowAnchor.RIGHT
       }
-      application={App}
+      application={app}
     >
-      <box vexpand={false} className="bar-items" valign={START}>
+      <box vexpand={false} class="bar-items" valign={START}>
         <box
           vexpand={false}
-          className="left"
+          class="left"
           hexpand
           halign={START}
           valign={START}
         >
           <box valign={START}>
-            <WorkspaceComponent />
+            <WorkspaceComponent monitor={monitorName} />
           </box>
 
           <box valign={START}>
@@ -72,13 +68,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           </box>
         </box>
 
-        <box className="center" halign={CENTER} valign={START}>
+        <box class="center" halign={CENTER} valign={START}>
           <box valign={START}>
             <TitleComponent />
           </box>
         </box>
 
-        <box className="right" hexpand halign={END} valign={START}>
+        <box class="right" hexpand halign={END} valign={START}>
           {/*<box valign={START} vertical>
             <MinReproComponent />
           </box>*/}
@@ -86,8 +82,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             <NotificationsComponent />
           </box>
           <eventbox
-            onHover={() => toggleAudioSettings.set(true)}
-            onHoverLost={() => toggleAudioSettings.set(false)}
+            onHover={() => setAudioSettings(true)}
+            onHoverLost={() => setAudioSettings(false)}
             valign={START}
           >
             <box vertical>
@@ -99,8 +95,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             <TemperatureComponent />
           </box>
           <eventbox
-            onHover={() => toggleBluetoothSettings.set(true)}
-            onHoverLost={() => toggleBluetoothSettings.set(false)}
+            onHover={() => setBluetoothSettings(true)}
+            onHoverLost={() => setBluetoothSettings(false)}
             valign={START}
           >
             <box vertical>

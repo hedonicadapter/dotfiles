@@ -1,8 +1,7 @@
-import { Variable, bind, type Binding } from "astal";
-import { Gtk } from "astal/gtk3";
-import Wp, { type Device, type Endpoint, type Stream } from "gi://AstalWp";
-import Hoverable from "../Hoverable";
-import { execAsync } from "astal/process";
+import { createBinding, With } from "ags";
+import Gtk from "gi://Gtk?version=3.0";
+import Wp, { type Device } from "gi://AstalWp";
+import { execAsync } from "ags/process";
 
 const { START, CENTER } = Gtk.Align;
 
@@ -42,44 +41,34 @@ const deviceRemovedConnection = wp.connect(
     await execAsync(deviceRemovedNotification(device.description)),
 );
 
+// Five segments; each reacts to volume rather than rebuilding the row
 export const Bar = ({ stream }: { stream: any }) => {
+  const volume = createBinding(stream, "volume");
+  const muted = createBinding(stream, "muted");
+
   return (
     <box>
-      {bind(stream, "volume").as((volume) =>
-        Array.from({ length: 5 }).map((_, i) => {
-          const tenths = Math.round(parseFloat(volume) * 5);
-          const fill = i <= tenths;
-
-          return (
-            <button
-              onClicked={() => {
-                const newVolume = i * 0.2;
-
-                stream.volume = newVolume;
-              }}
-              className={bind(stream, "muted").as((b) =>
-                b ? "bar muted" : "bar",
-              )}
-              valign={CENTER}
-            >
-              <label
-                className={
-                  tenths < 2
-                    ? "low"
-                    : tenths < 4
-                      ? "mid"
-                      : tenths >= 4
-                        ? "high"
-                        : ""
-                }
-                halign={START}
-                label={fill ? "▮" : "▯"}
-                valign={CENTER}
-              />
-            </button>
-          );
-        }),
-      )}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <button
+          onClicked={() => {
+            stream.volume = i * 0.2;
+          }}
+          class={muted.as((b) => (b ? "bar muted" : "bar"))}
+          valign={CENTER}
+        >
+          <label
+            class={volume.as((v) => {
+              const tenths = Math.round(parseFloat(v) * 5);
+              return tenths < 2 ? "low" : tenths < 4 ? "mid" : "high";
+            })}
+            halign={START}
+            label={volume.as((v) =>
+              i <= Math.round(parseFloat(v) * 5) ? "▮" : "▯",
+            )}
+            valign={CENTER}
+          />
+        </button>
+      ))}
     </box>
   );
 };
@@ -87,7 +76,7 @@ export const Bar = ({ stream }: { stream: any }) => {
 export default function () {
   return (
     <box
-      className="audio"
+      class="audio"
       valign={CENTER}
       halign={START}
       onDestroy={() => {
@@ -95,39 +84,43 @@ export default function () {
         wp.disconnect(deviceRemovedConnection);
       }}
     >
-      <box className="bar-item" valign={CENTER}>
+      <box class="bar-item" valign={CENTER}>
         <button valign={CENTER} onClicked={() => (mic.mute = !mic.mute)}>
-          <label valign={CENTER} className="bar-label" label="IN:" />
+          <label valign={CENTER} class="bar-label" label="IN:" />
         </button>
 
-        {bind(mic, "muted").as((m) =>
-          m ? (
-            <button valign={CENTER} onClicked={() => (mic.mute = false)}>
-              <label label="MUTED" valign={CENTER} />
-            </button>
-          ) : (
-            <Bar stream={mic} />
-          ),
-        )}
+        <With value={createBinding(mic, "muted")}>
+          {(m) =>
+            m ? (
+              <button valign={CENTER} onClicked={() => (mic.mute = false)}>
+                <label label="MUTED" valign={CENTER} />
+              </button>
+            ) : (
+              <Bar stream={mic} />
+            )
+          }
+        </With>
       </box>
 
-      <box className="bar-item" valign={CENTER}>
+      <box class="bar-item" valign={CENTER}>
         <button
           valign={CENTER}
           onClicked={() => (speaker.mute = !speaker.mute)}
         >
-          <label valign={CENTER} className="bar-label" label="OUT:" />
+          <label valign={CENTER} class="bar-label" label="OUT:" />
         </button>
 
-        {bind(speaker, "muted").as((m) =>
-          m ? (
-            <button valign={CENTER} onClicked={() => (speaker.mute = false)}>
-              <label valign={CENTER} label="MUTED" />
-            </button>
-          ) : (
-            <Bar stream={speaker} />
-          ),
-        )}
+        <With value={createBinding(speaker, "muted")}>
+          {(m) =>
+            m ? (
+              <button valign={CENTER} onClicked={() => (speaker.mute = false)}>
+                <label valign={CENTER} label="MUTED" />
+              </button>
+            ) : (
+              <Bar stream={speaker} />
+            )
+          }
+        </With>
       </box>
     </box>
   );
