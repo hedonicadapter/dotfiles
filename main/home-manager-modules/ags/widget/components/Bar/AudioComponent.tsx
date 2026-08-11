@@ -2,6 +2,7 @@ import { createBinding, With } from "ags";
 import Gtk from "gi://Gtk?version=3.0";
 import Wp, { type Device } from "gi://AstalWp";
 import { execAsync } from "ags/process";
+import { timeout } from "ags/time";
 
 const { START, CENTER } = Gtk.Align;
 
@@ -19,9 +20,16 @@ const deviceChangeFailedNotification = (deviceName: string) =>
 const deviceRemovedNotification = (deviceName: string) =>
   `bash -c 'notify-send "Device removed" "${deviceName}"'`;
 
+// device-added fires for every device already present when wireplumber is
+// first enumerated, which notified once per device on every startup
+let enumerated = false;
+timeout(3000, () => (enumerated = true));
+
 const deviceAddedConnection = wp.connect(
   "device-added",
   async (_: any, device: Device) => {
+    if (!enumerated) return;
+
     try {
       const res = await execAsync(deviceAddedNotification(device.description));
 
@@ -44,7 +52,7 @@ const deviceRemovedConnection = wp.connect(
 // Five segments; each reacts to volume rather than rebuilding the row
 export const Bar = ({ stream }: { stream: any }) => {
   const volume = createBinding(stream, "volume");
-  const muted = createBinding(stream, "muted");
+  const muted = createBinding(stream, "mute");
 
   return (
     <box>
@@ -89,7 +97,7 @@ export default function () {
           <label valign={CENTER} class="bar-label" label="IN:" />
         </button>
 
-        <With value={createBinding(mic, "muted")}>
+        <With value={createBinding(mic, "mute")}>
           {(m) =>
             m ? (
               <button valign={CENTER} onClicked={() => (mic.mute = false)}>
@@ -110,7 +118,7 @@ export default function () {
           <label valign={CENTER} class="bar-label" label="OUT:" />
         </button>
 
-        <With value={createBinding(speaker, "muted")}>
+        <With value={createBinding(speaker, "mute")}>
           {(m) =>
             m ? (
               <button valign={CENTER} onClicked={() => (speaker.mute = false)}>

@@ -51,7 +51,7 @@ export default function NotificationComponent(props: Props) {
             class="app-name"
             halign={START}
             valign={CENTER}
-            ellipsize={3}
+            truncate
             label={(n.appName || "Unknown").toUpperCase() + ":"}
           />
           <label
@@ -60,7 +60,7 @@ export default function NotificationComponent(props: Props) {
             valign={CENTER}
             xalign={0}
             label={" " + n.summary + " "}
-            ellipsize={3}
+            truncate
           />
           <label
             class="time"
@@ -102,6 +102,7 @@ export default function NotificationComponent(props: Props) {
                 useMarkup
                 halign={START}
                 xalign={0}
+                justifyFill
                 label={escapeHtml(n.body)}
               />
             )}
