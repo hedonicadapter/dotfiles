@@ -11,7 +11,6 @@ export default function Dash(gdkmonitor: Gdk.Monitor, index: number) {
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       keymode={Astal.Keymode.ON_DEMAND}
-      clickThrough={false}
       anchor={
         Astal.WindowAnchor.TOP |
         Astal.WindowAnchor.LEFT |
