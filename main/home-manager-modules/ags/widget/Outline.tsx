@@ -27,7 +27,8 @@ export default function Outline(gdkmonitor: Gdk.Monitor, index: number) {
       class={className}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.IGNORE}
-      clickThrough={true}
+      // click-through is not a GObject property — v3 has no clickThrough prop
+      $={(self) => Astal.widget_set_click_through(self, true)}
       layer={Astal.Layer.OVERLAY}
       anchor={
         Astal.WindowAnchor.TOP |
