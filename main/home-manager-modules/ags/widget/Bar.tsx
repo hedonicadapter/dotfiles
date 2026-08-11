@@ -1,5 +1,7 @@
-import { bind } from "astal";
-import { App, Astal, Gtk, Gdk } from "astal/gtk3";
+import app from "ags/gtk3/app";
+import Astal from "gi://Astal?version=3.0";
+import Gtk from "gi://Gtk?version=3.0";
+import Gdk from "gi://Gdk?version=3.0";
 import TimeComponent from "./components/Bar/TimeComponent";
 import SysTrayComponent from "./components/Bar/SysTrayComponent";
 import WifiComponent from "./components/Bar/WifiComponent";
@@ -14,20 +16,21 @@ import { getMonitorPlugName } from "../util";
 import NoiseComponent from "./components/Bar/NoiseComponent";
 import MinReproComponent from "./components/Bar/MinReproComponent";
 import AudioSettingsComponent, {
-  toggleAudioSettings,
+  setAudioSettings,
 } from "./components/Bar/AudioSettingsComponent";
 import BluetoothSettingsComponent, {
-  toggleBluetoothSettings,
+  setBluetoothSettings,
 } from "./components/Bar/BluetoothSettingsComponent";
 import { focusedOutput } from "../niri";
 
-export default function Bar(gdkmonitor: Gdk.Monitor) {
+export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
   const { START, END, CENTER } = Gtk.Align;
   const monitorName = getMonitorPlugName(gdkmonitor);
 
   return (
     <window
-      className={bind(focusedOutput).as((output) =>
+      name={`bar-${index}`}
+      class={focusedOutput.as((output) =>
         output && output === monitorName ? "Bar active-monitor" : "Bar",
       )}
       gdkmonitor={gdkmonitor}
@@ -38,12 +41,12 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         Astal.WindowAnchor.LEFT |
         Astal.WindowAnchor.RIGHT
       }
-      application={App}
+      application={app}
     >
-      <box vexpand={false} className="bar-items" valign={START}>
+      <box vexpand={false} class="bar-items" valign={START}>
         <box
           vexpand={false}
-          className="left"
+          class="left"
           hexpand
           halign={START}
           valign={START}
@@ -65,13 +68,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           </box>
         </box>
 
-        <box className="center" halign={CENTER} valign={START}>
+        <box class="center" halign={CENTER} valign={START}>
           <box valign={START}>
             <TitleComponent />
           </box>
         </box>
 
-        <box className="right" hexpand halign={END} valign={START}>
+        <box class="right" hexpand halign={END} valign={START}>
           {/*<box valign={START} vertical>
             <MinReproComponent />
           </box>*/}
@@ -79,8 +82,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             <NotificationsComponent />
           </box>
           <eventbox
-            onHover={() => toggleAudioSettings.set(true)}
-            onHoverLost={() => toggleAudioSettings.set(false)}
+            onHover={() => setAudioSettings(true)}
+            onHoverLost={() => setAudioSettings(false)}
             valign={START}
           >
             <box vertical>
@@ -92,8 +95,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             <TemperatureComponent />
           </box>
           <eventbox
-            onHover={() => toggleBluetoothSettings.set(true)}
-            onHoverLost={() => toggleBluetoothSettings.set(false)}
+            onHover={() => setBluetoothSettings(true)}
+            onHoverLost={() => setBluetoothSettings(false)}
             valign={START}
           >
             <box vertical>

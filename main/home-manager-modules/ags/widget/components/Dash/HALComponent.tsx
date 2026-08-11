@@ -1,9 +1,9 @@
-import { bind, Variable } from "astal";
-import { Gtk } from "astal/gtk3";
+import { createState, For } from "ags";
+import Gtk from "gi://Gtk?version=3.0";
 import Textarea from "../Textarea";
-import { subprocess } from "astal/process";
+import { subprocess } from "ags/process";
 
-export const toggleHAL = Variable(false);
+export const [toggleHAL, setHAL] = createState(false);
 
 const getCompletionScript = (msg: string) => {
   const payload = JSON.stringify({
@@ -27,7 +27,7 @@ const getCompletionScript = (msg: string) => {
     `;
 };
 
-const HALResponses = Variable<string[]>([]);
+const [HALResponses, setHALResponses] = createState<string[]>([]);
 let accumulatedResponse = " :PUTER";
 const processStdout = (stdout: string) => {
   const chunk = stdout.toString().trim();
@@ -45,13 +45,13 @@ const processStdout = (stdout: string) => {
 
     if (json.choices[0].delta?.content) {
       const res = json.choices[0].delta.content;
-      const copy = JSON.parse(JSON.stringify(HALResponses.get()));
+      const copy = [...HALResponses.peek()];
 
       if (accumulatedResponse === " :PUTER") copy.push(res);
       else copy[Math.max(copy.length - 1, 0)] = accumulatedResponse;
 
       accumulatedResponse += res;
-      HALResponses.set(copy);
+      setHALResponses(copy);
     }
   } catch (e) {
     console.error("Error processing stdout chunk:", e);
@@ -60,21 +60,21 @@ const processStdout = (stdout: string) => {
 
 export default function () {
   return (
-    <box vertical className="HAL" visible={bind(toggleHAL)}>
-      <box className="panel">
+    <box vertical class="HAL" visible={toggleHAL}>
+      <box class="panel">
         <scrollable heightRequest={800} hscroll={Gtk.PolicyType.NEVER}>
-          <box className="responses" orientation={1} vertical={true}>
-            {bind(HALResponses).as((responses) =>
-              responses.map((response) =>
+          <box class="responses" orientation={1} vertical={true}>
+            <For each={HALResponses}>
+              {(response) =>
                 response.startsWith("USER: ") ? (
-                  <box className="response user" halign={Gtk.Align.START}>
+                  <box class="response user" halign={Gtk.Align.START}>
                     <label
-                      className="label"
+                      class="label"
                       label="USER: "
                       valign={Gtk.Align.START}
                     />
                     <label
-                      className="text"
+                      class="text"
                       label={response.substring(6)}
                       wrap={true}
                       maxWidthChars={70}
@@ -82,9 +82,9 @@ export default function () {
                     />
                   </box>
                 ) : (
-                  <box className="response puter" halign={Gtk.Align.END}>
+                  <box class="response puter" halign={Gtk.Align.END}>
                     <label
-                      className="text"
+                      class="text"
                       label={response.substring(7)}
                       wrap={true}
                       maxWidthChars={70}
@@ -92,25 +92,23 @@ export default function () {
                     />
 
                     <label
-                      className="label"
+                      class="label"
                       label=" :PUTER"
                       valign={Gtk.Align.START}
                     />
                   </box>
-                ),
-              ),
-            )}
+                )
+              }
+            </For>
           </box>
         </scrollable>
       </box>
       <Textarea
-        className="textarea"
+        class="textarea"
         vexpand
         hexpand
         onEnter={(str: string) => {
-          const copy = JSON.parse(JSON.stringify(HALResponses.get()));
-          copy.push("USER: " + str);
-          HALResponses.set(copy);
+          setHALResponses([...HALResponses.peek(), "USER: " + str]);
 
           subprocess(["bash", "-c", getCompletionScript(str)], processStdout);
         }}

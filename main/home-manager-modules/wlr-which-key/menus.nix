@@ -217,7 +217,7 @@
       {
         key = "y";
         desc = "AI YAP SESH";
-        cmd = "astal toggleHAL";
+        cmd = "ags request toggleHAL";
       }
     ];
   };
@@ -233,7 +233,7 @@
       {
         key = "z";
         desc = "TOGGLE ZEN MODE";
-        cmd = "astal zenable";
+        cmd = "ags request zenable";
       }
 
       {

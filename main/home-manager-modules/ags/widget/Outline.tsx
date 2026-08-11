@@ -1,13 +1,15 @@
-import { Variable, bind } from "astal";
-import { App, Astal, Gdk } from "astal/gtk3";
+import { createComputed, createState } from "ags";
+import app from "ags/gtk3/app";
+import Astal from "gi://Astal?version=3.0";
+import Gdk from "gi://Gdk?version=3.0";
 import { getMonitorPlugName } from "../util";
 import { focusedOutput } from "../niri";
 
-export default function Outline(gdkmonitor: Gdk.Monitor) {
-  const hovered = Variable(false);
+export default function Outline(gdkmonitor: Gdk.Monitor, index: number) {
+  const [hovered, setHovered] = createState(false);
   const monitorName = getMonitorPlugName(gdkmonitor);
 
-  const className = Variable.derive(
+  const className = createComputed(
     [hovered, focusedOutput],
     (isHovered, output) =>
       [
@@ -21,7 +23,8 @@ export default function Outline(gdkmonitor: Gdk.Monitor) {
 
   return (
     <window
-      className={bind(className)}
+      name={`outline-${index}`}
+      class={className}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.IGNORE}
       clickThrough={true}
@@ -32,17 +35,13 @@ export default function Outline(gdkmonitor: Gdk.Monitor) {
         Astal.WindowAnchor.RIGHT |
         Astal.WindowAnchor.BOTTOM
       }
-      application={App}
+      application={app}
     >
       <eventbox
         hexpand
         vexpand
-        onDestroy={() => {
-          className.drop();
-          hovered.drop();
-        }}
-        onHover={() => hovered.set(true)}
-        onHoverLost={() => hovered.set(false)}
+        onHover={() => setHovered(true)}
+        onHoverLost={() => setHovered(false)}
       ></eventbox>
     </window>
   );

@@ -1,15 +1,15 @@
 import Bluetooth, { type Device } from "gi://AstalBluetooth";
-import { bind, Variable } from "astal";
-import { Gtk } from "astal/gtk3";
+import { createBinding, createComputed } from "ags";
+import Gtk from "gi://Gtk?version=3.0";
 
 const bluetooth = Bluetooth.get_default();
 
 export default function () {
-  const powered = bind(bluetooth, "is-powered");
-  const connected = bind(bluetooth, "is-connected");
-  const devices = bind(bluetooth, "devices");
+  const powered = createBinding(bluetooth, "is-powered");
+  const connected = createBinding(bluetooth, "is-connected");
+  const devices = createBinding(bluetooth, "devices");
 
-  const connectedPoweredIcon = Variable.derive(
+  const connectedPoweredIcon = createComputed(
     [connected, powered],
     (c: boolean, p: boolean) => {
       if (!p) return "bt-off-symbolic";
@@ -18,7 +18,7 @@ export default function () {
     },
   );
 
-  const connectedPoweredLabel = Variable.derive(
+  const connectedPoweredLabel = createComputed(
     [connected, powered, devices],
     (c: boolean, p: boolean, ds: Device[]) => {
       if (!p) return "POWERED OFF";
@@ -32,18 +32,14 @@ export default function () {
   );
 
   return (
-    <box className="bar-item bluetooth">
+    <box class="bar-item bluetooth">
       <box
-        className={bind(powered).as((b) => (b ? "main" : "main low"))}
-        onDestroy={() => {
-          connectedPoweredIcon.drop();
-          connectedPoweredLabel.drop();
-        }}
+        class={powered.as((b) => (b ? "main" : "main low"))}
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        <icon icon={bind(connectedPoweredIcon)} />
-        <label label={bind(connectedPoweredLabel)} halign={Gtk.Align.START} />
+        <icon icon={connectedPoweredIcon} />
+        <label label={connectedPoweredLabel} halign={Gtk.Align.START} />
       </box>
     </box>
   );

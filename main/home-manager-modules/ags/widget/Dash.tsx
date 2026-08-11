@@ -1,11 +1,13 @@
 import HALComponent from "./components/Dash/HALComponent";
-import { Variable, bind } from "astal";
-import { App, Astal, Gtk, Gdk } from "astal/gtk3";
+import app from "ags/gtk3/app";
+import Astal from "gi://Astal?version=3.0";
+import Gdk from "gi://Gdk?version=3.0";
 
-export default function Outline(gdkmonitor: Gdk.Monitor) {
+export default function Dash(gdkmonitor: Gdk.Monitor, index: number) {
   return (
     <window
-      className="Dash"
+      name={`dash-${index}`}
+      class="Dash"
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       keymode={Astal.Keymode.ON_DEMAND}
@@ -15,7 +17,7 @@ export default function Outline(gdkmonitor: Gdk.Monitor) {
         Astal.WindowAnchor.LEFT |
         Astal.WindowAnchor.BOTTOM
       }
-      application={App}
+      application={app}
     >
       <box>
         <HALComponent />

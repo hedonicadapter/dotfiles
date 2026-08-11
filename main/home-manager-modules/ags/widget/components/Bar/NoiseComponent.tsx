@@ -1,44 +1,40 @@
-import { App, Gtk } from "astal/gtk3";
-import { bind, Variable } from "astal";
-import { subprocess, Process } from "astal/process";
+import Gtk from "gi://Gtk?version=3.0";
+import { createState } from "ags";
+import { subprocess, type Process } from "ags/process";
 
 const noiseTypes = ["off", "brown", "pink", "white"];
-const noiseTypeSelectedIndex = Variable(0);
-const currentSubproc = Variable<Process | null>(null);
+const [noiseTypeSelectedIndex, setNoiseTypeSelectedIndex] = createState(0);
+const [currentSubproc, setCurrentSubproc] = createState<Process | null>(null);
 
-const stopNoise = () => currentSubproc.get()?.kill();
+const stopNoise = () => currentSubproc.peek()?.kill();
 
 const playNoise = () => {
   stopNoise();
 
-  const noiseToPlay = noiseTypes[noiseTypeSelectedIndex.get()];
+  const noiseToPlay = noiseTypes[noiseTypeSelectedIndex.peek()];
   if (noiseToPlay === "off") return;
 
   const noisePlayer = subprocess(
-    `bash -c 'mpv --no-audio-display --loop ~/.config/ags/noise/${noiseTypes[noiseTypeSelectedIndex.get()]}.flac'`,
+    `bash -c 'mpv --no-audio-display --loop ~/.config/ags/noise/${noiseToPlay}.flac'`,
   );
-  currentSubproc.set(noisePlayer);
+  setCurrentSubproc(noisePlayer);
 };
 
-const max = noiseTypes.length;
-const cycleNoise = () => {
-  const currentIndex = noiseTypeSelectedIndex.get();
-
-  if (currentIndex + 1 > max) noiseTypeSelectedIndex.set(0);
-  else noiseTypeSelectedIndex.set(currentIndex + 1);
-};
+// Wrap on the last type — index === length left the label blank for one click
+const cycleNoise = () =>
+  setNoiseTypeSelectedIndex((i) => (i + 1) % noiseTypes.length);
 
 noiseTypeSelectedIndex.subscribe(playNoise);
 
 export default function () {
   return (
     <eventbox
-      className="bar-item noise-player"
+      class="bar-item noise-player"
       valign={Gtk.Align.CENTER}
       halign={Gtk.Align.CENTER}
       onClick={() => cycleNoise()}
     >
-      <label label={bind(noiseTypeSelectedIndex).as((n) => noiseTypes[n])} />
+      <label label={noiseTypeSelectedIndex.as((n) => noiseTypes[n])} />
     </eventbox>
   );
 }

@@ -1,7 +1,7 @@
 // niri has no submaps and doesn't expose binds over IPC (hyprland's
 // `get_binds()` had both), so the keybind panel reads config.kdl directly.
 import GLib from "gi://GLib";
-import { readFile } from "astal/file";
+import { readFile } from "ags/file";
 
 export type Keybind = {
   key: string;
