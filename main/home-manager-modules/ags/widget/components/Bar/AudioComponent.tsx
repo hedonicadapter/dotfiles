@@ -1,15 +1,13 @@
 import { createBinding, With } from "ags";
 import Gtk from "gi://Gtk?version=3.0";
-import Wp, { type Device } from "gi://AstalWp";
+import Wp, { type Device, type Endpoint } from "gi://AstalWp";
 import { execAsync } from "ags/process";
 import { timeout } from "ags/time";
 
 const { START, CENTER } = Gtk.Align;
 
 const wp = Wp.get_default();
-const audio = wp?.audio;
-const speaker = audio.defaultSpeaker!;
-const mic = audio.defaultMicrophone!;
+const audio = wp?.audio ?? null;
 
 const deviceAddedNotification = (deviceName: string) =>
   `bash -c 'notify-send "Device added" "${deviceName}" --action=use=use'`;
@@ -23,31 +21,38 @@ const deviceRemovedNotification = (deviceName: string) =>
 // device-added fires for every device already present when wireplumber is
 // first enumerated, which notified once per device on every startup
 let enumerated = false;
-timeout(3000, () => (enumerated = true));
+let deviceAddedConnection: number | null = null;
+let deviceRemovedConnection: number | null = null;
 
-const deviceAddedConnection = wp.connect(
-  "device-added",
-  async (_: any, device: Device) => {
-    if (!enumerated) return;
+if (wp) {
+  timeout(3000, () => (enumerated = true));
 
-    try {
-      const res = await execAsync(deviceAddedNotification(device.description));
+  deviceAddedConnection = wp.connect(
+    "device-added",
+    async (_: any, device: Device) => {
+      if (!enumerated) return;
 
-      if (res === "use") {
-        console.log(device.id);
-        const res = await execAsync(`bash -c 'wpctl set-default ${device.id}'`);
-        await execAsync(deviceChangedNotification(device.description));
+      try {
+        const res = await execAsync(
+          deviceAddedNotification(device.description),
+        );
+
+        if (res === "use") {
+          await execAsync(`bash -c 'wpctl set-default ${device.id}'`);
+          await execAsync(deviceChangedNotification(device.description));
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
-    }
-  },
-);
-const deviceRemovedConnection = wp.connect(
-  "device-removed",
-  async (_: any, device: Device) =>
-    await execAsync(deviceRemovedNotification(device.description)),
-);
+    },
+  );
+
+  deviceRemovedConnection = wp.connect(
+    "device-removed",
+    async (_: any, device: Device) =>
+      await execAsync(deviceRemovedNotification(device.description)),
+  );
+}
 
 // Five segments; each reacts to volume rather than rebuilding the row
 export const Bar = ({ stream }: { stream: any }) => {
@@ -81,55 +86,61 @@ export const Bar = ({ stream }: { stream: any }) => {
   );
 };
 
-export default function () {
+const EndpointControls = ({
+  label,
+  endpoint,
+}: {
+  label: string;
+  endpoint: Endpoint;
+}) => (
+  <box class="bar-item" valign={CENTER}>
+    <button
+      valign={CENTER}
+      onClicked={() => (endpoint.mute = !endpoint.mute)}
+    >
+      <label valign={CENTER} class="bar-label" label={label} />
+    </button>
+
+    <With value={createBinding(endpoint, "mute")}>
+      {(m) =>
+        m ? (
+          <button valign={CENTER} onClicked={() => (endpoint.mute = false)}>
+            <label label="MUTED" valign={CENTER} />
+          </button>
+        ) : (
+          <Bar stream={endpoint} />
+        )
+      }
+    </With>
+  </box>
+);
+
+export default function AudioComponent() {
+  // Without wireplumber this module would throw at import and take the bar
+  // down with it
+  if (!audio) return <box />;
+
   return (
     <box
       class="audio"
       valign={CENTER}
       halign={START}
       onDestroy={() => {
-        wp.disconnect(deviceAddedConnection);
-        wp.disconnect(deviceRemovedConnection);
+        if (deviceAddedConnection !== null) wp!.disconnect(deviceAddedConnection);
+        if (deviceRemovedConnection !== null)
+          wp!.disconnect(deviceRemovedConnection);
       }}
     >
-      <box class="bar-item" valign={CENTER}>
-        <button valign={CENTER} onClicked={() => (mic.mute = !mic.mute)}>
-          <label valign={CENTER} class="bar-label" label="IN:" />
-        </button>
+      {/* Rebind when the default device changes, instead of capturing it once */}
+      <With value={createBinding(audio, "default-microphone")}>
+        {(mic) => (mic ? <EndpointControls label="IN:" endpoint={mic} /> : <box />)}
+      </With>
 
-        <With value={createBinding(mic, "mute")}>
-          {(m) =>
-            m ? (
-              <button valign={CENTER} onClicked={() => (mic.mute = false)}>
-                <label label="MUTED" valign={CENTER} />
-              </button>
-            ) : (
-              <Bar stream={mic} />
-            )
-          }
-        </With>
-      </box>
-
-      <box class="bar-item" valign={CENTER}>
-        <button
-          valign={CENTER}
-          onClicked={() => (speaker.mute = !speaker.mute)}
-        >
-          <label valign={CENTER} class="bar-label" label="OUT:" />
-        </button>
-
-        <With value={createBinding(speaker, "mute")}>
-          {(m) =>
-            m ? (
-              <button valign={CENTER} onClicked={() => (speaker.mute = false)}>
-                <label valign={CENTER} label="MUTED" />
-              </button>
-            ) : (
-              <Bar stream={speaker} />
-            )
-          }
-        </With>
-      </box>
+      <With value={createBinding(audio, "default-speaker")}>
+        {(speaker) =>
+          speaker ? <EndpointControls label="OUT:" endpoint={speaker} /> : <box />
+        }
+      </With>
     </box>
   );
 }

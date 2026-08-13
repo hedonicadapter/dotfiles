@@ -1,17 +1,5 @@
-import GObject from "gi://GObject";
 import Gtk from "gi://Gtk?version=3.0";
 import Gdk from "gi://Gdk?version=3.0";
-
-const ignoreKeys = [
-  Gdk.KEY_Alt_L,
-  Gdk.KEY_Alt_R,
-  Gdk.KEY_Shift_L,
-  Gdk.KEY_Shift_R,
-  Gdk.KEY_Meta_L,
-  Gdk.KEY_Meta_R,
-  Gdk.KEY_Control_L,
-  Gdk.KEY_Control_R,
-];
 
 export default function ({
   onEnter,
@@ -29,22 +17,32 @@ export default function ({
   textView.visible = true;
   textView.hexpand = true;
 
+  // Submit on Enter only — this used to fire onEnter for every keystroke.
+  // Bound on both the TextView and the wrapping eventbox since either can hold
+  // focus; the deeper one runs first and stops propagation once it submits.
+  const onKeyPress = (_: unknown, evt: Gdk.Event) => {
+    const keyval = evt.get_keyval()[1];
+    if (keyval !== Gdk.KEY_Return && keyval !== Gdk.KEY_KP_Enter) return false;
+
+    // Shift+Enter inserts a newline instead of submitting
+    const [, state] = evt.get_state();
+    if (state & Gdk.ModifierType.SHIFT_MASK) return false;
+
+    const bounds = textBuffer.get_bounds();
+    const currentText = textBuffer
+      .get_text(bounds[0], bounds[1], true)
+      ?.trim();
+    if (!currentText) return true;
+
+    onEnter(currentText);
+    textBuffer.set_text("", 0);
+    return true;
+  };
+
+  textView.connect("key-press-event", onKeyPress);
+
   return (
-    <eventbox
-      onKeyPressEvent={(_: Gtk.EventBox, evt: Gdk.Event) => {
-        console.log(evt.get_keyval()[1]);
-        if (ignoreKeys.includes(evt.get_keyval()[1])) return;
-
-        const bounds = textBuffer.get_bounds();
-        const currentText = textBuffer
-          .get_text(bounds[0], bounds[1], true)
-          ?.trim();
-        if (!currentText) return;
-
-        onEnter(currentText);
-        textBuffer.set_text("", 0);
-      }}
-    >
+    <eventbox onKeyPressEvent={onKeyPress}>
       <box class={className} hexpand={hexpand} vexpand={vexpand}>
         {textView}
       </box>
