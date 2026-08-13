@@ -10,6 +10,14 @@
 with lib; let
   removeHash = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
 
+  shaderDir = "${config.home.homeDirectory}/.config/anti-sleep-neglector/shaders";
+
+  # hyprctl lives in the hyprland package
+  hyprlandPkg = config.wayland.windowManager.hyprland.package or pkgs.hyprland;
+
+  # Defines refresh_circadian_vars, which (re)reads the period times published by
+  # anti-sleep-neglector.service into the systemd user environment. Callers must
+  # invoke it — long-running consumers re-invoke it so values don't go stale.
   circadianVars = ''
     function get_circadian_period() {
         if [ -z "$1" ]; then
@@ -40,19 +48,22 @@ with lib; let
         echo "$value"
     }
 
-    FIRST_LIGHT=$(get_circadian_period FIRST_LIGHT)
-    DAWN=$(get_circadian_period DAWN)
-    SUNRISE=$(get_circadian_period SUNRISE)
-    SOLAR_NOON=$(get_circadian_period SOLAR_NOON)
-    SUNSET=$(get_circadian_period SUNSET)
-    LAST_LIGHT=$(get_circadian_period LAST_LIGHT)
-    LATITUDE=$(systemctl --user show-environment | grep "^LATITUDE=" | cut -d= -f2-)
-    LONGITUDE=$(systemctl --user show-environment | grep "^LONGITUDE=" | cut -d= -f2-)
+    function refresh_circadian_vars() {
+        FIRST_LIGHT=$(get_circadian_period FIRST_LIGHT)
+        DAWN=$(get_circadian_period DAWN)
+        SUNRISE=$(get_circadian_period SUNRISE)
+        SOLAR_NOON=$(get_circadian_period SOLAR_NOON)
+        SUNSET=$(get_circadian_period SUNSET)
+        LAST_LIGHT=$(get_circadian_period LAST_LIGHT)
+        LATITUDE=$(systemctl --user show-environment | grep "^LATITUDE=" | cut -d= -f2-)
+        LONGITUDE=$(systemctl --user show-environment | grep "^LONGITUDE=" | cut -d= -f2-)
+    }
   '';
 in {
   options = {
     services.anti-sleep-neglector = {
       enable = mkOption {
+        type = types.bool;
         default = false;
         description = ''
           Whether to enable anti-sleep-neglector protocols.
@@ -62,15 +73,37 @@ in {
 
     services.anti-sleep-neglector-monitor = {
       enable = mkOption {
+        type = types.bool;
         default = false;
         description = ''
           Whether to enable anti-sleep-neglector monitor automatic brightness control.
         '';
       };
+
+      interval = mkOption {
+        type = types.str;
+        default = "1m";
+        description = ''
+          How often to recalculate monitor brightness (systemd time span).
+        '';
+      };
+
+      nightBrightness = mkOption {
+        type = types.int;
+        default = 20;
+        description = "Backlight percentage at night.";
+      };
+
+      dayBrightness = mkOption {
+        type = types.int;
+        default = 100;
+        description = "Backlight percentage at solar noon.";
+      };
     };
 
     services.anti-sleep-neglector-gamma = {
       enable = mkOption {
+        type = types.bool;
         default = false;
         description = ''
           Whether to enable anti-sleep-neglector monitor automatic gamma control.
@@ -162,12 +195,14 @@ in {
 
     services.anti-sleep-neglector-wallpaper = {
       enable = mkOption {
+        type = types.bool;
         default = false;
         description = ''
           Whether to enable anti-sleep-neglector selecting wallpapers by brightness and circadian period.
         '';
       };
       wallpapersDir = mkOption {
+        type = types.str;
         default = "${config.home.homeDirectory}/Pictures/wallpapers";
         description = ''
           Your wallpaper directory.
@@ -185,9 +220,20 @@ in {
 
         Service = {
           Type = "oneshot";
+          # Stay active so dependents can Requires= this unit without re-running it
+          RemainAfterExit = true;
           ExecStart = "${pkgs.writeShellScript "set_circadian_vars" ''
             #!/usr/bin/env bash
-            PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.jq pkgs.procps pkgs.curlMinimal pkgs.bc]}
+            PATH=$PATH:${lib.makeBinPath [
+              pkgs.coreutils
+              pkgs.gawk
+              pkgs.gnugrep
+              pkgs.jq
+              pkgs.procps
+              pkgs.curlMinimal
+              pkgs.bc
+              pkgs.systemd
+            ]}
 
             set -x
             exec &> /tmp/anti-sleep-neglector.log
@@ -255,21 +301,43 @@ in {
                 fi
             }
 
+            # $1 = key in the API response, $2 = fallback time
             get_time() {
-                local time_raw
-                time_raw=$(echo "$response" | jq -r ".results.$1")
-                local time
-                if [ "$time_raw" != "null" ]; then
-                    time=$(date -d "$time_raw" +%T)
-                else
+                local time_raw=""
+                local time=""
+
+                if [ -n "$response" ]; then
+                    time_raw=$(echo "$response" | jq -r ".results.$1 // empty" 2>/dev/null)
+                fi
+
+                if [ -n "$time_raw" ] && [ "$time_raw" != "null" ]; then
+                    time=$(date -d "$time_raw" +%T 2>/dev/null)
+                fi
+
+                # API missing or unparseable — fall back to the seasonal default
+                if [ -z "$time" ]; then
                     time=$(date -d "$2" +%T)
                 fi
+
                 echo "$time"
             }
 
-            loc_response=$(curl -s http://ip-api.com/json/)
-            LATITUDE=$(echo $loc_response | jq -r '.lat')
-            LONGITUDE=$(echo $loc_response | jq -r '.lon')
+            is_number() {
+                [[ "$1" =~ ^-?[0-9]+(\.[0-9]+)?$ ]]
+            }
+
+            loc_response=$(curl -s --max-time 10 http://ip-api.com/json/ || true)
+            LATITUDE=$(echo "$loc_response" | jq -r '.lat // empty' 2>/dev/null)
+            LONGITUDE=$(echo "$loc_response" | jq -r '.lon // empty' 2>/dev/null)
+
+            # Geolocation failed — keep whatever we resolved last run, else Greenwich
+            if ! is_number "$LATITUDE" || ! is_number "$LONGITUDE"; then
+                echo "Warning: geolocation lookup failed, reusing previous coordinates" >&2
+                LATITUDE=$(systemctl --user show-environment | grep "^LATITUDE=" | cut -d= -f2-)
+                LONGITUDE=$(systemctl --user show-environment | grep "^LONGITUDE=" | cut -d= -f2-)
+            fi
+            is_number "$LATITUDE" || LATITUDE=51.4769
+            is_number "$LONGITUDE" || LONGITUDE=0.0
 
             systemctl --user set-environment LATITUDE="$LATITUDE"
             systemctl --user set-environment LONGITUDE="$LONGITUDE"
@@ -279,7 +347,11 @@ in {
 
             default_times=($(get_default_times $LATITUDE $season))
 
-            response=$(curl -s "https://api.sunrisesunset.io/json?lat=$LATITUDE&lng=$LONGITUDE")
+            response=$(curl -s --max-time 10 "https://api.sunrisesunset.io/json?lat=$LATITUDE&lng=$LONGITUDE" || true)
+            if [ "$(echo "$response" | jq -r '.status // empty' 2>/dev/null)" != "OK" ]; then
+                echo "Warning: sunrisesunset.io unavailable, using seasonal defaults" >&2
+                response=""
+            fi
 
             DAWN=$(get_time "dawn" "''${default_times[1]}")
             systemctl --user set-environment DAWN="$DAWN"
@@ -308,7 +380,7 @@ in {
         };
       };
 
-      systemd.user.timers."anti-sleep-neglector.timer" = {
+      systemd.user.timers."anti-sleep-neglector" = {
         Unit = {
           Description = "Refresh circadian period env variables";
         };
@@ -333,22 +405,29 @@ in {
       systemd.user.services."anti-sleep-neglector-monitor" = {
         Unit = {
           Description = "Run anti sleep neglector automatic monitor brightness control";
-          WantedBy = ["graphical-session.target"];
           PartOf = ["graphical-session.target"];
-          After = ["graphical-session.target" "graphical-session-pre.target"];
-          Requires = ["anti-sleep-neglector.service" "graphical-session.target"];
+          Requires = ["anti-sleep-neglector.service"];
+          After = ["graphical-session.target" "anti-sleep-neglector.service"];
         };
 
         Service = {
           Type = "oneshot";
           ExecStart = "${pkgs.writeShellScript "set-monitor-brightness" ''
             #!/usr/bin/env bash
-            PATH=$PATH:${lib.makeBinPath [pkgs.coreutils pkgs.gnugrep pkgs.brightnessctl]}
+            PATH=$PATH:${lib.makeBinPath [
+              pkgs.coreutils
+              pkgs.gawk
+              pkgs.gnugrep
+              pkgs.brightnessctl
+              pkgs.systemd
+              hyprlandPkg
+            ]}
 
             set -x
             exec &> /tmp/anti-sleep-neglector-monitor.log
 
             ${circadianVars}
+            refresh_circadian_vars
 
             time_to_minutes() {
                 IFS=: read -r h m s <<< "$1"
@@ -367,8 +446,8 @@ in {
 
             max_brightness=$(brightnessctl max | awk '{print $1}')
 
-            night_brightness=20
-            day_brightness=100
+            night_brightness=${toString config.services.anti-sleep-neglector-monitor.nightBrightness}
+            day_brightness=${toString config.services.anti-sleep-neglector-monitor.dayBrightness}
 
             # Brightness based on current time
             calculate_brightness() {
@@ -395,6 +474,9 @@ in {
               hyprctl keyword decoration:screen_shader "$1"
             }
 
+            # Fallback if no branch matches (clock skew, malformed period times)
+            desired_brightness=$((max_brightness * night_brightness / 100))
+
             # Determine appropriate brightness based on current time
             if [ $current_minutes -lt $first_light_min ] || [ $current_minutes -ge $last_light_min ]; then
                 # Night time
@@ -402,7 +484,7 @@ in {
 
                   ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ~/.config/anti-sleep-neglector/shaders/night.frag"
+              then "set_shader ${shaderDir}/night.frag"
               else ""
             }
             elif [ $current_minutes -lt $dawn_min ]; then
@@ -411,7 +493,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ~/.config/anti-sleep-neglector/shaders/first_light.frag"
+              then "set_shader ${shaderDir}/first_light.frag"
               else ""
             }
             elif [ $current_minutes -lt $sunrise_min ]; then
@@ -420,7 +502,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ~/.config/anti-sleep-neglector/shaders/dawn.frag"
+              then "set_shader ${shaderDir}/dawn.frag"
               else ""
             }
             elif [ $current_minutes -lt $solar_noon_min ]; then
@@ -429,7 +511,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ~/.config/anti-sleep-neglector/shaders/sunrise.frag"
+              then "set_shader ${shaderDir}/sunrise.frag"
               else ""
             }
             elif [ $current_minutes -lt $sunset_min ]; then
@@ -438,7 +520,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ~/.config/anti-sleep-neglector/shaders/solar_noon.frag"
+              then "set_shader ${shaderDir}/solar_noon.frag"
               else ""
             }
             elif [ $current_minutes -lt $last_light_min ]; then
@@ -447,7 +529,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ~/.config/anti-sleep-neglector/shaders/sunset.frag"
+              then "set_shader ${shaderDir}/sunset.frag"
               else ""
             }
             fi
@@ -455,28 +537,27 @@ in {
             brightnessctl set "$(printf "%.0f" "$desired_brightness")"
           ''}";
         };
-
-        Install = {
-          WantedBy = ["default.target"];
-        };
       };
 
-      systemd.user.timers."anti-sleep-neglector-monitor.timer" = {
+      systemd.user.timers."anti-sleep-neglector-monitor" = {
         Unit = {
           Description = "Set brightness periodically";
+          PartOf = ["graphical-session.target"];
         };
 
         Timer = {
-          OnBootSec = "1s";
-          OnUnitActiveSec = "1s";
+          OnActiveSec = "1s";
+          OnUnitActiveSec = config.services.anti-sleep-neglector-monitor.interval;
           Unit = "anti-sleep-neglector-monitor.service";
         };
 
         Install = {
-          WantedBy = ["timers.target"];
+          WantedBy = ["graphical-session.target"];
         };
       };
+    })
 
+    (mkIf config.services.anti-sleep-neglector-gamma.enable {
       home.file = builtins.listToAttrs (
         builtins.map (periodName: {
           name = ".config/anti-sleep-neglector/shaders/${periodName}.frag";
@@ -501,10 +582,9 @@ in {
       systemd.user.services."anti-sleep-neglector-wallpaper" = {
         Unit = {
           Description = "Whether to enable anti-sleep-neglector selecting wallpapers by brightness and circadian period.";
-          WantedBy = ["graphical-session.target"];
           PartOf = ["graphical-session.target"];
-          After = ["graphical-session.target" "graphical-session-pre.target"];
-          Requires = ["anti-sleep-neglector.service" "graphical-session.target"];
+          Requires = ["anti-sleep-neglector.service"];
+          After = ["graphical-session.target" "anti-sleep-neglector.service"];
         };
 
         Service = {
@@ -522,15 +602,20 @@ in {
                   xrandr --query | awk '/ connected.*primary/{gsub("[x+]", " "); print $3, $4}' | head -n1
                 else
                   echo "Unable to detect display resolution" >&2
-                  exit 1
+                  return 1
                 fi
               } 2>> /tmp/anti-sleep-neglector-wallpaper.log
 
               should_no_resize() {
                 local image_w=$1
                 local image_h=$2
+                local monitor_w monitor_h
 
-                read -r monitor_w monitor_h < <(get_main_monitor_resolution 2>/dev/null || echo "1920 1080")
+                read -r monitor_w monitor_h < <(get_main_monitor_resolution 2>/dev/null)
+
+                # Detection failed or returned junk — assume 1080p
+                [[ "$monitor_w" =~ ^[0-9]+$ ]] || monitor_w=1920
+                [[ "$monitor_h" =~ ^[0-9]+$ ]] || monitor_h=1080
 
                 threshold_w=$(bc <<< "scale=0; $monitor_w * 0.8 / 1" 2>/dev/null || echo 1536)
                 threshold_h=$(bc <<< "scale=0; $monitor_h * 0.8 / 1" 2>/dev/null || echo 864)
@@ -544,10 +629,13 @@ in {
             #!/usr/bin/env bash
             PATH=$PATH:${lib.makeBinPath [
               pkgs.coreutils
+              pkgs.gawk
               pkgs.gnugrep
               pkgs.findutils
+              pkgs.jq
               pkgs.bc
               pkgs.procps
+              pkgs.systemd
               (pkgs.imagemagick_light.override {
                 zlibSupport = true;
                 libjpegSupport = true;
@@ -555,6 +643,7 @@ in {
                 libwebpSupport = true;
                 lcms2Support = true;
               })
+              hyprlandPkg
               inputs.swww.packages.${pkgs.system}.swww
             ]}
 
@@ -565,32 +654,52 @@ in {
 
             export RUST_BACKTRACE=1
 
+            WALLPAPERS_DIR="${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"
+
             if ! pgrep -x "swww-daemon" > /dev/null; then
               swww-daemon &
             fi
 
-            ${circadianVars}
+            # swww img fails until the daemon is accepting connections
+            for _ in $(seq 1 30); do
+              swww query >/dev/null 2>&1 && break
+              sleep 1
+            done
 
-            get_current_time_seconds() {
-                date +%s
-            }
+            ${circadianVars}
 
             time_to_seconds() {
                 IFS=: read -r h m s <<< "$1"
-                echo $(( 10#$h * 3600 + 10#$m * 60 + 10#$s ))
+                echo $(( 10#$h * 3600 + 10#$m * 60 + 10#''${s:-0} ))
+            }
+
+            seconds_to_time() {
+                printf '%02d:%02d:%02d\n' $(( $1 / 3600 )) $(( ($1 % 3600) / 60 )) $(( $1 % 60 ))
+            }
+
+            # Seconds since midnight — must match the period values it is compared against
+            get_current_time_seconds() {
+                time_to_seconds "$(date +%H:%M:%S)"
             }
 
             declare -A periods
-            periods[FIRST_LIGHT]=$(time_to_seconds "$FIRST_LIGHT")
-            periods[DAWN]=$(time_to_seconds "$DAWN")
-            periods[SUNRISE]=$(time_to_seconds "$SUNRISE")
-            periods[SOLAR_NOON]=$(time_to_seconds "$SOLAR_NOON")
-            periods[SUNSET]=$(time_to_seconds "$SUNSET")
-            periods[LAST_LIGHT]=$(time_to_seconds "$LAST_LIGHT")
+            declare -a sorted_periods
 
-            sorted_periods=($(for period in "''${!periods[@]}"; do echo "''${periods[$period]}:$period"; done | sort -n | cut -d: -f2))
+            load_periods() {
+                refresh_circadian_vars
+
+                periods[FIRST_LIGHT]=$(time_to_seconds "$FIRST_LIGHT")
+                periods[DAWN]=$(time_to_seconds "$DAWN")
+                periods[SUNRISE]=$(time_to_seconds "$SUNRISE")
+                periods[SOLAR_NOON]=$(time_to_seconds "$SOLAR_NOON")
+                periods[SUNSET]=$(time_to_seconds "$SUNSET")
+                periods[LAST_LIGHT]=$(time_to_seconds "$LAST_LIGHT")
+
+                sorted_periods=($(for period in "''${!periods[@]}"; do echo "''${periods[$period]}:$period"; done | sort -n | cut -d: -f2))
+            }
 
             get_current_period() {
+                local current_time
                 current_time=$(get_current_time_seconds)
                 for period in "''${sorted_periods[@]}"; do
                     if (( current_time < periods[$period] )); then
@@ -601,38 +710,68 @@ in {
                 echo "''${sorted_periods[0]}"  # If after last period, return first period of next day
             }
 
-            get_next_period() {
-                current_period=$1
+            # Seconds-since-midnight of the period following $1
+            get_next_period_seconds() {
+                local current_period=$1
                 for i in "''${!sorted_periods[@]}"; do
                     if [[ "''${sorted_periods[$i]}" == "$current_period" ]]; then
-                        next_index=$(( (i + 1) % ''${#sorted_periods[@]} ))
-                        next_period="''${sorted_periods[$next_index]}"
-                        echo "$(date -d "@''${periods[$next_period]}" +%T)"
+                        local next_index=$(( (i + 1) % ''${#sorted_periods[@]} ))
+                        echo "''${periods[''${sorted_periods[$next_index]}]}"
                         return
                     fi
                 done
+                echo ""
             }
 
+            # Keyed by "path:mtime" so magick only runs on new or modified files.
+            # Sets $BRIGHTNESS rather than echoing — command substitution would run
+            # this in a subshell and throw the cache away every call.
             declare -A brightness_cache
             get_brightness() {
               local file="$1"
-              if [[ "$file" == *.gif ]]; then
-                  brightness=$(magick "$file[0]" -colorspace gray -format "%[fx:mean]" info:)
-              else
-                  brightness=$(magick "$file" -colorspace gray -format "%[fx:mean]" info:)
+              local key
+              key="$file:$(date -r "$file" +%s 2>/dev/null || echo 0)"
+
+              if [[ -n "''${brightness_cache[$key]:-}" ]]; then
+                BRIGHTNESS="''${brightness_cache[$key]}"
+                return 0
               fi
-              echo "$brightness"
+
+              if [[ "$file" == *.gif ]]; then
+                  BRIGHTNESS=$(magick "$file[0]" -colorspace gray -format "%[fx:mean]" info: 2>/dev/null)
+              else
+                  BRIGHTNESS=$(magick "$file" -colorspace gray -format "%[fx:mean]" info: 2>/dev/null)
+              fi
+
+              [[ -z "$BRIGHTNESS" ]] && return 1
+              brightness_cache[$key]="$BRIGHTNESS"
+              return 0
             }
 
+            # Newline separated so filenames with spaces survive
+            declare -A grouped_wallpapers
             group_wallpapers() {
-                declare -A grouped_wallpapers
-                local -a brightnesses
-                local min_brightness max_brightness
+                local -a wallpapers=() brightnesses=()
+                local min_brightness max_brightness brightness_range threshold1 threshold2
+                local wallpaper brightness
 
-                for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
-                    brightness=$(get_brightness "$wallpaper")
-                    brightnesses+=("$brightness")
+                grouped_wallpapers=()
+
+                mapfile -t wallpapers < <(find "$WALLPAPERS_DIR" -maxdepth 1 -type f | sort)
+                if (( ''${#wallpapers[@]} == 0 )); then
+                    echo "No wallpapers in $WALLPAPERS_DIR" >&2
+                    return 1
+                fi
+
+                for wallpaper in "''${wallpapers[@]}"; do
+                    get_brightness "$wallpaper" || continue
+                    brightnesses+=("$BRIGHTNESS")
                 done
+
+                if (( ''${#brightnesses[@]} == 0 )); then
+                    echo "Could not read brightness of any wallpaper" >&2
+                    return 1
+                fi
 
                 IFS=$'\n' sorted=($(sort -g <<<"''${brightnesses[*]}"))
                 unset IFS
@@ -646,70 +785,74 @@ in {
                 threshold2=$(bc <<< "$min_brightness + ($brightness_range * 0.66)")
 
                 # Group wallpapers by time period
-                for wallpaper in "${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"/*; do
-                    brightness=$(get_brightness "$wallpaper")
+                for wallpaper in "''${wallpapers[@]}"; do
+                    get_brightness "$wallpaper" || continue
+                    brightness="$BRIGHTNESS"
                     if (( $(echo "$brightness < $threshold1" | bc -l) )); then
-                        grouped_wallpapers[FIRST_LIGHT]+="$wallpaper "
-                        grouped_wallpapers[LAST_LIGHT]+="$wallpaper "
+                        grouped_wallpapers[FIRST_LIGHT]+="$wallpaper"$'\n'
+                        grouped_wallpapers[LAST_LIGHT]+="$wallpaper"$'\n'
                     elif (( $(echo "$brightness < $threshold2" | bc -l) )); then
-                        grouped_wallpapers[DAWN]+="$wallpaper "
-                        grouped_wallpapers[SUNSET]+="$wallpaper "
+                        grouped_wallpapers[DAWN]+="$wallpaper"$'\n'
+                        grouped_wallpapers[SUNSET]+="$wallpaper"$'\n'
                     else
-                        grouped_wallpapers[SUNRISE]+="$wallpaper "
-                        grouped_wallpapers[SOLAR_NOON]+="$wallpaper "
+                        grouped_wallpapers[SUNRISE]+="$wallpaper"$'\n'
+                        grouped_wallpapers[SOLAR_NOON]+="$wallpaper"$'\n'
                     fi
                 done
-                echo "$(declare -p grouped_wallpapers)"
             }
 
             while true; do
-                eval "$(group_wallpapers)"
+                load_periods
                 current_period=$(get_current_period)
 
-                wallpapers_for_period=("''${grouped_wallpapers[$current_period]}")
-                wallpapers_for_period=($wallpapers_for_period)
-                if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
-                  selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
-                  selected_wallpaper_trimmed=$(echo "$selected_wallpaper" | xargs)
+                if group_wallpapers; then
+                  wallpapers_for_period=()
+                  while IFS= read -r line; do
+                      [[ -n "$line" ]] && wallpapers_for_period+=("$line")
+                  done <<< "''${grouped_wallpapers[$current_period]:-}"
 
-                  # Get image dimensions
-                  read -r img_w img_h < <(magick identify -format "%w %h" "$selected_wallpaper_trimmed")
+                  if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
+                    selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
 
-                  swww_cmd=(
-                    swww img "$selected_wallpaper_trimmed"
-                    --transition-type wipe
-                    --transition-angle 30
-                    --transition-step 20
-                    --transition-fps 144
-                    --fill-color ${removeHash outputs.palette.base00}
-                  )
+                    # Get image dimensions
+                    read -r img_w img_h < <(magick identify -format "%w %h" "$selected_wallpaper")
 
-                  resize_flag=$(should_no_resize "$img_w" "$img_h")
-                  if [[ -n "$resize_flag" ]]; then
-                    swww_cmd+=("$resize_flag")
-                    echo "Using --no-resize for image ($img_w x $img_h)"
+                    swww_cmd=(
+                      swww img "$selected_wallpaper"
+                      --transition-type wipe
+                      --transition-angle 30
+                      --transition-step 20
+                      --transition-fps 144
+                      --fill-color ${removeHash outputs.palette.base00}
+                    )
+
+                    resize_flag=$(should_no_resize "$img_w" "$img_h")
+                    if [[ -n "$resize_flag" ]]; then
+                      swww_cmd+=("$resize_flag")
+                      echo "Using --no-resize for image ($img_w x $img_h)"
+                    fi
+
+                    monitor_names=$(hyprctl monitors all -j | jq -r '.[] | .name')
+                    for monitor in $monitor_names; do
+                      nohup "''${swww_cmd[@]}" -o "$monitor" </dev/null >>/tmp/anti-sleep-neglector-wallpaper.log 2>&1 &
+                    done
                   fi
-
-                  monitor_names=$(hyprctl monitors all -j | jq -r '.[] | .name')
-                  for monitor in $monitor_names; do
-                    nohup "''${swww_cmd[@]}" -o "$monitor" </dev/null >command.log 2>&1 &
-                  done
                 fi
 
-                next_period=$(get_next_period "$current_period")
-                current_date=$(date +%Y-%m-%d)
-                next_period_time=$(date -d "$next_period" +%T)
-                next_time=$(date -d "$current_date $next_period_time" +%s)
+                next_time=$(get_next_period_seconds "$current_period")
                 current_time=$(get_current_time_seconds)
 
-                # If next_time is in the past, add 24 hours
-                if (( next_time <= current_time )); then
-                    next_time=$((next_time + 24*60*60))
+                if [[ -n "$next_time" ]]; then
+                    wait_time=$((next_time - current_time))
+                    # Next period already passed today — wait for tomorrow's occurrence
+                    if (( wait_time <= 0 )); then
+                        wait_time=$((wait_time + 24*60*60))
+                    fi
+                else
+                    wait_time=0
                 fi
 
-                wait_time=$((next_time - current_time))
-
-                if (( wait_time < 0 )); then
+                if (( wait_time <= 0 || wait_time > 24*60*60 )); then
                     wait_time=1800  # 30 minutes
                 fi
 
@@ -719,7 +862,7 @@ in {
         };
 
         Install = {
-          WantedBy = ["default.target"];
+          WantedBy = ["graphical-session.target"];
         };
       };
     })
