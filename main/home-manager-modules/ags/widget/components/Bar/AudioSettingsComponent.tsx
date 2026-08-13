@@ -1,5 +1,5 @@
 import Gtk from "gi://Gtk?version=3.0";
-import { createBinding, createState, For } from "ags";
+import { createBinding, createState, For, With } from "ags";
 import Wp, { type Endpoint } from "gi://AstalWp";
 import { Bar } from "./AudioComponent";
 
@@ -8,11 +8,15 @@ const { START, CENTER, END } = Gtk.Align;
 export const [toggleAudioSettings, setAudioSettings] = createState(false);
 
 const DevicePanel = ({ io }: { io: "input" | "output" }) => {
-  const wp = Wp.get_default();
-  const audio = wp?.audio;
+  const audio = Wp.get_default()?.audio;
+  if (!audio) return <box />;
 
-  const stream =
-    io === "input" ? audio.default_microphone : audio.default_speaker;
+  // Follows the default device instead of capturing whichever was default
+  // when the widget was built
+  const defaultEndpoint = createBinding(
+    audio,
+    io === "input" ? "default-microphone" : "default-speaker",
+  );
 
   return (
     <box vertical>
@@ -28,7 +32,9 @@ const DevicePanel = ({ io }: { io: "input" | "output" }) => {
           hexpand
         />
         <box halign={END} valign={CENTER}>
-          <Bar stream={stream} />
+          <With value={defaultEndpoint}>
+            {(endpoint) => (endpoint ? <Bar stream={endpoint} /> : <box />)}
+          </With>
         </box>
       </box>
 
@@ -55,9 +61,8 @@ const DevicePanel = ({ io }: { io: "input" | "output" }) => {
   );
 };
 
-export default function () {
-  const wp = Wp.get_default();
-  const audio = wp?.audio;
+export default function AudioSettingsComponent() {
+  const audio = Wp.get_default()?.audio;
 
   return (
     <box
@@ -78,24 +83,30 @@ export default function () {
       <box class="panel endpoints" orientation={1} vertical={true}>
         <label class="heading" halign={START} valign={CENTER} label="MIXER" />
 
-        <For each={createBinding(audio, "streams")}>
-          {(stream: any) => (
-            <box hexpand>
-              <button
-                valign={START}
-                class={createBinding(stream, "mute").as((b) =>
-                  b ? "muted" : "",
-                )}
-                onClicked={() => (stream.mute = !stream.mute)}
-                hexpand
-              >
-                <label label={stream.name || ""} halign={START} ellipsize={3} />
-              </button>
+        {audio && (
+          <For each={createBinding(audio, "streams")}>
+            {(stream: any) => (
+              <box hexpand>
+                <button
+                  valign={START}
+                  class={createBinding(stream, "mute").as((b) =>
+                    b ? "muted" : "",
+                  )}
+                  onClicked={() => (stream.mute = !stream.mute)}
+                  hexpand
+                >
+                  <label
+                    label={stream.name || ""}
+                    halign={START}
+                    ellipsize={3}
+                  />
+                </button>
 
-              <Bar stream={stream} />
-            </box>
-          )}
-        </For>
+                <Bar stream={stream} />
+              </box>
+            )}
+          </For>
+        )}
       </box>
     </box>
   );
