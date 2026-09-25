@@ -7,17 +7,26 @@
 in {
   services.skhd = {
     enable = true;
+    # No `@` (capture) on modes: a capture mode swallows every unbound key until
+    # escape, and the cmd-letter leaders collide with app shortcuts (Cmd+R reload,
+    # Cmd+S save, Cmd+D bookmark), so one stray press silently killed all input.
+    # Non-capture matches the aerospace modes: only a mode's own keys are grabbed.
     config = ''
       :: default
-      :: run @
-      :: browser @
-      :: directories @
-      :: query @
-      :: utility @
-      :: system @
-      :: audio @
-      :: display @
-      :: powermenu @
+      :: run
+      :: browser
+      :: directories
+      :: query
+      :: utility
+      :: system
+      :: audio
+      :: display
+      :: powermenu
+
+      # Linux-style close tab. Zen only; other apps (kitty's delete-word) get ctrl-w as is.
+      ctrl - w [
+        "zen" : ${skhd} -k "cmd - w"
+      ]
 
       # niri Mod+T
       cmd - t : open -na kitty
