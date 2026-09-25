@@ -81,6 +81,16 @@ in ''
     "moveToWorkspace.3" = "Command+Shift+4";
     "moveToWorkspace.4" = "Command+Shift+5";
     "moveToWorkspace.5" = "Command+Shift+6";
+    # Unlisted ids keep OmniWM's Option+digit defaults, which eat the Swedish
+    # layout's | [ ] (Option+7/8/9) and \ { } (Option+Shift+7/8/9).
+    "switchWorkspace.4" = "Unassigned";
+    "switchWorkspace.5" = "Unassigned";
+    "switchWorkspace.6" = "Unassigned";
+    "switchWorkspace.7" = "Unassigned";
+    "switchWorkspace.8" = "Unassigned";
+    "moveToWorkspace.6" = "Unassigned";
+    "moveToWorkspace.7" = "Unassigned";
+    "moveToWorkspace.8" = "Unassigned";
     # niri Mod+I / Mod+Page_Down. Page Up would be dead weight on the laptop.
     "switchWorkspace.previous" = "Command+I";
     "switchWorkspace.next" = "Command+Page Down";
