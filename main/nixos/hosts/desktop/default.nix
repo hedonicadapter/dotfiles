@@ -6,7 +6,4 @@
 
   # GPU fan/power/clock control, works for iGPU and RX 9060 XT
   services.lact.enable = true;
-
-  # Laptop's xremap config filters on built-in keyboard; add own config to use
-  services.xremap.enable = false;
 }

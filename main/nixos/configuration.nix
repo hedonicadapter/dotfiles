@@ -20,6 +20,7 @@ in {
     (import ../nix-modules/nix.nix {inherit inputs lib config;})
     (import ../nix-modules/nixpkgs.nix {inherit inputs outputs;})
     ../nix-modules/samba.nix
+    ../nix-modules/xremap.nix
     ./maintenance.nix
   ];
 

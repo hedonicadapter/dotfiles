@@ -83,21 +83,8 @@
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = ["nvidia"];
 
-  services.xremap = {
-    enable = true;
-    config = {
-      modmap = [
-        {
-          name = "Laptop Keyboard";
-          device = {
-            only = ["AT Translated Set 2 keyboard" "ITE Tech. Inc. ITE Device(8910) Keyboard"];
-          };
-          remap = {"CapsLock" = "Esc";};
-          remap = {"Esc" = "CapsLock";};
-        }
-      ];
-    };
-  };
+  # Built-in keyboard only
+  xremapCapsEsc.devices = ["AT Translated Set 2 keyboard" "ITE Tech. Inc. ITE Device(8910) Keyboard"];
 
   services.logind = {lidSwitch = "ignore";};
 
