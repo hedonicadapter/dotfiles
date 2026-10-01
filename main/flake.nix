@@ -96,23 +96,43 @@
     palette = builtins.fromJSON (builtins.readFile ./palette.json);
     paletteOpaque = builtins.fromJSON (builtins.readFile ./palette.json);
 
-    nixosConfigurations."default" = inputs.nixpkgs-stable-nixos.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {inherit inputs outputs;};
+    nixosConfigurations = let
+      mkNixos = hostModules:
+        inputs.nixpkgs-stable-nixos.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {inherit inputs outputs;};
 
-      modules = with inputs; [
-        {
-          nixpkgs.overlays = commonNixpkgsConfig.overlays;
-          nixpkgs.config = commonNixpkgsConfig.config;
-        }
-        nixos-hardware.nixosModules.common-cpu-intel
-        nixos-hardware.nixosModules.common-pc-laptop
-        nixos-hardware.nixosModules.common-pc-laptop-ssd
-        nixos-hardware.nixosModules.common-pc-laptop-hdd
-        # sops-nix.nixosModules.sops
-        # hermes-agent.nixosModules.default
-        ./nixos/configuration.nix
-      ];
+          modules =
+            [
+              {
+                nixpkgs.overlays = commonNixpkgsConfig.overlays;
+                nixpkgs.config = commonNixpkgsConfig.config;
+              }
+              # sops-nix.nixosModules.sops
+              # hermes-agent.nixosModules.default
+              ./nixos/configuration.nix
+            ]
+            ++ hostModules;
+        };
+      laptop = mkNixos (with inputs.nixos-hardware.nixosModules; [
+        common-cpu-intel
+        common-pc-laptop
+        common-pc-laptop-ssd
+        common-pc-laptop-hdd
+        ./nixos/hosts/laptop
+      ]);
+    in {
+      # Keyed by hostname so `nh os switch .` / autoUpgrade pick the right one
+      nixos = laptop;
+      default = laptop;
+      desktop = mkNixos (with inputs.nixos-hardware.nixosModules; [
+        common-cpu-amd
+        common-cpu-amd-pstate
+        common-gpu-amd
+        common-pc
+        common-pc-ssd
+        ./nixos/hosts/desktop
+      ]);
     };
 
     darwinConfigurations."default" = nix-darwin.lib.darwinSystem {

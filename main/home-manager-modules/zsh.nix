@@ -48,7 +48,7 @@
         "nr" =
           if pkgs.stdenv.isDarwin
           then "sudo nh darwin switch .#default"
-          else "sudo nh os switch .#default";
+          else "sudo nh os switch ."; # nixosConfigurations.<hostname>
         "df" = "debug-flake";
         "nu" = "sudo nix flake update";
 
