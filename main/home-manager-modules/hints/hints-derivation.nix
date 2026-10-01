@@ -5,7 +5,6 @@
   gobject-introspection,
   wrapGAppsHook3,
   at-spi2-core,
-  ydotool,
 }:
 python3.pkgs.buildPythonApplication {
   pname = "hints";
@@ -13,10 +12,10 @@ python3.pkgs.buildPythonApplication {
   pyproject = true;
 
   src = fetchFromGitHub {
-    owner = "hedonicadapter";
+    owner = "AlfredoSequeida";
     repo = "hints";
     rev = "main";
-    hash = "sha256-0Ee3BzwWNEyW0WpF+ZKWCdzKcQ58O3HYdnomTMn8pUU=";
+    sha256 = "sha256-NnSxVTzVl1/ZWPkuCqZoZc/u+c+nBUpz7ZwtavqT/rg=";
   };
 
   disabled = python3.pkgs.pythonOlder "3.10";
@@ -30,8 +29,9 @@ python3.pkgs.buildPythonApplication {
     opencv-python
     pyatspi
 
-    pkgs.ydotool
     pkgs.gtk-layer-shell
+    evdev
+    dbus-python
   ];
 
   nativeBuildInputs = [
@@ -44,6 +44,11 @@ python3.pkgs.buildPythonApplication {
   ];
 
   makeWrapperArgs = ["\${gappsWrapperArgs[@]}"];
+
+  env = {
+    HINTS_EXPECTED_BIN_DIR = "$out/bin";
+    HOME = "$out/home/";
+  };
 
   meta = {
     description = "Navigate GUIs without a mouse by typing hints in combination with modifier keys";
