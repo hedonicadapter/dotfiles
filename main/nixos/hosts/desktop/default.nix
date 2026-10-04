@@ -16,6 +16,16 @@ in {
   services.hardware.openrgb = {
     enable = true;
     motherboard = "amd";
+    # B850 Aura controller (0b05:1cd2) not yet upstream; same protocol as older boards
+    package = pkgs.openrgb.overrideAttrs (old: {
+      postPatch =
+        (old.postPatch or "")
+        + ''
+          sed -i '/AURA_MOTHERBOARD_5_PID);/a REGISTER_HID_DETECTOR("ASUS Aura Motherboard", DetectAsusAuraUSBMotherboards, AURA_USB_VID, 0x1CD2);' \
+            Controllers/AsusAuraUSBController/AsusAuraUSBControllerDetect.cpp
+          grep -q 0x1CD2 Controllers/AsusAuraUSBController/AsusAuraUSBControllerDetect.cpp
+        '';
+    });
   };
 
   # Cooler fan follows LIFX lamp color over LAN
