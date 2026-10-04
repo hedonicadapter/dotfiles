@@ -17,12 +17,14 @@ in {
     enable = true;
     # No SMBus driver; only the USB Aura controller is wanted
     motherboard = null;
-    # B850 Aura controller (0b05:1cd2) not yet upstream; same protocol as older boards
+    # B850 Aura controller (0b05:1cd2) not yet upstream; same protocol as older boards.
+    # Restrict to Aura vendor interface like upstream does for 0x19AF; other
+    # interfaces never answer and detection hangs on hid_read
     package = pkgs.openrgb.overrideAttrs (old: {
       postPatch =
         (old.postPatch or "")
         + ''
-          sed -i '/AURA_MOTHERBOARD_5_PID);/a REGISTER_HID_DETECTOR("ASUS Aura Motherboard", DetectAsusAuraUSBMotherboards, AURA_USB_VID, 0x1CD2);' \
+          sed -i '/AURA_MOTHERBOARD_5_PID);/a REGISTER_HID_DETECTOR_PU("ASUS Aura Motherboard", DetectAsusAuraUSBMotherboards, AURA_USB_VID, 0x1CD2, 0xFF72, 0x00A1);' \
             Controllers/AsusAuraUSBController/AsusAuraUSBControllerDetect.cpp
           grep -q 0x1CD2 Controllers/AsusAuraUSBController/AsusAuraUSBControllerDetect.cpp
         '';
