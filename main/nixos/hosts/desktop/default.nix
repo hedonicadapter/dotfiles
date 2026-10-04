@@ -4,6 +4,9 @@
 
   networking.hostName = "desktop";
 
+  # Motherboard sensors (NCT6799: fans, voltages)
+  boot.kernelModules = ["nct6775"];
+
   # GPU fan/power/clock control, works for iGPU and RX 9060 XT
   services.lact.enable = true;
 }
