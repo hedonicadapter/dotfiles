@@ -3,3 +3,4 @@ venv/
 /home-manager/modules/streamlink/config
 .home-manager/modules/twitch-tui/
 .aider*
+__pycache__/
