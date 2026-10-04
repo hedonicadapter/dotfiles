@@ -5,6 +5,16 @@ const temperature = createPoll(
   0,
   5000,
   `bash -c '
+      # AMD desktops expose CPU temp only via hwmon, not thermal zones
+      for hw in /sys/class/hwmon/hwmon*; do
+        case $(cat "$hw/name") in
+          k10temp|zenpower)
+            echo $(( $(cat "$hw/temp1_input") / 1000 ))
+            exit 0
+            ;;
+        esac
+      done
+
       max_temp=0
       for zone in /sys/class/thermal/thermal_zone*/temp; do
         temp=$(cat "$zone")
