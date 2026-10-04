@@ -446,6 +446,17 @@
       }
     }
 
+    .temperature {
+      @each $name, $dur in (rpm-slow: 2s, rpm-mid: 1.5s, rpm-fast: 1s) {
+        .fan.#{$name} {
+          animation: spin $dur steps(8) infinite;
+        }
+        .high .fan.#{$name} {
+          animation: spin $dur steps(8) infinite, blink 2.55s steps(14) infinite;
+        }
+      }
+    }
+
   '';
 in
   scss
