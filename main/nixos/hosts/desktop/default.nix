@@ -15,7 +15,8 @@ in {
   # RGB control; CPU cooler fan is on the motherboard ARGB header
   services.hardware.openrgb = {
     enable = true;
-    motherboard = "amd";
+    # No SMBus driver; only the USB Aura controller is wanted
+    motherboard = null;
     # B850 Aura controller (0b05:1cd2) not yet upstream; same protocol as older boards
     package = pkgs.openrgb.overrideAttrs (old: {
       postPatch =
@@ -26,6 +27,14 @@ in {
           grep -q 0x1CD2 Controllers/AsusAuraUSBController/AsusAuraUSBControllerDetect.cpp
         '';
     });
+  };
+
+  # Only USB HID (Aura controller) reachable: blocks SMBus RAM probing
+  # (/dev/i2c-*) and Super I/O port access (/dev/port), which have
+  # corrupted RAM RGB controllers in the past
+  systemd.services.openrgb.serviceConfig = {
+    DevicePolicy = "closed";
+    DeviceAllow = ["char-hidraw rw" "char-usb_device rw"];
   };
 
   # Cooler fan follows LIFX lamp color over LAN
