@@ -15,7 +15,6 @@ import os
 import random
 import socket
 import struct
-import sys
 import time
 
 from openrgb import OpenRGBClient
@@ -126,11 +125,19 @@ def main():
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     sock.bind(("", LIFX_PORT))
 
-    client = OpenRGBClient(name="lifx-rgb-sync")
-    zones = target_zones(client)
-    if not zones:
+    # OpenRGB lists no devices until detection finishes; wait instead of failing
+    seen = None
+    while True:
+        client = OpenRGBClient(name="lifx-rgb-sync")
+        zones = target_zones(client)
+        if zones:
+            break
         names = [f"{d.name}: {[z.name for z in d.zones]}" for d in client.devices]
-        sys.exit(f"No OpenRGB zone matching {OPENRGB_ZONE!r}. Devices: {names}")
+        if names != seen:
+            print(f"No OpenRGB zone matching {OPENRGB_ZONE!r} yet. Devices: {names}", flush=True)
+            seen = names
+        client.disconnect()
+        time.sleep(10)
     print(f"Driving zones: {[z.name for z in zones]}", flush=True)
 
     last = None
