@@ -27,6 +27,8 @@ in {
     wantedBy = ["multi-user.target"];
     environment = {
       LIFX_PORT = toString lifxPort;
+      # 2x TL-C12B-S V2 fans on one ARGB header via splitter, ~8 LEDs each
+      OPENRGB_LEDS = "16";
       # LIFX_LABEL = "Desk"; # follow a specific lamp
     };
     serviceConfig = {
