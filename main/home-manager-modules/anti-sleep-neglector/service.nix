@@ -858,8 +858,9 @@ in {
                     pkill -x mpvpaper || true
 
                     if is_video "$selected_wallpaper"; then
-                      # -o lines become an mpv config file, so no leading dashes
-                      nohup mpvpaper -o "no-audio loop-file=inf panscan=1.0 hwdec=auto" \
+                      # -o lines become an mpv config file, so no leading dashes; '#' must be
+                      # quoted there. Never upscale, shrink big ones to fit, bars in base00.
+                      nohup mpvpaper -o "no-audio loop-file=inf hwdec=auto video-unscaled=downscale-big background-color=\"#${removeHash outputs.palette.base00}\"" \
                         ALL "$selected_wallpaper" </dev/null >>/tmp/anti-sleep-neglector-wallpaper.log 2>&1 &
                     else
                       # Get image dimensions
@@ -874,10 +875,12 @@ in {
                         --fill-color ${removeHash outputs.palette.base00}
                       )
 
-                      resize_flag=$(should_no_resize "$img_w" "$img_h")
-                      if [[ -n "$resize_flag" ]]; then
-                        swww_cmd+=("$resize_flag")
-                        echo "Using --no-resize for image ($img_w x $img_h)"
+                      # Small images at native size, large ones shrunk to fit; never cropped to fill
+                      if [[ -n "$(should_no_resize "$img_w" "$img_h")" ]]; then
+                        swww_cmd+=(--resize no)
+                        echo "Native size for image ($img_w x $img_h)"
+                      else
+                        swww_cmd+=(--resize fit)
                       fi
 
                       # No -o: swww sets every output, no compositor-specific listing needed
