@@ -14,6 +14,27 @@
   homeManagerQuery = "home-manager-options.extranix.com";
   clipboardHistoryQuery = "cliphist list | tofi | cliphist decode | wl-copy";
 
+  # Flip output between highest refresh @1x and highest resolution @1.5x
+  hdmiModeToggle = pkgs.writeShellApplication {
+    name = "niri-output-mode-toggle";
+    runtimeInputs = [pkgs.jq];
+    text = ''
+      output=''${1:-HDMI-A-1}
+
+      target=$(niri msg --json outputs | jq -er --arg o "$output" '
+        (.[$o] // error("no output \($o)")) as $out
+        | ($out.modes | to_entries) as $m
+        | ($m | max_by([.value.refresh_rate, .value.width * .value.height]) | .key) as $rate
+        | ($m | max_by([.value.width * .value.height, .value.refresh_rate]) | .key) as $res
+        | (if $out.current_mode == $rate then [$res, "1.5"] else [$rate, "1"] end) as [$i, $scale]
+        | $out.modes[$i]
+        | "\(.width)x\(.height)@\(.refresh_rate / 1000) \($scale)"')
+
+      niri msg output "$output" mode "''${target% *}"
+      niri msg output "$output" scale "''${target#* }"
+    '';
+  };
+
   powerMenu = mkMenu {
     name = "power";
     menu = [
@@ -88,6 +109,11 @@
         key = "j";
         desc = "BRIGHTNESS DOWN";
         cmd = "brightnessctl set 10%-";
+      }
+      {
+        key = "m";
+        desc = "HDMI MAX RES / MAX REFRESH";
+        cmd = lib.getExe hdmiModeToggle;
       }
     ];
   };
