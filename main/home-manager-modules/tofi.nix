@@ -11,8 +11,15 @@
     settings = {
       require-match = false;
 
-      width = "25%";
+      # Default anchor (center) anchors all four edges; niri then stretches the
+      # surface to the whole output and tofi squeezes a full-screen buffer into
+      # its small viewport at the top-left, redrawing it on every keystroke.
+      # A corner anchor keeps the requested size; margins centre it.
+      anchor = "top-left";
+      width = "26%";
       height = "20%";
+      margin-left = "37%";
+      margin-top = "40%";
       border-width = 0;
       outline-width = 1;
       outline-color = outputs.palette.base04;
