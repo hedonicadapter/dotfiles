@@ -205,7 +205,15 @@ in {
         type = types.str;
         default = "${config.home.homeDirectory}/Pictures/wallpapers";
         description = ''
-          Your wallpaper directory.
+          Your wallpaper directory. Images and GIFs go through swww, videos
+          through mpvpaper.
+        '';
+      };
+      cycleInterval = mkOption {
+        type = types.ints.positive;
+        default = 3600;
+        description = ''
+          Seconds between wallpaper changes within the current circadian period.
         '';
       };
     };
@@ -594,8 +602,9 @@ in {
           ExecStart = let
             displayUtils = pkgs.writeShellScript "display-utils" ''
               get_main_monitor_resolution() {
-                # Try Hyprland first
-                if command -v hyprctl >/dev/null; then
+                if [[ -n "''${NIRI_SOCKET:-}" ]]; then
+                  niri msg --json focused-output | jq -r '.modes[.current_mode] | "\(.width) \(.height)"'
+                elif command -v hyprctl >/dev/null; then
                   hyprctl -j monitors | jq -r '.[0] | "\(.width) \(.height)"'
                 # Fallback to X11
                 elif command -v xrandr >/dev/null; then
@@ -645,6 +654,8 @@ in {
               })
               hyprlandPkg
               inputs.swww.packages.${pkgs.system}.swww
+              pkgs.mpvpaper
+              pkgs.ffmpeg-headless
             ]}
 
             source ${displayUtils}
@@ -723,6 +734,13 @@ in {
                 echo ""
             }
 
+            is_video() {
+              case "''${1,,}" in
+                *.mp4 | *.webm | *.mkv | *.mov | *.avi | *.m4v) return 0 ;;
+              esac
+              return 1
+            }
+
             # Keyed by "path:mtime" so magick only runs on new or modified files.
             # Sets $BRIGHTNESS rather than echoing — command substitution would run
             # this in a subshell and throw the cache away every call.
@@ -737,7 +755,14 @@ in {
                 return 0
               fi
 
-              if [[ "$file" == *.gif ]]; then
+              if is_video "$file"; then
+                  # Frame 1 s in skips fade-ins; short clips fall back to the first frame
+                  BRIGHTNESS=$(
+                    { ffmpeg -v error -ss 1 -i "$file" -frames:v 1 -f image2pipe -c:v png - 2>/dev/null ||
+                      ffmpeg -v error -i "$file" -frames:v 1 -f image2pipe -c:v png - 2>/dev/null; } |
+                      magick - -colorspace gray -format "%[fx:mean]" info: 2>/dev/null
+                  )
+              elif [[ "$file" == *.gif ]]; then
                   BRIGHTNESS=$(magick "$file[0]" -colorspace gray -format "%[fx:mean]" info: 2>/dev/null)
               else
                   BRIGHTNESS=$(magick "$file" -colorspace gray -format "%[fx:mean]" info: 2>/dev/null)
@@ -811,31 +836,53 @@ in {
                       [[ -n "$line" ]] && wallpapers_for_period+=("$line")
                   done <<< "''${grouped_wallpapers[$current_period]:-}"
 
+                  # Don't pick the one already showing when there's a choice
+                  if (( ''${#wallpapers_for_period[@]} > 1 )); then
+                    candidates=()
+                    for w in "''${wallpapers_for_period[@]}"; do
+                      [[ "$w" != "''${current_wallpaper:-}" ]] && candidates+=("$w")
+                    done
+                    wallpapers_for_period=("''${candidates[@]}")
+                  fi
+
+                  selected_wallpaper=""
                   if [[ ''${#wallpapers_for_period[@]} -gt 0 ]]; then
                     selected_wallpaper=''${wallpapers_for_period[$RANDOM % ''${#wallpapers_for_period[@]}]}
+                  fi
 
-                    # Get image dimensions
-                    read -r img_w img_h < <(magick identify -format "%w %h" "$selected_wallpaper")
+                  # Only candidate is already up: leave it (restarting would flash videos)
+                  if [[ -n "$selected_wallpaper" && "$selected_wallpaper" != "''${current_wallpaper:-}" ]]; then
+                    current_wallpaper=$selected_wallpaper
 
-                    swww_cmd=(
-                      swww img "$selected_wallpaper"
-                      --transition-type wipe
-                      --transition-angle 30
-                      --transition-step 20
-                      --transition-fps 144
-                      --fill-color ${removeHash outputs.palette.base00}
-                    )
+                    # mpvpaper's layer sits above swww's, so it must go for images to show
+                    pkill -x mpvpaper || true
 
-                    resize_flag=$(should_no_resize "$img_w" "$img_h")
-                    if [[ -n "$resize_flag" ]]; then
-                      swww_cmd+=("$resize_flag")
-                      echo "Using --no-resize for image ($img_w x $img_h)"
+                    if is_video "$selected_wallpaper"; then
+                      # -o lines become an mpv config file, so no leading dashes
+                      nohup mpvpaper -o "no-audio loop-file=inf panscan=1.0 hwdec=auto" \
+                        ALL "$selected_wallpaper" </dev/null >>/tmp/anti-sleep-neglector-wallpaper.log 2>&1 &
+                    else
+                      # Get image dimensions
+                      read -r img_w img_h < <(magick identify -format "%w %h\n" "$selected_wallpaper" | head -n1)
+
+                      swww_cmd=(
+                        swww img "$selected_wallpaper"
+                        --transition-type wipe
+                        --transition-angle 30
+                        --transition-step 20
+                        --transition-fps 144
+                        --fill-color ${removeHash outputs.palette.base00}
+                      )
+
+                      resize_flag=$(should_no_resize "$img_w" "$img_h")
+                      if [[ -n "$resize_flag" ]]; then
+                        swww_cmd+=("$resize_flag")
+                        echo "Using --no-resize for image ($img_w x $img_h)"
+                      fi
+
+                      # No -o: swww sets every output, no compositor-specific listing needed
+                      "''${swww_cmd[@]}" </dev/null >>/tmp/anti-sleep-neglector-wallpaper.log 2>&1 &
                     fi
-
-                    monitor_names=$(hyprctl monitors all -j | jq -r '.[] | .name')
-                    for monitor in $monitor_names; do
-                      nohup "''${swww_cmd[@]}" -o "$monitor" </dev/null >>/tmp/anti-sleep-neglector-wallpaper.log 2>&1 &
-                    done
                   fi
                 fi
 
@@ -854,6 +901,12 @@ in {
 
                 if (( wait_time <= 0 || wait_time > 24*60*60 )); then
                     wait_time=1800  # 30 minutes
+                fi
+
+                # Cycle within the period too, not only at its boundaries
+                cycle_interval=${toString config.services.anti-sleep-neglector-wallpaper.cycleInterval}
+                if (( wait_time > cycle_interval )); then
+                    wait_time=$cycle_interval
                 fi
 
                 sleep $wait_time
