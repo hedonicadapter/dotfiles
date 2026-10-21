@@ -1,5 +1,20 @@
-{outputs, ...}: let
+{
+  outputs,
+  hostName,
+  ...
+}: let
   p = outputs.palette;
+  # Desktop: Hisense M2 Pro projector; laptop: external monitor. Same 1280x720 logical size.
+  hdmi =
+    if hostName == "desktop"
+    then {
+      mode = "1920x1080@240";
+      scale = "1.5";
+    }
+    else {
+      mode = "2560x1440@119.998";
+      scale = "2.0";
+    };
 in ''
   input {
       keyboard {
@@ -31,8 +46,8 @@ in ''
   }
 
   output "HDMI-A-1" {
-      mode "2560x1440@119.998"
-      scale 2.0
+      mode "${hdmi.mode}"
+      scale ${hdmi.scale}
       variable-refresh-rate // on-demand=true
       focus-at-startup
   }

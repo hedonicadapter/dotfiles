@@ -1,6 +1,7 @@
 {
   outputs,
   pkgs,
+  osConfig,
   ...
 }: {
   home.packages = [
@@ -12,7 +13,10 @@
   ];
 
   home.file = {
-    ".config/niri/config.kdl".text = import ./niri/config.kdl.nix {inherit outputs;};
+    ".config/niri/config.kdl".text = import ./niri/config.kdl.nix {
+      inherit outputs;
+      inherit (osConfig.networking) hostName;
+    };
     ".config/niri/auto-start.sh".source = ./niri/auto-start.sh;
 
     # Nvidia driver doesn't release VRAM back to the pool — niri creeps toward 1 GiB
