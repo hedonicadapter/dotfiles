@@ -25,11 +25,15 @@ export default function KeyboardBatteryComponent() {
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        <icon icon="kb-pixel-symbolic" valign={Gtk.Align.CENTER} />
+        <icon
+          class="keyboard-icon"
+          icon="kb-pixel-symbolic"
+          valign={Gtk.Align.CENTER}
+        />
         <label
           valign={Gtk.Align.CENTER}
           label={splitBattery.as(
-            (b) => `L ${percent(b.left)} R ${percent(b.right)}`,
+            (b) => `L${percent(b.left)} R${percent(b.right)}`,
           )}
         />
       </box>

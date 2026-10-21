@@ -279,6 +279,10 @@
             font-size: 18px;
           }
 
+          .keyboard-battery .keyboard-icon {
+            margin-right: 5px;
+          }
+
           .datetime {
             .day {
               margin-right: 6px;
