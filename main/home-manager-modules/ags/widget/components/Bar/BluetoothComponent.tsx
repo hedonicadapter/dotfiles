@@ -22,11 +22,7 @@ export default function () {
     [connected, powered, devices],
     (c: boolean, p: boolean, ds: Device[]) => {
       if (!p) return "POWERED OFF";
-      if (c) {
-        const connectedDevices = ds.filter((d: Device) => d.connected);
-        const amount = connectedDevices.length;
-        return `${amount && amount + " "}CONNECTED`;
-      }
+      if (c) return `${ds.filter((d: Device) => d.connected).length}`;
       return "POWERED ON";
     },
   );
@@ -38,8 +34,12 @@ export default function () {
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        <icon icon={connectedPoweredIcon} />
-        <label label={connectedPoweredLabel} halign={Gtk.Align.START} />
+        <icon icon={connectedPoweredIcon} valign={Gtk.Align.CENTER} />
+        <label
+          label={connectedPoweredLabel}
+          halign={Gtk.Align.START}
+          valign={Gtk.Align.CENTER}
+        />
       </box>
     </box>
   );

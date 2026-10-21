@@ -20,11 +20,16 @@ export default function KeyboardBatteryComponent() {
       visible={splitBattery.as((b) => b.connected)}
       tooltipText={splitBattery.as((b) => b.name)}
     >
-      <box class={splitBattery.as(levelClass)} valign={Gtk.Align.CENTER}>
+      <box
+        class={splitBattery.as(levelClass)}
+        halign={Gtk.Align.START}
+        valign={Gtk.Align.CENTER}
+      >
+        <icon icon="kb-pixel-symbolic" valign={Gtk.Align.CENTER} />
         <label
-          class="bar-label"
+          valign={Gtk.Align.CENTER}
           label={splitBattery.as(
-            (b) => `⌨ L ${percent(b.left)} R ${percent(b.right)}`,
+            (b) => `L ${percent(b.left)} R ${percent(b.right)}`,
           )}
         />
       </box>

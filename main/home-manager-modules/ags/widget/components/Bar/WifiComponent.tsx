@@ -26,10 +26,9 @@ export default function WifiComponent() {
       createBinding(network, "connectivity"),
       createBinding(network, "wired", "internet"),
       createBinding(network, "wifi", "internet"),
-      createBinding(network, "wifi", "ssid"),
       createBinding(network, "wifi", "iconName"),
     ],
-    (primary, connectivity, wiredInternet, wifiInternet, ssid, wifiIcon) => {
+    (primary, connectivity, wiredInternet, wifiInternet, wifiIcon) => {
       const useWifi =
         primary === Primary.WIFI ||
         (primary !== Primary.WIRED && wifiInternet === Internet.CONNECTED);
@@ -40,7 +39,7 @@ export default function WifiComponent() {
         if (wifiInternet === Internet.CONNECTED)
           return {
             icon: wifiIcon ?? "",
-            label: connectivityLabels[connectivity] ?? (ssid ?? "WIFI").toUpperCase(),
+            label: connectivityLabels[connectivity] ?? "WIFI",
           };
       }
 
@@ -57,21 +56,11 @@ export default function WifiComponent() {
   );
 
   return (
-    <box
-      valign={Gtk.Align.CENTER}
-      halign={Gtk.Align.CENTER}
-      class="bar-item network"
-    >
-      <icon
-        valign={Gtk.Align.CENTER}
-        halign={Gtk.Align.CENTER}
-        icon={status.as((s) => s.icon)}
-      />
-      <label
-        valign={Gtk.Align.CENTER}
-        halign={Gtk.Align.CENTER}
-        label={status.as((s) => s.label)}
-      />
+    <box class="bar-item network">
+      <box class="main" halign={Gtk.Align.START} valign={Gtk.Align.CENTER}>
+        <icon valign={Gtk.Align.CENTER} icon={status.as((s) => s.icon)} />
+        <label valign={Gtk.Align.CENTER} label={status.as((s) => s.label)} />
+      </box>
     </box>
   );
 }

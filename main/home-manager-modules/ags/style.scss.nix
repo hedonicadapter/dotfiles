@@ -272,11 +272,10 @@
             font-size: 16px;
           }
 
-          .bluetooth {
-            font-size: 18px;
-          }
-
-          .network {
+          // Same size so icons and labels share one baseline
+          .bluetooth,
+          .network,
+          .keyboard-battery {
             font-size: 18px;
           }
 
