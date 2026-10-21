@@ -164,6 +164,14 @@ in ''
       open-focused false
   }
 
+  // Steam toasts are its own X11 windows, not freedesktop notifications
+  window-rule {
+      match app-id="steam" title=r#"^notificationtoasts_\d+_desktop$"#
+      open-floating true
+      open-focused false
+      default-floating-position x=10 y=10 relative-to="bottom-right"
+  }
+
   binds {
       Mod+Shift+Slash { show-hotkey-overlay; }
 
