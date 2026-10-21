@@ -13,6 +13,7 @@ import {
   toggleAudioSettings,
 } from "./widget/components/Bar/AudioSettingsComponent";
 import { connect as connectNiri } from "./niri";
+import { connect as connectKeyboardBattery } from "./keyboardBattery";
 
 const style = await readFileAsync("style.scss");
 const convertedToCss = await execAsync(
@@ -24,6 +25,7 @@ app.start({
   icons: `${SRC}/icons`,
   main() {
     connectNiri();
+    connectKeyboardBattery();
 
     // Layer surfaces die with their output — rebuild per-monitor windows on hotplug
     const teardown = new Map<Gdk.Monitor, () => void>();

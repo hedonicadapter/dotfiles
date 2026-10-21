@@ -12,6 +12,7 @@ import AudioComponent from "./components/Bar/AudioComponent";
 import MediaComponent from "./components/Bar/MediaComponent";
 import TemperatureComponent from "./components/Bar/TemperatureComponent";
 import BluetoothComponent from "./components/Bar/BluetoothComponent";
+import KeyboardBatteryComponent from "./components/Bar/KeyboardBatteryComponent";
 import { getMonitorPlugName } from "../util";
 import NoiseComponent from "./components/Bar/NoiseComponent";
 import MinReproComponent from "./components/Bar/MinReproComponent";
@@ -93,6 +94,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
           </eventbox>
           <box valign={START} vertical>
             <TemperatureComponent />
+          </box>
+          <box valign={START} vertical>
+            <KeyboardBatteryComponent />
           </box>
           <eventbox
             onHover={() => setBluetoothSettings(true)}
