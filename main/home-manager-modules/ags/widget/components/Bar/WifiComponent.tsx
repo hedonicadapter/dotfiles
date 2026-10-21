@@ -2,67 +2,57 @@ import Gtk from "gi://Gtk?version=3.0";
 import { createBinding, createComputed } from "ags";
 import Network from "gi://AstalNetwork";
 
-const connectivityEnumToIcon = {
-  [Network.Connectivity.UNKNOWN]: "unknown",
-  [Network.Connectivity.NONE]: "none",
-  [Network.Connectivity.PORTAL]: "portal",
-  [Network.Connectivity.LIMITED]: "limited",
-  [Network.Connectivity.FULL]: "full",
+const { Internet, Connectivity, Primary } = Network;
+
+const wiredIcons = {
+  [Internet.CONNECTED]: "wired-connected-symbolic",
+  [Internet.CONNECTING]: "wired-connecting-symbolic",
+  [Internet.DISCONNECTED]: "wired-disconnected-symbolic",
 };
 
-const wiredEnumToIcon = {
-  [Network.DeviceState.UNKNOWN]: "unknown",
-  [Network.DeviceState.UNMANAGED]: "unmanaged",
-  [Network.DeviceState.UNAVAILABLE]: "unavailable",
-  [Network.DeviceState.DISCONNECTED]: "disconnected",
-  [Network.DeviceState.PREPARE]: "prepare",
-  [Network.DeviceState.CONFIG]: "config",
-  [Network.DeviceState.NEED_AUTH]: "need_auth",
-  [Network.DeviceState.IP_CONFIG]: "ip_config",
-  [Network.DeviceState.IP_CHECK]: "ip_check",
-  [Network.DeviceState.SECONDARIES]: "secondaries",
-  [Network.DeviceState.ACTIVATED]: "activated",
-  [Network.DeviceState.DEACTIVATING]: "deactivating",
-  [Network.DeviceState.FAILED]: "failed",
-};
-const wifiEnumToIcon = {
-  [Network.State.UNKNOWN]: "unknown",
-  [Network.State.ASLEEP]: "asleep",
-  [Network.State.DISCONNECTED]: "disconnected",
-  [Network.State.DISCONNECTING]: "disconnecting",
-  [Network.State.CONNECTING]: "connecting",
-  [Network.State.CONNECTED_LOCAL]: "connected-local",
-  [Network.State.CONNECTED_SITE]: "connected-site",
-  [Network.State.CONNECTED_GLOBAL]: "connected-global",
+// Shown instead of the link name when NetworkManager can't reach the internet
+const connectivityLabels: Partial<Record<Network.Connectivity, string>> = {
+  [Connectivity.NONE]: "NO INTERNET",
+  [Connectivity.PORTAL]: "LOGIN REQUIRED",
+  [Connectivity.LIMITED]: "LIMITED",
 };
 
 export default function WifiComponent() {
   const network = Network.get_default();
 
-  const state = createBinding(network, "state");
-  const connectivity = createBinding(network, "connectivity");
-  const wired = createBinding(network, "wired");
-  const wifi = createBinding(network, "wifi");
+  const status = createComputed(
+    [
+      createBinding(network, "primary"),
+      createBinding(network, "connectivity"),
+      createBinding(network, "wired", "internet"),
+      createBinding(network, "wifi", "internet"),
+      createBinding(network, "wifi", "ssid"),
+      createBinding(network, "wifi", "iconName"),
+    ],
+    (primary, connectivity, wiredInternet, wifiInternet, ssid, wifiIcon) => {
+      const useWifi =
+        primary === Primary.WIFI ||
+        (primary !== Primary.WIRED && wifiInternet === Internet.CONNECTED);
 
-  const networking = createComputed(
-    [state, connectivity, wired, wifi],
-    (state: any, connectivity: any, wired: any, wifi: any) => {
-      // const conn = connectivityEnumToIcon[connectivity];
-      // const st = connectivityEnumToIcon[state];
-      // const wir = connectivityEnumToIcon[wired];
-      // const wif = connectivityEnumToIcon[wifi];
-      // console.log(state);
-      // console.log(st);
-      //
-      // // presedence:
-      // if (connectedStates.includes(state)) {
-      //   //    Connected: connectivity > wired > wifi > state
-      //   return "connectivity-" + (conn || wir || wif || st || "unknown");
-      // } else {
-      //   //    Not Connected: state > connectivity > wired > wifi
-      //   return "state-" + (st || conn || wir || wif || "unknown");
-      // }
-      return "NOT IMPLEMENTED";
+      if (useWifi && wifiInternet !== null) {
+        if (wifiInternet === Internet.CONNECTING)
+          return { icon: wifiIcon ?? "", label: "CONNECTING" };
+        if (wifiInternet === Internet.CONNECTED)
+          return {
+            icon: wifiIcon ?? "",
+            label: connectivityLabels[connectivity] ?? (ssid ?? "WIFI").toUpperCase(),
+          };
+      }
+
+      if (wiredInternet === Internet.CONNECTED)
+        return {
+          icon: wiredIcons[Internet.CONNECTED],
+          label: connectivityLabels[connectivity] ?? "WIRED",
+        };
+      if (wiredInternet === Internet.CONNECTING)
+        return { icon: wiredIcons[Internet.CONNECTING], label: "CONNECTING" };
+
+      return { icon: wiredIcons[Internet.DISCONNECTED], label: "OFFLINE" };
     },
   );
 
@@ -75,12 +65,12 @@ export default function WifiComponent() {
       <icon
         valign={Gtk.Align.CENTER}
         halign={Gtk.Align.CENTER}
-        icon={networking}
+        icon={status.as((s) => s.icon)}
       />
       <label
         valign={Gtk.Align.CENTER}
         halign={Gtk.Align.CENTER}
-        label={networking.as((s) => s.replaceAll("-", " ").toUpperCase())}
+        label={status.as((s) => s.label)}
       />
     </box>
   );
