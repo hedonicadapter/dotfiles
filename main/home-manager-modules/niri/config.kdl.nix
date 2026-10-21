@@ -4,12 +4,12 @@
   ...
 }: let
   p = outputs.palette;
-  # Desktop: Hisense M2 Pro projector; laptop: external monitor. Same 1280x720 logical size.
+  # Desktop: Hisense M2 Pro projector; laptop: external monitor
   hdmi =
     if hostName == "desktop"
     then {
       mode = "1920x1080@240";
-      scale = "1.5";
+      scale = "1";
     }
     else {
       mode = "2560x1440@119.998";
