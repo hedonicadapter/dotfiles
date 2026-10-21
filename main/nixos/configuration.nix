@@ -280,6 +280,14 @@ in {
       General = {
         Experimental = true;
       };
+      # 7.5 ms connection interval for keyboard latency; ConnectionLatency left at default
+      LE = {
+        MinConnectionInterval = 6;
+        MaxConnectionInterval = 6;
+      };
+      # Battery plugin claims every Battery Service; AGS reads both split-keyboard halves
+      # through the read-only export (BlueZ default, pinned here)
+      GATT.ExportClaimedServices = "read-only";
     };
   };
   services.blueman.enable = true;
