@@ -5,6 +5,7 @@ pkgs: {
   # cartograph-cf = pkgs.callPackage ./cartograph-cf { };
   stay-awake = pkgs.callPackage ./stay-awake {};
   speed-read = pkgs.callPackage ./speed-read {};
+  wm = pkgs.callPackage ./wm {};
 
   # Darwin-only, enforced by meta.platforms — do NOT gate this with
   # optionalAttrs pkgs.stdenv…, the additions overlay would then need the

@@ -16,22 +16,22 @@
 
   # Flip output between highest refresh @1x and highest resolution @1.5x
   hdmiModeToggle = pkgs.writeShellApplication {
-    name = "niri-output-mode-toggle";
-    runtimeInputs = [pkgs.jq];
+    name = "output-mode-toggle";
+    runtimeInputs = [pkgs.jq pkgs.wm];
     text = ''
       output=''${1:-HDMI-A-1}
 
-      target=$(niri msg --json outputs | jq -er --arg o "$output" '
-        (.[$o] // error("no output \($o)")) as $out
+      target=$(wm outputs | jq -er --arg o "$output" '
+        (map(select(.name == $o)) | first // error("no output \($o)")) as $out
         | ($out.modes | to_entries) as $m
-        | ($m | max_by([.value.refresh_rate, .value.width * .value.height]) | .key) as $rate
-        | ($m | max_by([.value.width * .value.height, .value.refresh_rate]) | .key) as $res
-        | (if $out.current_mode == $rate then [$res, "1.5"] else [$rate, "1"] end) as [$i, $scale]
+        | ($m | max_by([.value.refresh, .value.width * .value.height]) | .key) as $rate
+        | ($m | max_by([.value.width * .value.height, .value.refresh]) | .key) as $res
+        | (if $out.current == $rate then [$res, "1.5"] else [$rate, "1"] end) as [$i, $scale]
         | $out.modes[$i]
-        | "\(.width)x\(.height)@\(.refresh_rate / 1000) \($scale)"')
+        | "\(.width)x\(.height)@\(.refresh) \($scale)"')
 
-      niri msg output "$output" mode "''${target% *}"
-      niri msg output "$output" scale "''${target#* }"
+      wm set-mode "$output" "''${target% *}"
+      wm set-scale "$output" "''${target#* }"
     '';
   };
 

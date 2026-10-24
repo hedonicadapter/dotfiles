@@ -145,6 +145,7 @@ in {
       pipe-viewer # youtube cli
       yt-dlp # youtube to mp3
       resources
+      wm # output queries for scripts, niri or Hyprland
 
       ncdu
       alsa-utils
