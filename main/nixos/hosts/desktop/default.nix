@@ -6,6 +6,8 @@
 }: {
   imports = [./hardware-configuration.nix];
 
+  home-manager.extraSpecialArgs.display = import ./display.nix;
+
   networking.hostName = "desktop";
 
   # Motherboard sensors (NCT6799: fans, voltages)

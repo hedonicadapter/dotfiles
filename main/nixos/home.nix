@@ -5,8 +5,13 @@
   lib,
   config,
   osConfig,
+  # Per-host outputs, from nixos/hosts/<host>/display.nix
+  display,
   ...
-}: {
+}: let
+  # Outputs, window rules and launcher binds shared by niri and Hyprland
+  session = import ../home-manager-modules/compositor {inherit lib display;};
+in {
   # You can import other home-manager modules here
   imports = with inputs; [
     ags.homeManagerModules.default
@@ -29,7 +34,7 @@
     # ../home-manager-modules/lsd.nix
     ../home-manager-modules/eza.nix
     # ../home-manager-modules/hints/hints.nix
-    (import ../home-manager-modules/niri.nix {inherit outputs pkgs osConfig;})
+    (import ../home-manager-modules/niri.nix {inherit outputs pkgs session;})
     ../home-manager-modules/wlr-which-key/menus.nix
 
     (import ../home-manager-modules/nh.nix {flakeDir = "/etc/nixos/main";})
@@ -215,7 +220,7 @@
     systemd.enable = true;
     systemd.variables = ["--all"];
     configType = "lua";
-    extraConfig = import ../home-manager-modules/hyprland/hyprland.lua.nix {inherit outputs lib inputs pkgs;};
+    extraConfig = import ../home-manager-modules/hyprland/hyprland.lua.nix {inherit outputs lib inputs pkgs session;};
     plugins = [
       #  TODO: marked broken
       # pkgs.hyprlandPlugins.hyprfocus

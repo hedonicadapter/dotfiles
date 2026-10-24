@@ -1,7 +1,7 @@
 {
   outputs,
   pkgs,
-  osConfig,
+  session,
   ...
 }: let
   # Folds new windows into existing columns instead of scrolling sideways
@@ -31,8 +31,8 @@ in {
 
   home.file = {
     ".config/niri/config.kdl".text = import ./niri/config.kdl.nix {
-      inherit outputs;
-      inherit (osConfig.networking) hostName;
+      inherit outputs session;
+      inherit (pkgs) lib;
     };
 
     # Nvidia driver doesn't release VRAM back to the pool — niri creeps toward 1 GiB
