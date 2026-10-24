@@ -21,7 +21,6 @@ in ''
 
   -- autostart
   hl.on("hyprland.start", function()
-    hl.exec_cmd("bash ~/.config/hypr/auto-start.sh")
     hl.exec_cmd("bash ~/.config/hypr/auto-float-unfloat.sh")
 
     hl.dispatch(hl.dsp.exec_cmd(terminal .. " --detach --hold -e nvim ~/big-todo.md", { workspace = "1 silent" }))

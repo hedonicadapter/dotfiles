@@ -106,6 +106,21 @@
       pkgs.accountsservice
     ];
     # configDir = ../home-manager-modules/ags;
+    systemd.enable = true;
+  };
+  # Frozen main loop ignores SIGTERM; don't wait the default 90 s on restart
+  systemd.user.services.ags.Service.TimeoutStopSec = 3;
+
+  # Session daemons start with graphical-session.target, which niri and
+  # Hyprland (hyprland-session.target) both reach
+  services.wl-clip-persist = {
+    enable = true;
+    extraOptions = ["--all-mime-type-regex" "(?i)^(?!image/x-inkscape-svg).+"];
+  };
+  services.cliphist = {
+    enable = true;
+    allowImages = true;
+    extraOptions = [];
   };
 
   home.packages = with pkgs;

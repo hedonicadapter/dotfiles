@@ -108,7 +108,6 @@ in ''
       GSK_RENDERER "ngl"
   }
 
-  spawn-sh-at-startup "bash ~/.config/niri/auto-start.sh"
   spawn-sh-at-startup "kitty --detach --hold -e nvim ~/big-todo.md"
   spawn-at-startup "zen-beta"
   spawn-at-startup "obsidian"
