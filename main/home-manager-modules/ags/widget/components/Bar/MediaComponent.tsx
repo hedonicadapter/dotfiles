@@ -1,7 +1,7 @@
 import { createBinding, With } from "ags";
 import Gtk from "gi://Gtk?version=3.0";
 import Mpris from "gi://AstalMpris";
-import { exec } from "ags/process";
+import { execAsync } from "ags/process";
 import { fmtMSS } from "../../../util";
 import Hoverable from "../Hoverable";
 
@@ -53,7 +53,8 @@ const component = (enabled: boolean) => {
           onClick={() =>
             playa.get_available() && playa.get_can_raise()
               ? playa.raise()
-              : exec("bash -c 'spotify'")
+              : // exec() would block the whole shell until Spotify exits
+                execAsync(["setsid", "-f", "spotify"]).catch(console.error)
           }
           valign={CENTER}
         >

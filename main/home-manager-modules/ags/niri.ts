@@ -253,11 +253,19 @@ export function niriAction(action: Record<string, any>) {
     out.put_string(`${JSON.stringify({Action: action})}\n`, null);
     out.flush(null);
 
-    // Wait for the ack — closing early drops the request
-    new Gio.DataInputStream({
+    // Wait for the ack — closing early drops the request. Async so a stuck
+    // compositor can't freeze the shell.
+    const input = new Gio.DataInputStream({
       base_stream: connection.get_input_stream(),
-    }).read_line_utf8(null);
-    connection.close(null);
+    });
+    input.read_line_async(GLib.PRIORITY_DEFAULT, null, (_source, result) => {
+      try {
+        input.read_line_finish_utf8(result);
+      } catch (e) {
+        console.error("niri: action ack failed", e);
+      }
+      connection.close(null);
+    });
   } catch (e) {
     console.error("niri: action failed", e);
   }

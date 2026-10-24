@@ -14,6 +14,40 @@
   homeManagerQuery = "home-manager-options.extranix.com";
   clipboardHistoryQuery = "cliphist list | tofi | cliphist decode | wl-copy";
 
+  # `ags quit` waits forever if the shell's main loop is stuck; fall back to
+  # killing whoever owns the instance's bus name, then start fresh.
+  agsReload = pkgs.writeShellApplication {
+    name = "ags-reload";
+    runtimeInputs = [pkgs.systemd pkgs.util-linux];
+    text = ''
+      bus_name=io.Astal.ags
+      owner_pid() {
+        busctl --user call org.freedesktop.DBus /org/freedesktop/DBus \
+          org.freedesktop.DBus GetConnectionUnixProcessID s "$bus_name" 2>/dev/null |
+          cut -d' ' -f2
+      }
+
+      # Exits non-zero even on success: the instance quits before replying
+      timeout 3 ags quit >/dev/null 2>&1 || true
+
+      pid=$(owner_pid || true)
+      if [[ -n "$pid" ]]; then
+        kill "$pid" 2>/dev/null || true
+        sleep 1
+        # Frozen main loops can ignore SIGTERM handlers; only escalate on the same owner
+        [[ "$(owner_pid || true)" == "$pid" ]] && kill -9 "$pid" 2>/dev/null
+      fi
+
+      # New instance refuses to start while the old name is still owned
+      for _ in $(seq 1 20); do
+        [[ -z "$(owner_pid || true)" ]] && break
+        sleep 0.25
+      done
+
+      setsid -f ags run >/dev/null 2>&1
+    '';
+  };
+
   # Flip output between highest refresh @1x and highest resolution @1.5x
   hdmiModeToggle = pkgs.writeShellApplication {
     name = "niri-output-mode-toggle";
@@ -254,7 +288,7 @@
       {
         key = "r";
         desc = "RELOAD SHELL";
-        cmd = "ags quit; ags run &";
+        cmd = lib.getExe agsReload;
       }
       {
         key = "z";
