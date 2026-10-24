@@ -99,6 +99,7 @@
       tray
       mpris
       powerprofiles
+      hyprland # compositor/hyprland.ts; unused under niri
 
       pkgs.gtksourceview
       pkgs.webkitgtk_4_1

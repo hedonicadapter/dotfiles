@@ -1,24 +1,21 @@
 import { createComputed, For } from "ags";
 import Gtk from "gi://Gtk?version=3.0";
 import Hoverable from "../Hoverable";
-import { loadKeybinds } from "../../../keybinds";
 import {
   focusedWorkspace,
-  niriAction,
-  NiriWorkspace,
-  overviewOpen,
+  focusWorkspace,
+  loadKeybinds,
+  mode,
+  type Workspace,
   workspaces,
-} from "../../../niri";
+} from "../../../compositor";
 
 const MAX_INDICATORS = 4;
 
 export default function WorkspaceComponent({monitor}: {monitor?: string}) {
   const keybinds = loadKeybinds();
 
-  // niri has no submaps — overview is the only modal state
-  const mode = overviewOpen.as((open) => (open ? "OVERVIEW" : "NORMAL"));
-
-  const onThisMonitor = (wss: NiriWorkspace[]) =>
+  const onThisMonitor = (wss: Workspace[]) =>
     wss.filter((ws) => !monitor || ws.output === monitor);
 
   const indicators = workspaces.as((wss) =>
@@ -48,11 +45,7 @@ export default function WorkspaceComponent({monitor}: {monitor?: string}) {
       >
         <For each={indicators}>
           {(ws) => (
-            <eventbox
-              onClick={() =>
-                niriAction({FocusWorkspace: {reference: {Id: ws.id}}})
-              }
-            >
+            <eventbox onClick={() => focusWorkspace(ws.id)}>
               <label class="workspace" label={ws.is_active ? "✦" : "✧"} />
             </eventbox>
           )}

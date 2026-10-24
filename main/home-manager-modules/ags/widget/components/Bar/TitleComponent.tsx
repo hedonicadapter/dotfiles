@@ -2,7 +2,7 @@ import Gtk from "gi://Gtk?version=3.0";
 import { createState, With } from "ags";
 import { execAsync } from "ags/process";
 import { escapeShellString } from "../../../util";
-import { focusedWindow } from "../../../niri";
+import { focusedWindow } from "../../../compositor";
 
 export default function TitleComponent() {
   const [currentTitle, setCurrentTitle] = createState("");
