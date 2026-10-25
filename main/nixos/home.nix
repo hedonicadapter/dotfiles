@@ -5,8 +5,13 @@
   lib,
   config,
   osConfig,
+  # Per-host outputs, from nixos/hosts/<host>/display.nix
+  display,
   ...
-}: {
+}: let
+  # Outputs, window rules and launcher binds shared by niri and Hyprland
+  session = import ../home-manager-modules/compositor {inherit lib display;};
+in {
   # You can import other home-manager modules here
   imports = with inputs; [
     ags.homeManagerModules.default
@@ -29,7 +34,7 @@
     # ../home-manager-modules/lsd.nix
     ../home-manager-modules/eza.nix
     # ../home-manager-modules/hints/hints.nix
-    (import ../home-manager-modules/niri.nix {inherit outputs pkgs osConfig;})
+    (import ../home-manager-modules/niri.nix {inherit outputs pkgs session;})
     ../home-manager-modules/wlr-which-key/menus.nix
 
     (import ../home-manager-modules/nh.nix {flakeDir = "/etc/nixos/main";})
@@ -45,6 +50,7 @@
     (import ../home-manager-modules/spicetify.nix {inherit inputs outputs pkgs;})
     # (import ../home-manager-modules/nixcord.nix {inherit outputs pkgs lib config;})
     ../home-manager-modules/firefox.nix
+    ../home-manager-modules/charybdis-flash.nix
     ../home-manager-modules/kdeconnect.nix
   ];
 
@@ -99,12 +105,28 @@
       tray
       mpris
       powerprofiles
+      hyprland # compositor/hyprland.ts; unused under niri
 
       pkgs.gtksourceview
       pkgs.webkitgtk_4_1
       pkgs.accountsservice
     ];
     # configDir = ../home-manager-modules/ags;
+    systemd.enable = true;
+  };
+  # Frozen main loop ignores SIGTERM; don't wait the default 90 s on restart
+  systemd.user.services.ags.Service.TimeoutStopSec = 3;
+
+  # Session daemons start with graphical-session.target, which niri and
+  # Hyprland (hyprland-session.target) both reach
+  services.wl-clip-persist = {
+    enable = true;
+    extraOptions = ["--all-mime-type-regex" "(?i)^(?!image/x-inkscape-svg).+"];
+  };
+  services.cliphist = {
+    enable = true;
+    allowImages = true;
+    extraOptions = [];
   };
 
   home.packages = with pkgs;
@@ -124,6 +146,7 @@
       pipe-viewer # youtube cli
       yt-dlp # youtube to mp3
       resources
+      wm # output queries for scripts, niri or Hyprland
 
       ncdu
       alsa-utils
@@ -199,7 +222,7 @@
     systemd.enable = true;
     systemd.variables = ["--all"];
     configType = "lua";
-    extraConfig = import ../home-manager-modules/hyprland/hyprland.lua.nix {inherit outputs lib inputs pkgs;};
+    extraConfig = import ../home-manager-modules/hyprland/hyprland.lua.nix {inherit outputs lib inputs pkgs session;};
     plugins = [
       #  TODO: marked broken
       # pkgs.hyprlandPlugins.hyprfocus

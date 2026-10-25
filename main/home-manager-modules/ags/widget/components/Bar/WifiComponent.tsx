@@ -58,7 +58,11 @@ export default function WifiComponent() {
   return (
     <box class="bar-item network">
       <box class="main" halign={Gtk.Align.START} valign={Gtk.Align.CENTER}>
-        <icon valign={Gtk.Align.CENTER} icon={status.as((s) => s.icon)} />
+        <icon
+          class="spaced-icon"
+          valign={Gtk.Align.CENTER}
+          icon={status.as((s) => s.icon)}
+        />
         <label valign={Gtk.Align.CENTER} label={status.as((s) => s.label)} />
       </box>
     </box>

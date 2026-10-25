@@ -22,7 +22,7 @@ import AudioSettingsComponent, {
 import BluetoothSettingsComponent, {
   setBluetoothSettings,
 } from "./components/Bar/BluetoothSettingsComponent";
-import { focusedOutput } from "../niri";
+import { focusedOutput } from "../compositor";
 
 export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
   const { START, END, CENTER } = Gtk.Align;

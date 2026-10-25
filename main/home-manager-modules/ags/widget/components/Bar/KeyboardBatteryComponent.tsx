@@ -26,7 +26,7 @@ export default function KeyboardBatteryComponent() {
         valign={Gtk.Align.CENTER}
       >
         <icon
-          class="keyboard-icon"
+          class="spaced-icon"
           icon="kb-pixel-symbolic"
           valign={Gtk.Align.CENTER}
         />

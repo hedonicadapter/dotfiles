@@ -6,7 +6,7 @@ export function fmtMSS(s: number) {
 }
 
 // adapted from https://github.com/Aylur/ags/issues/534#issuecomment-2276879113 by Not-a-true-statement
-// Connector name (eDP-1, HDMI-A-1) for a monitor — matches niri's output names
+// Connector name (eDP-1, HDMI-A-1) for a monitor — matches compositor output names
 export function getMonitorPlugName(monitor: Gdk.Monitor) {
   const display = Gdk.Display.get_default();
   if (!display) return undefined;

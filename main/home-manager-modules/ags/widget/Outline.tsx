@@ -3,7 +3,7 @@ import app from "ags/gtk3/app";
 import Astal from "gi://Astal?version=3.0";
 import Gdk from "gi://Gdk?version=3.0";
 import { getMonitorPlugName } from "../util";
-import { focusedOutput } from "../niri";
+import { focusedOutput } from "../compositor";
 
 export default function Outline(gdkmonitor: Gdk.Monitor, index: number) {
   const [hovered, setHovered] = createState(false);

@@ -12,7 +12,7 @@ import {
   setAudioSettings,
   toggleAudioSettings,
 } from "./widget/components/Bar/AudioSettingsComponent";
-import { connect as connectNiri } from "./niri";
+import { connect as connectCompositor } from "./compositor";
 import { connect as connectKeyboardBattery } from "./keyboardBattery";
 
 const style = await readFileAsync("style.scss");
@@ -24,7 +24,7 @@ app.start({
   css: convertedToCss,
   icons: `${SRC}/icons`,
   main() {
-    connectNiri();
+    connectCompositor();
     connectKeyboardBattery();
 
     // Layer surfaces die with their output — rebuild per-monitor windows on hotplug

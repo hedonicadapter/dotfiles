@@ -279,7 +279,8 @@
             font-size: 18px;
           }
 
-          .keyboard-battery .keyboard-icon {
+          // Gap between icon and label
+          .spaced-icon {
             margin-right: 5px;
           }
 

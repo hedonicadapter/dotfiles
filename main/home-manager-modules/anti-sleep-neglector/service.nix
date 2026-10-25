@@ -478,8 +478,9 @@ in {
                 echo $(( max_brightness * brightness_percent / 100 ))
             }
 
+            # Hyprland only. Lua config: `hyprctl keyword` is gone, eval sets options
             set_shader() {
-              hyprctl keyword decoration:screen_shader "$1"
+              hyprctl eval "hl.config({ decoration = { screen_shader = \"$1\" } })"
             }
 
             # Fallback if no branch matches (clock skew, malformed period times)
@@ -602,10 +603,10 @@ in {
           ExecStart = let
             displayUtils = pkgs.writeShellScript "display-utils" ''
               get_main_monitor_resolution() {
-                if [[ -n "''${NIRI_SOCKET:-}" ]]; then
-                  niri msg --json focused-output | jq -r '.modes[.current_mode] | "\(.width) \(.height)"'
-                elif command -v hyprctl >/dev/null; then
-                  hyprctl -j monitors | jq -r '.[0] | "\(.width) \(.height)"'
+                local resolution
+                # Focused output, else the first
+                if resolution=$(wm outputs | jq -er '(map(select(.focused)) + .)[0].mode | "\(.width) \(.height)"'); then
+                  echo "$resolution"
                 # Fallback to X11
                 elif command -v xrandr >/dev/null; then
                   xrandr --query | awk '/ connected.*primary/{gsub("[x+]", " "); print $3, $4}' | head -n1
@@ -652,7 +653,7 @@ in {
                 libwebpSupport = true;
                 lcms2Support = true;
               })
-              hyprlandPkg
+              pkgs.wm
               inputs.swww.packages.${pkgs.system}.swww
               pkgs.mpvpaper
               pkgs.ffmpeg-headless

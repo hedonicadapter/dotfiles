@@ -3,11 +3,91 @@
   lib,
   inputs,
   pkgs,
+  # home-manager-modules/compositor
+  session,
   ...
 }: let
+  inherit (lib) boolToString concatMapStringsSep concatStringsSep mapAttrsToList optional optionalString;
   processColor = color: lib.toLower (builtins.substring 1 6 (builtins.toString color));
 
   hyprsplitSrc = inputs.hyprsplit.packages.${pkgs.system}.hyprsplitlua;
+
+  # JSON strings and numbers are valid Lua literals
+  lua = builtins.toJSON;
+  # Shared regexes search like niri's; Hyprland's RE2 engine full-matches
+  fullMatch = re: ".*(?:${re}).*";
+
+  monitor = name: o: let
+    mode =
+      if o.mode == null
+      then "preferred"
+      else o.mode;
+    position =
+      if o.position == null
+      then "auto"
+      else "${toString o.position.x}x${toString o.position.y}";
+  in "hl.monitor({ output = ${lua name}, mode = ${lua mode}, position = ${lua position}, scale = ${lua o.scale}${optionalString o.vrr ", vrr = 1"} })";
+
+  # Monitor-local expressions for niri's relative-to corners
+  move = {
+    x,
+    y,
+    relativeTo,
+  }: let
+    fromRight = "monitor_w-window_w-${toString x}";
+    fromBottom = "monitor_h-window_h-${toString y}";
+    corners = {
+      "top-left" = [(toString x) (toString y)];
+      "top-right" = [fromRight (toString y)];
+      "bottom-left" = [(toString x) fromBottom];
+      "bottom-right" = [fromRight fromBottom];
+    };
+    xy = corners.${relativeTo} or (throw "hyprland: unsupported relative-to ${relativeTo}");
+  in "{ ${lua (builtins.elemAt xy 0)}, ${lua (builtins.elemAt xy 1)} }";
+
+  windowRule = r: let
+    m = r.match;
+    class =
+      if m.appId != null && r.exclude.appId != null
+      then throw "hyprland: a rule can't both match and exclude app-ids"
+      else if m.appId != null
+      then fullMatch m.appId
+      else if r.exclude.appId != null
+      then "negative:${fullMatch r.exclude.appId}"
+      else null;
+    # Focus-dependent opacity is Hyprland's "active inactive" pair
+    opacity =
+      if m.active == false
+      then "1.0 ${lua r.opacity}"
+      else if m.active == true
+      then "${lua r.opacity} 1.0"
+      else lua r.opacity;
+    matches =
+      optional (class != null) "class = ${lua class}"
+      ++ optional (m.title != null) "title = ${lua (fullMatch m.title)}"
+      ++ optional (m.active != null && r.opacity == null) "focus = ${boolToString m.active}";
+    effects =
+      optional (r.float != null) "float = ${boolToString r.float}"
+      ++ optional (r.focus == false) "no_initial_focus = true"
+      ++ optional (r.center != null) "center = ${boolToString r.center}"
+      ++ optional (r.stayFocused != null) "stay_focused = ${boolToString r.stayFocused}"
+      ++ optional (r.position != null) "move = ${move r.position}"
+      ++ optional (r.opacity != null) "opacity = ${lua opacity}";
+  in
+    if m.atStartup != null
+    then throw "hyprland: no at-startup match; mark the rule only = \"niri\""
+    else "hl.window_rule({ match = { ${concatStringsSep ", " matches} }, ${concatStringsSep ", " effects} })";
+  windowRules = builtins.filter (r: r.only != "niri") session.windowRules;
+
+  mods = {
+    Mod = "SUPER";
+    Shift = "SHIFT";
+    Ctrl = "CTRL";
+    Alt = "ALT";
+  };
+  launcherBind = b: let
+    keys = concatStringsSep " + " (map (mod: mods.${mod}) b.mods ++ [b.key]);
+  in "hl.bind(${lua keys}, hl.dsp.exec_cmd(${lua b.cmd}), { description = ${lua b.desc}${optionalString b.locked ", locked = true"} })";
 in ''
   local mainMod = "SUPER"
 
@@ -21,7 +101,6 @@ in ''
 
   -- autostart
   hl.on("hyprland.start", function()
-    hl.exec_cmd("bash ~/.config/hypr/auto-start.sh")
     hl.exec_cmd("bash ~/.config/hypr/auto-float-unfloat.sh")
 
     hl.dispatch(hl.dsp.exec_cmd(terminal .. " --detach --hold -e nvim ~/big-todo.md", { workspace = "1 silent" }))
@@ -41,13 +120,7 @@ in ''
   hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
   hl.env("GSK_RENDERER", "ngl") -- error 71 gtk
 
-  hl.monitor({ output = "eDP-1",    mode = "2150x1440", position = "auto",       scale = 1 })
-  hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "2160x0",     scale = 0.75 })
-
-  -- Xenit
-  hl.monitor({ output = "DP-3", mode = "preferred", position = "2560x-1440", scale = 1 })
-  hl.monitor({ output = "DP-4", mode = "preferred", position = "5120x-1440", scale = 1 })
-  hl.monitor({ output = "DP-1", mode = "preferred", position = "auto",       scale = 1 })
+  ${concatStringsSep "\n" (mapAttrsToList monitor session.outputs)}
 
   -- for AlfredoSequeida/hints
   -- hl.device({
@@ -173,9 +246,7 @@ in ''
   hl.window_rule({ match = { float = false, workspace = "f[1]" },   border_size = 0 })
   hl.window_rule({ match = { float = false, workspace = "f[1]" },   rounding = 0 })
 
-  hl.window_rule({ match = { class = "^(.*popup.*)$" }, float = true })
-  hl.window_rule({ match = { class = "^(.*popup.*)$" }, center = true })
-  hl.window_rule({ match = { class = "^(.*popup.*)$" }, stay_focused = true })
+  ${concatMapStringsSep "\n" windowRule windowRules}
 
   package.path = package.path .. ";${hyprsplitSrc}/share/?/init.lua"
   local hs = require("hyprsplit")
@@ -184,47 +255,38 @@ in ''
     persistent_workspaces = true,
   })
 
-  -- Which-key menus (wlr-which-key), shared with niri.
-  -- Menu contents live in home-manager-modules/wlr-which-key/menus.nix
-  hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("wlr-which-key-run"))
-  hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("wlr-which-key-browser"))
-  hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("wlr-which-key-directories"))
-  hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd("wlr-which-key-query"))
-  hl.bind(mainMod .. " + U", hl.dsp.exec_cmd("wlr-which-key-utility"))
-  hl.bind(mainMod .. " + S", hl.dsp.exec_cmd("wlr-which-key-system"))
-
-  hl.bind("SUPER + V", hl.dsp.exec_cmd("hints"))
+  ${concatMapStringsSep "\n" launcherBind session.launcherBinds}
   -- hl.bind("SUPER + Y", hl.dsp.exec_cmd("hints --mode scroll"))
 
-  hl.bind(mainMod .. " + W", hl.dsp.window.close())
-  hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.float())
-  hl.bind(mainMod .. " + M", hl.dsp.window.fullscreen({ mode = "maximized" }))
+  hl.bind(mainMod .. " + W", hl.dsp.window.close(), { description = "Close window" })
+  hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.float(), { description = "Toggle floating" })
+  hl.bind(mainMod .. " + M", hl.dsp.window.fullscreen({ mode = "maximized" }), { description = "Maximize" })
 
-  hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "l" }))
-  hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "r" }))
-  hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "u" }))
-  hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "d" }))
+  hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "l" }), { description = "Focus left" })
+  hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "r" }), { description = "Focus right" })
+  hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "u" }), { description = "Focus up" })
+  hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "d" }), { description = "Focus down" })
 
-  hl.bind(mainMod .. " + up", hl.dsp.window.cycle_next())
+  hl.bind(mainMod .. " + up", hl.dsp.window.cycle_next(), { description = "Cycle windows" })
 
-  hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "l" }))
-  hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "r" }))
-  hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "u" }))
-  hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "d" }))
+  hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "l" }), { description = "Move left" })
+  hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "r" }), { description = "Move right" })
+  hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "u" }), { description = "Move up" })
+  hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "d" }), { description = "Move down" })
 
-  hl.bind(mainMod .. " + CTRL + H", hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { repeating = true })
-  hl.bind(mainMod .. " + CTRL + L", hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { repeating = true })
-  hl.bind(mainMod .. " + CTRL + K", hl.dsp.window.resize({ x = 0, y = -30, relative = true }), { repeating = true })
-  hl.bind(mainMod .. " + CTRL + J", hl.dsp.window.resize({ x = 0, y = 30, relative = true }), { repeating = true })
+  hl.bind(mainMod .. " + CTRL + H", hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { repeating = true, description = "Narrower" })
+  hl.bind(mainMod .. " + CTRL + L", hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { repeating = true, description = "Wider" })
+  hl.bind(mainMod .. " + CTRL + K", hl.dsp.window.resize({ x = 0, y = -30, relative = true }), { repeating = true, description = "Shorter" })
+  hl.bind(mainMod .. " + CTRL + J", hl.dsp.window.resize({ x = 0, y = 30, relative = true }), { repeating = true, description = "Taller" })
 
   -- switch to Nth workspace on focused monitor
   for i = 1, 4 do
-    hl.bind(mainMod .. " + " .. i, hs.dsp.focus({ workspace = i }))
+    hl.bind(mainMod .. " + " .. i, hs.dsp.focus({ workspace = i }), { description = "Focus workspace " .. i })
   end
   -- move active window to Nth workspace (follows focus); SHIFT+0 -> 10
   for i = 1, 10 do
     local key = (i == 10) and "0" or tostring(i)
-    hl.bind(mainMod .. " + SHIFT + " .. key, hs.dsp.window.move({ workspace = i, follow = true }))
+    hl.bind(mainMod .. " + SHIFT + " .. key, hs.dsp.window.move({ workspace = i, follow = true }), { description = "Move to workspace " .. i })
   end
 
   -- move/resize with mainMod + LMB/RMB drag

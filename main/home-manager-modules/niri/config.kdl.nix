@@ -1,20 +1,55 @@
 {
   outputs,
-  hostName,
+  lib,
+  # home-manager-modules/compositor
+  session,
   ...
 }: let
+  inherit (lib) boolToString concatMapStrings concatMapStringsSep concatStringsSep hasInfix mapAttrsToList optional;
   p = outputs.palette;
-  # Desktop: Hisense M2 Pro projector; laptop: external monitor
-  hdmi =
-    if hostName == "desktop"
-    then {
-      mode = "1920x1080@240";
-      scale = "1";
-    }
-    else {
-      mode = "2560x1440@119.998";
-      scale = "2.0";
-    };
+
+  str = builtins.toJSON;
+  # Raw string so regex backslashes survive
+  raw = s: "r#\"${s}\"#";
+
+  block = header: lines: "${header} {\n${concatMapStrings (l: "    ${l}\n") lines}}\n";
+
+  outputBlock = name: o:
+    block "output ${str name}" (
+      optional (o.mode != null) "mode ${str o.mode}"
+      ++ ["scale ${str o.scale}"]
+      ++ optional (o.position != null) "position x=${toString o.position.x} y=${toString o.position.y}"
+      ++ optional o.vrr "variable-refresh-rate"
+      ++ optional o.focusAtStartup "focus-at-startup"
+    );
+
+  matcher = keyword: m: let
+    props =
+      optional (m.appId or null != null) "app-id=${raw m.appId}"
+      ++ optional (m.title or null != null) "title=${raw m.title}"
+      ++ optional (m.active or null != null) "is-active=${boolToString m.active}"
+      ++ optional (m.atStartup or null != null) "at-startup=${boolToString m.atStartup}";
+  in
+    optional (props != []) (concatStringsSep " " ([keyword] ++ props));
+
+  windowRule = r:
+    block "window-rule" (
+      matcher "match" r.match
+      ++ matcher "exclude" r.exclude
+      ++ optional (r.float != null) "open-floating ${boolToString r.float}"
+      ++ optional (r.focus != null) "open-focused ${boolToString r.focus}"
+      ++ optional (r.position != null)
+      "default-floating-position x=${toString r.position.x} y=${toString r.position.y} relative-to=${str r.position.relativeTo}"
+      ++ optional (r.opacity != null) "opacity ${str r.opacity}"
+    );
+
+  launcherBind = b: let
+    props = ["hotkey-overlay-title=${str b.desc}"] ++ optional b.locked "allow-when-locked=true";
+    action =
+      if hasInfix " " b.cmd
+      then "spawn-sh ${str b.cmd}"
+      else "spawn ${str b.cmd}";
+  in "    ${concatStringsSep "+" (b.mods ++ [b.key])} ${concatStringsSep " " props} { ${action}; }\n";
 in ''
   input {
       keyboard {
@@ -39,19 +74,7 @@ in ''
       warp-mouse-to-focus mode="center-xy"
   }
 
-  output "eDP-1" {
-      mode "2150x1440@144"
-      scale 1
-      position x=0 y=0
-  }
-
-  output "HDMI-A-1" {
-      mode "${hdmi.mode}"
-      scale ${hdmi.scale}
-      variable-refresh-rate // on-demand=true
-      focus-at-startup
-  }
-
+  ${concatStringsSep "\n" (mapAttrsToList outputBlock session.outputs)}
   layout {
       gaps 16
       center-focused-column "on-overflow"
@@ -108,7 +131,6 @@ in ''
       GSK_RENDERER "ngl"
   }
 
-  spawn-sh-at-startup "bash ~/.config/niri/auto-start.sh"
   spawn-sh-at-startup "kitty --detach --hold -e nvim ~/big-todo.md"
   spawn-at-startup "zen-beta"
   spawn-at-startup "obsidian"
@@ -133,12 +155,7 @@ in ''
       saturation 1.5
   }
 
-  window-rule {
-      match is-active=false
-      exclude app-id="^mpv$"
-      opacity 0.6
-  }
-
+  ${concatMapStringsSep "\n" windowRule (builtins.filter (r: r.only != "hyprland") session.windowRules)}
   // Blur+noise behind all windows; shows through the opacity rule above.
   // Keeps default xray — non-xray blur breaks the open/close shaders.
   window-rule {
@@ -149,42 +166,10 @@ in ''
       }
   }
 
-  window-rule {
-      match app-id="popup"
-      open-floating true
-  }
-
-  window-rule {
-      match title="^Picture-in-Picture$"
-      open-floating true
-  }
-
-  window-rule {
-      match at-startup=true app-id="obsidian"
-      open-focused false
-  }
-
-  // Steam toasts are its own X11 windows, not freedesktop notifications
-  window-rule {
-      match app-id="steam" title=r#"^notificationtoasts_\d+_desktop$"#
-      open-floating true
-      open-focused false
-      default-floating-position x=10 y=10 relative-to="bottom-right"
-  }
-
   binds {
       Mod+Shift+Slash { show-hotkey-overlay; }
 
-      Mod+R { spawn "wlr-which-key-run"; }
-      Mod+B { spawn "wlr-which-key-browser"; }
-      Mod+D { spawn "wlr-which-key-directories"; }
-      Mod+Q { spawn "wlr-which-key-query"; }
-      Mod+U { spawn "wlr-which-key-utility"; }
-      Mod+S { spawn "wlr-which-key-system"; }
-
-      Mod+V { spawn "hints"; }
-      Mod+T hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
-
+  ${concatMapStrings launcherBind session.launcherBinds}
       Mod+W repeat=false { close-window; }
 
       Mod+Shift+F { toggle-window-floating; }
@@ -318,20 +303,6 @@ in ''
       Print      { screenshot; }
       Ctrl+Print { screenshot-screen; }
       Alt+Print  { screenshot-window; }
-
-      XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
-      XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
-      XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
-      XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
-
-      XF86AudioPlay  allow-when-locked=true { spawn-sh "playerctl play-pause"; }
-      XF86AudioPause allow-when-locked=true { spawn-sh "playerctl play-pause"; }
-      XF86AudioStop  allow-when-locked=true { spawn-sh "playerctl stop"; }
-      XF86AudioPrev  allow-when-locked=true { spawn-sh "playerctl previous"; }
-      XF86AudioNext  allow-when-locked=true { spawn-sh "playerctl next"; }
-
-      XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-      XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
 
       Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
