@@ -29,7 +29,11 @@
 
   # Suspend + Wake-on-LAN instead of running 24/7; shared config keeps sleep off for the laptop
   systemd.sleep.settings.Sleep.AllowSuspend = lib.mkForce "yes";
-  # Magic-packet wake on every wired connection NetworkManager activates (64 = magic).
+  # Magic-packet wake on every connection NetworkManager activates; flag values differ per type.
   # Also needs BIOS: APM Configuration → Power On By PCI-E enabled, ErP disabled.
-  networking.networkmanager.connectionConfig."ethernet.wake-on-lan" = 64;
+  networking.networkmanager.connectionConfig = {
+    "ethernet.wake-on-lan" = 64; # magic
+    # MT7922 WoWLAN; only from suspend, and the router must keep the sleeping client associated
+    "wifi.wake-on-wlan" = 8; # magic
+  };
 }
