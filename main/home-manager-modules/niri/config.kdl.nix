@@ -155,7 +155,7 @@ in ''
       saturation 1.5
   }
 
-  ${concatMapStringsSep "\n" windowRule session.windowRules}
+  ${concatMapStringsSep "\n" windowRule (builtins.filter (r: r.only != "hyprland") session.windowRules)}
   // Blur+noise behind all windows; shows through the opacity rule above.
   // Keeps default xray — non-xray blur breaks the open/close shaders.
   window-rule {

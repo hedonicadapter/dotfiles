@@ -73,9 +73,11 @@
       ++ optional (r.stayFocused != null) "stay_focused = ${boolToString r.stayFocused}"
       ++ optional (r.position != null) "move = ${move r.position}"
       ++ optional (r.opacity != null) "opacity = ${lua opacity}";
-  in "hl.window_rule({ match = { ${concatStringsSep ", " matches} }, ${concatStringsSep ", " effects} })";
-  # No at-startup match; startup apps open silently instead
-  windowRules = builtins.filter (r: r.match.atStartup == null) session.windowRules;
+  in
+    if m.atStartup != null
+    then throw "hyprland: no at-startup match; mark the rule only = \"niri\""
+    else "hl.window_rule({ match = { ${concatStringsSep ", " matches} }, ${concatStringsSep ", " effects} })";
+  windowRules = builtins.filter (r: r.only != "niri") session.windowRules;
 
   mods = {
     Mod = "SUPER";
@@ -168,10 +170,12 @@ in ''
     },
 
     decoration = {
+      dim_inactive = true,
+      dim_strength = 0.3,
+
       rounding = 0,
 
-      -- Behind translucent unfocused windows (shared opacity rule), like niri
-      blur = { enabled = true, size = 3, passes = 3, noise = 0.05 },
+      blur = { enabled = false },
       shadow = { enabled = false },
     },
 
@@ -243,7 +247,6 @@ in ''
   hl.window_rule({ match = { float = false, workspace = "f[1]" },   rounding = 0 })
 
   ${concatMapStringsSep "\n" windowRule windowRules}
-  hl.window_rule({ match = { class = "^mpv$" }, no_blur = true })
 
   package.path = package.path .. ";${hyprsplitSrc}/share/?/init.lua"
   local hs = require("hyprsplit")

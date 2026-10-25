@@ -21,6 +21,8 @@
 
   windowRules = map (rule:
     {
+      # "niri" or "hyprland"; null = both
+      only = null;
       float = null;
       focus = null;
       center = null;

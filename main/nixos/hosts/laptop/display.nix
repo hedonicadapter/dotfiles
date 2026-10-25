@@ -16,15 +16,4 @@
     vrr = true;
     focusAtStartup = true;
   };
-
-  # Xenit office
-  "DP-1" = {};
-  "DP-3".position = {
-    x = 2560;
-    y = -1440;
-  };
-  "DP-4".position = {
-    x = 5120;
-    y = -1440;
-  };
 }

@@ -1,8 +1,11 @@
 # Window rules for niri and Hyprland. Regexes match like niri's (unanchored
 # search); the Hyprland renderer wraps them for its full-match engine.
+# `only` limits a rule to one compositor.
 [
-  # Translucent unfocused windows; video stays opaque
+  # Translucent unfocused windows; video stays opaque. Hyprland dims them
+  # instead (decoration.dim_inactive)
   {
+    only = "niri";
     match.active = false;
     exclude.appId = "^mpv$";
     opacity = 0.6;
@@ -21,8 +24,9 @@
     float = true;
   }
 
-  # niri only: Hyprland has no at-startup match and starts obsidian silently
+  # Hyprland has no at-startup match and starts obsidian silently
   {
+    only = "niri";
     match = {
       appId = "obsidian";
       atStartup = true;
