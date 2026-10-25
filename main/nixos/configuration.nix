@@ -328,6 +328,7 @@ in {
   services.desktopManager.gnome.enable = true;
   # services.libinput.mouse.accelProfile = "adaptive"; configured in hyprland.conf
   services.printing.enable = true;
+  services.udisks2.enable = true; # charybdis-flash mounts the bootloader drive as the user
   services.fwupd.enable = true; # Firmware updator
   services.system76-scheduler.enable = false;
 

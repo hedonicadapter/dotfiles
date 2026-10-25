@@ -226,6 +226,23 @@
         "type": "github"
       }
     },
+    "charybdis-firmware": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792919087,
+        "narHash": "sha256-+Xj/qLjzwm8pzO4b8uVMxGadw1zGqlfpihWJVD65Hoo=",
+        "owner": "hedonicadapter",
+        "repo": "charybdis-wireless-mini-zmk-firmware",
+        "rev": "dd59d6f4ff12e1bfadd0ae6a7259803a49622064",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hedonicadapter",
+        "ref": "claude/zmk-keybind-3x5-remap-0ewtqz",
+        "repo": "charybdis-wireless-mini-zmk-firmware",
+        "type": "github"
+      }
+    },
     "cl-nix-lite": {
       "inputs": {
         "flake-parts": "flake-parts_2",
@@ -1926,6 +1943,7 @@
     "root": {
       "inputs": {
         "ags": "ags",
+        "charybdis-firmware": "charybdis-firmware",
         "colors": "colors",
         "direnv-instant": "direnv-instant",
         "home-manager": "home-manager",

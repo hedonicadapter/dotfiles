@@ -47,6 +47,9 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     direnv-instant.url = "github:Mic92/direnv-instant";
+    # scripts/flash.sh for the charybdis-flash service
+    charybdis-firmware.url = "github:hedonicadapter/charybdis-wireless-mini-zmk-firmware?ref=claude/zmk-keybind-3x5-remap-0ewtqz";
+    charybdis-firmware.flake = false;
     # hermes-agent.url = "github:NousResearch/hermes-agent";
     # hermes-agent.inputs.nixpkgs.follows = "nixpkgs";
 
