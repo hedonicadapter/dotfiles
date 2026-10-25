@@ -1,9 +1,12 @@
 {
   pkgs,
   lib,
+  osConfig,
   ...
 }: let
   mkMenu = import ./mkMenu.nix {inherit pkgs lib;};
+
+  canSuspend = (osConfig.systemd.sleep.settings.Sleep.AllowSuspend or "yes") != "no";
 
   terminal = "kitty";
   music = "spotify";
@@ -48,7 +51,12 @@
         desc = "REBOOT";
         cmd = "sudo shutdown -r now";
       }
-    ];
+    ]
+    ++ lib.optional canSuspend {
+      key = "s";
+      desc = "SUSPEND";
+      cmd = "systemctl suspend";
+    };
   };
 
   audioMenu = mkMenu {

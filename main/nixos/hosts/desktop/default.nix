@@ -26,4 +26,10 @@
 
   # GPU fan/power/clock control, works for iGPU and RX 9060 XT
   services.lact.enable = true;
+
+  # Suspend + Wake-on-LAN instead of running 24/7; shared config keeps sleep off for the laptop
+  systemd.sleep.settings.Sleep.AllowSuspend = lib.mkForce "yes";
+  # Magic-packet wake on every wired connection NetworkManager activates (64 = magic).
+  # Also needs BIOS: APM Configuration → Power On By PCI-E enabled, ErP disabled.
+  networking.networkmanager.connectionConfig."ethernet.wake-on-lan" = 64;
 }
