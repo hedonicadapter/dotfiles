@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/x3d-guard.sh",
+            "timeout": 10,
+            "statusMessage": "Checking for 9800X3D-risk settings"
+          }
+        ]
+      }
+    ]
+  }
+}
