@@ -65,8 +65,8 @@ Switching compositors should be a login choice, not a port.
 
 ## Stays compositor-specific
 
-- Screen shader (`anti-sleep-neglector-gamma`): Hyprland only. Under niri, skip it
-  and optionally fall back to `wlsunset` for colour temperature (no CRT effect).
+- Screen shader (`anti-sleep-neglector-gamma`): Hyprland only. Under niri, sunsetr
+  presets give the same per-period colour temperature plus dimming (no CRT effect).
 - Tearing for games: Hyprland only (`allow_tearing` + `immediate` window rule);
   currently `allow_tearing = false`, VRR commented out.
 - Layout behaviour and animations.

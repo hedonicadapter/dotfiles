@@ -156,6 +156,28 @@ in {
         description = "Brightness periods configuration";
       };
 
+      # Gamma, not backlight: dims displays brightnessctl can't reach (HDMI, projectors)
+      brightness = mkOption {
+        type = types.submodule {
+          options =
+            mapAttrs (period: default:
+              mkOption {
+                type = types.ints.between 10 200;
+                inherit default;
+                description = "sunsetr gamma percentage for the ${period} period (100 = unchanged). niri only.";
+              }) {
+              dawn = 95;
+              first_light = 90;
+              night = 85;
+              solar_noon = 100;
+              sunrise = 100;
+              sunset = 95;
+            };
+        };
+        default = {};
+        description = "Per-period display brightness applied by sunsetr under niri";
+      };
+
       crt-effect = mkOption {
         type = types.submodule {
           options = {
@@ -415,7 +437,8 @@ in {
           Description = "Run anti sleep neglector automatic monitor brightness control";
           PartOf = ["graphical-session.target"];
           Requires = ["anti-sleep-neglector.service"];
-          After = ["graphical-session.target" "anti-sleep-neglector.service"];
+          # sunsetr must be up before set_period checks for it
+          After = ["graphical-session.target" "anti-sleep-neglector.service" "sunsetr.service"];
         };
 
         Service = {
@@ -428,6 +451,7 @@ in {
               pkgs.gnugrep
               pkgs.brightnessctl
               pkgs.systemd
+              pkgs.sunsetr
               hyprlandPkg
             ]}
 
@@ -483,6 +507,17 @@ in {
               hyprctl eval "hl.config({ decoration = { screen_shader = \"$1\" } })"
             }
 
+            # sunsetr preset where its service runs (niri), else the Hyprland shader.
+            # Never call `sunsetr preset` without a running instance: it would start
+            # sunsetr in the foreground here. Same name twice toggles back to default.
+            set_period() {
+              if systemctl --user is-active -q sunsetr.service; then
+                [ "$(sunsetr preset active)" = "$1" ] || timeout 10 sunsetr preset "$1"
+              else
+                set_shader "${shaderDir}/$1.frag"
+              fi
+            }
+
             # Fallback if no branch matches (clock skew, malformed period times)
             desired_brightness=$((max_brightness * night_brightness / 100))
 
@@ -493,7 +528,7 @@ in {
 
                   ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ${shaderDir}/night.frag"
+              then "set_period night"
               else ""
             }
             elif [ $current_minutes -lt $dawn_min ]; then
@@ -502,7 +537,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ${shaderDir}/first_light.frag"
+              then "set_period first_light"
               else ""
             }
             elif [ $current_minutes -lt $sunrise_min ]; then
@@ -511,7 +546,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ${shaderDir}/dawn.frag"
+              then "set_period dawn"
               else ""
             }
             elif [ $current_minutes -lt $solar_noon_min ]; then
@@ -520,7 +555,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ${shaderDir}/sunrise.frag"
+              then "set_period sunrise"
               else ""
             }
             elif [ $current_minutes -lt $sunset_min ]; then
@@ -529,7 +564,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ${shaderDir}/solar_noon.frag"
+              then "set_period solar_noon"
               else ""
             }
             elif [ $current_minutes -lt $last_light_min ]; then
@@ -538,7 +573,7 @@ in {
 
                     ${
               if config.services.anti-sleep-neglector-gamma.enable
-              then "set_shader ${shaderDir}/sunset.frag"
+              then "set_period sunset"
               else ""
             }
             fi
@@ -566,26 +601,73 @@ in {
       };
     })
 
-    (mkIf config.services.anti-sleep-neglector-gamma.enable {
-      home.file = builtins.listToAttrs (
-        builtins.map (periodName: {
-          name = ".config/anti-sleep-neglector/shaders/${periodName}.frag";
-          value = {
-            text = import ./template.frag.nix {
-              temp = toString (config.services.anti-sleep-neglector-gamma.periods.${periodName});
-              glowStrength = config.services.anti-sleep-neglector-gamma.crt-effect.glowStrength;
-              glowRadius = config.services.anti-sleep-neglector-gamma.crt-effect.glowRadius;
-              scanlineFrequency = config.services.anti-sleep-neglector-gamma.crt-effect.scanlineFrequency;
-              scanlineIntensity = config.services.anti-sleep-neglector-gamma.crt-effect.scanlineIntensity;
-              curvatureStrength = config.services.anti-sleep-neglector-gamma.crt-effect.curvatureStrength;
-              brightness = config.services.anti-sleep-neglector-gamma.crt-effect.brightness;
-              contrast = config.services.anti-sleep-neglector-gamma.crt-effect.contrast;
+    (mkIf config.services.anti-sleep-neglector-gamma.enable (let
+      cfg = config.services.anti-sleep-neglector-gamma;
+      periodNames = builtins.attrNames cfg.periods;
+
+      # Presets are standalone configs, not overlays on sunsetr.toml
+      sunsetrConfig = period:
+        (pkgs.formats.toml {}).generate "sunsetr-${period}.toml" {
+          backend = "wayland";
+          transition_mode = "static";
+          smoothing = true;
+          # Also the fade when the monitor switches presets
+          startup_duration = 10;
+          shutdown_duration = 2;
+          # 1ms default stutters and lags the cursor on AMD
+          adaptive_interval = 144;
+          static_temp = builtins.floor cfg.periods.${period};
+          static_gamma = cfg.brightness.${period};
+        };
+    in {
+      home.file =
+        builtins.listToAttrs (
+          builtins.map (periodName: {
+            name = ".config/anti-sleep-neglector/shaders/${periodName}.frag";
+            value = {
+              text = import ./template.frag.nix {
+                temp = toString (config.services.anti-sleep-neglector-gamma.periods.${periodName});
+                glowStrength = config.services.anti-sleep-neglector-gamma.crt-effect.glowStrength;
+                glowRadius = config.services.anti-sleep-neglector-gamma.crt-effect.glowRadius;
+                scanlineFrequency = config.services.anti-sleep-neglector-gamma.crt-effect.scanlineFrequency;
+                scanlineIntensity = config.services.anti-sleep-neglector-gamma.crt-effect.scanlineIntensity;
+                curvatureStrength = config.services.anti-sleep-neglector-gamma.crt-effect.curvatureStrength;
+                brightness = config.services.anti-sleep-neglector-gamma.crt-effect.brightness;
+                contrast = config.services.anti-sleep-neglector-gamma.crt-effect.contrast;
+              };
             };
-          };
-        })
-        (builtins.attrNames config.services.anti-sleep-neglector-gamma.periods)
-      );
-    })
+          })
+          periodNames
+        )
+        // builtins.listToAttrs (
+          builtins.map (periodName: {
+            name = ".config/sunsetr/presets/${periodName}/sunsetr.toml";
+            value.source = sunsetrConfig periodName;
+          })
+          periodNames
+        )
+        # Used until the monitor picks a preset
+        // {".config/sunsetr/sunsetr.toml".source = sunsetrConfig "solar_noon";};
+
+      # niri has no screen shaders; sunsetr sets temperature and gamma over
+      # wlr-gamma-control instead. Hyprland keeps the shader.
+      systemd.user.services.sunsetr = {
+        Unit = {
+          Description = "Per-period colour temperature and dimming for anti-sleep-neglector";
+          PartOf = ["graphical-session.target"];
+          After = ["graphical-session.target"];
+          ConditionEnvironment = "NIRI_SOCKET";
+        };
+        Service = {
+          ExecStart = "${pkgs.sunsetr}/bin/sunsetr";
+          # Apply the current period now, not on the monitor's next tick
+          ExecStartPost = mkIf config.services.anti-sleep-neglector-monitor.enable "${pkgs.systemd}/bin/systemctl --user start --no-block anti-sleep-neglector-monitor.service";
+          Restart = "on-failure";
+          RestartSec = "30s";
+        };
+        Install.WantedBy = ["graphical-session.target"];
+      };
+    }))
 
     (mkIf config.services.anti-sleep-neglector-wallpaper.enable {
       systemd.user.services."anti-sleep-neglector-wallpaper" = {
