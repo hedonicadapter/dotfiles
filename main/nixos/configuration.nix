@@ -434,6 +434,12 @@ in {
 
   services.openssh.enable = true;
 
+  services.tailscale = {
+    enable = true;
+    # UDP 41641: direct peer connections instead of DERP relays
+    openFirewall = true;
+  };
+
   services.udev.extraRules = ''
     KERNEL=="uinput", GROUP="input", MODE:="0660"
   '';
