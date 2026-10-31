@@ -15,6 +15,9 @@ flags:
   +layer   gfx.webrender.layer-compositor=true           (helped on NVIDIA/AMD, zen#11890)
   +forcehw media.hardware-video-decoding.force-enabled   (skips the VA-API blocklist)
   +60hz    layout.frame_rate=60                          (isolates the 240 Hz projector)
+  +swdecode  media.hardware-video-decoding.enabled=false  (rules VA-API in or out)
+  +nohttp3   network.http.http3.enable=false              (rules QUIC in or out)
+  +noipv6    network.dns.disableIPv6=true                 (rules the v6 CDN path in or out)
 USAGE
 }
 
@@ -111,6 +114,9 @@ ab_run() {
       +layer) echo 'user_pref("gfx.webrender.layer-compositor", true);' >> "$tmp/user.js";;
       +forcehw) echo 'user_pref("media.hardware-video-decoding.force-enabled", true);' >> "$tmp/user.js";;
       +60hz) echo 'user_pref("layout.frame_rate", 60);' >> "$tmp/user.js";;
+      +swdecode) printf 'user_pref("media.hardware-video-decoding.enabled", false);\nuser_pref("media.hardware-video-decoding.force-enabled", false);\n' >> "$tmp/user.js";;
+      +nohttp3) echo 'user_pref("network.http.http3.enable", false);' >> "$tmp/user.js";;
+      +noipv6) echo 'user_pref("network.dns.disableIPv6", true);' >> "$tmp/user.js";;
       *) echo "unknown flag $x" >&2; exit 2;;
     esac
   done

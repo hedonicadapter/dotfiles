@@ -15,6 +15,10 @@ user_pref("layers.acceleration.force-enabled", true);
 // VA-API decode through the system ffmpeg the wrapper puts on LD_LIBRARY_PATH.
 // `media.ffmpeg.vaapi.enabled` no longer exists in Gecko 152; this is the switch.
 user_pref("media.hardware-video-decoding.enabled", true);
+// Left in prefs.js by an earlier attempt. Forcing skips the blocklist *and*
+// keeps retrying a failing hardware decoder instead of falling back to
+// software; about:support already reports VA-API available without it.
+user_pref("media.hardware-video-decoding.force-enabled", false);
 
 // Zen writes a second session file next to Firefox's. Each write serialises
 // the whole session on the UI thread; profiles show 0.5-3 s hangs that drop
