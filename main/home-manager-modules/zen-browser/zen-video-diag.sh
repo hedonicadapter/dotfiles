@@ -41,13 +41,17 @@ summary() {
   echo "session: ${XDG_SESSION_TYPE:-?}  desktop: ${XDG_CURRENT_DESKTOP:-?}  niri: ${NIRI_SOCKET:+yes}  hyprland: ${HYPRLAND_INSTANCE_SIGNATURE:+yes}"
   echo "== gpu"; lspci -nn | grep -Ei 'vga|3d|display' || true
   echo "== env"; env | grep -E '^(MOZ_|LIBVA_|NVD_|LD_LIBRARY_PATH|__GLX|GBM_|NIXOS_OZONE_WL|XDG_SESSION_TYPE|WAYLAND_DISPLAY)' | sort || true
-  echo "== vainfo (what Firefox's VA-API decoder will get)"
-  if vainfo >/tmp/zen-video-diag.vainfo 2>&1; then
-    grep -E 'vainfo: (VA-API version|Driver version)' /tmp/zen-video-diag.vainfo
-    echo "decode profiles: $(grep -c VAEntrypointVLD /tmp/zen-video-diag.vainfo)  (AV1: $(grep -c 'AV1Profile0.*VLD' /tmp/zen-video-diag.vainfo), VP9: $(grep -c 'VP9Profile0.*VLD' /tmp/zen-video-diag.vainfo), H264: $(grep -c 'H264Main.*VLD' /tmp/zen-video-diag.vainfo))"
-  else
-    echo "vainfo FAILED -> no hardware decode in any browser:"; tail -5 /tmp/zen-video-diag.vainfo
-  fi
+  echo "== vainfo per render node (Gecko decodes on the node of the GPU it renders with)"
+  local node
+  for node in /dev/dri/renderD*; do
+    [[ -e $node ]] || { echo "no render nodes"; break; }
+    if vainfo --display drm --device "$node" >/tmp/zen-video-diag.vainfo 2>&1; then
+      echo "$node: $(grep -oE 'Driver version: .*' /tmp/zen-video-diag.vainfo)"
+      echo "  decode profiles: $(grep -c VAEntrypointVLD /tmp/zen-video-diag.vainfo)  (AV1: $(grep -c 'AV1Profile0.*VLD' /tmp/zen-video-diag.vainfo), VP9: $(grep -c 'VP9Profile0.*VLD' /tmp/zen-video-diag.vainfo), H264: $(grep -c 'H264Main.*VLD' /tmp/zen-video-diag.vainfo))"
+    else
+      echo "$node: vainfo FAILED: $(tail -1 /tmp/zen-video-diag.vainfo)"
+    fi
+  done
   echo "== zen"
   local bin; bin=$(zen_bin) || { echo "zen not in PATH"; return; }
   echo "binary: $bin ($("$bin" --version 2>/dev/null || true))"
@@ -61,7 +65,7 @@ summary() {
     echo "  prefs.js overrides of interest:"
     grep -E '"(gfx\.webrender\.(all|software|layer-compositor)|layers\.acceleration\.(force-enabled|disabled)|media\.hardware-video-decoding\.[a-z-]+|media\.ffmpeg\.vaapi\.enabled|widget\.dmabuf\.force-enabled|layout\.frame_rate|browser\.sessionstore\.interval)"' "$p/prefs.js" | sed 's/^/    /' || echo "    (none)"
   fi
-  [[ -e $p/chrome/userContent.css ]] && grep -q 'transition-property: all' "$p/chrome/userContent.css" && echo "  NOTE: userContent.css still has the global 'transition-property: all' rule"
+  [[ -e $p/chrome/userContent.css ]] && grep -qE '^\s*transition-property:\s*all\s*;' "$p/chrome/userContent.css" && echo "  NOTE: userContent.css still has the global 'transition-property: all' rule"
   pgrep -f 'zen-bin|zen-beta' >/dev/null && echo "zen is running (quit it before 'log')"
   echo
   echo "Next: open about:support in Zen -> Graphics. Want: Compositing = WebRender (not Software),"
