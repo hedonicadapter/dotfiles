@@ -460,10 +460,10 @@ in {
   #   addToSystemPackages = true;
   # };
 
-  # CachyOS kernel cache; moved 2026-10-24 after a server compromise, old key dropped
-  # https://github.com/xddxdd/nix-cachyos-kernel/issues/110
-  nix.settings.substituters = ["https://cache.lantian.pub/lantian"];
-  nix.settings.trusted-public-keys = ["lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="];
+  # CachyOS kernel is built locally: no third-party binary cache since the maintainer's
+  # 2026-10 server compromise (https://github.com/xddxdd/nix-cachyos-kernel/issues/110).
+  # Their cache, if wanted back: https://cache.lantian.pub/lantian
+  #   lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ=
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
