@@ -249,6 +249,16 @@ in {
         default = 56700;
         description = "Local UDP port bulbs reply to.";
       };
+
+      addresses = mkOption {
+        type = types.listOf types.str;
+        default = ["255.255.255.255"];
+        example = ["192.168.1.255"];
+        description = ''
+          Where to send queries: broadcast addresses or bulb IPs. Use the subnet broadcast,
+          or reserved bulb IPs, if the access point drops 255.255.255.255.
+        '';
+      };
     };
 
     services.anti-sleep-neglector-wallpaper = {
@@ -741,6 +751,7 @@ in {
             "LIFX_INTERVAL=${toString lifx.interval}"
             "LIFX_BRIGHTNESS_FLOOR=${toString lifx.brightnessFloor}"
             "LIFX_PORT=${toString lifx.port}"
+            ''"LIFX_ADDRESSES=${concatStringsSep " " lifx.addresses}"''
             # Short fade so the display keeps up with the bulbs
             "LIFX_SUNSETR_BASE=${toml.generate "sunsetr-lifx-base.toml" (sunsetrCommon // {startup_duration = 2;})}"
           ];

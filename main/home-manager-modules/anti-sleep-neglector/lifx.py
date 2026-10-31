@@ -16,7 +16,8 @@ Tunables (env):
   LIFX_GROUP             group or location label, case-insensitive (default "home")
   LIFX_INTERVAL          seconds between polls (default 5)
   LIFX_BRIGHTNESS_FLOOR  gamma % with the group at 0% brightness (default 70)
-  LIFX_BROADCAST         broadcast address (default 255.255.255.255)
+  LIFX_ADDRESSES         space-separated broadcast or bulb addresses
+                         (default 255.255.255.255)
   LIFX_PORT              local UDP port (default 56700)
   LIFX_SUNSETR_BASE      sunsetr.toml without static_temp/static_gamma (required)
 """
@@ -35,7 +36,8 @@ from pathlib import Path
 GROUP = os.environ.get("LIFX_GROUP", "home").casefold()
 INTERVAL = float(os.environ.get("LIFX_INTERVAL", "5"))
 FLOOR = int(os.environ.get("LIFX_BRIGHTNESS_FLOOR", "70"))
-BROADCAST = os.environ.get("LIFX_BROADCAST", "255.255.255.255")
+# Some access points drop 255.255.255.255; subnet broadcast or bulb IPs work there
+ADDRESSES = os.environ.get("LIFX_ADDRESSES", "255.255.255.255").split()
 PORT = int(os.environ.get("LIFX_PORT", "56700"))
 BASE = Path(os.environ["LIFX_SUNSETR_BASE"]).read_text().rstrip("\n") + "\n"
 
@@ -46,7 +48,7 @@ MARKER = Path(os.environ["XDG_RUNTIME_DIR"]) / "anti-sleep-neglector-lifx"
 
 # Polls without an answer before handing back to the monitor
 MISSES = 3
-# How long to collect replies to one broadcast
+# How long to collect replies to one query
 REPLY_WINDOW = 1.0
 
 BULB_PORT = 56700
@@ -74,7 +76,8 @@ def query(sock):
     Brightness is 16-bit. A bulb may lack keys whose reply got lost.
     """
     for msg_type in (GET_LOCATION, GET_GROUP, LIGHT_GET):
-        sock.sendto(packet(msg_type), (BROADCAST, BULB_PORT))
+        for address in ADDRESSES:
+            sock.sendto(packet(msg_type), (address, BULB_PORT))
 
     bulbs = {}
     deadline = time.monotonic() + REPLY_WINDOW
@@ -166,7 +169,8 @@ def main():
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(("", PORT))
 
-    print(f"polling {BROADCAST} for {GROUP!r} every {INTERVAL:g}s", flush=True)
+    print(f"polling {' '.join(ADDRESSES)} for {GROUP!r} every {INTERVAL:g}s",
+          flush=True)
     last, missed, status = None, 0, None
     try:
         while True:
