@@ -675,6 +675,9 @@ in {
         pkgs.writers.writePython3Bin "anti-sleep-neglector-lifx" {flakeIgnore = ["E501"];}
         (builtins.readFile ./lifx.py);
     in {
+      # CLI for `sunsetr preset active` and friends; services use the store path
+      home.packages = [pkgs.sunsetr];
+
       home.file =
         builtins.listToAttrs (
           builtins.map (periodName: {
