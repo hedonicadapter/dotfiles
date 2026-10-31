@@ -11,11 +11,16 @@
       border-radius: 1px !important;
     }
 
-    * {
+    /* Keep media and embedded content out of this: a radius on <video> forces a
+       clip mask on every frame, and `transition-property: all` made Gecko diff
+       every animatable property on every element each restyle. Measured in
+       headless Zen 1.21.8b at 240 Hz: +40% CPU and 4x more >50 ms video-frame
+       gaps versus no stylesheet; colour-only transitions cost ~nothing. */
+    *:not(video, canvas, img, picture, iframe, embed, object, svg, audio) {
       border-radius: 1px !important;
       transition-duration: 0.15s;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-      transition-property: all;
+      transition-property: background-color, color, border-color;
     }
 
     /* new tab */
