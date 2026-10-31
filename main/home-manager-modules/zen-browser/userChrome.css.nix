@@ -9,7 +9,11 @@
       --tab-inline-padding: 4px !important;
     }
 
-    * {
+    /* Not on the content stack: a radius on <browser> and its containers makes
+       Zen 1.24b (Gecko 159) drop a third of all video frames; harmless on
+       1.21.8b. Measured headless at 240 Hz: 424 of 1197 frames dropped with a
+       bare `*`, 3 with this exclusion list. */
+    *:not(browser, .browserStack, .browserContainer, .browserSidebarContainer, #tabbrowser-tabpanels, #tabbrowser-tabbox, #appcontent, #browser) {
       box-shadow: none !important;
       border-radius: 1px !important;
 
