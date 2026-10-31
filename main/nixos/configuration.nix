@@ -460,8 +460,10 @@ in {
   #   addToSystemPackages = true;
   # };
 
-  nix.settings.substituters = ["https://attic.xuyh0120.win/lantian"];
-  nix.settings.trusted-public-keys = ["lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="];
+  # CachyOS kernel cache; moved 2026-10-24 after a server compromise, old key dropped
+  # https://github.com/xddxdd/nix-cachyos-kernel/issues/110
+  nix.settings.substituters = ["https://cache.lantian.pub/lantian"];
+  nix.settings.trusted-public-keys = ["lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="];
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
