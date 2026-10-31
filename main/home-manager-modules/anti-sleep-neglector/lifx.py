@@ -1,6 +1,6 @@
-"""Make sunsetr follow a LIFX group.
+"""Make sunsetr follow a LIFX group or location.
 
-Polls the group over the LIFX LAN protocol and writes a `lifx` sunsetr preset:
+Polls the bulbs over the LIFX LAN protocol and writes a `lifx` sunsetr preset:
 bulb kelvin becomes the colour temperature, bulb brightness maps linearly onto
 gamma from LIFX_BRIGHTNESS_FLOOR (bulbs at 0%) to 100% (bulbs at 100%).
 Power is ignored: an off bulb still reports its last brightness and kelvin.
@@ -13,7 +13,7 @@ Bulbs reply to the port the query came from, so LIFX_PORT must be open in the
 firewall: replies to a broadcast never match conntrack.
 
 Tunables (env):
-  LIFX_GROUP             group label, case-insensitive (default "home")
+  LIFX_GROUP             group or location label, case-insensitive (default "home")
   LIFX_INTERVAL          seconds between polls (default 5)
   LIFX_BRIGHTNESS_FLOOR  gamma % with the group at 0% brightness (default 70)
   LIFX_BROADCAST         broadcast address (default 255.255.255.255)
@@ -50,8 +50,10 @@ MISSES = 3
 REPLY_WINDOW = 1.0
 
 BULB_PORT = 56700
+GET_LOCATION, STATE_LOCATION = 48, 50
 GET_GROUP, STATE_GROUP = 51, 53
 LIGHT_GET, LIGHT_STATE = 101, 107
+LABELS = {STATE_LOCATION: "location", STATE_GROUP: "group"}
 HEADER = 36
 # Echoed in replies; filters out other clients' traffic and our own broadcasts
 SOURCE = random.randint(2, 0xFFFFFFFF)
@@ -67,11 +69,14 @@ def packet(msg_type):
 
 
 def query(sock):
-    """Return [(brightness, kelvin)] for bulbs in GROUP, 16-bit brightness."""
-    for msg_type in (GET_GROUP, LIGHT_GET):
+    """Return {mac: {"location", "group", "state": (brightness, kelvin)}}.
+
+    Brightness is 16-bit. A bulb may lack keys whose reply got lost.
+    """
+    for msg_type in (GET_LOCATION, GET_GROUP, LIGHT_GET):
         sock.sendto(packet(msg_type), (BROADCAST, BULB_PORT))
 
-    groups, lights = {}, {}
+    bulbs = {}
     deadline = time.monotonic() + REPLY_WINDOW
     while (left := deadline - time.monotonic()) > 0:
         if not select.select([sock], [], [], left)[0]:
@@ -81,16 +86,32 @@ def query(sock):
             continue
         mac = data[8:14]
         msg_type = struct.unpack_from("<H", data, 32)[0]
-        if msg_type == STATE_GROUP and len(data) >= HEADER + 48:
-            # Payload: group uuid[16], label[32], updated_at
+        if msg_type in LABELS and len(data) >= HEADER + 48:
+            # Payload: uuid[16], label[32], updated_at
             label = data[HEADER + 16:HEADER + 48].split(b"\0", 1)[0]
-            groups[mac] = label.decode(errors="replace").casefold()
+            bulb = bulbs.setdefault(mac, {})
+            bulb[LABELS[msg_type]] = label.decode(errors="replace").strip()
         elif msg_type == LIGHT_STATE and len(data) >= HEADER + 8:
             # Payload: hue, saturation, brightness, kelvin, ...
             _, _, brightness, kelvin = struct.unpack_from("<4H", data, HEADER)
-            lights[mac] = (brightness, kelvin)
+            bulbs.setdefault(mac, {})["state"] = (brightness, kelvin)
+    return bulbs
 
-    return [state for mac, state in lights.items() if groups.get(mac) == GROUP]
+
+def matches(bulb):
+    labels = (bulb.get("group", ""), bulb.get("location", ""))
+    return "state" in bulb and GROUP in (label.casefold() for label in labels)
+
+
+def describe(bulbs):
+    """Say why no bulb matched, so a wrong label or blocked replies show in the log."""
+    if not bulbs:
+        return "no LIFX bulbs answered (firewall, other subnet, or client isolation)"
+    seen = sorted({
+        f"{b.get('location', '?')} / {b.get('group', '?')}" for b in bulbs.values()
+    })
+    return (f"{len(bulbs)} bulbs answered, none in {GROUP!r}. "
+            f"Seen (location / group): {'; '.join(seen)}")
 
 
 def sunsetr_running():
@@ -145,23 +166,30 @@ def main():
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(("", PORT))
 
-    last, missed = None, 0
+    print(f"polling {BROADCAST} for {GROUP!r} every {INTERVAL:g}s", flush=True)
+    last, missed, status = None, 0, None
     try:
         while True:
             try:
                 bulbs = query(sock)
+                states = [b["state"] for b in bulbs.values() if matches(b)]
+                new_status = (f"following {len(states)} bulbs in {GROUP!r}"
+                              if states else describe(bulbs))
             except OSError as e:
                 # No network yet, interface down
-                print(f"query failed: {e}", file=sys.stderr, flush=True)
-                bulbs = []
+                states, new_status = [], f"query failed: {e}"
+            # Log changes only, not every poll
+            if new_status != status:
+                print(new_status, flush=True)
+                status = new_status
 
-            if bulbs:
+            if states:
                 missed = 0
-                last = sync(bulbs, last)
+                last = sync(states, last)
             else:
                 missed += 1
                 if missed == MISSES and MARKER.exists():
-                    print(f"group {GROUP!r} not answering", flush=True)
+                    print("handing back to per-period presets", flush=True)
                     release()
             time.sleep(INTERVAL)
     finally:

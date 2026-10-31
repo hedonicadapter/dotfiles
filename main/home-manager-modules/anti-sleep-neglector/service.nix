@@ -229,7 +229,7 @@ in {
       group = mkOption {
         type = types.str;
         default = "home";
-        description = "LIFX group label to follow (case-insensitive).";
+        description = "LIFX group or location label to follow (case-insensitive).";
       };
 
       interval = mkOption {
