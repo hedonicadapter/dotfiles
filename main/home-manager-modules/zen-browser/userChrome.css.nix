@@ -9,16 +9,24 @@
       --tab-inline-padding: 4px !important;
     }
 
-    /* Not on the content stack: a radius on <browser> and its containers makes
-       Zen 1.24b (Gecko 159) drop a third of all video frames; harmless on
-       1.21.8b. Measured headless at 240 Hz: 424 of 1197 frames dropped with a
-       bare `*`, 3 with this exclusion list. */
-    *:not(browser, .browserStack, .browserContainer, .browserSidebarContainer, #tabbrowser-tabpanels, #tabbrowser-tabbox, #appcontent, #browser) {
+    * {
       box-shadow: none !important;
-      border-radius: 1px !important;
 
       --urlbar-height: 32px !important;
       --zen-workspace-indicator-height: 34px !important;
+    }
+
+    /* Radius everywhere except the content stack. On Zen 1.24b (Gecko 159)
+       a radius on each nested container of the web view, browser through
+       #tabbrowser-tabbox, drops a third of all video frames (measured
+       headless at 240 Hz: 424 of 1197; any single one of them: 0 to 6).
+       Zen itself rounds only .browserSidebarContainer, so that one gets the
+       1px square look on its own and the rest stay untouched. */
+    *:not(browser, .browserStack, .browserContainer, .browserSidebarContainer, #tabbrowser-tabpanels, #tabbrowser-tabbox, #appcontent, #browser) {
+      border-radius: 1px !important;
+    }
+    .browserSidebarContainer {
+      border-radius: 1px !important;
     }
   '';
   removedElements = ''
