@@ -15,7 +15,7 @@ firewall: replies to a broadcast never match conntrack.
 Tunables (env):
   LIFX_GROUP             group label, case-insensitive (default "home")
   LIFX_INTERVAL          seconds between polls (default 5)
-  LIFX_BRIGHTNESS_FLOOR  gamma % with the group at 0% brightness (default 50)
+  LIFX_BRIGHTNESS_FLOOR  gamma % with the group at 0% brightness (default 70)
   LIFX_BROADCAST         broadcast address (default 255.255.255.255)
   LIFX_PORT              local UDP port (default 56700)
   LIFX_SUNSETR_BASE      sunsetr.toml without static_temp/static_gamma (required)
@@ -34,7 +34,7 @@ from pathlib import Path
 
 GROUP = os.environ.get("LIFX_GROUP", "home").casefold()
 INTERVAL = float(os.environ.get("LIFX_INTERVAL", "5"))
-FLOOR = int(os.environ.get("LIFX_BRIGHTNESS_FLOOR", "50"))
+FLOOR = int(os.environ.get("LIFX_BRIGHTNESS_FLOOR", "70"))
 BROADCAST = os.environ.get("LIFX_BROADCAST", "255.255.255.255")
 PORT = int(os.environ.get("LIFX_PORT", "56700"))
 BASE = Path(os.environ["LIFX_SUNSETR_BASE"]).read_text().rstrip("\n") + "\n"

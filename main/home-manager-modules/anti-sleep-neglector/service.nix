@@ -240,7 +240,7 @@ in {
 
       brightnessFloor = mkOption {
         type = types.ints.between 10 100;
-        default = 50;
+        default = 70;
         description = "Display gamma % with the group at 0% brightness; scales linearly to 100% at full.";
       };
 
