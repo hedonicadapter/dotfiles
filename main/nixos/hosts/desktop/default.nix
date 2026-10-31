@@ -27,6 +27,13 @@
   # GPU fan/power/clock control, works for iGPU and RX 9060 XT
   services.lact.enable = true;
 
+  # Projector colour and dimming follow the LIFX "home" group (niri)
+  home-manager.users.hedonicadapter.services.anti-sleep-neglector-lifx.enable = true;
+  # Bulbs answer broadcasts from their own IP, which conntrack never matches
+  networking.firewall.allowedUDPPorts = [
+    config.home-manager.users.hedonicadapter.services.anti-sleep-neglector-lifx.port
+  ];
+
   # Suspend + Wake-on-LAN instead of running 24/7; shared config keeps sleep off for the laptop
   systemd.sleep.settings.Sleep.AllowSuspend = lib.mkForce "yes";
   # Magic-packet wake on every connection NetworkManager activates; flag values differ per type.

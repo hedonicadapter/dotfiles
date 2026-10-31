@@ -215,6 +215,42 @@ in {
       };
     };
 
+    services.anti-sleep-neglector-lifx = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to make sunsetr follow a LIFX group (niri only): bulb kelvin sets the
+          colour temperature, bulb brightness the dimming. Per-period presets resume when
+          the bulbs stop answering. Needs UDP `port` open in the NixOS firewall.
+        '';
+      };
+
+      group = mkOption {
+        type = types.str;
+        default = "home";
+        description = "LIFX group label to follow (case-insensitive).";
+      };
+
+      interval = mkOption {
+        type = types.ints.positive;
+        default = 5;
+        description = "Seconds between polls.";
+      };
+
+      brightnessFloor = mkOption {
+        type = types.ints.between 10 100;
+        default = 50;
+        description = "Display gamma % with the group at 0% brightness; scales linearly to 100% at full.";
+      };
+
+      port = mkOption {
+        type = types.port;
+        default = 56700;
+        description = "Local UDP port bulbs reply to.";
+      };
+    };
+
     services.anti-sleep-neglector-wallpaper = {
       enable = mkOption {
         type = types.bool;
@@ -507,11 +543,19 @@ in {
               hyprctl eval "hl.config({ decoration = { screen_shader = \"$1\" } })"
             }
 
+            # anti-sleep-neglector-lifx touches this while its bulbs answer
+            lifx_owns_sunsetr() {
+              local marker="$XDG_RUNTIME_DIR/anti-sleep-neglector-lifx"
+              [ -e "$marker" ] &&
+                [ $(( $(date +%s) - $(stat -c %Y "$marker") )) -lt ${toString (6 * config.services.anti-sleep-neglector-lifx.interval)} ]
+            }
+
             # sunsetr preset where its service runs (niri), else the Hyprland shader.
             # Never call `sunsetr preset` without a running instance: it would start
             # sunsetr in the foreground here. Same name twice toggles back to default.
             set_period() {
               if systemctl --user is-active -q sunsetr.service; then
+                lifx_owns_sunsetr && return
                 [ "$(sunsetr preset active)" = "$1" ] || timeout 10 sunsetr preset "$1"
               else
                 set_shader "${shaderDir}/$1.frag"
@@ -605,20 +649,31 @@ in {
       cfg = config.services.anti-sleep-neglector-gamma;
       periodNames = builtins.attrNames cfg.periods;
 
+      lifx = config.services.anti-sleep-neglector-lifx;
+      toml = pkgs.formats.toml {};
+
+      sunsetrCommon = {
+        backend = "wayland";
+        transition_mode = "static";
+        smoothing = true;
+        # Also the fade when the monitor switches presets
+        startup_duration = 10;
+        shutdown_duration = 2;
+        # 1ms default stutters and lags the cursor on AMD
+        adaptive_interval = 144;
+      };
+
       # Presets are standalone configs, not overlays on sunsetr.toml
       sunsetrConfig = period:
-        (pkgs.formats.toml {}).generate "sunsetr-${period}.toml" {
-          backend = "wayland";
-          transition_mode = "static";
-          smoothing = true;
-          # Also the fade when the monitor switches presets
-          startup_duration = 10;
-          shutdown_duration = 2;
-          # 1ms default stutters and lags the cursor on AMD
-          adaptive_interval = 144;
-          static_temp = builtins.floor cfg.periods.${period};
-          static_gamma = cfg.brightness.${period};
-        };
+        toml.generate "sunsetr-${period}.toml" (sunsetrCommon
+          // {
+            static_temp = builtins.floor cfg.periods.${period};
+            static_gamma = cfg.brightness.${period};
+          });
+
+      lifxSync =
+        pkgs.writers.writePython3Bin "anti-sleep-neglector-lifx" {flakeIgnore = ["E501"];}
+        (builtins.readFile ./lifx.py);
     in {
       home.file =
         builtins.listToAttrs (
@@ -667,7 +722,40 @@ in {
         };
         Install.WantedBy = ["graphical-session.target"];
       };
+
+      systemd.user.services.anti-sleep-neglector-lifx = mkIf lifx.enable {
+        Unit = {
+          Description = "Follow LIFX group ${lifx.group} with sunsetr";
+          PartOf = ["graphical-session.target"];
+          After = ["graphical-session.target" "sunsetr.service"];
+          ConditionEnvironment = "NIRI_SOCKET";
+        };
+        Service = {
+          ExecStart = "${lifxSync}/bin/anti-sleep-neglector-lifx";
+          Environment = [
+            "PATH=${lib.makeBinPath [pkgs.systemd pkgs.sunsetr]}"
+            ''"LIFX_GROUP=${lifx.group}"''
+            "LIFX_INTERVAL=${toString lifx.interval}"
+            "LIFX_BRIGHTNESS_FLOOR=${toString lifx.brightnessFloor}"
+            "LIFX_PORT=${toString lifx.port}"
+            # Short fade so the display keeps up with the bulbs
+            "LIFX_SUNSETR_BASE=${toml.generate "sunsetr-lifx-base.toml" (sunsetrCommon // {startup_duration = 2;})}"
+          ];
+          Restart = "on-failure";
+          RestartSec = "10s";
+        };
+        Install.WantedBy = ["graphical-session.target"];
+      };
     }))
+
+    (mkIf config.services.anti-sleep-neglector-lifx.enable {
+      assertions = [
+        {
+          assertion = config.services.anti-sleep-neglector-gamma.enable;
+          message = "services.anti-sleep-neglector-lifx drives sunsetr; enable services.anti-sleep-neglector-gamma too.";
+        }
+      ];
+    })
 
     (mkIf config.services.anti-sleep-neglector-wallpaper.enable {
       systemd.user.services."anti-sleep-neglector-wallpaper" = {
