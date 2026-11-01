@@ -4,6 +4,7 @@ usage: wm outputs                    JSON: [{name, focused, scale, mode, modes, 
        wm focused-output             name of the focused output
        wm set-mode OUTPUT WxH[@R]    e.g. wm set-mode HDMI-A-1 1920x1080@240
        wm set-scale OUTPUT SCALE
+       wm monitors on|off            DPMS all outputs
 
 Modes are {width, height, refresh} with refresh in Hz; current indexes modes.
 USAGE
@@ -93,6 +94,17 @@ set_scale() {
   esac
 }
 
+monitors() {
+  check state "$1" '^(on|off)$'
+
+  local wm
+  wm=$(backend)
+  case $wm in
+  niri) niri msg action "power-$1-monitors" ;;
+  hyprland) hyprctl dispatch dpms "$1" ;;
+  esac
+}
+
 case ${1:-} in
 outputs) outputs ;;
 focused-output) outputs | jq -er '.[] | select(.focused) | .name' ;;
@@ -103,6 +115,10 @@ set-mode)
 set-scale)
   [[ $# -eq 3 ]] || usage
   set_scale "$2" "$3"
+  ;;
+monitors)
+  [[ $# -eq 2 ]] || usage
+  monitors "$2"
   ;;
 *) usage ;;
 esac
