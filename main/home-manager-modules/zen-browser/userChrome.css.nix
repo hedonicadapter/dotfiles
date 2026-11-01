@@ -44,6 +44,18 @@
   '';
 
   tabs = ''
+    /* Sticky pinned tabs. Zen 1.24 puts the pinned and normal sections of a
+       workspace in the same scrollbox, so pins scroll away with the list.
+       Verified in a live window: without this the first pin sits 815px above
+       the viewport after scrolling, with it it stays at the top. The
+       background is the sidebar's own, so the list passes underneath. */
+    .zen-workspace-pinned-tabs-section {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 2 !important;
+      background: var(--zen-themed-toolbar-bg-transparent, var(--zen-main-browser-background)) !important;
+    }
+
     /* Tabs Audio */
     #tabbrowser-tabs .tabbrowser-tab:is([soundplaying]) .tab-background {
       background-color: ${outputs.palette.base08} !important;
