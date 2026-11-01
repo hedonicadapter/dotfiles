@@ -80,7 +80,7 @@ summary() {
 
 log_run() {
   local bin; bin=$(zen_bin)
-  if pgrep -f 'zen-bin|zen-beta' >/dev/null; then
+  if pgrep -f '^/[^ ]*/zen-b(in|eta)( |$)' >/dev/null; then
     echo "Quit Zen first; a second launch only opens a window in the running instance and the log env is ignored." >&2; exit 1
   fi
   local dir="/tmp/zen-video-diag-log"; rm -rf "$dir"; mkdir -p "$dir"
@@ -131,8 +131,11 @@ ab_run() {
 
 inspect_run() {
   local bin; bin=$(zen_bin)
-  if pgrep -x zen-bin >/dev/null; then
+  if pgrep -f '^/[^ ]*/zen-b(in|eta)( |$)' >/dev/null; then
     echo "Quit Zen first (killall zen-bin); Marionette only attaches to an instance started here." >&2; exit 1
+  fi
+  if python3 -c 'import socket,sys; s=socket.socket(); s.settimeout(0.5); sys.exit(0 if s.connect_ex(("127.0.0.1",2828))==0 else 1)'; then
+    echo "Something already listens on 127.0.0.1:2828 (an older Zen started by this command?). Kill it first." >&2; exit 1
   fi
   local js='
 const tb = gNavToolbox, cs = getComputedStyle(tb);
@@ -153,7 +156,7 @@ return {
 };'
   [[ -n ${1:-} ]] && js=$(cat "$1")
   local profile; profile=${ZEN_PROFILE:-$(profile_dir)}
-  MOZ_REMOTE_ALLOW_SYSTEM_ACCESS=1 "$bin" --marionette --profile "$profile" >/dev/null 2>&1 &
+  MOZ_REMOTE_ALLOW_SYSTEM_ACCESS=1 "$bin" --marionette --no-remote --profile "$profile" >/dev/null 2>&1 &
   echo "waiting for Marionette on 127.0.0.1:2828 (profile $profile)..." >&2
   python3 - "$js" <<'PY'
 import json, socket, sys, time

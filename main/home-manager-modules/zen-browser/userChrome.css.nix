@@ -112,8 +112,15 @@
   '';
 
   sidebar = ''
+    /* Sidebar width. Zen keeps it in --zen-sidebar-width (inline, px, from
+       the splitter); in compact mode the toolbox itself is `width: unset`
+       and the visible panel is #titlebar { width: var(--zen-sidebar-width) },
+       so the variable is the only thing that reaches both layouts. */
     #navigator-toolbox {
-      width: 30vw !important;
+      --zen-sidebar-width: min(30vw, 600px) !important;
+    }
+    :root:not([zen-compact-mode="true"]) #navigator-toolbox {
+      width: var(--zen-sidebar-width) !important;
       max-width: 600px !important;
     }
 
