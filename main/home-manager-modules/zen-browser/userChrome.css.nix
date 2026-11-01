@@ -229,8 +229,11 @@
       width: 1px !important;
     }
 
+    /* Zen 1.24 moved the splitter to the sidebar's outer edge and hides it
+       until hover (opacity 0 -> 0.8). Forcing opacity 1 here drew it as a
+       permanent line next to the sidebar; on 1.21 the same rule sat under
+       the sidebar's left edge and was never visible. */
     #zen-sidebar-splitter {
-      opacity: 1 !important;
       min-width: 0 !important;
     }
 
