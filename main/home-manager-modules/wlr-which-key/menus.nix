@@ -2,9 +2,10 @@
   pkgs,
   lib,
   osConfig,
+  outputs,
   ...
 }: let
-  mkMenu = import ./mkMenu.nix {inherit pkgs lib;};
+  mkMenu = import ./mkMenu.nix {inherit pkgs lib outputs;};
 
   canSuspend = (osConfig.systemd.sleep.settings.Sleep.AllowSuspend or "yes") != "no";
 
