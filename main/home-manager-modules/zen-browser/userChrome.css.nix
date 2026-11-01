@@ -101,7 +101,7 @@
 
   sidebar = ''
     #navigator-toolbox {
-      width: 20vw !important;
+      width: 30vw !important;
       max-width: 600px !important;
     }
 
