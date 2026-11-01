@@ -4,6 +4,9 @@ usage() {
 zen-video-diag            environment + profile summary
 zen-video-diag log [URL]  run Zen with decoder/compositor logging, then summarise
 zen-video-diag ab VARIANT [+flag...]   throwaway profile for side-by-side testing
+zen-video-diag inspect [file.js]  start Zen (real profile) with Marionette, run JS in the
+                                  browser window, print the result. Default script reports
+                                  the sidebar geometry and every CSS rule that sets its width.
 
 VARIANT: plain | css | userjs | all
   plain    stock Zen, nothing from dotfiles
@@ -126,8 +129,61 @@ ab_run() {
   echo "profile kept at $tmp (rm -rf it when finished)"
 }
 
+inspect_run() {
+  local bin; bin=$(zen_bin)
+  if pgrep -x zen-bin >/dev/null; then
+    echo "Quit Zen first (killall zen-bin); Marionette only attaches to an instance started here." >&2; exit 1
+  fi
+  local js='
+const tb = gNavToolbox, cs = getComputedStyle(tb);
+const rules = [...(InspectorUtils.getMatchingCSSRules || InspectorUtils.getCSSStyleRules).call(InspectorUtils, tb)].map(r => ({
+  sheet: (r.parentStyleSheet && r.parentStyleSheet.href || "?").replace(/^.*\//, ""),
+  selector: (r.selectorText || "").slice(0, 90),
+  width: r.style.getPropertyValue("width") + (r.style.getPropertyPriority("width") ? " !important" : ""),
+  maxWidth: r.style.getPropertyValue("max-width") + (r.style.getPropertyPriority("max-width") ? " !important" : ""),
+  minWidth: r.style.getPropertyValue("min-width") + (r.style.getPropertyPriority("min-width") ? " !important" : ""),
+})).filter(r => r.width || r.maxWidth || r.minWidth);
+return {
+  innerWidth: window.innerWidth, toolboxRect: Math.round(tb.getBoundingClientRect().width),
+  computed: { width: cs.width, maxWidth: cs.maxWidth, minWidth: cs.minWidth, position: cs.position, display: cs.display },
+  inlineStyle: tb.getAttribute("style"), widthAttr: tb.getAttribute("width"),
+  rootAttrs: [...document.documentElement.attributes].filter(a => /zen|compact|sidebar/.test(a.name)).map(a => a.name + "=" + a.value),
+  tabsRect: Math.round(document.getElementById("tabbrowser-tabs").getBoundingClientRect().width),
+  rules,
+};'
+  [[ -n ${1:-} ]] && js=$(cat "$1")
+  local profile; profile=${ZEN_PROFILE:-$(profile_dir)}
+  MOZ_REMOTE_ALLOW_SYSTEM_ACCESS=1 "$bin" --marionette --profile "$profile" >/dev/null 2>&1 &
+  echo "waiting for Marionette on 127.0.0.1:2828 (profile $profile)..." >&2
+  python3 - "$js" <<'PY'
+import json, socket, sys, time
+js = sys.argv[1]
+def send(s, i, n, p):
+    b = json.dumps([0, i, n, p]).encode(); s.sendall(f"{len(b)}:".encode() + b)
+def recv(s):
+    h = b""
+    while b":" not in h: h += s.recv(1)
+    n = int(h[:-1]); d = b""
+    while len(d) < n: d += s.recv(n - len(d))
+    return json.loads(d)
+sock = None
+for _ in range(120):
+    try: sock = socket.create_connection(("127.0.0.1", 2828), timeout=1); break
+    except OSError: time.sleep(0.5)
+if not sock: sys.exit("Marionette did not come up")
+sock.settimeout(60); recv(sock)
+send(sock, 1, "WebDriver:NewSession", {"capabilities": {}}); r = recv(sock); assert r[2] is None, r
+send(sock, 2, "Marionette:SetContext", {"value": "chrome"}); r = recv(sock); assert r[2] is None, r
+time.sleep(5)
+send(sock, 3, "WebDriver:ExecuteScript", {"script": js, "args": []}); r = recv(sock)
+print(json.dumps(r[3]["value"] if r[2] is None else r[2], indent=1))
+PY
+  echo "(Zen stays open; it is a normal session on your profile)" >&2
+}
+
 case ${1:-} in
   "") summary;;
+  inspect) shift; inspect_run "$@";;
   log) shift; log_run "$@";;
   ab) shift; ab_run "$@";;
   -h|--help|help) usage;;

@@ -13,7 +13,7 @@
 
   diag = pkgs.writeShellApplication {
     name = "zen-video-diag";
-    runtimeInputs = with pkgs; [libva-utils pciutils coreutils gnugrep gnused procps];
+    runtimeInputs = with pkgs; [libva-utils pciutils coreutils gnugrep gnused procps python3];
     text = builtins.readFile ./zen-video-diag.sh;
   };
 in {
