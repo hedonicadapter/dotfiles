@@ -102,7 +102,7 @@
   sidebar = ''
     #navigator-toolbox {
       width: 20vw !important;
-      max-width: 200px !important;
+      max-width: 600px !important;
     }
 
     .urlbar-input-container {
