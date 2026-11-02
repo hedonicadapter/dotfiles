@@ -45,8 +45,8 @@ in {
 
   # Suspend + Wake-on-LAN instead of running 24/7; shared config keeps sleep off for the laptop
   systemd.sleep.settings.Sleep.AllowSuspend = lib.mkForce "yes";
-  # Idle: monitors off after 10 min, suspend after 30. Wake by power button or magic packet;
-  # the Bluetooth keyboard can't wake from suspend.
+  # Idle: monitors off after 10 min, suspend after 30. Wake by keyboard (below), power
+  # button or magic packet.
   home-manager.users.hedonicadapter.services.swayidle = {
     enable = true;
     timeouts = [
@@ -63,6 +63,12 @@ in {
     # Compositor leaves outputs off after resume until it sees input
     events.after-resume = "${wm} monitors on";
   };
+  # Bluetooth controller (MT7922, USB class e0) may wake the host: a keypress reconnects the
+  # keyboard. Needs USB powered in S3 (ErP off). Check with
+  # `grep . /sys/bus/usb/devices/*/power/wakeup`; fall back to mem_sleep_default=s2idle.
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{bDeviceClass}=="e0", ATTR{power/wakeup}="enabled"
+  '';
   # Magic-packet wake on every connection NetworkManager activates; flag values differ per type.
   # Also needs BIOS: APM Configuration → Power On By PCI-E enabled, ErP disabled.
   networking.networkmanager.connectionConfig = {
