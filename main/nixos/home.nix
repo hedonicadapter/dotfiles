@@ -53,6 +53,7 @@ in {
     ../home-manager-modules/zen-browser
     ../home-manager-modules/charybdis-flash.nix
     ../home-manager-modules/kdeconnect.nix
+    ../home-manager-modules/stremio-service.nix
   ];
 
   home.username = "hedonicadapter";
