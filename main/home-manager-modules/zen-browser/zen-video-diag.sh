@@ -7,6 +7,10 @@ zen-video-diag ab VARIANT [+flag...]   throwaway profile for side-by-side testin
 zen-video-diag inspect [file.js]  start Zen (real profile) with Marionette, run JS in the
                                   browser window, print the result. Default script reports
                                   the sidebar geometry and every CSS rule that sets its width.
+zen-video-diag inspect --drop TEXT [--drop TEXT...]
+                                  same, but first delete every userChrome.css rule whose
+                                  selector contains TEXT from the running window (not from
+                                  disk). Zen stays open: test, then restart to get them back.
 
 VARIANT: plain | css | userjs | all
   plain    stock Zen, nothing from dotfiles
@@ -152,9 +156,32 @@ return {
   inlineStyle: tb.getAttribute("style"), widthAttr: tb.getAttribute("width"),
   rootAttrs: [...document.documentElement.attributes].filter(a => /zen|compact|sidebar/.test(a.name)).map(a => a.name + "=" + a.value),
   tabsRect: Math.round(document.getElementById("tabbrowser-tabs").getBoundingClientRect().width),
+  titlebarRect: Math.round(document.getElementById("titlebar").getBoundingClientRect().width),
+  titlebarRules: [...InspectorUtils.getMatchingCSSRules(document.getElementById("titlebar"))].map(r => (r.style.getPropertyValue("width") || r.style.getPropertyValue("min-width")) ? `${(r.parentStyleSheet && r.parentStyleSheet.href || "?").replace(/^.*\//, "")} | ${(r.selectorText || "").slice(0, 70)} | width: ${r.style.getPropertyValue("width")} min: ${r.style.getPropertyValue("min-width")}` : null).filter(Boolean),
+  sidebarVar: cs.getPropertyValue("--zen-sidebar-width"),
+  pinnedSection: (e => e ? { position: getComputedStyle(e).position, height: Math.round(e.getBoundingClientRect().height) } : null)(document.querySelector(".zen-workspace-pinned-tabs-section")),
+  compactPrefs: ["zen.view.compact.hide-tabbar", "zen.view.compact.hide-toolbar", "zen.view.compact.show-sidebar-and-toolbar-on-hover", "zen.view.sidebar-expanded"].map(p => p + "=" + Services.prefs.getBoolPref(p, null)),
   rules,
 };'
-  [[ -n ${1:-} ]] && js=$(cat "$1")
+  local drops=() ; local jsfile=""
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --drop) drops+=("$2"); shift 2;;
+      *) jsfile=$1; shift;;
+    esac
+  done
+  [[ -n $jsfile ]] && js=$(cat "$jsfile")
+  if [[ ${#drops[@]} -gt 0 ]]; then
+    local list; list=$(printf '%s\n' "${drops[@]}" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read().splitlines()))')
+    js="const __drops = $list; const __dropped = [];
+for (const r of [gNavToolbox, document.getElementById('titlebar'), document.querySelector('.zen-workspace-pinned-tabs-section') || gNavToolbox].flatMap(e => [...InspectorUtils.getMatchingCSSRules(e)])) {
+  const sh = r.parentStyleSheet; if (!sh || !/userChrome\\.css/.test(sh.href || '')) continue;
+  const i = [...sh.cssRules].indexOf(r); if (i < 0) continue;
+  if (__drops.some(d => (r.selectorText || '').includes(d))) { __dropped.push(r.selectorText); sh.deleteRule(i); }
+}
+const __rest = (() => { $js })();
+return Promise.resolve(__rest).then(v => ({ dropped: __dropped, result: v }));"
+  fi
   local profile; profile=${ZEN_PROFILE:-$(profile_dir)}
   MOZ_REMOTE_ALLOW_SYSTEM_ACCESS=1 "$bin" --marionette --no-remote --profile "$profile" >/dev/null 2>&1 &
   echo "waiting for Marionette on 127.0.0.1:2828 (profile $profile)..." >&2
