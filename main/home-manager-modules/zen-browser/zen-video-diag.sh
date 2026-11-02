@@ -141,6 +141,7 @@ inspect_run() {
   if python3 -c 'import socket,sys; s=socket.socket(); s.settimeout(0.5); sys.exit(0 if s.connect_ex(("127.0.0.1",2828))==0 else 1)'; then
     echo "Something already listens on 127.0.0.1:2828 (an older Zen started by this command?). Kill it first." >&2; exit 1
   fi
+  # shellcheck disable=SC2016  # JS template literals, not shell expansion
   local js='
 const tb = gNavToolbox, cs = getComputedStyle(tb);
 const rules = [...(InspectorUtils.getMatchingCSSRules || InspectorUtils.getCSSStyleRules).call(InspectorUtils, tb)].map(r => ({
