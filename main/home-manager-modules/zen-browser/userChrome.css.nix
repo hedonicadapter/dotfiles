@@ -117,11 +117,11 @@
        and the visible panel is #titlebar { width: var(--zen-sidebar-width) },
        so the variable is the only thing that reaches both layouts. */
     #navigator-toolbox {
-      --zen-sidebar-width: min(20vw, 600px) !important;
+      --zen-sidebar-width: min(20vw, 450px) !important;
     }
     :root:not([zen-compact-mode="true"]) #navigator-toolbox {
       width: var(--zen-sidebar-width) !important;
-      max-width: 600px !important;
+      max-width: 450px !important;
     }
 
     .urlbar-input-container {
