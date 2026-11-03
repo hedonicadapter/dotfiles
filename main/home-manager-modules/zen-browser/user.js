@@ -12,12 +12,15 @@
 user_pref("gfx.webrender.all", true);
 user_pref("layers.acceleration.force-enabled", true);
 
-// VA-API decode through the system ffmpeg the wrapper puts on LD_LIBRARY_PATH.
-// `media.ffmpeg.vaapi.enabled` no longer exists in Gecko 152; this is the switch.
-user_pref("media.hardware-video-decoding.enabled", true);
-// Left in prefs.js by an earlier attempt. Forcing skips the blocklist *and*
-// keeps retrying a failing hardware decoder instead of falling back to
-// software; about:support already reports VA-API available without it.
+// Software video decoding. With VA-API on, a seek or a resume after a long
+// pause re-creates the decoder and on this two-GPU box (RX 9060 XT + the
+// 9800X3D iGPU, Mesa 26.1) the new decoder comes back with corrupted frames
+// (vertical colour bars) and YouTube then drops the stream with a playback
+// error. The CPU decodes 4K VP9/AV1 with a few percent of one core, so this
+// costs nothing noticeable. `media.ffmpeg.vaapi.enabled` is gone in Gecko
+// 152; these two are the switches. Flip the first to true to re-test VA-API
+// after a Mesa or Zen update.
+user_pref("media.hardware-video-decoding.enabled", false);
 user_pref("media.hardware-video-decoding.force-enabled", false);
 
 // Zen writes a second session file next to Firefox's. Each write serialises
