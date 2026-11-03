@@ -6,7 +6,7 @@
 # stremio-linux-shell starts its own server.js on the same port; with this
 # running, that one fails to bind and the app uses this server instead.
 {pkgs, ...}: {
-  home.packages = [pkgs.stremio-service];
+  home.packages = [pkgs.unstable.stremio-service];
 
   systemd.user.services.stremio-service = {
     Unit = {
@@ -15,7 +15,7 @@
       After = ["graphical-session.target"];
     };
     Service = {
-      ExecStart = "${pkgs.stremio-service}/bin/stremio-service";
+      ExecStart = "${pkgs.unstable.stremio-service}/bin/stremio-service";
       Restart = "on-failure";
       RestartSec = 3;
     };
