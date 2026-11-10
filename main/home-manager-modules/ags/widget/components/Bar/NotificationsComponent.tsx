@@ -44,7 +44,7 @@ export default function NotificationsComponent() {
       onHover={() => setHovered(true)}
       onHoverLost={() => setHovered(false)}
     >
-      <box vertical class="panel ">
+      <box vertical class="panel">
         <For each={entries} id={(e) => `${e.id}:${e.rev}`}>
           {(entry) => (
             <NotificationComponent

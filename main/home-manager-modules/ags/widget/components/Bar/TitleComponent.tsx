@@ -29,7 +29,7 @@ export default function TitleComponent() {
       <With value={focusedWindow}>
         {(client) => {
           const title = client?.title?.length
-            ? client.title.split("—")[0]
+            ? client.title.split("—")[0].trim()
             : "♥︎";
           clearTimeout(timeout);
           setCurrentTitle(title);
