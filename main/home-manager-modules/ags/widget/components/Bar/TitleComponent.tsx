@@ -24,6 +24,9 @@ export default function TitleComponent() {
     <box
       class="bar-item title"
       visible={focusedWindow.as(Boolean)}
+      // Takes the whole center slot, shows centered; label ellipsizes to fit
+      hexpand
+      halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
     >
       <With value={focusedWindow}>

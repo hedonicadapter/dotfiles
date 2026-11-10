@@ -25,7 +25,7 @@ import BluetoothSettingsComponent, {
 import { focusedOutput } from "../compositor";
 
 export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
-  const { START, END, CENTER } = Gtk.Align;
+  const { START, END } = Gtk.Align;
   const monitorName = getMonitorPlugName(gdkmonitor);
 
   return (
@@ -44,8 +44,20 @@ export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
       }
       application={app}
     >
-      <box vexpand={false} class="bar-items" valign={START}>
+      <centerbox
+        class="bar-items"
+        valign={START}
+        // GTK3 gives an expanding center widget the bar width minus twice the
+        // wider side, so the title stays centered and ellipsizes. hexpand
+        // isn't enough: set_center_widget packs it with expand=false
+        $={(self) => {
+          const center = self.get_center_widget();
+          if (center)
+            self.set_child_packing(center, true, true, 0, Gtk.PackType.START);
+        }}
+      >
         <box
+          $type="start"
           vexpand={false}
           class="left"
           hexpand
@@ -69,13 +81,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
           </box>
         </box>
 
-        <box class="center" halign={CENTER} valign={START}>
-          <box valign={START}>
-            <TitleComponent />
-          </box>
+        <box $type="center" class="center" hexpand valign={START}>
+          <TitleComponent />
         </box>
 
-        <box class="right" hexpand halign={END} valign={START}>
+        <box $type="end" class="right" hexpand halign={END} valign={START}>
           {/*<box valign={START} vertical>
             <MinReproComponent />
           </box>*/}
@@ -115,7 +125,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
             <TimeComponent />
           </box>
         </box>
-      </box>
+      </centerbox>
     </window>
   );
 }
