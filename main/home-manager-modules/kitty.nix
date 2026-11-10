@@ -24,44 +24,48 @@
       modify_font underline_position 2px
       modify_font underline_thickness 125%
     '';
-    settings = {
-      scrollback_indicator_opacity = "0.7";
-      mouse_hide_wait = -1;
-      focus_follows_mouse = true;
-      show_hyperlink_targets = "yes";
-      paste_actions = "quote-urls-at-prompt,filter,confirm-if-large";
-      confirm_os_window_close = 0;
-      strip_trailing_spaces = "always";
+    settings =
+      lib.optionalAttrs pkgs.stdenv.isLinux {
+        bell_path = "${pkgs.yaru-theme}/share/sounds/Yaru/stereo/dialog-error.oga";
+      }
+      // {
+        scrollback_indicator_opacity = "0.7";
+        mouse_hide_wait = -1;
+        focus_follows_mouse = true;
+        show_hyperlink_targets = "yes";
+        paste_actions = "quote-urls-at-prompt,filter,confirm-if-large";
+        confirm_os_window_close = 0;
+        strip_trailing_spaces = "always";
 
-      repaint_delay = 6;
-      input_delay = 0;
-      sync_to_monitor = "yes";
+        repaint_delay = 6;
+        input_delay = 0;
+        sync_to_monitor = "yes";
 
-      window_padding_width = "4 10";
-      hide_window_decorations = "yes";
-      remember_window_size = "no";
-      window_border_width = "0.0pt";
+        window_padding_width = "4 10";
+        hide_window_decorations = "yes";
+        remember_window_size = "no";
+        window_border_width = "0.0pt";
 
-      tab_title_template = "{fmt.fg.red}{bell_symbol}{fmt.fg.tab}{index}{title}{activity_symbol}";
-      macos_show_window_title_in = "menubar";
+        tab_title_template = "{fmt.fg.red}{bell_symbol}{fmt.fg.tab}{index}{title}{activity_symbol}";
+        macos_show_window_title_in = "menubar";
 
-      update_check_interval = 0; #disable
-      notify_on_cmd_finish = "unfocused";
-      linux_display_server = "wayland";
-      wayland_enable_ime = "no";
+        update_check_interval = 0; #disable
+        notify_on_cmd_finish = "unfocused";
+        linux_display_server = "wayland";
+        wayland_enable_ime = "no";
 
-      cursor_trail = 1;
-      cursor_trail_decay = "0.1 0.4";
+        cursor_trail = 1;
+        cursor_trail_decay = "0.1 0.4";
 
-      background_blur =
-        if pkgs.stdenv.isDarwin
-        then "100"
-        else "0";
-      background_opacity =
-        if pkgs.stdenv.isDarwin
-        then lib.mkForce "0.6"
-        else lib.mkForce "1.0";
-    };
+        background_blur =
+          if pkgs.stdenv.isDarwin
+          then "100"
+          else "0";
+        background_opacity =
+          if pkgs.stdenv.isDarwin
+          then lib.mkForce "0.6"
+          else lib.mkForce "1.0";
+      };
     # darwinLaunchOptions = ["--single-instance"];
   };
 }

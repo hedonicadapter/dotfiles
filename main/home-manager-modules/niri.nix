@@ -18,8 +18,18 @@
       before=$(focused)
       niri msg action "$1"
       if [ "$before" = "$(focused)" ]; then
-        ${session.bonkCmd} &
+        ${session.sounds.edge} &
       fi
+    '';
+  };
+
+  closeSound = pkgs.writeShellApplication {
+    name = "niri-close-sound";
+    runtimeInputs = [pkgs.jq];
+    text = ''
+      niri msg --json event-stream \
+        | jq --unbuffered -c 'select(.WindowClosed)' \
+        | while read -r _; do ${session.sounds.windowClose} & done
     '';
   };
 in {
@@ -38,6 +48,20 @@ in {
     };
     Service = {
       ExecStart = "${autotile}/bin/niri-autotile";
+      Restart = "on-failure";
+    };
+    Install.WantedBy = ["graphical-session.target"];
+  };
+
+  systemd.user.services.niri-close-sound = {
+    Unit = {
+      Description = "Play a sound when a niri window closes";
+      PartOf = ["graphical-session.target"];
+      After = ["graphical-session.target"];
+      ConditionEnvironment = "NIRI_SOCKET";
+    };
+    Service = {
+      ExecStart = "${closeSound}/bin/niri-close-sound";
       Restart = "on-failure";
     };
     Install.WantedBy = ["graphical-session.target"];

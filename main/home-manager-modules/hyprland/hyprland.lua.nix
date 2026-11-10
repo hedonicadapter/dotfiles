@@ -108,6 +108,10 @@ in ''
     hl.dispatch(hl.dsp.exec_cmd("obsidian", { workspace = "5 silent" }))
   end)
 
+  hl.on("window.close", function()
+    hl.exec_cmd(${lua session.sounds.windowClose})
+  end)
+
   -- env (set before display server init)
   -- hl.env("AQ_DRM_DEVICES", "/dev/dri/card0:/dev/dri/card1")
 
@@ -272,7 +276,7 @@ in ''
       local before = focused()
       hl.dispatch(hl.dsp.focus({ direction = direction }))
       if focused() == before then
-        hl.exec_cmd(${lua session.bonkCmd})
+        hl.exec_cmd(${lua session.sounds.edge})
       end
     end
   end

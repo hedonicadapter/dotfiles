@@ -45,8 +45,14 @@
     })
   (import ./window-rules.nix);
 
-  # Played when directional focus has nowhere to go
-  bonkCmd = "${pkgs.pipewire}/bin/pw-play --volume=0.5 ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/audio-volume-change.oga";
+  # Shell commands that play feedback sounds
+  sounds = let
+    play = file: "${pkgs.pipewire}/bin/pw-play --volume=0.5 ${file}";
+  in {
+    # Directional focus has nowhere to go
+    edge = play "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/audio-volume-change.oga";
+    windowClose = play "${pkgs.kdePackages.oxygen-sounds}/share/sounds/oxygen/stereo/window-close.ogg";
+  };
 
   launcherBinds = map (bind:
     {
