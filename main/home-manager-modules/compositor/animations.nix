@@ -22,9 +22,10 @@ in {
     curve = easeOut;
     ms = 50;
   };
-  # Edge glow fade-out, ags/widget/Outline.tsx
+  # Edge glow, ags/widget/Outline.tsx: lit for holdMs, then fades over ms
   edgeFlash = {
-    curve = easeOut;
+    curve = easeOutQuart;
     ms = 220;
+    holdMs = 160;
   };
 }

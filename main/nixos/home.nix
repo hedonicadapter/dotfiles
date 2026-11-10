@@ -242,6 +242,7 @@ in {
       recursive = true;
     };
     ".config/ags/style.scss".text = import ../home-manager-modules/ags/style.scss.nix {inherit outputs session;};
+    ".config/ags/animations.json".text = builtins.toJSON session.animations;
     ".config/hypr" = {
       source = ../home-manager-modules/hyprland;
       recursive = true;
