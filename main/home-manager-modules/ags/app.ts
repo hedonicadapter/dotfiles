@@ -3,7 +3,7 @@ import { createRoot } from "ags";
 import Gdk from "gi://Gdk?version=3.0";
 import Gtk from "gi://Gtk?version=3.0";
 import Bar from "./widget/Bar";
-import Outline from "./widget/Outline";
+import Outline, { flashEdge } from "./widget/Outline";
 import Dash from "./widget/Dash";
 import { readFileAsync } from "ags/file";
 import { execAsync } from "ags/process";
@@ -67,6 +67,10 @@ app.start({
         break;
       case "toggleAudioSettings":
         setAudioSettings(!toggleAudioSettings.peek());
+        break;
+      // Directional focus hit an edge: edge <left|right|top|bottom>
+      case "edge":
+        flashEdge(argv[1]);
         break;
     }
     res("ok");

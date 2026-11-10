@@ -1,4 +1,5 @@
 {outputs, ...}: let
+  edge = outputs.palette.base0D;
   scss = ''
     * {
       background-color: transparent;
@@ -50,6 +51,21 @@
     window.Outline.active-monitor {
       border: 0.5px solid ${outputs.palette.base04};
     }
+
+    // Edge glow: on instantly, fades out when the class drops
+    window.Outline {
+      transition: box-shadow 220ms ease-out;
+    }
+    window.Outline.edge-left,
+    window.Outline.edge-right,
+    window.Outline.edge-top,
+    window.Outline.edge-bottom {
+      transition-duration: 0;
+    }
+    window.Outline.edge-left   { box-shadow: inset 3px 0 0 0 ${edge}, inset 28px 0 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-right  { box-shadow: inset -3px 0 0 0 ${edge}, inset -28px 0 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-top    { box-shadow: inset 0 3px 0 0 ${edge}, inset 0 28px 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-bottom { box-shadow: inset 0 -3px 0 0 ${edge}, inset 0 -28px 28px -20px rgba(${edge}, 0.55); }
 
     window.Bar {
       color: ${outputs.palette.base05};

@@ -266,8 +266,9 @@ in ''
   hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.float(), { description = "Toggle floating" })
   hl.bind(mainMod .. " + M", hl.dsp.window.fullscreen({ mode = "maximized" }), { description = "Maximize" })
 
-  -- Focus in direction; bonk if focused window didn't change
-  local function focus_or_bonk(direction)
+  -- Focus in direction; flash that screen edge if focused window didn't change
+  local edge_side = { l = "left", r = "right", u = "top", d = "bottom" }
+  local function focus_or_flash(direction)
     local function focused()
       local w = hl.get_active_window()
       return w and w.address
@@ -276,15 +277,15 @@ in ''
       local before = focused()
       hl.dispatch(hl.dsp.focus({ direction = direction }))
       if focused() == before then
-        hl.exec_cmd(${lua session.sounds.edge})
+        hl.exec_cmd(${lua session.edgeHitCmd} .. " " .. edge_side[direction])
       end
     end
   end
 
-  hl.bind(mainMod .. " + H", focus_or_bonk("l"), { description = "Focus left" })
-  hl.bind(mainMod .. " + L", focus_or_bonk("r"), { description = "Focus right" })
-  hl.bind(mainMod .. " + K", focus_or_bonk("u"), { description = "Focus up" })
-  hl.bind(mainMod .. " + J", focus_or_bonk("d"), { description = "Focus down" })
+  hl.bind(mainMod .. " + H", focus_or_flash("l"), { description = "Focus left" })
+  hl.bind(mainMod .. " + L", focus_or_flash("r"), { description = "Focus right" })
+  hl.bind(mainMod .. " + K", focus_or_flash("u"), { description = "Focus up" })
+  hl.bind(mainMod .. " + J", focus_or_flash("d"), { description = "Focus down" })
 
   hl.bind(mainMod .. " + up", hl.dsp.window.cycle_next(), { description = "Cycle windows" })
 

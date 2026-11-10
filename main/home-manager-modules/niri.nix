@@ -9,16 +9,16 @@
     pkgs.writers.writePython3Bin "niri-autotile" {flakeIgnore = ["E501"];}
     (builtins.readFile ./niri/autotile.py);
 
-  # Run focus action; bonk if focused window didn't change
-  focusOrBonk = pkgs.writeShellApplication {
-    name = "niri-focus-or-bonk";
+  # Run focus action $1; flash edge $2 if focused window didn't change
+  focusOrFlash = pkgs.writeShellApplication {
+    name = "niri-focus-or-flash";
     runtimeInputs = [pkgs.jq];
     text = ''
       focused() { niri msg -j focused-window | jq -r '.id // "none"'; }
       before=$(focused)
       niri msg action "$1"
       if [ "$before" = "$(focused)" ]; then
-        ${session.sounds.edge} &
+        ${session.edgeHitCmd} "$2" >/dev/null 2>&1 &
       fi
     '';
   };
@@ -71,7 +71,7 @@ in {
     ".config/niri/config.kdl".text = import ./niri/config.kdl.nix {
       inherit outputs session;
       inherit (pkgs) lib;
-      focusOrBonk = "${focusOrBonk}/bin/niri-focus-or-bonk";
+      focusOrFlash = "${focusOrFlash}/bin/niri-focus-or-flash";
     };
 
     # Nvidia driver doesn't release VRAM back to the pool — niri creeps toward 1 GiB

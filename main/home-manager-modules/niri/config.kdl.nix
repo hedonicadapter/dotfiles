@@ -3,8 +3,8 @@
   lib,
   # home-manager-modules/compositor
   session,
-  # Focus wrapper that plays a sound at the edge, from niri.nix
-  focusOrBonk,
+  # Focus wrapper that flashes the screen edge when stuck, from niri.nix
+  focusOrFlash,
   ...
 }: let
   inherit (lib) boolToString concatMapStrings concatMapStringsSep concatStringsSep hasInfix mapAttrsToList optional;
@@ -180,14 +180,14 @@ in ''
       Mod+M { maximize-window-to-edges; }
       Mod+Shift+M { fullscreen-window; }
 
-      Mod+H     { spawn "${focusOrBonk}" "focus-column-or-monitor-left"; }
-      Mod+J     { spawn "${focusOrBonk}" "focus-window-down"; }
-      Mod+K     { spawn "${focusOrBonk}" "focus-window-up"; }
-      Mod+L     { spawn "${focusOrBonk}" "focus-column-or-monitor-right"; }
-      Mod+Left  { spawn "${focusOrBonk}" "focus-column-or-monitor-left"; }
-      Mod+Down  { spawn "${focusOrBonk}" "focus-window-down"; }
-      Mod+Up    { spawn "${focusOrBonk}" "focus-window-up"; }
-      Mod+Right { spawn "${focusOrBonk}" "focus-column-or-monitor-right"; }
+      Mod+H     { spawn "${focusOrFlash}" "focus-column-or-monitor-left" "left"; }
+      Mod+J     { spawn "${focusOrFlash}" "focus-window-down" "bottom"; }
+      Mod+K     { spawn "${focusOrFlash}" "focus-window-up" "top"; }
+      Mod+L     { spawn "${focusOrFlash}" "focus-column-or-monitor-right" "right"; }
+      Mod+Left  { spawn "${focusOrFlash}" "focus-column-or-monitor-left" "left"; }
+      Mod+Down  { spawn "${focusOrFlash}" "focus-window-down" "bottom"; }
+      Mod+Up    { spawn "${focusOrFlash}" "focus-window-up" "top"; }
+      Mod+Right { spawn "${focusOrFlash}" "focus-column-or-monitor-right" "right"; }
 
       // swap-window moves the window across columns, not the whole column.
       // Falls back to a column move when both columns hold a single window.

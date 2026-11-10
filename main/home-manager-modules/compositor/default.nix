@@ -49,10 +49,12 @@
   sounds = let
     play = file: "${pkgs.pipewire}/bin/pw-play --volume=0.5 ${file}";
   in {
-    # Directional focus has nowhere to go
-    edge = play "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/audio-volume-change.oga";
     windowClose = play "${pkgs.kdePackages.oxygen-sounds}/share/sounds/oxygen/stereo/window-close.ogg";
   };
+
+  # Directional focus has nowhere to go; append left/right/top/bottom.
+  # Flashes that screen edge (ags/widget/Outline.tsx)
+  edgeHitCmd = "ags request edge";
 
   launcherBinds = map (bind:
     {
