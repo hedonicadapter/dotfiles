@@ -2,6 +2,7 @@
 # hyprland/hyprland.lua.nix. Fills in defaults so renderers needn't.
 {
   lib,
+  pkgs,
   # Per-host outputs, from nixos/hosts/<host>/display.nix
   display,
 }: {
@@ -43,6 +44,9 @@
       exclude = {appId = null;} // rule.exclude or {};
     })
   (import ./window-rules.nix);
+
+  # Played when directional focus has nowhere to go
+  bonkCmd = "${pkgs.pipewire}/bin/pw-play --volume=0.5 ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/audio-volume-change.oga";
 
   launcherBinds = map (bind:
     {

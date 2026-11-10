@@ -10,7 +10,7 @@
   ...
 }: let
   # Outputs, window rules and launcher binds shared by niri and Hyprland
-  session = import ../home-manager-modules/compositor {inherit lib display;};
+  session = import ../home-manager-modules/compositor {inherit lib pkgs display;};
 in {
   # You can import other home-manager modules here
   imports = with inputs; [

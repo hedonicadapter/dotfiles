@@ -3,6 +3,8 @@
   lib,
   # home-manager-modules/compositor
   session,
+  # Focus wrapper that plays a sound at the edge, from niri.nix
+  focusOrBonk,
   ...
 }: let
   inherit (lib) boolToString concatMapStrings concatMapStringsSep concatStringsSep hasInfix mapAttrsToList optional;
@@ -178,14 +180,14 @@ in ''
       Mod+M { maximize-window-to-edges; }
       Mod+Shift+M { fullscreen-window; }
 
-      Mod+H     { focus-column-or-monitor-left; }
-      Mod+J     { focus-window-down; }
-      Mod+K     { focus-window-up; }
-      Mod+L     { focus-column-or-monitor-right; }
-      Mod+Left  { focus-column-or-monitor-left; }
-      Mod+Down  { focus-window-down; }
-      Mod+Up    { focus-window-up; }
-      Mod+Right { focus-column-or-monitor-right; }
+      Mod+H     { spawn "${focusOrBonk}" "focus-column-or-monitor-left"; }
+      Mod+J     { spawn "${focusOrBonk}" "focus-window-down"; }
+      Mod+K     { spawn "${focusOrBonk}" "focus-window-up"; }
+      Mod+L     { spawn "${focusOrBonk}" "focus-column-or-monitor-right"; }
+      Mod+Left  { spawn "${focusOrBonk}" "focus-column-or-monitor-left"; }
+      Mod+Down  { spawn "${focusOrBonk}" "focus-window-down"; }
+      Mod+Up    { spawn "${focusOrBonk}" "focus-window-up"; }
+      Mod+Right { spawn "${focusOrBonk}" "focus-column-or-monitor-right"; }
 
       // swap-window moves the window across columns, not the whole column.
       // Falls back to a column move when both columns hold a single window.

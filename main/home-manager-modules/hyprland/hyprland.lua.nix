@@ -262,10 +262,25 @@ in ''
   hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.float(), { description = "Toggle floating" })
   hl.bind(mainMod .. " + M", hl.dsp.window.fullscreen({ mode = "maximized" }), { description = "Maximize" })
 
-  hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "l" }), { description = "Focus left" })
-  hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "r" }), { description = "Focus right" })
-  hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "u" }), { description = "Focus up" })
-  hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "d" }), { description = "Focus down" })
+  -- Focus in direction; bonk if focused window didn't change
+  local function focus_or_bonk(direction)
+    local function focused()
+      local w = hl.get_active_window()
+      return w and w.address
+    end
+    return function()
+      local before = focused()
+      hl.dispatch(hl.dsp.focus({ direction = direction }))
+      if focused() == before then
+        hl.exec_cmd(${lua session.bonkCmd})
+      end
+    end
+  end
+
+  hl.bind(mainMod .. " + H", focus_or_bonk("l"), { description = "Focus left" })
+  hl.bind(mainMod .. " + L", focus_or_bonk("r"), { description = "Focus right" })
+  hl.bind(mainMod .. " + K", focus_or_bonk("u"), { description = "Focus up" })
+  hl.bind(mainMod .. " + J", focus_or_bonk("d"), { description = "Focus down" })
 
   hl.bind(mainMod .. " + up", hl.dsp.window.cycle_next(), { description = "Cycle windows" })
 
