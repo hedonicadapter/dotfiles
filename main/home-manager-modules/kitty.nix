@@ -25,8 +25,11 @@
       modify_font underline_thickness 125%
     '';
     settings =
-      lib.optionalAttrs pkgs.stdenv.isLinux {
-        bell_path = "${pkgs.yaru-theme}/share/sounds/Yaru/stereo/dialog-error.oga";
+      {
+        # WAV: macOS bell can't play Ogg
+        bell_path = "${pkgs.runCommand "kitty-bell.wav" {} ''
+          ${pkgs.sox}/bin/sox -t ogg ${pkgs.yaru-theme}/share/sounds/Yaru/stereo/dialog-error.oga $out
+        ''}";
       }
       // {
         scrollback_indicator_opacity = "0.7";
