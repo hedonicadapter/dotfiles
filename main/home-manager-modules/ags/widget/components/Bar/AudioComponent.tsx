@@ -54,30 +54,34 @@ if (wp) {
   );
 }
 
-// Five segments; each reacts to volume rather than rebuilding the row
+const SEGMENTS = 5;
+
+// Filled segments, 0..SEGMENTS
+const level = (volume: number) => Math.round(volume * SEGMENTS);
+
+// Each reacts to volume rather than rebuilding the row. Segment i sets
+// (i + 1) / SEGMENTS, so the last one reaches 100% and silence shows empty
 export const Bar = ({ stream }: { stream: any }) => {
   const volume = createBinding(stream, "volume");
   const muted = createBinding(stream, "mute");
 
   return (
     <box>
-      {Array.from({ length: 5 }).map((_, i) => (
+      {Array.from({ length: SEGMENTS }).map((_, i) => (
         <button
           onClicked={() => {
-            stream.volume = i * 0.2;
+            stream.volume = (i + 1) / SEGMENTS;
           }}
           class={muted.as((b) => (b ? "bar muted" : "bar"))}
           valign={CENTER}
         >
           <label
             class={volume.as((v) => {
-              const tenths = Math.round(parseFloat(v) * 5);
-              return tenths < 2 ? "low" : tenths < 4 ? "mid" : "high";
+              const l = level(v);
+              return l < 2 ? "low" : l < 4 ? "mid" : "high";
             })}
             halign={START}
-            label={volume.as((v) =>
-              i <= Math.round(parseFloat(v) * 5) ? "▮" : "▯",
-            )}
+            label={volume.as((v) => (i < level(v) ? "▮" : "▯"))}
             valign={CENTER}
           />
         </button>
