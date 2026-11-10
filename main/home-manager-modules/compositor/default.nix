@@ -52,6 +52,8 @@
     windowClose = play "${pkgs.kdePackages.oxygen-sounds}/share/sounds/oxygen/stereo/window-close.ogg";
   };
 
+  animations = import ./animations.nix;
+
   # Directional focus has nowhere to go; append left/right/top/bottom.
   # Flashes that screen edge (ags/widget/Outline.tsx)
   edgeHitCmd = "ags request edge";

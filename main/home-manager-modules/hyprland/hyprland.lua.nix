@@ -28,6 +28,16 @@
       else "${toString o.position.x}x${toString o.position.y}";
   in "hl.monitor({ output = ${lua name}, mode = ${lua mode}, position = ${lua position}, scale = ${lua o.scale}${optionalString o.vrr ", vrr = 1"} })";
 
+  # Hyprland speed is in tenths of a second; curve named after its role
+  animation = leaf: role: extra: let
+    a = session.animations.${role};
+    points = c: "{ {${lua (builtins.elemAt c 0)}, ${lua (builtins.elemAt c 1)}}, {${lua (builtins.elemAt c 2)}, ${lua (builtins.elemAt c 3)}} }";
+  in
+    optionalString (a != null) (concatStringsSep "\n" [
+      "hl.curve(${lua role}, { type = \"bezier\", points = ${points a.curve} })"
+      "hl.animation({ leaf = ${lua leaf}, enabled = true, speed = ${lua (a.ms / 100.0)}, bezier = ${lua role}${optionalString (extra ? style) ", style = ${lua extra.style}"} })"
+    ]);
+
   # Monitor-local expressions for niri's relative-to corners
   move = {
     x,
@@ -217,22 +227,16 @@ in ''
     },
   })
 
-  hl.curve("myBezier",    { type = "bezier", points = { {0, 0},       {0.58, 1} } })
+  -- Timing from compositor/animations.nix
+  ${animation "layers" "fade" {}}
+  ${animation "fade" "fade" {}}
+  ${animation "windows" "windowOpen" {style = "popin";}}
+  ${animation "windowsOut" "windowClose" {style = "slide";}}
+  ${animation "workspaces" "workspaceSwitch" {style = "slide";}}
+
   hl.curve("easeOutBack", { type = "bezier", points = { {0.34, 1.56}, {0.64, 1} } })
-
-  hl.animation({ leaf = "layers",     enabled = true, speed = 0.5, bezier = "myBezier" })
-  hl.animation({ leaf = "fade",       enabled = true, speed = 0.5, bezier = "myBezier" })
-  hl.animation({ leaf = "windows",    enabled = true, speed = 0.5, bezier = "myBezier", style = "slide" })
-  hl.animation({ leaf = "windowsOut", enabled = true, speed = 0.5, bezier = "myBezier", style = "slide" })
-  hl.animation({ leaf = "workspaces", enabled = true, speed = 0.5, bezier = "myBezier" })
-
-  -- hl.animation({ leaf = "border",      enabled = true, speed = 3.5,  bezier = "myBezier" })
+  -- hl.animation({ leaf = "border",      enabled = true, speed = 3.5,  bezier = "fade" })
   -- hl.animation({ leaf = "borderangle", enabled = true, speed = 11.5, bezier = "easeOutBack" })
-
-  -- last-wins overrides for windows/workspaces
-  hl.curve("easeOutQuart", { type = "bezier", points = { {0.25, 1}, {0.5, 1} } })
-  hl.animation({ leaf = "windows",    enabled = true, speed = 3.5, bezier = "easeOutQuart", style = "popin" })
-  hl.animation({ leaf = "workspaces", enabled = true, speed = 3.5, bezier = "easeOutQuart", style = "slide" })
 
   hl.workspace_rule({ workspace = "1",  default_name = "main" })
   hl.workspace_rule({ workspace = "2",  default_name = "misc" })

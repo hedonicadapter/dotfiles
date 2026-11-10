@@ -45,6 +45,13 @@
       ++ optional (r.opacity != null) "opacity ${str r.opacity}"
     );
 
+  # Timing from compositor/animations.nix
+  animation = name: role: let
+    a = session.animations.${role};
+  in
+    optional (a != null)
+    "${name} { duration-ms ${toString a.ms}; curve \"cubic-bezier\" ${concatMapStringsSep " " str a.curve}; }";
+
   launcherBind = b: let
     props = ["hotkey-overlay-title=${str b.desc}"] ++ optional b.locked "allow-when-locked=true";
     action =
@@ -122,6 +129,11 @@ in ''
       }
   }
 
+  ${block "animations" (
+    animation "window-open" "windowOpen"
+    ++ animation "window-close" "windowClose"
+    ++ animation "workspace-switch" "workspaceSwitch"
+  )}
   cursor {
       xcursor-theme "rah"
       xcursor-size 100

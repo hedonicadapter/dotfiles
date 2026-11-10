@@ -1,5 +1,16 @@
-{outputs, ...}: let
+{
+  outputs,
+  # home-manager-modules/compositor
+  session,
+  ...
+}: let
   edge = outputs.palette.base0F;
+  edgeFade = let
+    a = session.animations.edgeFlash;
+  in
+    if a == null
+    then "box-shadow 220ms ease-out"
+    else "box-shadow ${toString a.ms}ms cubic-bezier(${builtins.concatStringsSep ", " (map builtins.toJSON a.curve)})";
   scss = ''
     * {
       background-color: transparent;
@@ -54,7 +65,7 @@
 
     // Edge glow: on instantly, fades out when the class drops
     window.Outline {
-      transition: box-shadow 220ms ease-out;
+      transition: ${edgeFade};
     }
     window.Outline.edge-left,
     window.Outline.edge-right,

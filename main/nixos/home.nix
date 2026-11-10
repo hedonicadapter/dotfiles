@@ -241,7 +241,7 @@ in {
       source = ../home-manager-modules/ags;
       recursive = true;
     };
-    ".config/ags/style.scss".text = import ../home-manager-modules/ags/style.scss.nix {inherit outputs;};
+    ".config/ags/style.scss".text = import ../home-manager-modules/ags/style.scss.nix {inherit outputs session;};
     ".config/hypr" = {
       source = ../home-manager-modules/hyprland;
       recursive = true;
