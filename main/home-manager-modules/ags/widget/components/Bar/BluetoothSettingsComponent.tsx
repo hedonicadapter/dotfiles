@@ -69,56 +69,58 @@ const DevicePanel = ({
         )}
       </box>
 
-      <scrollable heightRequest={80} hscroll={Gtk.PolicyType.AUTOMATIC}>
-        <box class={type} vertical>
-          <For each={devices}>
-            {(d: Device) => {
-              const name = d.name;
-              const battery = d.batteryPercentage;
-              const finalLabel = [
-                name !== undefined ? name : null,
-                battery !== undefined ? `${battery}%` : null,
-              ]
-                .filter(Boolean)
-                .join(" ");
+      {/* Plain list like audio devices; a scrollable stayed narrow */}
+      <box class={type} vertical>
+        <For each={devices}>
+          {(d: Device) => {
+            const name = d.name;
+            const battery = d.batteryPercentage;
+            const finalLabel = [
+              name !== undefined ? name : null,
+              battery !== undefined ? `${battery}%` : null,
+            ]
+              .filter(Boolean)
+              .join(" ");
 
-              return (
-                <button
-                  class={type}
-                  onClicked={() => {
-                    switch (type) {
-                      case "paired":
-                      case "trusted":
-                        d.connect_device((_: any, res: any) => {
-                          try {
-                            d.connect_device_finish(res);
-                          } catch (e) {
-                            execAsync(deviceOperationErrorNotification(e));
-                          }
-                        });
-                        break;
-                      case "connected":
-                        d.set_trusted(true);
-                        break;
-                      default:
-                        break;
-                    }
-                  }}
+            return (
+              <button
+                // Connected device highlighted, like the default audio device
+                class={createBinding(d, "connected").as((c) =>
+                  c && type !== "connected" ? `${type} active` : type,
+                )}
+                onClicked={() => {
+                  switch (type) {
+                    case "paired":
+                    case "trusted":
+                      d.connect_device((_: any, res: any) => {
+                        try {
+                          d.connect_device_finish(res);
+                        } catch (e) {
+                          execAsync(deviceOperationErrorNotification(e));
+                        }
+                      });
+                      break;
+                    case "connected":
+                      d.set_trusted(true);
+                      break;
+                    default:
+                      break;
+                  }
+                }}
+                valign={CENTER}
+                hexpand
+              >
+                <label
                   valign={CENTER}
-                  hexpand
-                >
-                  <label
-                    valign={CENTER}
-                    halign={START}
-                    class="bar-label"
-                    label={finalLabel.trim() || d.address || "Unknown"}
-                  />
-                </button>
-              );
-            }}
-          </For>
-        </box>
-      </scrollable>
+                  halign={START}
+                  class="bar-label"
+                  label={finalLabel.trim() || d.address || "Unknown"}
+                />
+              </button>
+            );
+          }}
+        </For>
+      </box>
     </box>
   );
 };
