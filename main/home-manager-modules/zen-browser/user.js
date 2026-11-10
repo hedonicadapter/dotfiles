@@ -27,3 +27,11 @@ user_pref("media.hardware-video-decoding.force-enabled", false);
 // the whole session on the UI thread; profiles show 0.5-3 s hangs that drop
 // video frames (zen-browser/desktop#10649, #13266). 15 s default -> 60 s.
 user_pref("browser.sessionstore.interval", 60000);
+
+// Second variable, after software decoding removed most of the seek/resume
+// failures. QUIC to googlevideo is the usual cause of the remainder in Gecko
+// (seek -> new range request stalls or errors); Chrome recovers from the
+// same network differently. Wired desktop, so no cost. If a week passes
+// with no failures, this stays; if they continue, set it back to true and
+// the next suspect is the audio sink after long pauses.
+user_pref("network.http.http3.enable", false);
