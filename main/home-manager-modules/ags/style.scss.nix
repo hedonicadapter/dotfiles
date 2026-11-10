@@ -1,5 +1,5 @@
 {outputs, ...}: let
-  edge = outputs.palette.base0D;
+  edge = outputs.palette.base0F;
   scss = ''
     * {
       background-color: transparent;
@@ -62,10 +62,10 @@
     window.Outline.edge-bottom {
       transition-duration: 0;
     }
-    window.Outline.edge-left   { box-shadow: inset 3px 0 0 0 ${edge}, inset 28px 0 28px -20px rgba(${edge}, 0.55); }
-    window.Outline.edge-right  { box-shadow: inset -3px 0 0 0 ${edge}, inset -28px 0 28px -20px rgba(${edge}, 0.55); }
-    window.Outline.edge-top    { box-shadow: inset 0 3px 0 0 ${edge}, inset 0 28px 28px -20px rgba(${edge}, 0.55); }
-    window.Outline.edge-bottom { box-shadow: inset 0 -3px 0 0 ${edge}, inset 0 -28px 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-left   { box-shadow: inset 4px 0 0 0 ${edge}, inset 28px 0 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-right  { box-shadow: inset -4px 0 0 0 ${edge}, inset -28px 0 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-top    { box-shadow: inset 0 4px 0 0 ${edge}, inset 0 28px 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-bottom { box-shadow: inset 0 -4px 0 0 ${edge}, inset 0 -28px 28px -20px rgba(${edge}, 0.55); }
 
     window.Bar {
       color: ${outputs.palette.base05};
