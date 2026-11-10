@@ -12,6 +12,24 @@ let discoveryTimeouts: ReturnType<typeof setTimeout>[] = [];
 const deviceOperationErrorNotification = (error: any) =>
   `bash -c 'notify-send "Bluetooth" "${error.toString()}"'`;
 
+// Astal reports battery as 0..1, or -1 when the device has none
+const deviceLabel = (d: Device, battery: number) =>
+  [
+    d.name || d.address || "Unknown",
+    battery >= 0 ? `${Math.round(battery * 100)}%` : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+const connect = (d: Device) =>
+  d.connect_device((_: any, res: any) => {
+    try {
+      d.connect_device_finish(res);
+    } catch (e) {
+      execAsync(deviceOperationErrorNotification(e));
+    }
+  });
+
 const DevicePanel = ({
   type,
 }: {
@@ -28,7 +46,12 @@ const DevicePanel = ({
   );
 
   return (
-    <box vertical onDestroy={() => discoveryTimeouts.forEach(clearTimeout)}>
+    <box
+      vertical
+      // Detected keeps its SCAN button even when empty
+      visible={devices.as((ds) => type === "detected" || ds.length > 0)}
+      onDestroy={() => discoveryTimeouts.forEach(clearTimeout)}
+    >
       <box>
         <label
           halign={START}
@@ -72,53 +95,47 @@ const DevicePanel = ({
       {/* Plain list like audio devices; a scrollable stayed narrow */}
       <box class={type} vertical>
         <For each={devices}>
-          {(d: Device) => {
-            const name = d.name;
-            const battery = d.batteryPercentage;
-            const finalLabel = [
-              name !== undefined ? name : null,
-              battery !== undefined ? `${battery}%` : null,
-            ]
-              .filter(Boolean)
-              .join(" ");
-
-            return (
-              <button
-                // Connected device highlighted, like the default audio device
-                class={createBinding(d, "connected").as((c) =>
-                  c && type !== "connected" ? `${type} active` : type,
-                )}
-                onClicked={() => {
-                  switch (type) {
-                    case "paired":
-                    case "trusted":
-                      d.connect_device((_: any, res: any) => {
-                        try {
-                          d.connect_device_finish(res);
-                        } catch (e) {
-                          execAsync(deviceOperationErrorNotification(e));
-                        }
-                      });
-                      break;
-                    case "connected":
-                      d.set_trusted(true);
-                      break;
-                    default:
-                      break;
-                  }
-                }}
+          {(d: Device) => (
+            <button
+              // Connected device highlighted, like the default audio device
+              class={createBinding(d, "connected").as((c) =>
+                c && type !== "connected" ? `${type} active` : type,
+              )}
+              onClicked={() => {
+                switch (type) {
+                  case "paired":
+                  case "trusted":
+                    connect(d);
+                    break;
+                  case "connected":
+                    d.set_trusted(true);
+                    break;
+                  case "detected":
+                    // Device.pair() blocks the shell until pairing ends
+                    execAsync(["bluetoothctl", "pair", d.address])
+                      .then(() => {
+                        d.set_trusted(true);
+                        connect(d);
+                      })
+                      .catch((e) =>
+                        execAsync(deviceOperationErrorNotification(e)),
+                      );
+                    break;
+                }
+              }}
+              valign={CENTER}
+              hexpand
+            >
+              <label
                 valign={CENTER}
-                hexpand
-              >
-                <label
-                  valign={CENTER}
-                  halign={START}
-                  class="bar-label"
-                  label={finalLabel.trim() || d.address || "Unknown"}
-                />
-              </button>
-            );
-          }}
+                halign={START}
+                class="bar-label"
+                label={createBinding(d, "batteryPercentage").as((b) =>
+                  deviceLabel(d, b),
+                )}
+              />
+            </button>
+          )}
         </For>
       </box>
     </box>

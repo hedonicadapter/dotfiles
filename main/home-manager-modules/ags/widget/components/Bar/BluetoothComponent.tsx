@@ -21,9 +21,9 @@ export default function () {
   const connectedPoweredLabel = createComputed(
     [connected, powered, devices],
     (c: boolean, p: boolean, ds: Device[]) => {
-      if (!p) return "POWERED OFF";
+      if (!p) return "OFF";
       if (c) return `${ds.filter((d: Device) => d.connected).length}`;
-      return "POWERED ON";
+      return "ON";
     },
   );
 
@@ -34,7 +34,11 @@ export default function () {
         halign={Gtk.Align.START}
         valign={Gtk.Align.CENTER}
       >
-        <icon icon={connectedPoweredIcon} valign={Gtk.Align.CENTER} />
+        <icon
+          class="spaced-icon"
+          icon={connectedPoweredIcon}
+          valign={Gtk.Align.CENTER}
+        />
         <label
           label={connectedPoweredLabel}
           halign={Gtk.Align.START}
