@@ -22,6 +22,11 @@ in {
     curve = easeOut;
     ms = 50;
   };
+  # Bar and frame moving between the screen gap and the edge, ags/layout.ts
+  screenGap = {
+    curve = easeOutQuart;
+    ms = 350;
+  };
   # Edge glow, ags/widget/Outline.tsx: lit for holdMs, then fades over ms
   edgeFlash = {
     curve = easeOutQuart;

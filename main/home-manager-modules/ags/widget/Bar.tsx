@@ -24,7 +24,7 @@ import BluetoothSettingsComponent, {
 } from "./components/Bar/BluetoothSettingsComponent";
 import RecordingComponent from "./components/Bar/RecordingComponent";
 import { focusedOutput } from "../compositor";
-import { screenGap } from "../layout";
+import { reserveBarSpace, screenGap } from "../layout";
 
 export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
   const { START, END } = Gtk.Align;
@@ -42,6 +42,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
       marginLeft={gap}
       marginRight={gap}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
+      $={(self) => reserveBarSpace(self, monitorName)}
       keymode={Astal.Keymode.ON_DEMAND}
       anchor={
         Astal.WindowAnchor.TOP |

@@ -65,21 +65,12 @@
         }
     }
 
-    // Double-line HUD frame
     window.Outline {
-      border: 3px double ${outputs.palette.base03};
+      border: 0.5px solid ${outputs.palette.base03};
       box-shadow: ${frameCrt};
-
-      .ticks {
-        color: rgba(${outputs.palette.base03}, 0.8);
-      }
     }
     window.Outline.active-monitor {
-      border: 3px double ${outputs.palette.base04};
-
-      .ticks {
-        color: ${outputs.palette.base04};
-      }
+      border: 0.5px solid ${outputs.palette.base04};
     }
 
     // Phosphor glow and colour fringing on everything the bar draws
