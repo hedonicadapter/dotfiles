@@ -54,6 +54,13 @@
 
   animations = import ./animations.nix;
 
+  # Inset of the AGS bar and frame from the screen edge. Also niri struts and
+  # Hyprland outer gaps on the other sides, so windows sit as far inside the
+  # frame as they sit below the bar
+  screenGap = 20;
+  # Window borders and AGS frame/tab lines
+  borderWidth = 2;
+
   # Directional focus has nowhere to go; append left/right/top/bottom.
   # Flashes that screen edge (ags/widget/Outline.tsx)
   edgeHitCmd = "ags request edge";

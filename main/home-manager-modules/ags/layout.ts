@@ -2,9 +2,10 @@ import Gtk from "gi://Gtk?version=3.0";
 import { type Accessor, createState } from "ags";
 import { fillingOutputs } from "./compositor";
 import { timing, tween } from "./animations";
+import { session } from "./session";
 
 // Gap between the screen edge and the bar/outline frame
-export const SCREEN_GAP = 20;
+export const SCREEN_GAP = session.screenGap ?? 20;
 
 // gtk-layer-shell sets the bar's reserved space directly. Loaded loosely so
 // a missing typelib only costs the smooth bar move, not the whole shell

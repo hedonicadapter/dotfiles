@@ -5,6 +5,7 @@
   ...
 }: let
   edge = outputs.palette.base0F;
+  line = "${toString session.borderWidth}px";
 
   # CRT look: red/blue fringe either side plus a soft phosphor glow
   fringeRed = outputs.palette.base08;
@@ -66,11 +67,11 @@
     }
 
     window.Outline {
-      border: 0.5px solid ${outputs.palette.base03};
+      border: ${line} solid ${outputs.palette.base03};
       box-shadow: ${frameCrt};
     }
     window.Outline.active-monitor {
-      border: 0.5px solid ${outputs.palette.base04};
+      border: ${line} solid ${outputs.palette.base04};
     }
 
     // Phosphor glow and colour fringing on everything the bar draws
@@ -134,7 +135,7 @@
         }
 
         .left {
-          border: 0.5px solid ${outputs.palette.base03};
+          border: ${line} solid ${outputs.palette.base03};
           .workspaces {
             .workspace-indicator {
               font-size: 20px;
@@ -239,7 +240,7 @@
         }
 
         .right {
-          border: 0.5px solid ${outputs.palette.base03};
+          border: ${line} solid ${outputs.palette.base03};
           .notifications {
             background-color: ${outputs.palette.base00};
             color: ${outputs.palette.base05};
@@ -353,7 +354,7 @@
     }
     window.Dash {
       .panel {
-         border: 0.5px solid ${outputs.palette.base03};
+         border: ${line} solid ${outputs.palette.base03};
       }
       .heading {
         padding: 1px;

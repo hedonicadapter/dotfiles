@@ -86,6 +86,13 @@ in ''
   ${concatStringsSep "\n" (mapAttrsToList outputBlock session.outputs)}
   layout {
       gaps 16
+
+      // Windows stay inside the AGS frame; the bar reserves the top
+      struts {
+          left ${toString session.screenGap}
+          right ${toString session.screenGap}
+          bottom ${toString session.screenGap}
+      }
       center-focused-column "on-overflow"
       always-center-single-column
       background-color "${p.base00}"
@@ -104,7 +111,7 @@ in ''
 
       border {
           on
-          width 1
+          width ${toString session.borderWidth}
           active-color "${p.base04}"
           inactive-color "${p.base03}"
           urgent-color "${p.base0E}"

@@ -1,7 +1,7 @@
-// Shared timing from compositor/animations.nix, written to animations.json
-// by home.nix. A missing role means "no animation".
+// Shared timing from compositor/animations.nix, via session.json.
+// A missing role means "no animation".
 import GLib from "gi://GLib";
-import { readFile } from "ags/file";
+import { session } from "./session";
 
 export type Timing = {
   curve: [number, number, number, number];
@@ -9,18 +9,8 @@ export type Timing = {
   holdMs?: number;
 };
 
-let roles: Record<string, Timing | null> | null = null;
-
 export function timing(role: string): Timing | null {
-  if (!roles) {
-    try {
-      roles = JSON.parse(readFile(`${SRC}/animations.json`));
-    } catch (e) {
-      console.error("animations: no animations.json, animating nothing", e);
-      roles = {};
-    }
-  }
-  return roles?.[role] ?? null;
+  return session.animations?.[role] ?? null;
 }
 
 // CSS cubic-bezier(x1, y1, x2, y2) as progress -> eased progress
