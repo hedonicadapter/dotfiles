@@ -61,7 +61,7 @@
   # Between windows, and between windows and the frame
   windowGap = 16;
   # Between the bar and the windows below it (niri: negative top strut)
-  barSpacing = 8;
+  barSpacing = 4;
   # Window borders
   borderWidth = 1;
 
