@@ -23,50 +23,26 @@ import BluetoothSettingsComponent, {
   setBluetoothSettings,
 } from "./components/Bar/BluetoothSettingsComponent";
 import RecordingComponent from "./components/Bar/RecordingComponent";
-import { createComputed } from "ags";
 import { focusedOutput } from "../compositor";
-import { barHover, filled, hudDimmed, inputOnlyOn, screenGap } from "../layout";
+import { reserveBarSpace, screenGap } from "../layout";
 
 export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
   const { START, END } = Gtk.Align;
   const monitorName = getMonitorPlugName(gdkmonitor);
   const gap = screenGap(monitorName);
-  const [, setHovered] = barHover(monitorName);
-  const className = createComputed(
-    [focusedOutput, hudDimmed(monitorName)],
-    (output, dim) =>
-      [
-        "Bar",
-        output && output === monitorName ? "active-monitor" : "",
-        dim ? "dim" : "",
-      ]
-        .filter(Boolean)
-        .join(" "),
-  );
 
   return (
     <window
       name={`bar-${index}`}
-      class={className}
+      class={focusedOutput.as((output) =>
+        output && output === monitorName ? "Bar active-monitor" : "Bar",
+      )}
       gdkmonitor={gdkmonitor}
       marginTop={gap}
       marginLeft={gap}
       marginRight={gap}
-      // Floats over windows like a HUD; a maximized window gets the space
-      // reserved so it sits below the bar
-      exclusivity={filled(monitorName).as((f) =>
-        f ? Astal.Exclusivity.EXCLUSIVE : Astal.Exclusivity.IGNORE,
-      )}
-      $={(self) => {
-        // Left group, right group, and the title inside the center slot
-        const row = (self.get_child() as Gtk.EventBox).get_child() as Gtk.Box;
-        const items = row.get_children().flatMap((child) =>
-          child === row.get_center_widget()
-            ? (child as Gtk.Box).get_children()
-            : [child],
-        );
-        inputOnlyOn(self, items);
-      }}
+      exclusivity={Astal.Exclusivity.EXCLUSIVE}
+      $={(self) => reserveBarSpace(self, monitorName)}
       keymode={Astal.Keymode.ON_DEMAND}
       anchor={
         Astal.WindowAnchor.TOP |
@@ -75,96 +51,91 @@ export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
       }
       application={app}
     >
-      <eventbox
-        onHover={() => setHovered(true)}
-        onHoverLost={() => setHovered(false)}
+      <centerbox
+        class="bar-items"
+        valign={START}
+        // GTK3 gives an expanding center widget the bar width minus twice the
+        // wider side, so the title stays centered and ellipsizes. hexpand
+        // isn't enough: set_center_widget packs it with expand=false
+        $={(self) => {
+          const center = self.get_center_widget();
+          if (center)
+            self.set_child_packing(center, true, true, 0, Gtk.PackType.START);
+        }}
       >
-        <centerbox
-          class="bar-items"
+        <box
+          $type="start"
+          vexpand={false}
+          class="left"
+          hexpand
+          halign={START}
           valign={START}
-          // GTK3 gives an expanding center widget the bar width minus twice the
-          // wider side, so the title stays centered and ellipsizes. hexpand
-          // isn't enough: set_center_widget packs it with expand=false
-          $={(self) => {
-            const center = self.get_center_widget();
-            if (center)
-              self.set_child_packing(center, true, true, 0, Gtk.PackType.START);
-          }}
         >
-          <box
-            $type="start"
-            vexpand={false}
-            class="left"
-            hexpand
-            halign={START}
+          <box valign={START}>
+            <WorkspaceComponent monitor={monitorName} />
+          </box>
+
+          <box valign={START}>
+            <SysTrayComponent />
+          </box>
+
+          <box valign={START}>
+            <MediaComponent />
+          </box>
+
+          <box valign={START}>
+            <NoiseComponent />
+          </box>
+        </box>
+
+        <box $type="center" class="center" hexpand valign={START}>
+          <TitleComponent />
+        </box>
+
+        <box $type="end" class="right" hexpand halign={END} valign={START}>
+          {/*<box valign={START} vertical>
+            <MinReproComponent />
+          </box>*/}
+          <box valign={START} vertical>
+            <RecordingComponent />
+          </box>
+          <box valign={START} vertical>
+            <NotificationsComponent />
+          </box>
+          <eventbox
+            onHover={() => setAudioSettings(true)}
+            onHoverLost={() => setAudioSettings(false)}
             valign={START}
           >
-            <box valign={START}>
-              <WorkspaceComponent monitor={monitorName} />
+            <box vertical>
+              <AudioComponent />
+              <AudioSettingsComponent />
             </box>
-
-            <box valign={START}>
-              <SysTrayComponent />
-            </box>
-
-            <box valign={START}>
-              <MediaComponent />
-            </box>
-
-            <box valign={START}>
-              <NoiseComponent />
-            </box>
+          </eventbox>
+          <box valign={START} vertical>
+            <TemperatureComponent />
           </box>
-
-          <box $type="center" class="center" hexpand valign={START}>
-            <TitleComponent />
+          <box valign={START} vertical>
+            <KeyboardBatteryComponent />
           </box>
-
-          <box $type="end" class="right" hexpand halign={END} valign={START}>
-            {/*<box valign={START} vertical>
-              <MinReproComponent />
-            </box>*/}
-            <box valign={START} vertical>
-              <RecordingComponent />
+          <eventbox
+            onHover={() => setBluetoothSettings(true)}
+            onHoverLost={() => setBluetoothSettings(false)}
+            valign={START}
+          >
+            <box vertical>
+              <BluetoothComponent />
+              <BluetoothSettingsComponent />
             </box>
-            <box valign={START} vertical>
-              <NotificationsComponent />
-            </box>
-            <eventbox
-              onHover={() => setAudioSettings(true)}
-              onHoverLost={() => setAudioSettings(false)}
-              valign={START}
-            >
-              <box vertical>
-                <AudioComponent />
-                <AudioSettingsComponent />
-              </box>
-            </eventbox>
-            <box valign={START} vertical>
-              <TemperatureComponent />
-            </box>
-            <box valign={START} vertical>
-              <KeyboardBatteryComponent />
-            </box>
-            <eventbox
-              onHover={() => setBluetoothSettings(true)}
-              onHoverLost={() => setBluetoothSettings(false)}
-              valign={START}
-            >
-              <box vertical>
-                <BluetoothComponent />
-                <BluetoothSettingsComponent />
-              </box>
-            </eventbox>
-            <box valign={START} vertical>
-              <WifiComponent />
-            </box>
-            <box valign={START} vertical>
-              <TimeComponent />
-            </box>
+          </eventbox>
+          <box valign={START} vertical>
+            <WifiComponent />
           </box>
-        </centerbox>
-      </eventbox>
+          <box valign={START} vertical>
+            <TimeComponent />
+          </box>
+        </box>
+      </centerbox>
     </window>
   );
 }

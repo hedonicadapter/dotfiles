@@ -14,12 +14,6 @@
   boxCrt = "-1px 0 0 rgba(${fringeRed}, 0.35), 1px 0 0 rgba(${fringeBlue}, 0.35), 0 0 6px rgba(${phosphor}, 0.2)";
   # Inside the frame; the edge glow appends its own shadows after these
   frameCrt = "inset 1px 0 0 rgba(${fringeRed}, 0.35), inset -1px 0 0 rgba(${fringeBlue}, 0.35), inset 0 0 10px rgba(${phosphor}, 0.15)";
-  hudFade = let
-    a = session.animations.hudDim;
-  in
-    if a == null
-    then "0ms"
-    else "${toString a.ms}ms cubic-bezier(${builtins.concatStringsSep ", " (map builtins.toJSON a.curve)})";
   edgeFade = let
     a = session.animations.edgeFlash;
   in
@@ -79,20 +73,6 @@
       border: 0.5px solid ${outputs.palette.base04};
     }
 
-    // HUD fades back while windows sit under it and the bar is not hovered
-    window.Bar .bar-items {
-      transition: opacity ${hudFade};
-    }
-    window.Bar.dim .bar-items {
-      opacity: 0.45;
-    }
-    window.Outline.dim {
-      border-color: rgba(${outputs.palette.base03}, 0.45);
-    }
-    window.Outline.active-monitor.dim {
-      border-color: rgba(${outputs.palette.base04}, 0.45);
-    }
-
     // Phosphor glow and colour fringing on everything the bar draws
     window.Bar {
       label {
@@ -113,7 +93,7 @@
     // Edge glow: on instantly, fades out when the class drops. Frame shadows
     // come first in both lists so only the edge pair animates
     window.Outline {
-      transition: ${edgeFade}, border-color ${hudFade};
+      transition: ${edgeFade};
     }
     window.Outline.edge-left,
     window.Outline.edge-right,

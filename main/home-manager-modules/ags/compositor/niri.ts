@@ -9,7 +9,6 @@ import { getMonitorPlugName } from "../util";
 import {
   type Keybind,
   publishFillingOutputs,
-  publishOccupiedOutputs,
   publishWorkspaces as publishShared,
   setScreencasting,
   setFocusedWindow,
@@ -56,12 +55,6 @@ function outputWidths() {
 // niri reports no maximized/fullscreen flag; a tile as wide as the output
 // means maximize-to-edges or fullscreen (a full-width column keeps its gaps)
 function publishFilling() {
-  publishOccupiedOutputs(
-    workspaces
-      .filter((ws) => ws.is_active && ws.output && ws.active_window_id !== null)
-      .map((ws) => ws.output!),
-  );
-
   const widths = outputWidths();
   publishFillingOutputs(
     workspaces

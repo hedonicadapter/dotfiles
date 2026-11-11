@@ -54,11 +54,15 @@
 
   animations = import ./animations.nix;
 
-  # Inset of the AGS bar and frame from the screen edge. They float over
-  # windows like a HUD, so windows don't make room for them
-  screenGap = 32;
-  # Between windows, and between windows and the screen edge
+  # Inset of the AGS bar and frame from the screen edge. Also niri struts and
+  # Hyprland outer gaps on the other sides, so windows sit as far inside the
+  # frame as they sit below the bar
+  screenGap = 20;
+  # Between windows, and between windows and the frame
   windowGap = 16;
+  # Between the bar and the windows below it. Smaller than windowGap: the
+  # bar already adds its own height (ags/layout.ts reserves less to get it)
+  barSpacing = 6;
   # Window borders
   borderWidth = 1;
 
