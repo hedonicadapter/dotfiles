@@ -243,7 +243,7 @@ in {
     };
     ".config/ags/style.scss".text = import ../home-manager-modules/ags/style.scss.nix {inherit outputs session;};
     ".config/ags/session.json".text = builtins.toJSON {
-      inherit (session) animations screenGap screenGapTop;
+      inherit (session) animations screenGap;
     };
     ".config/hypr" = {
       source = ../home-manager-modules/hyprland;

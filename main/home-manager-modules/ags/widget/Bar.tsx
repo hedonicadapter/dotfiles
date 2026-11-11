@@ -38,9 +38,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
         output && output === monitorName ? "Bar active-monitor" : "Bar",
       )}
       gdkmonitor={gdkmonitor}
-      marginTop={gap.top}
-      marginLeft={gap.side}
-      marginRight={gap.side}
+      marginTop={gap}
+      marginLeft={gap}
+      marginRight={gap}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       $={(self) => reserveBarSpace(self, monitorName)}
       keymode={Astal.Keymode.ON_DEMAND}

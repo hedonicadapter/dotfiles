@@ -4,10 +4,8 @@ import { fillingOutputs } from "./compositor";
 import { timing, tween } from "./animations";
 import { session } from "./session";
 
-// Gap between the screen edge and the bar/outline frame. The top is
-// smaller: the bar already adds its own height there
+// Gap between the screen edge and the bar/outline frame, on every side
 export const SCREEN_GAP = session.screenGap ?? 20;
-export const SCREEN_GAP_TOP = session.screenGapTop ?? SCREEN_GAP;
 
 // gtk-layer-shell sets the bar's reserved space directly. Loaded loosely so
 // a missing typelib only costs the smooth bar move, not the whole shell
@@ -21,7 +19,7 @@ try {
 }
 
 // The frame hugs the screen edge while the active window fills the output.
-// 1 = gapped, 0 = at the edge; tweened so top and sides move together
+// 1 = gapped, 0 = at the edge
 const targetOpen = (monitorName: string | undefined) =>
   fillingOutputs.as((outputs) =>
     monitorName && outputs.includes(monitorName) ? 0 : 1,
@@ -46,13 +44,10 @@ function gapOpen(monitorName: string | undefined) {
   return open;
 }
 
-// Animated margins for the bar and frame on one output
+// Animated margin for the bar and frame on one output, shared so they move
+// together
 export function screenGap(monitorName: string | undefined) {
-  const open = gapOpen(monitorName);
-  return {
-    top: open.as((o) => Math.round(o * SCREEN_GAP_TOP)),
-    side: open.as((o) => Math.round(o * SCREEN_GAP)),
-  };
+  return gapOpen(monitorName).as((o) => Math.round(o * SCREEN_GAP));
 }
 
 // Reserve the bar's space for the target gap right away, so windows resize
@@ -70,7 +65,7 @@ export function reserveBarSpace(
   const update = () =>
     LayerShell.set_exclusive_zone(
       win,
-      win.get_allocated_height() + target.peek() * SCREEN_GAP_TOP,
+      win.get_allocated_height() + target.peek() * SCREEN_GAP,
     );
 
   // Hover panels change the bar's height

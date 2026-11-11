@@ -58,8 +58,6 @@
   # Hyprland outer gaps on the other sides, so windows sit as far inside the
   # frame as they sit below the bar
   screenGap = 20;
-  # Above the bar; smaller since the bar adds its own height
-  screenGapTop = 6;
   # Between windows, and between windows and the frame
   windowGap = 16;
   # Between the bar and the windows below it (niri: negative top strut)
