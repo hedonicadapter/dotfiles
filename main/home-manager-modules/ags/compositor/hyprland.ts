@@ -4,6 +4,7 @@ import AstalHyprland from "gi://AstalHyprland";
 import {
   type Keybind,
   publishFillingOutputs,
+  publishOccupiedOutputs,
   publishWorkspaces,
   setFocusedOutput,
   setFocusedWindow,
@@ -57,6 +58,11 @@ function publish() {
   publishFillingOutputs(
     hypr.monitors
       .filter((m) => m.activeWorkspace?.hasFullscreen)
+      .map((m) => m.name),
+  );
+  publishOccupiedOutputs(
+    hypr.monitors
+      .filter((m) => (m.activeWorkspace?.clients.length ?? 0) > 0)
       .map((m) => m.name),
   );
 

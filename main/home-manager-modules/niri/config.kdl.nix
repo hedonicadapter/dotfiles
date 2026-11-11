@@ -87,12 +87,6 @@ in ''
   layout {
       gaps ${toString session.windowGap}
 
-      // Windows stay inside the AGS frame; the bar reserves the top
-      struts {
-          left ${toString session.screenGap}
-          right ${toString session.screenGap}
-          bottom ${toString session.screenGap}
-      }
       center-focused-column "on-overflow"
       always-center-single-column
       background-color "${p.base00}"

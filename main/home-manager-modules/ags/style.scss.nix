@@ -5,7 +5,6 @@
   ...
 }: let
   edge = outputs.palette.base0F;
-  line = "${toString session.borderWidth}px";
 
   # CRT look: red/blue fringe either side plus a soft phosphor glow
   fringeRed = outputs.palette.base08;
@@ -15,6 +14,12 @@
   boxCrt = "-1px 0 0 rgba(${fringeRed}, 0.35), 1px 0 0 rgba(${fringeBlue}, 0.35), 0 0 6px rgba(${phosphor}, 0.2)";
   # Inside the frame; the edge glow appends its own shadows after these
   frameCrt = "inset 1px 0 0 rgba(${fringeRed}, 0.35), inset -1px 0 0 rgba(${fringeBlue}, 0.35), inset 0 0 10px rgba(${phosphor}, 0.15)";
+  hudFade = let
+    a = session.animations.hudDim;
+  in
+    if a == null
+    then "0ms"
+    else "${toString a.ms}ms cubic-bezier(${builtins.concatStringsSep ", " (map builtins.toJSON a.curve)})";
   edgeFade = let
     a = session.animations.edgeFlash;
   in
@@ -67,11 +72,25 @@
     }
 
     window.Outline {
-      border: ${line} solid ${outputs.palette.base03};
+      border: 0.5px solid ${outputs.palette.base03};
       box-shadow: ${frameCrt};
     }
     window.Outline.active-monitor {
-      border: ${line} solid ${outputs.palette.base04};
+      border: 0.5px solid ${outputs.palette.base04};
+    }
+
+    // HUD fades back while windows sit under it and the bar is not hovered
+    window.Bar .bar-items {
+      transition: opacity ${hudFade};
+    }
+    window.Bar.dim .bar-items {
+      opacity: 0.45;
+    }
+    window.Outline.dim {
+      border-color: rgba(${outputs.palette.base03}, 0.45);
+    }
+    window.Outline.active-monitor.dim {
+      border-color: rgba(${outputs.palette.base04}, 0.45);
     }
 
     // Phosphor glow and colour fringing on everything the bar draws
@@ -94,7 +113,7 @@
     // Edge glow: on instantly, fades out when the class drops. Frame shadows
     // come first in both lists so only the edge pair animates
     window.Outline {
-      transition: ${edgeFade};
+      transition: ${edgeFade}, border-color ${hudFade};
     }
     window.Outline.edge-left,
     window.Outline.edge-right,
@@ -135,7 +154,7 @@
         }
 
         .left {
-          border: ${line} solid ${outputs.palette.base03};
+          border: 0.5px solid ${outputs.palette.base03};
           .workspaces {
             .workspace-indicator {
               font-size: 20px;
@@ -240,7 +259,7 @@
         }
 
         .right {
-          border: ${line} solid ${outputs.palette.base03};
+          border: 0.5px solid ${outputs.palette.base03};
           .notifications {
             background-color: ${outputs.palette.base00};
             color: ${outputs.palette.base05};
@@ -354,7 +373,7 @@
     }
     window.Dash {
       .panel {
-         border: ${line} solid ${outputs.palette.base03};
+         border: 0.5px solid ${outputs.palette.base03};
       }
       .heading {
         padding: 1px;

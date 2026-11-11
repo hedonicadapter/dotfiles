@@ -39,15 +39,28 @@ export const [mode, setMode] = createState("NORMAL");
 export const [keyboardLayout, setKeyboardLayout] = createState("");
 // Outputs whose active window is maximized to the edges or fullscreen
 export const [fillingOutputs, setFillingOutputs] = createState<string[]>([]);
+// Outputs whose active workspace has windows, i.e. something under the HUD
+export const [occupiedOutputs, setOccupiedOutputs] = createState<string[]>([]);
 // The compositor is streaming a screen or window to some app
 export const [screencasting, setScreencasting] = createState(false);
 
-let lastFilling = "";
+// Set only on change; every compositor event recomputes these
+const changed = (() => {
+  const last = new Map<string, string>();
+  return (name: string, outputs: string[]) => {
+    const key = [...outputs].sort().join(",");
+    if (last.get(name) === key) return false;
+    last.set(name, key);
+    return true;
+  };
+})();
+
 export function publishFillingOutputs(outputs: string[]) {
-  const key = [...outputs].sort().join(",");
-  if (key === lastFilling) return;
-  lastFilling = key;
-  setFillingOutputs(outputs);
+  if (changed("filling", outputs)) setFillingOutputs(outputs);
+}
+
+export function publishOccupiedOutputs(outputs: string[]) {
+  if (changed("occupied", outputs)) setOccupiedOutputs(outputs);
 }
 
 export function publishWorkspaces(list: Workspace[]) {

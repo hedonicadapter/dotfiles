@@ -27,6 +27,11 @@ in {
     curve = easeOutQuart;
     ms = 350;
   };
+  # HUD fading back over windows and returning on hover
+  hudDim = {
+    curve = easeOutQuart;
+    ms = 220;
+  };
   # Edge glow, ags/widget/Outline.tsx: lit for holdMs, then fades over ms
   edgeFlash = {
     curve = easeOutQuart;

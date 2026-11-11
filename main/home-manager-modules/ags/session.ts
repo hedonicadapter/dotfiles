@@ -5,9 +5,6 @@ import { readFile } from "ags/file";
 type Session = {
   animations?: Record<string, any>;
   screenGap?: number;
-  windowGap?: number;
-  barSpacing?: number;
-  borderWidth?: number;
 };
 
 function load(): Session {

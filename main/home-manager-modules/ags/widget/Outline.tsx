@@ -6,7 +6,7 @@ import Astal from "gi://Astal?version=3.0";
 import Gdk from "gi://Gdk?version=3.0";
 import { getMonitorPlugName } from "../util";
 import { focusedOutput } from "../compositor";
-import { screenGap } from "../layout";
+import { hudDimmed, screenGap } from "../layout";
 
 const SIDES = ["left", "right", "top", "bottom"];
 const EDGE_HOLD_MS = timing("edgeFlash")?.holdMs ?? 160;
@@ -28,13 +28,14 @@ export default function Outline(gdkmonitor: Gdk.Monitor, index: number) {
   const gap = screenGap(monitorName);
 
   const className = createComputed(
-    [hovered, focusedOutput, edge],
-    (isHovered, output, side) => {
+    [hovered, focusedOutput, edge, hudDimmed(monitorName)],
+    (isHovered, output, side, dim) => {
       const active = !!output && output === monitorName;
       return [
         "Outline",
         active ? "active-monitor" : "",
         isHovered ? "hovered" : "",
+        dim ? "dim" : "",
         active && side ? `edge-${side}` : "",
       ]
         .filter(Boolean)
