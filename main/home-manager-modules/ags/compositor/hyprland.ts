@@ -3,11 +3,13 @@
 import AstalHyprland from "gi://AstalHyprland";
 import {
   type Keybind,
+  publishFillingOutputs,
   publishWorkspaces,
   setFocusedOutput,
   setFocusedWindow,
   setKeyboardLayout,
   setMode,
+  setScreencasting,
   type Window,
   type Workspace,
 } from "./state";
@@ -51,6 +53,13 @@ function publish() {
   const output = hypr.focusedMonitor?.name;
   if (output) setFocusedOutput(output);
 
+  // Hyprland's maximize is a fullscreen mode, so hasFullscreen covers both
+  publishFillingOutputs(
+    hypr.monitors
+      .filter((m) => m.activeWorkspace?.hasFullscreen)
+      .map((m) => m.name),
+  );
+
   const client = hypr.focusedClient;
   const win: Window | null = client
     ? {title: client.title, app_id: client.class}
@@ -71,7 +80,11 @@ export function connect() {
     return;
   }
 
-  hypr.connect("event", publish);
+  hypr.connect("event", (_, name: string, data: string) => {
+    // screencast>>1,<owner> on start, screencast>>0,<owner> on stop
+    if (name === "screencast") setScreencasting(data.startsWith("1"));
+    publish();
+  });
   hypr.connect("submap", (_, name: string) =>
     setMode(name ? name.toUpperCase() : "NORMAL"),
   );

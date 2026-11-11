@@ -5,6 +5,15 @@
   ...
 }: let
   edge = outputs.palette.base0F;
+
+  # CRT look: red/blue fringe either side plus a soft phosphor glow
+  fringeRed = outputs.palette.base08;
+  fringeBlue = outputs.palette.base0D;
+  phosphor = outputs.palette.base05;
+  textCrt = "-1px 0 rgba(${fringeRed}, 0.45), 1px 0 rgba(${fringeBlue}, 0.45), 0 0 6px rgba(${phosphor}, 0.35)";
+  boxCrt = "-1px 0 0 rgba(${fringeRed}, 0.35), 1px 0 0 rgba(${fringeBlue}, 0.35), 0 0 6px rgba(${phosphor}, 0.2)";
+  # Inside the frame; the edge glow appends its own shadows after these
+  frameCrt = "inset 1px 0 0 rgba(${fringeRed}, 0.35), inset -1px 0 0 rgba(${fringeBlue}, 0.35), inset 0 0 10px rgba(${phosphor}, 0.15)";
   edgeFade = let
     a = session.animations.edgeFlash;
   in
@@ -56,14 +65,42 @@
         }
     }
 
+    // Double-line HUD frame
     window.Outline {
-      border: 0.5px solid ${outputs.palette.base03};
+      border: 3px double ${outputs.palette.base03};
+      box-shadow: ${frameCrt};
+
+      .ticks {
+        color: rgba(${outputs.palette.base03}, 0.8);
+      }
     }
     window.Outline.active-monitor {
-      border: 0.5px solid ${outputs.palette.base04};
+      border: 3px double ${outputs.palette.base04};
+
+      .ticks {
+        color: ${outputs.palette.base04};
+      }
     }
 
-    // Edge glow: on instantly, fades out when the class drops
+    // Phosphor glow and colour fringing on everything the bar draws
+    window.Bar {
+      label {
+        text-shadow: ${textCrt};
+      }
+      icon {
+        -gtk-icon-shadow: ${textCrt};
+      }
+      .bar-items .left,
+      .bar-items .right {
+        box-shadow: ${boxCrt};
+      }
+      .recording .main {
+        color: ${outputs.palette.base08};
+      }
+    }
+
+    // Edge glow: on instantly, fades out when the class drops. Frame shadows
+    // come first in both lists so only the edge pair animates
     window.Outline {
       transition: ${edgeFade};
     }
@@ -73,10 +110,10 @@
     window.Outline.edge-bottom {
       transition-duration: 0;
     }
-    window.Outline.edge-left   { box-shadow: inset 4px 0 0 0 ${edge}, inset 28px 0 28px -20px rgba(${edge}, 0.55); }
-    window.Outline.edge-right  { box-shadow: inset -4px 0 0 0 ${edge}, inset -28px 0 28px -20px rgba(${edge}, 0.55); }
-    window.Outline.edge-top    { box-shadow: inset 0 4px 0 0 ${edge}, inset 0 28px 28px -20px rgba(${edge}, 0.55); }
-    window.Outline.edge-bottom { box-shadow: inset 0 -4px 0 0 ${edge}, inset 0 -28px 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-left   { box-shadow: ${frameCrt}, inset 4px 0 0 0 ${edge}, inset 28px 0 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-right  { box-shadow: ${frameCrt}, inset -4px 0 0 0 ${edge}, inset -28px 0 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-top    { box-shadow: ${frameCrt}, inset 0 4px 0 0 ${edge}, inset 0 28px 28px -20px rgba(${edge}, 0.55); }
+    window.Outline.edge-bottom { box-shadow: ${frameCrt}, inset 0 -4px 0 0 ${edge}, inset 0 -28px 28px -20px rgba(${edge}, 0.55); }
 
     window.Bar {
       color: ${outputs.palette.base05};

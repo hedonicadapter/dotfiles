@@ -22,11 +22,14 @@ import AudioSettingsComponent, {
 import BluetoothSettingsComponent, {
   setBluetoothSettings,
 } from "./components/Bar/BluetoothSettingsComponent";
+import RecordingComponent from "./components/Bar/RecordingComponent";
 import { focusedOutput } from "../compositor";
+import { screenGap } from "../layout";
 
 export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
   const { START, END } = Gtk.Align;
   const monitorName = getMonitorPlugName(gdkmonitor);
+  const gap = screenGap(monitorName);
 
   return (
     <window
@@ -35,6 +38,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
         output && output === monitorName ? "Bar active-monitor" : "Bar",
       )}
       gdkmonitor={gdkmonitor}
+      marginTop={gap}
+      marginLeft={gap}
+      marginRight={gap}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       keymode={Astal.Keymode.ON_DEMAND}
       anchor={
@@ -89,6 +95,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor, index: number) {
           {/*<box valign={START} vertical>
             <MinReproComponent />
           </box>*/}
+          <box valign={START} vertical>
+            <RecordingComponent />
+          </box>
           <box valign={START} vertical>
             <NotificationsComponent />
           </box>

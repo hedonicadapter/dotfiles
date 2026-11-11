@@ -1,12 +1,16 @@
 // niri backend. niri speaks newline-delimited JSON over $NIRI_SOCKET. The
 // "EventStream" request dumps full state up front and then streams deltas, so
 // a single connection is enough to keep the shared state in sync.
+import Gdk from "gi://Gdk?version=3.0";
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
 import { readFile } from "ags/file";
+import { getMonitorPlugName } from "../util";
 import {
   type Keybind,
+  publishFillingOutputs,
   publishWorkspaces as publishShared,
+  setScreencasting,
   setFocusedWindow,
   setKeyboardLayout,
   setMode,
@@ -24,6 +28,7 @@ type NiriWindow = {
   workspace_id: number | null;
   is_focused: boolean;
   is_urgent?: boolean;
+  layout?: {tile_size: [number, number]};
 };
 
 const RECONNECT_MS = 1000;
@@ -31,11 +36,47 @@ const RECONNECT_MS = 1000;
 let workspaces: NiriWorkspace[] = [];
 const windows = new Map<number, NiriWindow>();
 let focusedWindowId: number | null = null;
+// Screencast stream id -> currently streaming frames
+const casts = new Map<number, boolean>();
 let started = false;
+
+// Logical monitor widths, the same units as niri's tile sizes
+function outputWidths() {
+  const widths = new Map<string, number>();
+  const display = Gdk.Display.get_default();
+  for (let i = 0; i < (display?.get_n_monitors() ?? 0); i++) {
+    const monitor = display!.get_monitor(i)!;
+    const name = getMonitorPlugName(monitor);
+    if (name) widths.set(name, monitor.get_geometry().width);
+  }
+  return widths;
+}
+
+// niri reports no maximized/fullscreen flag; a tile as wide as the output
+// means maximize-to-edges or fullscreen (a full-width column keeps its gaps)
+function publishFilling() {
+  const widths = outputWidths();
+  publishFillingOutputs(
+    workspaces
+      .filter((ws) => {
+        if (!ws.is_active || !ws.output || ws.active_window_id === null)
+          return false;
+        const tile = windows.get(ws.active_window_id)?.layout?.tile_size;
+        const width = widths.get(ws.output);
+        return !!tile && !!width && tile[0] >= width - 2;
+      })
+      .map((ws) => ws.output!),
+  );
+}
+
+function publishCasts() {
+  setScreencasting([...casts.values()].some(Boolean));
+}
 
 function publishWorkspaces(list: NiriWorkspace[]) {
   workspaces = list;
   publishShared(list);
+  publishFilling();
 }
 
 function publishFocusedWindow() {
@@ -95,6 +136,7 @@ function handleEvent(event: Record<string, any>) {
         if (win.is_focused) focusedWindowId = win.id;
       }
       publishFocusedWindow();
+      publishFilling();
       break;
     }
 
@@ -104,6 +146,7 @@ function handleEvent(event: Record<string, any>) {
       windows.set(win.id, win);
       if (win.is_focused) focusedWindowId = win.id;
       if (focusedWindowId === win.id) publishFocusedWindow();
+      publishFilling();
       break;
     }
 
@@ -113,6 +156,34 @@ function handleEvent(event: Record<string, any>) {
         focusedWindowId = null;
         publishFocusedWindow();
       }
+      publishFilling();
+      break;
+
+    case "WindowLayoutsChanged":
+      for (const [id, layout] of data.changes as [
+        number,
+        NiriWindow["layout"],
+      ][]) {
+        const win = windows.get(id);
+        if (win) windows.set(id, {...win, layout});
+      }
+      publishFilling();
+      break;
+
+    case "CastsChanged":
+      casts.clear();
+      for (const cast of data.casts) casts.set(cast.stream_id, cast.is_active);
+      publishCasts();
+      break;
+
+    case "CastStartedOrChanged":
+      casts.set(data.cast.stream_id, data.cast.is_active);
+      publishCasts();
+      break;
+
+    case "CastStopped":
+      casts.delete(data.stream_id);
+      publishCasts();
       break;
 
     case "WindowFocusChanged":

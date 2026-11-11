@@ -37,6 +37,18 @@ export const [focusedWindow, setFocusedWindow] = createState<Window | null>(null
 // Modal state for the bar: niri overview, Hyprland submap
 export const [mode, setMode] = createState("NORMAL");
 export const [keyboardLayout, setKeyboardLayout] = createState("");
+// Outputs whose active window is maximized to the edges or fullscreen
+export const [fillingOutputs, setFillingOutputs] = createState<string[]>([]);
+// The compositor is streaming a screen or window to some app
+export const [screencasting, setScreencasting] = createState(false);
+
+let lastFilling = "";
+export function publishFillingOutputs(outputs: string[]) {
+  const key = [...outputs].sort().join(",");
+  if (key === lastFilling) return;
+  lastFilling = key;
+  setFillingOutputs(outputs);
+}
 
 export function publishWorkspaces(list: Workspace[]) {
   // Derived state first — subscribers of `workspaces` read it in the same tick

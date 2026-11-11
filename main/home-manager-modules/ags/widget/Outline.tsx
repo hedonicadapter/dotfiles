@@ -4,8 +4,10 @@ import { timeout } from "ags/time";
 import { readFile } from "ags/file";
 import Astal from "gi://Astal?version=3.0";
 import Gdk from "gi://Gdk?version=3.0";
+import Gtk from "gi://Gtk?version=3.0";
 import { getMonitorPlugName } from "../util";
 import { focusedOutput } from "../compositor";
+import { screenGap } from "../layout";
 
 const SIDES = ["left", "right", "top", "bottom"];
 // Written by home.nix from compositor/animations.nix
@@ -31,9 +33,44 @@ export function flashEdge(side: string) {
   clearEdge = timeout(EDGE_HOLD_MS, () => setEdge(null));
 }
 
+// Ruler ticks along the inside of the frame, like plot axes. Minor every
+// TICK_STEP px, major every TICK_MAJOR ticks. The top edge is left to the bar
+const TICK_STEP = 24;
+const TICK_MAJOR = 5;
+const TICK_MINOR_LEN = 3;
+const TICK_MAJOR_LEN = 7;
+// Side ticks start below the bar's tabs
+const TICK_TOP_CLEAR = 56;
+
+function drawTicks(area: Gtk.DrawingArea, cr: any) {
+  const w = area.get_allocated_width();
+  const h = area.get_allocated_height();
+  // Color comes from CSS (.ticks), so it follows the palette and focus
+  const c = area.get_style_context().get_color(area.get_state_flags());
+  cr.setSourceRGBA(c.red, c.green, c.blue, c.alpha);
+
+  const len = (i: number) =>
+    i % TICK_MAJOR === 0 ? TICK_MAJOR_LEN : TICK_MINOR_LEN;
+
+  for (let i = 1; i * TICK_STEP < h; i++) {
+    const y = h - i * TICK_STEP;
+    if (y < TICK_TOP_CLEAR) break;
+    cr.rectangle(0, y, len(i), 1);
+    cr.rectangle(w - len(i), y, len(i), 1);
+  }
+  for (let i = 1; i * TICK_STEP < w; i++) {
+    const x = i * TICK_STEP;
+    cr.rectangle(x, h - len(i), 1, len(i));
+  }
+  cr.fill();
+  cr.$dispose();
+  return false;
+}
+
 export default function Outline(gdkmonitor: Gdk.Monitor, index: number) {
   const [hovered, setHovered] = createState(false);
   const monitorName = getMonitorPlugName(gdkmonitor);
+  const gap = screenGap(monitorName);
 
   const className = createComputed(
     [hovered, focusedOutput, edge],
@@ -55,6 +92,10 @@ export default function Outline(gdkmonitor: Gdk.Monitor, index: number) {
       name={`outline-${index}`}
       class={className}
       gdkmonitor={gdkmonitor}
+      marginTop={gap}
+      marginBottom={gap}
+      marginLeft={gap}
+      marginRight={gap}
       exclusivity={Astal.Exclusivity.IGNORE}
       // click-through is not a GObject property — v3 has no clickThrough prop
       $={(self) => Astal.widget_set_click_through(self, true)}
@@ -72,7 +113,14 @@ export default function Outline(gdkmonitor: Gdk.Monitor, index: number) {
         vexpand
         onHover={() => setHovered(true)}
         onHoverLost={() => setHovered(false)}
-      ></eventbox>
+      >
+        <drawingarea
+          class="ticks"
+          hexpand
+          vexpand
+          $={(self) => self.connect("draw", drawTicks)}
+        />
+      </eventbox>
     </window>
   );
 }
