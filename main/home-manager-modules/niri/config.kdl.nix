@@ -85,7 +85,7 @@ in ''
 
   ${concatStringsSep "\n" (mapAttrsToList outputBlock session.outputs)}
   layout {
-      gaps 16
+      gaps ${toString session.windowGap}
 
       // Windows stay inside the AGS frame; the bar reserves the top
       struts {

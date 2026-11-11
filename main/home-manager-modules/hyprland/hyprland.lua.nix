@@ -168,7 +168,12 @@ in ''
     general = {
       gaps_in = 8,
       -- Sides and bottom also clear the AGS frame; the bar reserves the top
-      gaps_out = { top = 16, right = ${toString (16 + session.screenGap)}, bottom = ${toString (16 + session.screenGap)}, left = ${toString (16 + session.screenGap)} },
+      gaps_out = {
+        top = ${toString session.windowGap},
+        right = ${toString (session.windowGap + session.screenGap)},
+        bottom = ${toString (session.windowGap + session.screenGap)},
+        left = ${toString (session.windowGap + session.screenGap)},
+      },
       border_size = ${toString session.borderWidth},
       ["col.active_border"] = "rgb(${processColor outputs.palette.base04})",
       ["col.inactive_border"] = "rgb(${processColor outputs.palette.base03})",

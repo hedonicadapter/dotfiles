@@ -6,6 +6,12 @@ import { session } from "./session";
 
 // Gap between the screen edge and the bar/outline frame
 export const SCREEN_GAP = session.screenGap ?? 20;
+// The compositor's outer window gap applies below the bar too; reserving
+// this much less leaves barSpacing between the bar and the windows
+const BAR_OVERLAP = Math.max(
+  0,
+  (session.windowGap ?? 0) - (session.barSpacing ?? session.windowGap ?? 0),
+);
 
 // gtk-layer-shell sets the bar's reserved space directly. Loaded loosely so
 // a missing typelib only costs the smooth bar move, not the whole shell
@@ -56,11 +62,15 @@ export function reserveBarSpace(
   if (!LayerShell) return;
 
   const target = targetGap(monitorName);
-  const update = () =>
+  // A maximized window ignores gaps, so overlapping would put it under the
+  // bar: reserve the full height while the output is filled (gap 0)
+  const update = () => {
+    const gap = target.peek();
     LayerShell.set_exclusive_zone(
       win,
-      win.get_allocated_height() + target.peek(),
+      win.get_allocated_height() + gap - (gap > 0 ? BAR_OVERLAP : 0),
     );
+  };
 
   // Hover panels change the bar's height
   win.connect("size-allocate", update);
