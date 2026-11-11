@@ -4,14 +4,10 @@ import { fillingOutputs } from "./compositor";
 import { timing, tween } from "./animations";
 import { session } from "./session";
 
-// Gap between the screen edge and the bar/outline frame
+// Gap between the screen edge and the bar/outline frame. The top is
+// smaller: the bar already adds its own height there
 export const SCREEN_GAP = session.screenGap ?? 20;
-// The compositor's outer window gap applies below the bar too; reserving
-// this much less leaves barSpacing between the bar and the windows
-const BAR_OVERLAP = Math.max(
-  0,
-  (session.windowGap ?? 0) - (session.barSpacing ?? session.windowGap ?? 0),
-);
+export const SCREEN_GAP_TOP = session.screenGapTop ?? SCREEN_GAP;
 
 // gtk-layer-shell sets the bar's reserved space directly. Loaded loosely so
 // a missing typelib only costs the smooth bar move, not the whole shell
@@ -24,53 +20,58 @@ try {
   console.error("layout: no GtkLayerShell, bar gap reflows per frame", e);
 }
 
-// The frame hugs the screen edge while the active window fills the output
-const targetGap = (monitorName: string | undefined) =>
+// The frame hugs the screen edge while the active window fills the output.
+// 1 = gapped, 0 = at the edge; tweened so top and sides move together
+const targetOpen = (monitorName: string | undefined) =>
   fillingOutputs.as((outputs) =>
-    monitorName && outputs.includes(monitorName) ? 0 : SCREEN_GAP,
+    monitorName && outputs.includes(monitorName) ? 0 : 1,
   );
 
-// One animated gap per output, shared so bar and frame move together
-const gaps = new Map<string, Accessor<number>>();
+const opens = new Map<string, Accessor<number>>();
 
-export function screenGap(monitorName: string | undefined) {
+function gapOpen(monitorName: string | undefined) {
   const key = monitorName ?? "";
-  const cached = gaps.get(key);
+  const cached = opens.get(key);
   if (cached) return cached;
 
-  const target = targetGap(monitorName);
-  const [gap, setGap] = createState(target.peek());
+  const target = targetOpen(monitorName);
+  const [open, setOpen] = createState(target.peek());
   let cancel = () => {};
   target.subscribe(() => {
     cancel();
-    cancel = tween(gap.peek(), target.peek(), timing("screenGap"), (v) =>
-      setGap(Math.round(v)),
-    );
+    cancel = tween(open.peek(), target.peek(), timing("screenGap"), setOpen);
   });
 
-  gaps.set(key, gap);
-  return gap;
+  opens.set(key, open);
+  return open;
+}
+
+// Animated margins for the bar and frame on one output
+export function screenGap(monitorName: string | undefined) {
+  const open = gapOpen(monitorName);
+  return {
+    top: open.as((o) => Math.round(o * SCREEN_GAP_TOP)),
+    side: open.as((o) => Math.round(o * SCREEN_GAP)),
+  };
 }
 
 // Reserve the bar's space for the target gap right away, so windows resize
 // once (the compositor animates that) while the bar itself slides. With
-// auto exclusive zone the margin tween would reflow every window per frame
+// auto exclusive zone the margin tween would reflow every window per frame.
+// The space under the bar is the compositor's: a negative niri top strut,
+// Hyprland's top outer gap
 export function reserveBarSpace(
   win: Gtk.Window,
   monitorName: string | undefined,
 ) {
   if (!LayerShell) return;
 
-  const target = targetGap(monitorName);
-  // A maximized window ignores gaps, so overlapping would put it under the
-  // bar: reserve the full height while the output is filled (gap 0)
-  const update = () => {
-    const gap = target.peek();
+  const target = targetOpen(monitorName);
+  const update = () =>
     LayerShell.set_exclusive_zone(
       win,
-      win.get_allocated_height() + gap - (gap > 0 ? BAR_OVERLAP : 0),
+      win.get_allocated_height() + target.peek() * SCREEN_GAP_TOP,
     );
-  };
 
   // Hover panels change the bar's height
   win.connect("size-allocate", update);

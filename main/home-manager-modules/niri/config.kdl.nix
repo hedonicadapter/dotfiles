@@ -89,6 +89,8 @@ in ''
 
       // Windows stay inside the AGS frame; the bar reserves the top
       struts {
+          // Pulls windows up under the bar's reserved space, leaving barSpacing
+          top ${toString (session.barSpacing - session.windowGap)}
           left ${toString session.screenGap}
           right ${toString session.screenGap}
           bottom ${toString session.screenGap}

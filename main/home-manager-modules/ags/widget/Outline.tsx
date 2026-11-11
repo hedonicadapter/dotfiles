@@ -47,10 +47,10 @@ export default function Outline(gdkmonitor: Gdk.Monitor, index: number) {
       name={`outline-${index}`}
       class={className}
       gdkmonitor={gdkmonitor}
-      marginTop={gap}
-      marginBottom={gap}
-      marginLeft={gap}
-      marginRight={gap}
+      marginTop={gap.top}
+      marginBottom={gap.side}
+      marginLeft={gap.side}
+      marginRight={gap.side}
       exclusivity={Astal.Exclusivity.IGNORE}
       // click-through is not a GObject property — v3 has no clickThrough prop
       $={(self) => Astal.widget_set_click_through(self, true)}

@@ -169,7 +169,7 @@ in ''
       gaps_in = 8,
       -- Sides and bottom also clear the AGS frame; the bar reserves the top
       gaps_out = {
-        top = ${toString session.windowGap},
+        top = ${toString session.barSpacing},
         right = ${toString (session.windowGap + session.screenGap)},
         bottom = ${toString (session.windowGap + session.screenGap)},
         left = ${toString (session.windowGap + session.screenGap)},
