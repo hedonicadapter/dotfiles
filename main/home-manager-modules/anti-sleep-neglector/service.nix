@@ -941,12 +941,14 @@ in {
               fi
 
               if is_video "$file"; then
-                  # Frame 1 s in skips fade-ins; short clips fall back to the first frame
-                  BRIGHTNESS=$(
-                    { ffmpeg -v error -ss 1 -i "$file" -frames:v 1 -f image2pipe -c:v png - 2>/dev/null ||
-                      ffmpeg -v error -i "$file" -frames:v 1 -f image2pipe -c:v png - 2>/dev/null; } |
+                  # Frame 1 s in skips fade-ins. Clips under 1 s give no frame there
+                  # (ffmpeg still exits 0), so retry the first frame on empty output
+                  video_brightness() {
+                    ffmpeg -v error "$@" -i "$file" -frames:v 1 -f image2pipe -c:v png - 2>/dev/null |
                       magick - -colorspace gray -format "%[fx:mean]" info: 2>/dev/null
-                  )
+                  }
+                  BRIGHTNESS=$(video_brightness -ss 1)
+                  [[ -z "$BRIGHTNESS" ]] && BRIGHTNESS=$(video_brightness)
               elif [[ "$file" == *.gif ]]; then
                   BRIGHTNESS=$(magick "$file[0]" -colorspace gray -format "%[fx:mean]" info: 2>/dev/null)
               else
