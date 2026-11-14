@@ -1074,8 +1074,22 @@ in {
 
                       # Small images at native size, large ones shrunk to fit; never cropped to fill
                       if [[ -n "$(should_no_resize "$img_w" "$img_h")" ]]; then
-                        swww_cmd+=(--resize no)
                         echo "Native size for image ($img_w x $img_h)"
+                        # swww --resize no shears images smaller than the output, so pad
+                        # to the screen here and hand swww an exact fit
+                        read -r mon_w mon_h < <(get_main_monitor_resolution 2>/dev/null)
+                        [[ "$mon_w" =~ ^[0-9]+$ ]] || mon_w=1920
+                        [[ "$mon_h" =~ ^[0-9]+$ ]] || mon_h=1080
+                        padded_ext=png
+                        [[ "''${selected_wallpaper,,}" == *.gif ]] && padded_ext=gif
+                        padded="''${XDG_RUNTIME_DIR:-/tmp}/anti-sleep-neglector-wallpaper.$padded_ext"
+                        if magick "$selected_wallpaper" -coalesce -background "#${removeHash outputs.palette.base00}" \
+                          -gravity center -extent "''${mon_w}x''${mon_h}" "$padded"; then
+                          swww_cmd[2]=$padded
+                          swww_cmd+=(--resize fit)
+                        else
+                          swww_cmd+=(--resize no)
+                        fi
                       else
                         swww_cmd+=(--resize fit)
                       fi
