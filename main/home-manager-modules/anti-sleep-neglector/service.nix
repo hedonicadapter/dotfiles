@@ -852,9 +852,14 @@ in {
 
             WALLPAPERS_DIR="${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"
 
-            if ! pgrep -x "swww-daemon" > /dev/null; then
-              swww-daemon &
-            fi
+            # Always a fresh daemon: one left over from before keeps its old buffer
+            # size after a resolution change (or a rebuild) and shears the image
+            pkill -x swww-daemon || true
+            for _ in $(seq 1 20); do
+              pgrep -x swww-daemon >/dev/null || break
+              sleep 0.25
+            done
+            swww-daemon &
 
             # swww img fails until the daemon is accepting connections
             for _ in $(seq 1 30); do
@@ -1126,7 +1131,7 @@ in {
           Restart = "always";
           RestartSec = "10s";
           ExecStart = "${pkgs.writeShellScript "wallpaper-mode-watch" ''
-            export PATH=${lib.makeBinPath [pkgs.wm pkgs.jq pkgs.systemd inputs.swww.packages.${pkgs.system}.swww]}:$PATH
+            export PATH=${lib.makeBinPath [pkgs.wm pkgs.jq pkgs.systemd]}:$PATH
 
             modes() { wm outputs 2>/dev/null | jq -c 'map({name, mode}) | sort_by(.name)' 2>/dev/null; }
 
@@ -1136,7 +1141,7 @@ in {
               # Empty while the compositor is busy reconfiguring; wait for a real reading
               [[ -z "$current" || "$current" == "$last" ]] && continue
               last=$current
-              swww kill 2>/dev/null || true
+              # The wallpaper service starts a fresh swww-daemon
               systemctl --user restart anti-sleep-neglector-wallpaper.service
             done
           ''}";
