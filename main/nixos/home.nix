@@ -142,7 +142,7 @@ in {
       hyprpicker
       (speed-read.override {xkbLayout = osConfig.services.xserver.xkb.layout;})
       lutris
-      (mpv.override {scripts = [mpvScripts.mpris];})
+      (mpv.override {scripts = [mpvScripts.mpris mpvScripts.autocrop];})
       streamlink
       twitch-tui
       pipe-viewer # youtube cli
