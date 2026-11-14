@@ -1113,6 +1113,38 @@ in {
           WantedBy = ["graphical-session.target"];
         };
       };
+
+      # swww-daemon keeps its old buffer size when an output changes mode (4K <->
+      # 1080p), which shears the image. Start it fresh and reapply on mode changes
+      systemd.user.services."anti-sleep-neglector-wallpaper-modes" = {
+        Unit = {
+          Description = "Reapply the wallpaper when an output changes resolution";
+          PartOf = ["graphical-session.target"];
+          After = ["graphical-session.target" "anti-sleep-neglector-wallpaper.service"];
+        };
+        Service = {
+          Restart = "always";
+          RestartSec = "10s";
+          ExecStart = "${pkgs.writeShellScript "wallpaper-mode-watch" ''
+            export PATH=${lib.makeBinPath [pkgs.wm pkgs.jq pkgs.systemd inputs.swww.packages.${pkgs.system}.swww]}:$PATH
+
+            modes() { wm outputs 2>/dev/null | jq -c 'map({name, mode}) | sort_by(.name)' 2>/dev/null; }
+
+            last=$(modes)
+            while sleep 3; do
+              current=$(modes)
+              # Empty while the compositor is busy reconfiguring; wait for a real reading
+              [[ -z "$current" || "$current" == "$last" ]] && continue
+              last=$current
+              swww kill 2>/dev/null || true
+              systemctl --user restart anti-sleep-neglector-wallpaper.service
+            done
+          ''}";
+        };
+        Install = {
+          WantedBy = ["graphical-session.target"];
+        };
+      };
     })
   ];
 }
