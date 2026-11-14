@@ -273,8 +273,8 @@ in {
         type = types.str;
         default = "${config.home.homeDirectory}/Pictures/wallpapers";
         description = ''
-          Your wallpaper directory. Images and GIFs go through swww, videos
-          through mpvpaper.
+          Your wallpaper directory. Images, GIFs and videos all play through
+          mpvpaper.
         '';
       };
       cycleInterval = mkOption {
@@ -800,24 +800,6 @@ in {
                 fi
               } 2>> /tmp/anti-sleep-neglector-wallpaper.log
 
-              should_no_resize() {
-                local image_w=$1
-                local image_h=$2
-                local monitor_w monitor_h
-
-                read -r monitor_w monitor_h < <(get_main_monitor_resolution 2>/dev/null)
-
-                # Detection failed or returned junk — assume 1080p
-                [[ "$monitor_w" =~ ^[0-9]+$ ]] || monitor_w=1920
-                [[ "$monitor_h" =~ ^[0-9]+$ ]] || monitor_h=1080
-
-                threshold_w=$(bc <<< "scale=0; $monitor_w * 0.8 / 1" 2>/dev/null || echo 1536)
-                threshold_h=$(bc <<< "scale=0; $monitor_h * 0.8 / 1" 2>/dev/null || echo 864)
-
-                if (( image_w < threshold_w || image_h < threshold_h )); then
-                  echo "--no-resize"
-                fi
-              }
             '';
           in "${pkgs.writeShellScript "set-wallpaper" ''
             #!/usr/bin/env bash
@@ -838,7 +820,6 @@ in {
                 lcms2Support = true;
               })
               pkgs.wm
-              inputs.swww.packages.${pkgs.system}.swww
               pkgs.mpvpaper
               pkgs.ffmpeg-headless
             ]}
@@ -852,20 +833,8 @@ in {
 
             WALLPAPERS_DIR="${config.services.anti-sleep-neglector-wallpaper.wallpapersDir}"
 
-            # Always a fresh daemon: one left over from before keeps its old buffer
-            # size after a resolution change (or a rebuild) and shears the image
+            # Wallpapers used to go through swww; clear a leftover daemon
             pkill -x swww-daemon || true
-            for _ in $(seq 1 20); do
-              pgrep -x swww-daemon >/dev/null || break
-              sleep 0.25
-            done
-            swww-daemon &
-
-            # swww img fails until the daemon is accepting connections
-            for _ in $(seq 1 30); do
-              swww query >/dev/null 2>&1 && break
-              sleep 1
-            done
 
             ${circadianVars}
 
@@ -1051,52 +1020,14 @@ in {
                   if [[ -n "$selected_wallpaper" && "$selected_wallpaper" != "''${current_wallpaper:-}" ]]; then
                     current_wallpaper=$selected_wallpaper
 
-                    # mpvpaper's layer sits above swww's, so it must go for images to show
                     pkill -x mpvpaper || true
 
-                    if is_video "$selected_wallpaper"; then
-                      # -o lines become an mpv config file, so no leading dashes; '#' must be
-                      # quoted there. Never upscale, shrink big ones to fit, bars in base00.
-                      nohup mpvpaper -o "no-audio loop-file=inf hwdec=auto video-unscaled=downscale-big background-color=\"#${removeHash outputs.palette.base00}\"" \
-                        ALL "$selected_wallpaper" </dev/null >>/tmp/anti-sleep-neglector-wallpaper.log 2>&1 &
-                    else
-                      # Get image dimensions
-                      read -r img_w img_h < <(magick identify -format "%w %h\n" "$selected_wallpaper" | head -n1)
-
-                      swww_cmd=(
-                        swww img "$selected_wallpaper"
-                        --transition-type wipe
-                        --transition-angle 30
-                        --transition-step 20
-                        --transition-fps 144
-                        --fill-color ${removeHash outputs.palette.base00}
-                      )
-
-                      # Small images at native size, large ones shrunk to fit; never cropped to fill
-                      if [[ -n "$(should_no_resize "$img_w" "$img_h")" ]]; then
-                        echo "Native size for image ($img_w x $img_h)"
-                        # swww --resize no shears images smaller than the output, so pad
-                        # to the screen here and hand swww an exact fit
-                        read -r mon_w mon_h < <(get_main_monitor_resolution 2>/dev/null)
-                        [[ "$mon_w" =~ ^[0-9]+$ ]] || mon_w=1920
-                        [[ "$mon_h" =~ ^[0-9]+$ ]] || mon_h=1080
-                        padded_ext=png
-                        [[ "''${selected_wallpaper,,}" == *.gif ]] && padded_ext=gif
-                        padded="''${XDG_RUNTIME_DIR:-/tmp}/anti-sleep-neglector-wallpaper.$padded_ext"
-                        if magick "$selected_wallpaper" -coalesce -background "#${removeHash outputs.palette.base00}" \
-                          -gravity center -extent "''${mon_w}x''${mon_h}" "$padded"; then
-                          swww_cmd[2]=$padded
-                          swww_cmd+=(--resize fit)
-                        else
-                          swww_cmd+=(--resize no)
-                        fi
-                      else
-                        swww_cmd+=(--resize fit)
-                      fi
-
-                      # No -o: swww sets every output, no compositor-specific listing needed
-                      "''${swww_cmd[@]}" </dev/null >>/tmp/anti-sleep-neglector-wallpaper.log 2>&1 &
-                    fi
+                    # mpv shows images, GIFs and videos alike; swww sheared images on
+                    # scaled outputs (4K at 1.5). -o lines become an mpv config file, so
+                    # no leading dashes; '#' must be quoted there. Never upscale, shrink
+                    # big ones to fit, bars in base00; stills stay up instead of ending
+                    nohup mpvpaper -o "no-audio loop-file=inf image-display-duration=inf hwdec=auto video-unscaled=downscale-big background-color=\"#${removeHash outputs.palette.base00}\"" \
+                      ALL "$selected_wallpaper" </dev/null >>/tmp/anti-sleep-neglector-wallpaper.log 2>&1 &
                   fi
                 fi
 
@@ -1128,38 +1059,6 @@ in {
           ''}";
         };
 
-        Install = {
-          WantedBy = ["graphical-session.target"];
-        };
-      };
-
-      # swww-daemon keeps its old buffer size when an output changes mode (4K <->
-      # 1080p), which shears the image. Start it fresh and reapply on mode changes
-      systemd.user.services."anti-sleep-neglector-wallpaper-modes" = {
-        Unit = {
-          Description = "Reapply the wallpaper when an output changes resolution";
-          PartOf = ["graphical-session.target"];
-          After = ["graphical-session.target" "anti-sleep-neglector-wallpaper.service"];
-        };
-        Service = {
-          Restart = "always";
-          RestartSec = "10s";
-          ExecStart = "${pkgs.writeShellScript "wallpaper-mode-watch" ''
-            export PATH=${lib.makeBinPath [pkgs.wm pkgs.jq pkgs.systemd]}:$PATH
-
-            modes() { wm outputs 2>/dev/null | jq -c 'map({name, mode}) | sort_by(.name)' 2>/dev/null; }
-
-            last=$(modes)
-            while sleep 3; do
-              current=$(modes)
-              # Empty while the compositor is busy reconfiguring; wait for a real reading
-              [[ -z "$current" || "$current" == "$last" ]] && continue
-              last=$current
-              # The wallpaper service starts a fresh swww-daemon
-              systemctl --user restart anti-sleep-neglector-wallpaper.service
-            done
-          ''}";
-        };
         Install = {
           WantedBy = ["graphical-session.target"];
         };
