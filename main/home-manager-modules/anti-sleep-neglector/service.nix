@@ -1021,6 +1021,12 @@ in {
                       [[ -n "$line" ]] && wallpapers_for_period+=("$line")
                   done <<< "''${grouped_wallpapers[$current_period]:-}"
 
+                  # Nothing matched this period (e.g. one readable file, or new videos
+                  # whose brightness couldn't be read): pick from the whole folder
+                  if (( ''${#wallpapers_for_period[@]} == 0 )); then
+                    mapfile -t wallpapers_for_period < <(find "$WALLPAPERS_DIR" -maxdepth 1 -type f | sort)
+                  fi
+
                   # Don't pick the one already showing when there's a choice
                   if (( ''${#wallpapers_for_period[@]} > 1 )); then
                     candidates=()
