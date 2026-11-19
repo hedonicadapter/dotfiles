@@ -7,6 +7,7 @@ pkgs: {
   speed-read = pkgs.callPackage ./speed-read {};
   wm = pkgs.callPackage ./wm {};
   stremio-service = pkgs.callPackage ./stremio-service {};
+  rah-cursors = pkgs.callPackage ./rah-cursors {};
 
   # Darwin-only, enforced by meta.platforms — do NOT gate this with
   # optionalAttrs pkgs.stdenv…, the additions overlay would then need the

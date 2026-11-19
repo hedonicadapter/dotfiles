@@ -156,11 +156,12 @@ in {
       sizes.terminal = 14;
     };
 
-    # cursor = {
-    # package = pkgs.callPackage ../home-manager/oxygen-neon-cursors.nix {};
-    #   name = "rah";
-    #   size = 200;
-    # };
+    # Also drives home.pointerCursor (XCURSOR_*, GTK, Xwayland) via stylix's HM target
+    cursor = {
+      package = pkgs.rah-cursors;
+      name = "rah";
+      size = 100;
+    };
   };
 
   security.polkit.enable = true;
