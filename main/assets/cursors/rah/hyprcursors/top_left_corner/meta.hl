@@ -1,6 +1,6 @@
 resize_algorithm = none
-hotspot_x = 0.21
-hotspot_y = 0.21
+hotspot_x = 0.23
+hotspot_y = 0.23
 
 define_size = 24, top_left_corner_000.png, 50
 define_size = 32, top_left_corner_001.png, 50

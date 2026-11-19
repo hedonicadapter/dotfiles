@@ -1,6 +1,6 @@
 resize_algorithm = none
-hotspot_x = 0.54
-hotspot_y = 0.46
+hotspot_x = 0.50
+hotspot_y = 0.50
 
 define_size = 24, grabbing_000.png, 50
 define_size = 32, grabbing_001.png, 50

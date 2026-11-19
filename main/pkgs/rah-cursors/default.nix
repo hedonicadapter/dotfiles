@@ -26,6 +26,36 @@ stdenvNoCC.mkDerivation {
     theme=build/rah
     mkdir -p "$theme/cursors" work
 
+    # CSS / cursor-shape names on top of the X11 ones, for apps and compositors
+    # that ask for them directly. Added as overrides so both formats get them.
+    while read -r shape aliases; do
+      for alias in $aliases; do
+        grep -qx "define_override = $alias" hyprcursors/*/meta.hl 2>/dev/null ||
+          echo "define_override = $alias" >> "hyprcursors/$shape/meta.hl"
+      done
+    done <<EOF
+    left_ptr default
+    hand2 pointer pointing_hand
+    xterm text ibeam
+    watch wait
+    left_ptr_watch progress
+    crossed_circle not-allowed no-drop forbidden
+    grabbing grab openhand closedhand all-scroll size_all
+    sb_h_double_arrow ew-resize col-resize size_hor
+    sb_v_double_arrow ns-resize row-resize size_ver
+    fd_double_arrow nesw-resize size_bdiag
+    bd_double_arrow nwse-resize size_fdiag
+    left_side w-resize
+    right_side e-resize
+    top_side n-resize
+    bottom_side s-resize
+    top_left_corner nw-resize
+    top_right_corner ne-resize
+    bottom_left_corner sw-resize
+    bottom_right_corner se-resize
+    question_arrow whats_this
+    EOF
+
     # hyprcursor: compile workspace -> theme_rah/{manifest.hl,hyprcursors/*.hlc}
     hyprcursor-util --create . --output build
     cp -r build/theme_rah/. "$theme/"
