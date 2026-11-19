@@ -42,15 +42,22 @@
   powerMenu = mkMenu {
     name = "power";
     menu = [
+      # systemctl, not sudo: polkit allows the active local session, and
+      # sudo has no tty to prompt on when spawned from a keybind
       {
         key = "q";
         desc = "SHUT DOWN";
-        cmd = "sudo shutdown -h now";
+        cmd = "systemctl poweroff";
       }
       {
         key = "r";
         desc = "REBOOT";
-        cmd = "sudo shutdown -r now";
+        cmd = "systemctl reboot";
+      }
+      {
+        key = "l";
+        desc = "LOG OUT";
+        cmd = "${lib.getExe pkgs.wm} quit";
       }
     ]
     ++ lib.optional canSuspend {

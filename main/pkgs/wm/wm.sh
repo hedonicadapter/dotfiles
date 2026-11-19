@@ -4,6 +4,7 @@ usage: wm outputs                    JSON: [{name, focused, scale, mode, modes, 
        wm focused-output             name of the focused output
        wm set-mode OUTPUT WxH[@R]    e.g. wm set-mode HDMI-A-1 1920x1080@240
        wm set-scale OUTPUT SCALE
+       wm quit                       end the compositor session (log out)
 
 Modes are {width, height, refresh} with refresh in Hz; current indexes modes.
 USAGE
@@ -93,8 +94,19 @@ set_scale() {
   esac
 }
 
+quit() {
+  local wm
+  wm=$(backend)
+  case $wm in
+  niri) niri msg action quit --skip-confirmation ;;
+  # Compositor exits mid-request, so no "ok" reply to check
+  hyprland) hyprctl eval "hl.dispatch(hl.dsp.exit())" >/dev/null || true ;;
+  esac
+}
+
 case ${1:-} in
 outputs) outputs ;;
+quit) quit ;;
 focused-output) outputs | jq -er '.[] | select(.focused) | .name' ;;
 set-mode)
   [[ $# -eq 3 ]] || usage
