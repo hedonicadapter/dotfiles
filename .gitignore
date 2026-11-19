@@ -4,3 +4,4 @@ venv/
 .home-manager/modules/twitch-tui/
 .aider*
 __pycache__/
+result
