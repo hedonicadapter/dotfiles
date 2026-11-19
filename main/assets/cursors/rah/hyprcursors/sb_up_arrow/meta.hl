@@ -1,0 +1,8 @@
+resize_algorithm = none
+hotspot_x = 0.50
+hotspot_y = 0.17
+
+define_size = 24, sb_up_arrow_000.png, 50
+define_size = 32, sb_up_arrow_001.png, 50
+define_size = 48, sb_up_arrow_002.png, 50
+

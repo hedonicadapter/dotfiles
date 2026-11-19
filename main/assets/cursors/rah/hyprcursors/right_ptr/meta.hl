@@ -1,0 +1,10 @@
+resize_algorithm = none
+hotspot_x = 0.71
+hotspot_y = 0.17
+
+define_size = 24, right_ptr_000.png, 50
+define_size = 32, right_ptr_001.png, 50
+define_size = 48, right_ptr_002.png, 50
+
+define_override = draft_small
+define_override = draft_large

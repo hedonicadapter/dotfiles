@@ -1,0 +1,12 @@
+resize_algorithm = none
+hotspot_x = 0.46
+hotspot_y = 0.46
+
+define_size = 24, dotbox_000.png, 50
+define_size = 32, dotbox_001.png, 50
+define_size = 48, dotbox_002.png, 50
+
+define_override = draped_box
+define_override = icon
+define_override = dot_box_mask
+define_override = target

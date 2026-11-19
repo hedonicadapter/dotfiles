@@ -1,0 +1,10 @@
+resize_algorithm = none
+hotspot_x = 0.17
+hotspot_y = 0.21
+
+define_size = 24, link_000.png, 50
+define_size = 32, link_001.png, 50
+define_size = 48, link_002.png, 50
+
+define_override = 640fb0e74195791501fd1ed57b41487f
+define_override = 3085a0e285430894940527032f8b26df

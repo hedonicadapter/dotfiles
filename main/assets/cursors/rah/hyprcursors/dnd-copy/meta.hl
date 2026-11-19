@@ -1,0 +1,8 @@
+resize_algorithm = none
+hotspot_x = 0.38
+hotspot_y = 0.38
+
+define_size = 24, dnd-copy_000.png, 50
+define_size = 32, dnd-copy_001.png, 50
+define_size = 48, dnd-copy_002.png, 50
+
