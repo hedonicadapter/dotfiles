@@ -900,6 +900,41 @@ in {
               return 1
             }
 
+            # mpv scaling for one wallpaper, judged against the two modes the focused
+            # output toggles between (fastest refresh, highest resolution). Anything
+            # near or above the smaller mode fills the screen in either mode, cropping
+            # a little; clearly smaller files stay at native size; an aspect too far
+            # off to crop gets bars instead. Relative to the screen, so mpv redoes it
+            # on its own when the mode changes.
+            wallpaper_scaling() {
+              local dims img_w img_h mode mode_w mode_h
+              dims=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height \
+                -of csv=p=0:s=x "$1" 2>/dev/null | head -n1)
+              img_w=''${dims%x*}
+              img_h=''${dims#*x}
+              mode=$(wm outputs 2>/dev/null | jq -er '(map(select(.focused)) + .)[0].modes
+                | [max_by([.refresh, .width * .height]), max_by([.width * .height, .refresh])]
+                | min_by(.width * .height) | "\(.width)x\(.height)"') || mode=1920x1080
+              mode_w=''${mode%x*}
+              mode_h=''${mode#*x}
+
+              if ! [[ $img_w =~ ^[0-9]+$ && $img_h =~ ^[0-9]+$ && $img_w -gt 0 && $img_h -gt 0 ]]; then
+                echo "video-unscaled=downscale-big"
+                return
+              fi
+
+              # keep: share of the image left after cropping to fill.
+              # upscale: zoom needed to fill the smaller mode.
+              awk -v iw="$img_w" -v ih="$img_h" -v sw="$mode_w" -v sh="$mode_h" 'BEGIN {
+                ia = iw / ih; sa = sw / sh
+                keep = ia < sa ? ia / sa : sa / ia
+                upscale = sw / iw > sh / ih ? sw / iw : sh / ih
+                if (keep < 0.85)        print "video-unscaled=downscale-big"
+                else if (upscale > 1.34) print "video-unscaled=yes"
+                else                    print "video-unscaled=no panscan=1.0"
+              }'
+            }
+
             # Keyed by "path:mtime" so magick only runs on new or modified files.
             # Sets $BRIGHTNESS rather than echoing — command substitution would run
             # this in a subshell and throw the cache away every call.
@@ -1022,11 +1057,14 @@ in {
 
                     pkill -x mpvpaper || true
 
+                    scaling=$(wallpaper_scaling "$selected_wallpaper")
+                    echo "Scaling for $selected_wallpaper: $scaling"
+
                     # mpv shows images, GIFs and videos alike; swww sheared images on
                     # scaled outputs (4K at 1.5). -o lines become an mpv config file, so
-                    # no leading dashes; '#' must be quoted there. Never upscale, shrink
-                    # big ones to fit, bars in base00; stills stay up instead of ending
-                    nohup mpvpaper -o "no-audio loop-file=inf image-display-duration=inf hwdec=auto video-unscaled=downscale-big background-color=\"#${removeHash outputs.palette.base00}\"" \
+                    # no leading dashes; '#' must be quoted there. Bars in base00;
+                    # stills stay up instead of ending
+                    nohup mpvpaper -o "no-audio loop-file=inf image-display-duration=inf hwdec=auto $scaling background-color=\"#${removeHash outputs.palette.base00}\"" \
                       ALL "$selected_wallpaper" </dev/null >>/tmp/anti-sleep-neglector-wallpaper.log 2>&1 &
                   fi
                 fi
