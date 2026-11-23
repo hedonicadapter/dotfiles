@@ -48,8 +48,11 @@
   # Shell commands that play feedback sounds
   sounds = let
     play = file: "${pkgs.pipewire}/bin/pw-play --volume=0.5 ${file}";
+    oxygen = name: play "${pkgs.kdePackages.oxygen-sounds}/share/sounds/oxygen/stereo/${name}.ogg";
   in {
-    windowClose = play "${pkgs.kdePackages.oxygen-sounds}/share/sounds/oxygen/stereo/window-close.ogg";
+    windowClose = oxygen "window-close";
+    bluetoothConnect = oxygen "message-contact-in";
+    bluetoothDisconnect = oxygen "message-contact-out";
   };
 
   animations = import ./animations.nix;
