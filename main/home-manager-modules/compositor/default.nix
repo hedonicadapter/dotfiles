@@ -49,10 +49,11 @@
   sounds = let
     play = file: "${pkgs.pipewire}/bin/pw-play --volume=0.5 ${file}";
     oxygen = name: play "${pkgs.kdePackages.oxygen-sounds}/share/sounds/oxygen/stereo/${name}.ogg";
+    ocean = name: play "${pkgs.kdePackages.ocean-sound-theme}/share/sounds/ocean/stereo/${name}.oga";
   in {
     windowClose = oxygen "window-close";
-    bluetoothConnect = oxygen "message-contact-in";
-    bluetoothDisconnect = oxygen "message-contact-out";
+    bluetoothConnect = ocean "device-added";
+    bluetoothDisconnect = ocean "device-removed";
   };
 
   animations = import ./animations.nix;
