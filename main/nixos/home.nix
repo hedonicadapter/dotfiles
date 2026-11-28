@@ -148,6 +148,7 @@ in {
       pipe-viewer # youtube cli
       yt-dlp # youtube to mp3
       resources
+      koboldcpp # local LLM runner; Vulkan backend works on AMD and NVIDIA
       wm # output queries for scripts, niri or Hyprland
 
       ncdu
