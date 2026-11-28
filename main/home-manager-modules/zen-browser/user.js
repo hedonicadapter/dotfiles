@@ -35,3 +35,8 @@ user_pref("browser.sessionstore.interval", 60000);
 // with no failures, this stays; if they continue, set it back to true and
 // the next suspect is the audio sink after long pauses.
 user_pref("network.http.http3.enable", false);
+
+// Horizontal wheel over sidebar switches workspaces; this pref gates that
+// listener (ZenSpaceManager #afterLoadInit), plus touchpad swipes and
+// back/forward buttons over the toolbox. Read once at startup.
+user_pref("zen.workspaces.swipe-actions", false);
