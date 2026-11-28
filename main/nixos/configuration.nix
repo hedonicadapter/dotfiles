@@ -92,6 +92,12 @@ in {
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
+  # Run AppImages directly via binfmt_misc
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
