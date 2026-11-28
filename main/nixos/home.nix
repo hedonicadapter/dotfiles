@@ -143,7 +143,6 @@ in {
       hyprpicker
       (speed-read.override {xkbLayout = osConfig.services.xserver.xkb.layout;})
       lutris
-      (mpv.override {scripts = [mpvScripts.mpris mpvScripts.autocrop];})
       streamlink
       twitch-tui
       pipe-viewer # youtube cli
@@ -264,6 +263,13 @@ in {
 
     ".config/streamlink/config".source = ../home-manager-modules/streamlink/config;
 
+  };
+
+  programs.mpv = {
+    enable = true;
+    scripts = with pkgs.mpvScripts; [mpris autocrop];
+    # Prefer English audio; falls back to default track
+    config.alang = "en,eng,english";
   };
 
   programs.home-manager.enable = true;
